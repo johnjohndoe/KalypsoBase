@@ -59,9 +59,6 @@ public class ThemeNodeLabelProvider extends LabelProvider implements IFontProvid
 {
   private ResourceManager m_resourceManager;
 
-  /**
-   * @see org.eclipse.jface.viewers.BaseLabelProvider#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -87,9 +84,6 @@ public class ThemeNodeLabelProvider extends LabelProvider implements IFontProvid
     return m_resourceManager;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-   */
   @Override
   public String getText( final Object element )
   {
@@ -97,9 +91,6 @@ public class ThemeNodeLabelProvider extends LabelProvider implements IFontProvid
     return node.getLabel();
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
-   */
   @Override
   public Image getImage( final Object element )
   {

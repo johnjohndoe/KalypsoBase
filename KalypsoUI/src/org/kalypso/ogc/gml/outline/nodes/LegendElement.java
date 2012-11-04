@@ -148,6 +148,7 @@ public class LegendElement
     if( m_image == null )
     {
       final ImageDescriptor legendImage = m_node.getLegendImage();
+
       if( legendImage != null )
         m_image = legendImage.createImage( true );
     }
