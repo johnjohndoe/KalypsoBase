@@ -44,7 +44,7 @@ import java.io.BufferedOutputStream;
 import java.io.Closeable;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
+import java.io.OutputStream;
 
 import org.kalypso.grid.BinaryGeoGrid;
 import org.kalypsodeegree.model.geometry.ByteUtils;
@@ -54,24 +54,23 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
  */
 public class SequentialBinaryGeoGridWriter implements Closeable
 {
-  private final BufferedOutputStream m_gridStream;
+  private final byte[] m_writeBuffer = new byte[4];
 
-  private BigDecimal m_max = BigDecimal.valueOf( -Double.MAX_VALUE );
+  private final OutputStream m_gridStream;
 
-  private BigDecimal m_min = BigDecimal.valueOf( Double.MAX_VALUE );
+  private Integer m_unscaledMin = Integer.MAX_VALUE;
+
+  private Integer m_unscaledMax = -Integer.MAX_VALUE;
 
   private final double m_scalePotence;
 
   public SequentialBinaryGeoGridWriter( final String outputCoverageFileName, final int sizeX, final int sizeY, final int scale ) throws IOException
   {
     // init values
-    m_min = BigDecimal.valueOf( Double.MAX_VALUE );
-    m_max = BigDecimal.valueOf( -Double.MAX_VALUE );
-
     m_scalePotence = Math.pow( 10, scale );
 
     // .. init file
-    m_gridStream = new BufferedOutputStream( new FileOutputStream( outputCoverageFileName ) );
+    m_gridStream = new BufferedOutputStream( new FileOutputStream( outputCoverageFileName ), SequentialBinaryGeoGridReader.BLOCK_SIZE );
 
     // ...
     writeInt( 0 ); // version
@@ -101,17 +100,22 @@ public class SequentialBinaryGeoGridWriter implements Closeable
 
   private final void writeInt( final int v ) throws IOException
   {
-    final byte[] lBuff = new byte[4];
+    ByteUtils.writeBEInt( m_writeBuffer, 0, v );
+    m_gridStream.write( m_writeBuffer, 0, 4 ); // Version number
 
-    ByteUtils.writeBEInt( lBuff, 0, v );
-    m_gridStream.write( lBuff, 0, 4 ); // Version number
+    /* update min/max */
+    if( v != BinaryGeoGrid.NO_DATA )
+    {
+      m_unscaledMin = Math.min( m_unscaledMin, v );
+      m_unscaledMax = Math.max( m_unscaledMax, v );
+    }
   }
 
   @Override
   public void close( ) throws IOException
   {
-    writeInt( rescaleValue( m_min.doubleValue() ) );
-    writeInt( rescaleValue( m_max.doubleValue() ) );
+    writeInt( m_unscaledMin );
+    writeInt( m_unscaledMax );
 
     m_gridStream.close();
   }
