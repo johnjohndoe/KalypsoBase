@@ -78,11 +78,6 @@ public class ImportCoverageUtilities
     }
   }
 
-  public static void selectCoverages( final ICoverage[] coverages, final CoverageManagementWidget widget )
-  {
-    widget.handleCoveragesAdded( coverages );
-  }
-
   public static IStatus saveCoverages( final CoverageManagementWidget widget )
   {
     /* Get the selected theme. */
