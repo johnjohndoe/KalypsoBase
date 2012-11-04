@@ -56,7 +56,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.AbstractCoverage;
 
 /**
  * Feature-Binding for gml:MultiSurfaceCoverage type.
- *
+ * 
  * @author Gernot Belger
  */
 public class MultiSurfaceCoverage extends AbstractCoverage implements IElevationModelProvider
@@ -85,6 +85,7 @@ public class MultiSurfaceCoverage extends AbstractCoverage implements IElevation
       {
         final URL dataLocation = new URL( context, fileName );
 
+        // FIXME: when to dispose?
         m_tin = new TriangulatedSurfaceTin( dataLocation, mimeType )
         {
           @Override
