@@ -9,7 +9,7 @@ import com.vividsolutions.jts.geom.Coordinate;
  * <p>
  * The size of the grid is given, the value are taken from the provider.
  * </p>
- *
+ * 
  * @author Gernot Belger
  */
 public class DoubleFakeRaster extends AbstractGeoGrid
@@ -48,41 +48,15 @@ public class DoubleFakeRaster extends AbstractGeoGrid
     return m_sizeY;
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#getMax()
-   */
   @Override
   public BigDecimal getMax( )
   {
     return null;
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#getMin()
-   */
   @Override
   public BigDecimal getMin( )
   {
     return null;
-  }
-
-  /**
-   * @see org.kalypso.grid.IGeoGrid#setMax(java.math.BigDecimal)
-   */
-  @Override
-  public void setMax( final BigDecimal maxValue )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see org.kalypso.grid.IGeoGrid#setMin(java.math.BigDecimal)
-   */
-  @Override
-  public void setMin( final BigDecimal minValue )
-  {
-    // TODO Auto-generated method stub
-
   }
 }

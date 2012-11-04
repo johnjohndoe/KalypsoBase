@@ -88,14 +88,8 @@ public class TiffGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
    */
   private TiledImage m_image;
 
-  /**
-   * The minimum.
-   */
   private BigDecimal m_min;
 
-  /**
-   * The maximum.
-   */
   private BigDecimal m_max;
 
   /**
@@ -130,9 +124,6 @@ public class TiffGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
     m_max = null;
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#getSizeX()
-   */
   @Override
   public int getSizeX( )
   {
@@ -142,9 +133,6 @@ public class TiffGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
     return m_sizeX;
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#getSizeY()
-   */
   @Override
   public int getSizeY( )
   {
@@ -154,9 +142,6 @@ public class TiffGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
     return m_sizeY;
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#getValue(int, int)
-   */
   @Override
   public double getValue( final int x, final int y )
   {
@@ -171,9 +156,6 @@ public class TiffGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
     return tile.getSampleDouble( x, y, 0 );
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#getMin()
-   */
   @Override
   public BigDecimal getMin( )
   {
@@ -183,9 +165,6 @@ public class TiffGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
     return m_min;
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#getMax()
-   */
   @Override
   public BigDecimal getMax( )
   {
@@ -195,27 +174,6 @@ public class TiffGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
     return m_max;
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#setMin(java.math.BigDecimal)
-   */
-  @Override
-  public void setMin( final BigDecimal minValue )
-  {
-    m_min = minValue;
-  }
-
-  /**
-   * @see org.kalypso.grid.IGeoGrid#setMax(java.math.BigDecimal)
-   */
-  @Override
-  public void setMax( final BigDecimal maxValue )
-  {
-    m_max = maxValue;
-  }
-
-  /**
-   * @see org.kalypso.grid.IWriteableGeoGrid#setValue(int, int, double)
-   */
   @Override
   public void setValue( final int x, final int y, final double value ) throws GeoGridException
   {
@@ -231,25 +189,6 @@ public class TiffGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
     m_image.setSample( x, y, 0, value );
   }
 
-  /**
-   * @see org.kalypso.grid.IWriteableGeoGrid#setStatistically(java.math.BigDecimal, java.math.BigDecimal)
-   */
-  @Override
-  public void setStatistically( final BigDecimal min, final BigDecimal max )
-  {
-  }
-
-  /**
-   * @see org.kalypso.grid.IWriteableGeoGrid#saveStatistically()
-   */
-  @Override
-  public void saveStatistically( )
-  {
-  }
-
-  /**
-   * @see org.kalypso.grid.AbstractGeoGrid#dispose()
-   */
   @Override
   public void dispose( )
   {

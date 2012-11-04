@@ -63,7 +63,7 @@ import com.vividsolutions.jts.geom.Coordinate;
  * </p>
  * TODO: still slow, how to improve performance? <br>
  * TODO: overide the walk method in order to make sure, that we iterate thorugh lines, not columns
- *
+ * 
  * @author Dejan Antanaskovic
  * @author Thomas Jung
  * @author Gernot Belger
@@ -212,21 +212,19 @@ public class AsciiRandomAccessGeoGrid extends AbstractGeoGrid
     m_randomAccessFile.seek( m_rowPositions[y] );
     final String line = m_randomAccessFile.readLine();
 
-    final Scanner scanner = new Scanner( line );
-
-    for( int x = 0; x < m_sizeX; x++ )
+    try( final Scanner scanner = new Scanner( line ) )
     {
-      final String next = scanner.next();
-      final BigDecimal value = new BigDecimal( next );
-      m_rowData[x] = value.equals( m_noDataValue ) ? Double.NaN : value.doubleValue();
+      for( int x = 0; x < m_sizeX; x++ )
+      {
+        final String next = scanner.next();
+        final BigDecimal value = new BigDecimal( next );
+        m_rowData[x] = value.equals( m_noDataValue ) ? Double.NaN : value.doubleValue();
+      }
     }
 
     m_currentRow = y;
   }
 
-  /**
-   * @see java.lang.Object#finalize()
-   */
   @Override
   protected void finalize( ) throws Throwable
   {
@@ -235,9 +233,6 @@ public class AsciiRandomAccessGeoGrid extends AbstractGeoGrid
     super.finalize();
   }
 
-  /**
-   * @see org.kalypso.gis.doubleraster.grid.DoubleGrid#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -256,41 +251,15 @@ public class AsciiRandomAccessGeoGrid extends AbstractGeoGrid
     }
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#getMax()
-   */
   @Override
   public BigDecimal getMax( )
   {
     return null;
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#getMin()
-   */
   @Override
   public BigDecimal getMin( )
   {
     return null;
-  }
-
-  /**
-   * @see org.kalypso.grid.IGeoGrid#setMax(java.math.BigDecimal)
-   */
-  @Override
-  public void setMax( final BigDecimal maxValue )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see org.kalypso.grid.IGeoGrid#setMin(java.math.BigDecimal)
-   */
-  @Override
-  public void setMin( final BigDecimal minValue )
-  {
-    // TODO Auto-generated method stub
-
   }
 }
