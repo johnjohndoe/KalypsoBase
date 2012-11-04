@@ -61,14 +61,13 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.simulation.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings( "restriction" )
 public class AntLauncher
 {
   private final IFile m_launchFile;
@@ -213,7 +212,6 @@ public class AntLauncher
     // TODO better ask for termination, but continue task in background?
     launch.terminate();
 
-    return StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "AntLauncher_3" ), null ); //$NON-NLS-1$
+    return new Status( IStatus.WARNING, KalypsoSimulationUIPlugin.getID(), Messages.getString( "AntLauncher_3" ), null ); //$NON-NLS-1$
   }
-
 }
