@@ -53,8 +53,7 @@ public class OptimizedGeoGridWalkingStrategy implements IGeoWalkingStrategy
 {
 
   /**
-   * @see org.kalypso.grid.IGeoWalkingStrategy#walk(org.kalypso.grid.IGeoGrid, org.kalypso.grid.IGeoGridWalker,
-   *      org.kalypso.grid.areas.IGeoGridArea, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.grid.IGeoWalkingStrategy#walk(org.kalypso.grid.IGeoGrid, org.kalypso.grid.IGeoGridWalker, org.kalypso.grid.areas.IGeoGridArea, org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
   public Object walk( final IGeoGrid grid, final IGeoGridWalker pwo, final IGeoGridArea walkingArea, final IProgressMonitor monitor ) throws GeoGridException, OperationCanceledException
@@ -66,15 +65,11 @@ public class OptimizedGeoGridWalkingStrategy implements IGeoWalkingStrategy
 
     pwo.start( grid );
 
-    final Coordinate tmpCrd = new Coordinate();
-
     final Coordinate origin = grid.getOrigin();
-    // final double rasterSize = raster.getRasterSize();
     final Coordinate offsetX = grid.getOffsetX();
     final Coordinate offsetY = grid.getOffsetY();
 
-    tmpCrd.y = origin.y;
-    tmpCrd.x = origin.x;
+    final Coordinate tmpCrd = new Coordinate();
 
     for( int y = 0; y < sizeY; y++ )
     {
