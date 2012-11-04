@@ -822,6 +822,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     final CoverageColormapHandler colormapHandler = new CoverageColormapHandler( m_theme, findThemesForCombo() );
 
     colormapHandler.guessInitialColormap( getShell(), getCoverages() );
+
+    updateStylePanel();
   }
 
   private void initalizeCoverageViewer( final StructuredViewer viewer )
