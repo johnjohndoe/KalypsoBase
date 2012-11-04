@@ -41,31 +41,28 @@
 package org.kalypso.transformation.internal;
 
 import org.geotools.geometry.GeneralDirectPosition;
-import org.geotools.referencing.CRS;
 import org.kalypso.transformation.Debug;
 import org.kalypso.transformation.transformer.GeoTransformerException;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.geometry.MismatchedDimensionException;
-import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 
 /**
  * This geo transformer uses geo tools.
- *
+ * 
  * @author Holger Albert
  */
 public class GeoToolsGeoTransformer implements IGeoTransformer
 {
-  private static final CachedGeoToolsCRSFactory CRS_CACHE = new CachedGeoToolsCRSFactory();
-
   /**
    * The coordinate system, into which the transformations should be done.
    */
@@ -100,11 +97,11 @@ public class GeoToolsGeoTransformer implements IGeoTransformer
       // TODO: performance bottle neck -> we should cache the math transforms!
 
       /* Get the coordinate systems. */
-      final CoordinateReferenceSystem sourceCoordinateSystem = CRS_CACHE.getCRS( sourceCRS );
-      final CoordinateReferenceSystem targetCoordinateSystem = CRS_CACHE.getCRS( m_targetCRS );
+      final CoordinateReferenceSystem sourceCoordinateSystem = GeoTransformerFactory.CRS_CACHE.getCRS( sourceCRS );
+      final CoordinateReferenceSystem targetCoordinateSystem = GeoTransformerFactory.CRS_CACHE.getCRS( m_targetCRS );
 
       /* Get the transformation. */
-      final MathTransform transformation = CRS_CACHE.getTransform( sourceCRS, m_targetCRS );
+      final MathTransform transformation = GeoTransformerFactory.CRS_CACHE.getTransform( sourceCRS, m_targetCRS );
 
       /* Debug. */
       Debug.TRANSFORM.printf( "POS: %s to %s\n", sourceCRS, m_targetCRS );
@@ -141,7 +138,7 @@ public class GeoToolsGeoTransformer implements IGeoTransformer
       return geometry;
 
     if( geometry instanceof GM_Point )
-      return transform( (GM_Point) geometry, sourceCRS, m_targetCRS );
+      return transform( (GM_Point)geometry, sourceCRS, m_targetCRS );
 
     return geometry.transform( m_targetCRS );
   }
@@ -172,12 +169,12 @@ public class GeoToolsGeoTransformer implements IGeoTransformer
     if( sourceCRS == null || sourceCRS.equalsIgnoreCase( m_targetCRS ) )
       return surfacePatch;
 
-    return (GM_AbstractSurfacePatch) surfacePatch.transform( m_targetCRS );
+    return (GM_AbstractSurfacePatch)surfacePatch.transform( m_targetCRS );
   }
 
   /**
    * This function transformes a point.
-   *
+   * 
    * @param point
    *          The point, which should be transformed.
    * @param sourceCRS
@@ -195,11 +192,11 @@ public class GeoToolsGeoTransformer implements IGeoTransformer
         return point;
 
       /* Get the coordinate systems. */
-      final CoordinateReferenceSystem sourceCoordinateSystem = CRS.decode( sourceCRS );
-      final CoordinateReferenceSystem targetCoordinateSystem = CRS.decode( targetCRS );
+      final CoordinateReferenceSystem sourceCoordinateSystem = GeoTransformerFactory.CRS_CACHE.getCRS( sourceCRS );
+      final CoordinateReferenceSystem targetCoordinateSystem = GeoTransformerFactory.CRS_CACHE.getCRS( targetCRS );
 
       /* Get the transformation. */
-      final MathTransform transformation = CRS.findMathTransform( sourceCoordinateSystem, targetCoordinateSystem );
+      final MathTransform transformation = GeoTransformerFactory.CRS_CACHE.getTransform( sourceCRS, targetCRS );
 
       /* Debug. */
       Debug.TRANSFORM.printf( "POS: %s to %s\n", sourceCRS, targetCRS );
@@ -219,7 +216,7 @@ public class GeoToolsGeoTransformer implements IGeoTransformer
 
       return GeometryFactory.createGM_Point( targetPt.getOrdinate( 0 ), targetPt.getOrdinate( 1 ), targetPt.getDimension() == 3 ? targetPt.getOrdinate( 2 ) : point.getZ(), targetCRS );
     }
-    catch( MismatchedDimensionException | IndexOutOfBoundsException | FactoryException | TransformException e )
+    catch( MismatchedDimensionException | IndexOutOfBoundsException | TransformException e )
     {
       throw new GeoTransformerException( e );
     }

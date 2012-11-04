@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.transformation.transformer;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.geotools.geometry.GeneralDirectPosition;
-import org.geotools.referencing.CRS;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
@@ -72,30 +72,38 @@ public class JTSTransformer
 
   public JTSTransformer( final int sourceSRID, final int targetSRID ) throws FactoryException
   {
-    m_targetSRID = targetSRID;
+    this( JTSAdapter.toSrs( sourceSRID ), JTSAdapter.toSrs( targetSRID ) );
+  }
 
-    final String sourceCRS = JTSAdapter.toSrs( sourceSRID );
-    final CoordinateReferenceSystem sourceCoordinateSystem = CRS.decode( sourceCRS );
-
-    final String targetCRS = JTSAdapter.toSrs( targetSRID );
-    final CoordinateReferenceSystem targetCoordinateSystem = CRS.decode( targetCRS );
-
-    if( sourceSRID == m_targetSRID )
+  public JTSTransformer( final String sourceCRS, final String targetCRS ) throws FactoryException
+  {
+    try
     {
-      m_transformation = null;
-      m_sourcePt = null;
-      m_targetPt = null;
+      m_targetSRID = JTSAdapter.toSrid( targetCRS );
+
+      final CoordinateReferenceSystem sourceCoordinateSystem = GeoTransformerFactory.CRS_CACHE.getCRS( sourceCRS );
+      final CoordinateReferenceSystem targetCoordinateSystem = GeoTransformerFactory.CRS_CACHE.getCRS( targetCRS );
+
+      if( ObjectUtils.equals( sourceCRS, targetCRS ) )
+      {
+        m_transformation = null;
+        m_sourcePt = null;
+        m_targetPt = null;
+      }
+      else
+      {
+        m_transformation = GeoTransformerFactory.CRS_CACHE.getTransform( sourceCRS, targetCRS );
+        m_sourcePt = new GeneralDirectPosition( sourceCoordinateSystem );
+        m_targetPt = new GeneralDirectPosition( targetCoordinateSystem );
+      }
     }
-    else
+    catch( final GeoTransformerException e )
     {
-      m_transformation = CRS.findMathTransform( sourceCoordinateSystem, targetCoordinateSystem );
-      m_sourcePt = new GeneralDirectPosition( sourceCoordinateSystem );
-      m_targetPt = new GeneralDirectPosition( targetCoordinateSystem );
+      throw new FactoryException( e );
     }
   }
 
-  // TODO: better exceptions
-  public Coordinate transform( final Coordinate sourceCrd ) throws TransformException
+  public synchronized Coordinate transform( final Coordinate sourceCrd ) throws TransformException
   {
     if( sourceCrd == null )
       return null;

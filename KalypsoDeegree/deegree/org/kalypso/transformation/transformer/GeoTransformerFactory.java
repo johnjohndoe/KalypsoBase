@@ -41,6 +41,7 @@
 package org.kalypso.transformation.transformer;
 
 import org.kalypso.commons.java.lang.Strings;
+import org.kalypso.transformation.internal.CachedGeoToolsCRSFactory;
 import org.kalypso.transformation.internal.GeoToolsGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 
@@ -51,11 +52,11 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
  */
 public final class GeoTransformerFactory
 {
-  /**
-   * The constructor.
-   */
+  public static final CachedGeoToolsCRSFactory CRS_CACHE = new CachedGeoToolsCRSFactory();
+
   private GeoTransformerFactory( )
   {
+    throw new UnsupportedOperationException();
   }
 
   /**

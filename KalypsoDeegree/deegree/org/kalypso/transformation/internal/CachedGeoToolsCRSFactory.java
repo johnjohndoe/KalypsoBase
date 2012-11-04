@@ -54,10 +54,10 @@ import com.google.common.cache.LoadingCache;
 
 /**
  * Cache for geotools crs and transformations
- *
+ * 
  * @author Gernot Belger
  */
-class CachedGeoToolsCRSFactory
+public class CachedGeoToolsCRSFactory
 {
   private final LoadingCache<String, CoordinateReferenceSystem> m_crsCache = CacheBuilder.newBuilder().maximumSize( 100 ).build( new CacheLoader<String, CoordinateReferenceSystem>()
   {
