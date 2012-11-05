@@ -71,7 +71,7 @@ import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 /**
  * Shows a {@link org.kalypso.model.wspm.core.profil.IProfile} in a table viewer.<br/>
  * Also shows 'no profile selected' in a form header as well as the current problem markers of the profile.
- *
+ * 
  * @author Gernot Belger
  */
 public class ProfileTableForm implements ITupleResultViewerProvider
@@ -351,7 +351,7 @@ public class ProfileTableForm implements ITupleResultViewerProvider
     // FIXME: refresh table viewer!! check hints!
     // but only those stuff, that is not already handled by content provider
 
-    if( hint.isSelectionChanged() )
+    if( (hint.getEvent() & ProfileChangeHint.ACTIVE_POINTS_CHANGED) != 0 )
     {
       m_updateSelectionJob.cancel();
       m_updateSelectionJob.schedule( 100 );

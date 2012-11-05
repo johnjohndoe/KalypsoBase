@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.table;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -48,7 +51,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.profil.IProfile;
-import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 
@@ -80,9 +82,8 @@ class UpdateSelectionJob extends UIJob
       return Status.CANCEL_STATUS;
 
     final IProfile profile = m_tableControl.getProfil();
-    final IRangeSelection selection = profile.getSelection();
 
-    final IProfileRecord[] records = toSelection( selection );
+    final IProfileRecord[] records = toSelection( profile );
 
     m_tableControl.disableFireSelectionChanged();
 
@@ -92,15 +93,17 @@ class UpdateSelectionJob extends UIJob
     return Status.OK_STATUS;
   }
 
-  private IProfileRecord[] toSelection( final IRangeSelection selection )
+  private IProfileRecord[] toSelection( final IProfile profile )
   {
-    if( selection.isEmpty() )
-      return new IProfileRecord[] {};
+    final Collection<IProfileRecord> selectedRecords = new ArrayList<>();
 
-    final IProfileRecord[] points = selection.toPoints();
-    if( points == null )
-      return new IProfileRecord[] {};
-    else
-      return points;
+    final IProfileRecord[] points = profile.getPoints();
+    for( final IProfileRecord record : points )
+    {
+      if( record.isSelected() )
+        selectedRecords.add( record );
+    }
+
+    return selectedRecords.toArray( new IProfileRecord[selectedRecords.size()] );
   }
 }
