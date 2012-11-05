@@ -49,13 +49,10 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.ui.editor.mousehandler.AbstractChartHandler;
-import org.kalypso.model.wspm.core.IWspmLayers;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.manager.visitors.FindLayerVisitor;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTSTYLE;
@@ -101,18 +98,6 @@ public class MousePositionChartHandler extends AbstractChartHandler
     m_labelRenderer = new GenericChartLabelRenderer( title );
   }
 
-  public static final IProfilChartLayer findProfileTheme( final IChartComposite chart )
-  {
-    final IChartModel model = chart.getChartModel();
-
-    final FindLayerVisitor visitor = new FindLayerVisitor( IWspmLayers.THEME_GELAENDE );
-    model.getLayerManager().accept( visitor );
-
-    final IChartLayer layer = visitor.getLayer();
-
-    return (IProfilChartLayer)layer;
-  }
-
   @SuppressWarnings( "rawtypes" )
   @Override
   public void mouseMove( final MouseEvent e )
@@ -146,6 +131,6 @@ public class MousePositionChartHandler extends AbstractChartHandler
       return;
     }
     final Rectangle rect = chart.getPlotInfo().getLegendRect();
-    m_labelRenderer.paint( e.gc, rect );// new Point( rect.x+rect.width, rect.y ) );
+    m_labelRenderer.paint( e.gc, rect );
   }
 }

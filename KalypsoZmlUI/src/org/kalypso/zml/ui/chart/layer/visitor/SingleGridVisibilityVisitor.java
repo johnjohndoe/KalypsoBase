@@ -84,7 +84,10 @@ public class SingleGridVisibilityVisitor extends AbstractChartLayerVisitor
   private boolean isValid( final IChartLayer layer )
   {
     final ICoordinateMapper mapper = layer.getCoordinateMapper();
-
+    if( mapper == null )
+    {
+      return false;
+    }
     final IAxis domainAxis = mapper.getDomainAxis();
     final IAxis targetAxis = mapper.getTargetAxis();
     if( Objects.isNull( domainAxis, targetAxis ) )
@@ -100,7 +103,7 @@ public class SingleGridVisibilityVisitor extends AbstractChartLayerVisitor
     if( Objects.isNull( handler ) )
       return false;
 
-    final IObservation observation = (IObservation) handler.getAdapter( IObservation.class );
+    final IObservation observation = (IObservation)handler.getAdapter( IObservation.class );
     if( Objects.isNull( observation ) )
       return false;
 
@@ -131,7 +134,7 @@ public class SingleGridVisibilityVisitor extends AbstractChartLayerVisitor
         continue;
 
       if( layer instanceof IZmlLayer )
-        return (IZmlLayer) layer;
+        return (IZmlLayer)layer;
     }
 
     return null;

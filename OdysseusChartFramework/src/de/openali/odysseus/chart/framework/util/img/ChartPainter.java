@@ -130,24 +130,30 @@ public class ChartPainter
   private final Rectangle calculateAxisBottomRect( final Rectangle usableRect )
   {
     final int totalWidth = getAxisWidth( POSITION.BOTTOM );
+    // usableRect.height -= totalWidth;
     return new Rectangle( usableRect.x, usableRect.y + usableRect.height - totalWidth, usableRect.width, totalWidth );
   }
 
   private final Rectangle calculateAxisLeftRect( final Rectangle usableRect )
   {
     final int totalWidth = getAxisWidth( POSITION.LEFT );
-    return new Rectangle( usableRect.x, usableRect.y, totalWidth, usableRect.height );
+    // usableRect.width -= totalWidth;
+    // usableRect.x += totalWidth;
+    return new Rectangle( usableRect.x, usableRect.y, totalWidth, usableRect.height - totalWidth );
   }
 
   private final Rectangle calculateAxisRightRect( final Rectangle usableRect )
   {
     final int totalWidth = getAxisWidth( POSITION.RIGHT );
+    // usableRect.width -= totalWidth;
     return new Rectangle( usableRect.x + usableRect.width - totalWidth, usableRect.y, totalWidth, usableRect.height );
   }
 
   private final Rectangle calculateAxisTopRect( final Rectangle usableRect )
   {
     final int totalWidth = getAxisWidth( POSITION.TOP );
+    // usableRect.height -= totalWidth;
+    // usableRect.y += totalWidth;
     return new Rectangle( usableRect.x, usableRect.y, usableRect.width, totalWidth );
   }
 
@@ -258,11 +264,6 @@ public class ChartPainter
       }
     }
     plotFrame.paint( gc, rect );
-// final int old = gc.getLineWidth();
-// gc.setLineWidth( 1 );
-// gc.drawRectangle( rect );
-// gc.setLineWidth( old );
-
   }
 
   public final IStatus paintImage( final IProgressMonitor monitor )
@@ -289,25 +290,28 @@ public class ChartPainter
       final Rectangle legendRect = calculateLegendRect( m_paintRect, legendImage );
       infoObject.setLegendRect( legendRect );
       final Rectangle usableAxisRect = new Rectangle( m_paintRect.x, m_paintRect.y + titleRect.height, m_paintRect.width, m_paintRect.height - titleRect.height - legendRect.height );
-      final Rectangle axisTopRect = calculateAxisTopRect( usableAxisRect );
-      final Rectangle axisBottomRect = calculateAxisBottomRect( usableAxisRect );
-      final Rectangle axisLeftRect = calculateAxisLeftRect( usableAxisRect );
-      final Rectangle axisRightRect = calculateAxisRightRect( usableAxisRect );
+      final int axisLeftWidth = getAxisWidth( POSITION.LEFT );
+      final int axisRightWidth = getAxisWidth( POSITION.RIGHT );
+      final int axisTopHeight = getAxisWidth( POSITION.TOP );
+      final int axisBottomHeight = getAxisWidth( POSITION.BOTTOM );
+      final Insets axisPlotInsets = new Insets( axisTopHeight, axisLeftWidth, axisBottomHeight, axisRightWidth );
+      final Rectangle plotRect = RectangleUtils.inflateRect( usableAxisRect, axisPlotInsets );
+      final Rectangle plotClientRect = RectangleUtils.inflateRect( plotRect, plotInsets );
+      final Rectangle axisTopRect = new Rectangle( plotRect.x, usableAxisRect.y, plotRect.width, axisTopHeight );
+      final Rectangle axisBottomRect = new Rectangle( plotRect.x, plotRect.y + plotRect.height, plotRect.width, axisBottomHeight );
+      final Rectangle axisLeftRect = new Rectangle( usableAxisRect.x, plotRect.y, axisLeftWidth, plotRect.height );
+      final Rectangle axisRightRect = new Rectangle( usableAxisRect.x + usableAxisRect.width - axisRightWidth, plotRect.y, axisRightWidth, plotRect.height );
       infoObject.setAxisBottomRect( axisBottomRect );
       infoObject.setAxisLeftRect( axisLeftRect );
       infoObject.setAxisRightRect( axisRightRect );
       infoObject.setAxisTopRect( axisTopRect );
-      final Rectangle plotRect = new Rectangle( usableAxisRect.x + axisLeftRect.width, usableAxisRect.y + axisTopRect.height, usableAxisRect.width - axisLeftRect.width - axisRightRect.width, usableAxisRect.height
-          - axisTopRect.height - axisBottomRect.height );
       infoObject.setPlotRect( plotRect );
-
-      final Rectangle plotClientRect = RectangleUtils.inflateRect( plotRect, plotInsets );
 
       infoObject.setLayerRect( plotClientRect );
       m_infoObject = infoObject;
 
       // FIXME: plot insets do not really act like expected; check this...
-      setAxesHeight( plotRect, plotRect );
+      setAxesHeight( plotRect, plotClientRect );
 
       m_titlePainter.paint( gc, titleRect );
       if( monitor.isCanceled() )
@@ -316,19 +320,19 @@ public class ChartPainter
       paintAxes( POSITION.TOP, gc, plotRect.x, axisTopRect.y + axisTopRect.height, plotInsets.left, axisTopRect.width, 0, true );
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
-      
-      paintAxes( POSITION.LEFT, gc, plotRect.x, axisLeftRect.y, plotInsets.top, axisLeftRect.height - axisTopRect.height - axisBottomRect.height, 90, false );
+
+      paintAxes( POSITION.LEFT, gc, plotRect.x, axisLeftRect.y, plotInsets.top, axisLeftRect.height, 90, false );
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
-      
-      paintAxes( POSITION.RIGHT, gc, axisRightRect.x, axisRightRect.y, plotInsets.top, axisRightRect.height - axisTopRect.height - axisBottomRect.height, 90, true );
+
+      paintAxes( POSITION.RIGHT, gc, axisRightRect.x, axisRightRect.y, plotInsets.top, axisRightRect.height, 90, true );
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
-      
-      paintAxes( POSITION.BOTTOM, gc, plotRect.x, axisBottomRect.y, plotInsets.left, axisBottomRect.width - axisLeftRect.width - axisRightRect.width, 0, false );
+
+      paintAxes( POSITION.BOTTOM, gc, plotRect.x, axisBottomRect.y, plotInsets.left, axisBottomRect.width, 0, false );
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
-      
+
       if( legendImage != null )
         gc.drawImage( legendImage, legendRect.x, legendRect.y );
 

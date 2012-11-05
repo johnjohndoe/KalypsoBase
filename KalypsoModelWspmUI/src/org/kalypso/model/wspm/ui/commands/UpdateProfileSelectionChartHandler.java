@@ -109,6 +109,14 @@ public class UpdateProfileSelectionChartHandler extends AbstractChartHandler
     if( EventUtils.isStateButton1( e ) )
     {
       m_p1 = e.x;
+    }else{
+      final IProfilChartLayer theme = SelectionChartHandlerHelper.findProfileTheme( getChart() );
+      final ICoordinateMapper mapper = theme.getCoordinateMapper();
+      final IAxis domAxis = mapper.getDomainAxis();
+      final IProfile profile = theme.getProfil();
+      final Double x2 = domAxis.screenToNumeric( e.x );
+      final IRangeSelection selection = profile.getSelection();
+      selection.setCursor( x2 );
     }
   }
 
@@ -149,8 +157,11 @@ public class UpdateProfileSelectionChartHandler extends AbstractChartHandler
     super.paintControl( e );
     final IChartComposite chart = getChart();
     SelectionChartHandlerHelper.paintMouse( chart, e, m_p2 );
-    final Pair<Integer,Integer> selection = SelectionChartHandlerHelper.selectionToScreen( chart );
-    SelectionChartHandlerHelper.paintSelection( chart, e, selection.getDomain(), selection.getTarget() );
+    final Pair<Integer, Integer> selection = SelectionChartHandlerHelper.selectionToScreen( chart );
+    if( selection != null )
+    {
+      SelectionChartHandlerHelper.paintSelection( chart, e, selection.getDomain(), selection.getTarget() );
+    }
     if( m_p0 == null || m_p1 == null )
     {
       return;
