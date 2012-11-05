@@ -48,6 +48,8 @@ public class DisplayProfileSelectionWidget extends AbstractProfilePointSelection
   public DisplayProfileSelectionWidget( )
   {
     super( true );
+
+    // FIXME: bad! thi smeans, that this tools also allows to edit the cursor/selection; this is not meant to be so!
   }
 
   @Override

@@ -152,7 +152,6 @@ public class SelectionChartHandlerHelper
     return null;
   }
 
-  @SuppressWarnings( "rawtypes" )
   public static final Integer cursorToScreen( final IChartComposite chart )
   {
     final IProfilChartLayer theme = SelectionChartHandlerHelper.findProfileTheme( chart );
@@ -160,11 +159,13 @@ public class SelectionChartHandlerHelper
     final IRangeSelection selection = profile.getSelection();
     final ICoordinateMapper mapper = theme.getCoordinateMapper();
     final IAxis domAxis = mapper.getDomainAxis();
-    if( selection.getRange() != null )
-    {
-      return domAxis.numericToScreen( selection.getCursor() );
-    }
-    return null;
+
+    final Double cursor = selection.getCursor();
+
+    if( cursor == null )
+      return null;
+
+    return domAxis.numericToScreen( cursor );
   }
 
   public static void paintRange( final IChartComposite chart, final PaintEvent e, final int min, final int max )

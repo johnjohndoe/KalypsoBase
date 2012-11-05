@@ -58,25 +58,10 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
  */
 public class UpdateProfileCursorChartHandler extends AbstractChartHandler
 {
-  private Integer m_p1 = null;
-
-  private Integer m_pMin = null;
-
-  private Integer m_pMax = null;
-
   public UpdateProfileCursorChartHandler( final IChartComposite chart )
   {
     super( chart );
 
-  }
-
-  private final void getSelectionCursor( )
-  {
-    m_p1 = SelectionChartHandlerHelper.cursorToScreen( getChart() );
-    final Pair<Integer, Integer> selection = SelectionChartHandlerHelper.selectionToScreen( getChart() );
-
-    m_pMin = selection == null ? null : selection.getDomain();
-    m_pMax = selection == null ? null : selection.getTarget();
   }
 
   @Override
@@ -85,21 +70,18 @@ public class UpdateProfileCursorChartHandler extends AbstractChartHandler
     return CHART_HANDLER_TYPE.eToggle;
   }
 
-  @SuppressWarnings( { "unused", "rawtypes" } )
   @Override
   public void mouseMove( final MouseEvent e )
   {
     super.mouseMove( e );
+
     if( isOutOfRange( new Point( e.x, e.y ) ) )
-    {
       return;
-    }
+
     final IProfilChartLayer theme = SelectionChartHandlerHelper.findProfileTheme( getChart() );
-    final IChartComposite chart = getChart();
     if( theme == null )
-    {
       return;
-    }
+
     final ICoordinateMapper mapper = theme.getCoordinateMapper();
     final IAxis domAxis = mapper.getDomainAxis();
     final IProfile profile = theme.getProfil();
@@ -112,11 +94,15 @@ public class UpdateProfileCursorChartHandler extends AbstractChartHandler
   public void paintControl( final PaintEvent e )
   {
     super.paintControl( e );
-    getSelectionCursor();
-    SelectionChartHandlerHelper.paintMouse( getChart(), e, m_p1 );
-    SelectionChartHandlerHelper.paintSelection( getChart(), e, m_pMin, m_pMax );
-    m_p1 = null;
-    m_pMin = null;
-    m_pMax = null;
+
+    /* paint cursor */
+    final Integer cursorScreen = SelectionChartHandlerHelper.cursorToScreen( getChart() );
+    SelectionChartHandlerHelper.paintMouse( getChart(), e, cursorScreen );
+
+    final Pair<Integer, Integer> selection = SelectionChartHandlerHelper.selectionToScreen( getChart() );
+
+    final Integer selectionMinScreen = selection == null ? null : selection.getDomain();
+    final Integer selectionMaxScreen = selection == null ? null : selection.getTarget();
+    SelectionChartHandlerHelper.paintSelection( getChart(), e, selectionMinScreen, selectionMaxScreen );
   }
 }

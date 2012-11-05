@@ -175,7 +175,7 @@ public class AbstractProfileWidget extends AbstractWidget
         return null;
 
       final GM_Point gmCurrent = MapUtilities.transform( getMapPanel(), position );
-      return (com.vividsolutions.jts.geom.Point) JTSAdapter.export( gmCurrent );
+      return (com.vividsolutions.jts.geom.Point)JTSAdapter.export( gmCurrent );
     }
     catch( final Throwable t )
     {
