@@ -24,10 +24,5 @@ public interface IAxisProvider extends IChartComponentProvider
 
   IAxis getScreenAxis( final String identifier, final POSITION position );
 
-  void init( final IChartModel model, String id, final IParameterContainer parameters, URL context, Class< ? > dataClass, POSITION pos, String[] valueArray );
-
-  // /**
-  // * returns XML configuration element for the given chart element
-  // */
-  // public AxisType getXMLType( IAxis axis );
+  void init( final IChartModel model, String id, final IParameterContainer parameters, URL context, POSITION pos, String[] valueArray );
 }

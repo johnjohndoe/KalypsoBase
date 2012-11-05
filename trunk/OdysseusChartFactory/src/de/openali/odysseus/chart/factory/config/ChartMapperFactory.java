@@ -144,13 +144,12 @@ public class ChartMapperFactory extends AbstractChartFactory
             final String axisId = axisType.getId();
             final POSITION axisPosition = getAxisPosition( axisType.getPosition() );
             final IParameterContainer container = createParameterContainer( axisId, axisType.getProvider() );
-            final Class< ? > dataClass = getAxisDataClass( axisType );
 
             String[] valueList = null;
             if( axisType.isSetStringRange() )
               valueList = axisType.getStringRange().getValueSet().getValueArray();
 
-            axisProvider.init( getModel(), axisId, container, getContext(), dataClass, axisPosition, valueList );
+            axisProvider.init( getModel(), axisId, container, getContext(), axisPosition, valueList );
 
             final IAxis axis = axisProvider.getAxis();
 
@@ -258,7 +257,11 @@ public class ChartMapperFactory extends AbstractChartFactory
     // FIXME: does the provider really make sense for the screen axis?!
 
     final IAxisProvider provider = getLoader().getExtension( IAxisProvider.class, providerId );
-
+    if( provider == null )
+    {
+      System.out.println( "Axisprovider not found : " + providerId );
+      return null;
+    }
     final IAxis screenAxis = provider.getScreenAxis( screenAxisType.getId(), getAxisPosition( screenAxisType.getPosition() ) );
 
     // FIXME: what about the 'position' declared in the xml?
@@ -330,7 +333,7 @@ public class ChartMapperFactory extends AbstractChartFactory
   @SuppressWarnings( { "unchecked", "rawtypes" } )
   private IDataRange<Double> getAxisRange( final IAxis axis, final AxisType at )
   {
-    //final DataOperatorHelper dataOperatorHelper = new DataOperatorHelper();
+    // final DataOperatorHelper dataOperatorHelper = new DataOperatorHelper();
 
     if( at.isSetDateRange() )
     {
@@ -402,16 +405,6 @@ public class ChartMapperFactory extends AbstractChartFactory
     cal.add( Calendar.SECOND, sign * dur.getSecond() );
     cal.add( Calendar.MILLISECOND, (int)(sign * dur.getFraction().doubleValue()) );
     return cal;
-  }
-
-  public Class< ? > getAxisDataClass( final AxisType at )
-  {
-    if( at.isSetDateRange() || at.isSetDurationRange() )
-      return Calendar.class;
-    else if( at.isSetStringRange() )
-      return String.class;
-    else
-      return Number.class;
   }
 
   public void addMapper( final MapperType type, final ReferencableType... baseTypes )

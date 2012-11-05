@@ -76,7 +76,7 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  * <ul>
  * <li>fixedHeight: replaces the value of the target axis with a fixed value</li>
  * </ul>
- *
+ * 
  * @author Dirk Kuch
  * @author Gernot Belger
  */
@@ -92,7 +92,7 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
 
   private final int m_baseLine;
 
-  private final ICoordinateMapper<Date,Number> m_mapper;
+  private final ICoordinateMapper<Date, Number> m_mapper;
 
   private BarRectangle m_currentBar;
 
@@ -114,20 +114,18 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
 
   public ZmlBarLayerBackwardsVisitor( final ZmlBarLayer layer, final BarPaintManager paintManager, final ZmlBarLayerRangeHandler range, final IObservation observation, final IRequest request, final Period timestep, final String[] styleNames )
   {
-    m_layer = layer;
-    m_paintManager = paintManager;
-    m_mapper = layer.getCoordinateMapper();
-
     m_range = range;
     m_observation = observation;
     m_request = request;
     m_timestep = timestep;
     m_styleNames = styleNames;
     m_fixedHeight = layer.getFixedHeight();
-
     m_valueAxis = AxisUtils.findValueAxis( observation.getAxes() );
     m_dateAxis = AxisUtils.findDateAxis( observation.getAxes() );
 
+    m_layer = layer;
+    m_paintManager = paintManager;
+    m_mapper = layer.getCoordinateMapper();
     m_baseLine = m_mapper.numericToScreen( 0.0, 0.0 ).y;
   }
 
@@ -159,7 +157,7 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
 
     try
     {
-      final Date domainValue = (Date) container.get( m_dateAxis );
+      final Date domainValue = (Date)container.get( m_dateAxis );
       final Number targetValue = getTargetValue( container );
       if( Objects.isNull( domainValue, targetValue ) )
         return;
@@ -170,7 +168,7 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
 //      final IDataOperator<Date> dateDataOperator = m_range.getDateDataOperator();
 //      final Double numericDomain = dateDataOperator.logicalToNumeric( domainValue );
 
-      final Point screenCurrent = m_mapper.logicalToScreen(domainValue,targetValue);//numericToScreen( numericDomain, numericTarget );
+      final Point screenCurrent = m_mapper.logicalToScreen( domainValue, targetValue );// numericToScreen( numericDomain, numericTarget );
 
       final int currentX = screenCurrent.x;
       final int currentY = screenCurrent.y;
@@ -242,7 +240,7 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
     if( m_fixedHeight != null )
       return m_fixedHeight;
 
-    return (Number) container.get( m_valueAxis );
+    return (Number)container.get( m_valueAxis );
   }
 
   private String[] getCurrentStyles( final IObservationValueContainer container )
@@ -330,7 +328,7 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
 //      final IDataOperator<Date> dateDataOperator = m_range.getDateDataOperator();
 //      final Double numericPrev = dateDataOperator.logicalToNumeric( prevTime );
 
-      return m_mapper.getDomainAxis().logicalToScreen( prevTime );//.numericToScreen( numericPrev, 0.0 ).x;
+      return m_mapper.getDomainAxis().logicalToScreen( prevTime );// .numericToScreen( numericPrev, 0.0 ).x;
     }
   }
 

@@ -24,6 +24,8 @@ import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
@@ -154,14 +156,15 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
   @Override
   public void init( )
   {
-    if( getValueData() == null )
+    final TupleResultDomainValueData< ? , ? > tupleResultData = getValueData();
+    final IAxis< ? > domainAxis = getDomainAxis();
+    final IAxis< ? > targetAxis = getTargetAxis();
+    if( tupleResultData == null || domainAxis == null || targetAxis == null )
       return;
-
-    if( getTargetAxis().getLabels().length == 0 )
-      getTargetAxis().addLabel( new TitleTypeBean( getUnitFromComponent( getValueData().getTargetComponentName() ) ) );
-
+    if( targetAxis.getLabels().length == 0 )
+      targetAxis.addLabel( new TitleTypeBean( getUnitFromComponent( tupleResultData.getTargetComponentName() ) ) );
     if( getDomainAxis().getLabels().length == 0 )
-      getDomainAxis().addLabel( new TitleTypeBean( getUnitFromComponent( getValueData().getDomainComponentName() ) ) );
+      domainAxis.addLabel( new TitleTypeBean( getUnitFromComponent( tupleResultData.getDomainComponentName() ) ) );
   }
 
   @Override
@@ -203,8 +206,9 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
   {
     final Object domainValue = m_valueData.getDomainValue( record );
     final Object targetValue = m_valueData.getTargetValue( record );
+    final ICoordinateMapper< ? , ? > mapper = getCoordinateMapper();
 
-    if( domainValue == null || targetValue == null )
+    if( domainValue == null || targetValue == null || mapper == null )
       return null;
 
     // we have to check if all values are correct - an incorrect value means a null value - the axis would return 0

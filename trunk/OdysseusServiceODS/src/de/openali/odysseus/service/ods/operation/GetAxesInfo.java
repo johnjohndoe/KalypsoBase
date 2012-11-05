@@ -118,7 +118,6 @@ public class GetAxesInfo extends AbstractODSOperation
     atInfo.setTitle( atConf.getLabel() );
 
     // Type
-    Class< ? > type = null;
     IAxis< ? > axis = null;
 
     try
@@ -136,20 +135,18 @@ public class GetAxesInfo extends AbstractODSOperation
       else if( atConf.getPosition() == PositionType.RIGHT )
         pos = POSITION.RIGHT;
 
-      provider.init( null, atInfo.getId(), null, null, type, pos, null );
+      provider.init( null, atInfo.getId(), null, null, pos, null );
       axis = provider.getAxis();
       m_mapperRegistry.addMapper( axis );
-      type = axis.getDataClass();
-      if( type == null )
-        type = Number.class;
     }
     catch( final Exception ex )
     {
       ex.printStackTrace();
     }
 
-    if( type != null )
-      atInfo.setType( type.getCanonicalName() );
+    final Class< ? > dataClass = axis.getDataClass();
+    if( dataClass != null )
+      atInfo.setType( dataClass.getCanonicalName() );
 
     // request parameters can overwrite configuration parameters
     ODSChartManipulation.setAxesRanges( m_mapperRegistry, getRequest() );
@@ -172,7 +169,7 @@ public class GetAxesInfo extends AbstractODSOperation
     else if( direction == DirectionType.POSITIVE )
       atInfo.setDirection( AxisDirectionType.POSITIVE );
 
-    setDataRange( atConf, atInfo, type, axis );
+    setDataRange( atConf, atInfo, dataClass, axis );
   }
 
   private void setDataRange( final AxisType atConf, final AxisOfferingType atInfo, final Class< ? > type, final IAxis< ? > axis )
