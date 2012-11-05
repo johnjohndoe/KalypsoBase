@@ -77,6 +77,7 @@ public class WMSImageProvider extends AbstractDeegreeImageProvider
   @Override
   public ICapabilitiesLoader createCapabilitiesLoader( )
   {
-    return new WMSCapabilitiesLoader( 5000 );
+    // FIXME: event 10 secs is sometimes not enough for slow/big wms servers; configure it from outside?
+    return new WMSCapabilitiesLoader( 10000 );
   }
 }
