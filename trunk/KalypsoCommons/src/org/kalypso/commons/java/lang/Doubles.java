@@ -115,8 +115,8 @@ public final class Doubles
       else
         doubles[i] = numbers[i].doubleValue();
     }
-    
-    return isNaN( doubles );
+
+    return isNullOrInfinite( doubles );
   }
 
   /**
@@ -126,19 +126,19 @@ public final class Doubles
   {
     if( ArrayUtils.isEmpty( numbers ) )
       return true;
-    
+
     for( final Double number : numbers )
     {
       if( Objects.isNull( number ) )
         return true;
-      
+
       if( !com.google.common.primitives.Doubles.isFinite( number ) )
         return true;
     }
-    
+
     return false;
   }
-  
+
   // FIXME bad name!
   public static boolean isNaN( final Double... numbers )
   {
