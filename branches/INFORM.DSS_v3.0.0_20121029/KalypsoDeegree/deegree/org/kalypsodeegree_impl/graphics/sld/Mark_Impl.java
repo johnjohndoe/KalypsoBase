@@ -193,8 +193,7 @@ public class Mark_Impl implements Mark, Marshallable
   }
 
   /**
-   * @see org.kalypsodeegree.graphics.sld.Mark#paintAwt(java.awt.Graphics2D, org.kalypsodeegree.model.feature.Feature,
-   *      int)
+   * @see org.kalypsodeegree.graphics.sld.Mark#paintAwt(java.awt.Graphics2D, org.kalypsodeegree.model.feature.Feature, int)
    */
   @Override
   public void paintAwt( final Graphics2D g, final Feature feature, final int size ) throws FilterEvaluationException
@@ -222,19 +221,20 @@ public class Mark_Impl implements Mark, Marshallable
       drawSquare( g2D, size, strokePainter, fillPainter );
   }
 
-  /**
-   * @see org.kalypsodeegree.graphics.sld.Mark#paint(org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public void paint( final GC gc, final Feature feature ) throws FilterEvaluationException
   {
     final Resource[] strokeResources = Symbolizer_Impl.prepareGc( gc, m_stroke, feature );
     final Resource[] fillResources = Symbolizer_Impl.prepareGc( gc, m_fill, feature );
 
-    final Transform oldTrans = new Transform( gc.getDevice() );
-    gc.getTransform( oldTrans );
+    Transform oldTrans = null;
+    Transform trans = null;
+
     try
     {
+      oldTrans = new Transform( gc.getDevice() );
+      gc.getTransform( oldTrans );
+
       if( m_wellKnownName == null )
         m_wellKnownName = "square";
 
@@ -248,30 +248,37 @@ public class Mark_Impl implements Mark, Marshallable
       final float size = clipSize * scale - 1;
       final float halfSize = clipSize / 2;
 
-      final Transform trans = new Transform( gc.getDevice() );
+      trans = new Transform( gc.getDevice() );
       trans.translate( halfSize - halfSize * scale, halfSize - halfSize * scale );
       gc.setTransform( trans );
 
       if( m_wellKnownName.equalsIgnoreCase( "circle" ) )
-        drawCircle( gc, (int) size );
+        drawCircle( gc, (int)size );
       else if( m_wellKnownName.equalsIgnoreCase( "triangle" ) )
-        drawTriangle( gc, (int) size );
+        drawTriangle( gc, (int)size );
       else if( m_wellKnownName.equalsIgnoreCase( "cross" ) )
-        drawCross1( gc, (int) size );
+        drawCross1( gc, (int)size );
       else if( m_wellKnownName.equalsIgnoreCase( "x" ) )
-        drawCross2( gc, (int) size );
+        drawCross2( gc, (int)size );
       /* Kalypso known names */
       else if( m_wellKnownName.equalsIgnoreCase( "kalypsoArrow" ) )
-        drawArrow( gc, (int) size );
+        drawArrow( gc, (int)size );
       else
-        drawSquare( gc, (int) size );
+        drawSquare( gc, (int)size );
     }
     finally
     {
       Symbolizer_Impl.disposeResource( fillResources );
       Symbolizer_Impl.disposeResource( strokeResources );
 
-      gc.setTransform( oldTrans );
+      if( oldTrans != null )
+      {
+        gc.setTransform( oldTrans );
+        oldTrans.dispose();
+      }
+
+      if( trans != null )
+        trans.dispose();
     }
   }
 
@@ -573,9 +580,9 @@ public class Mark_Impl implements Mark, Marshallable
       sb.append( "</WellKnownName>" );
     }
     if( m_fill != null )
-      sb.append( ((Marshallable) m_fill).exportAsXML() );
+      sb.append( ((Marshallable)m_fill).exportAsXML() );
     if( m_stroke != null )
-      sb.append( ((Marshallable) m_stroke).exportAsXML() );
+      sb.append( ((Marshallable)m_stroke).exportAsXML() );
 
     sb.append( "</Mark>" );
 

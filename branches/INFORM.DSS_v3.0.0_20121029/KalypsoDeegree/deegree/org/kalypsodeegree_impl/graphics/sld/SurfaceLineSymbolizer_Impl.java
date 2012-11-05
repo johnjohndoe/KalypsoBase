@@ -52,7 +52,7 @@ import org.kalypsodeegree.xml.Marshallable;
  * <p>
  * ----------------------------------------------------------------------
  * </p>
- *
+ * 
  * @author Thomas Jung
  */
 public class SurfaceLineSymbolizer_Impl extends Symbolizer_Impl implements SurfaceLineSymbolizer
@@ -89,10 +89,6 @@ public class SurfaceLineSymbolizer_Impl extends Symbolizer_Impl implements Surfa
     return m_colorMap;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl#paint(org.eclipse.swt.graphics.GC,
-   *      org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public void paint( final GC gc, final Feature feature ) throws FilterEvaluationException
   {
@@ -107,22 +103,30 @@ public class SurfaceLineSymbolizer_Impl extends Symbolizer_Impl implements Surfa
 
     // the black border
     final java.awt.Color startColor = colorMapEntries[0].getStroke().getStroke( null );
-    gc.setForeground( new Color( gc.getDevice(), startColor.getRed(), startColor.getGreen(), startColor.getBlue() ) );
+    final Color foreground1 = new Color( gc.getDevice(), startColor.getRed(), startColor.getGreen(), startColor.getBlue() );
+
+    gc.setForeground( foreground1 );
     gc.drawLine( clipping.x, clipping.y, clipping.width, clipping.height / 2 );
 
     // the black border
     final java.awt.Color endColor = colorMapEntries[colorMapEntries.length - 1].getStroke().getStroke( null );
-    gc.setForeground( new Color( gc.getDevice(), endColor.getRed(), endColor.getGreen(), endColor.getBlue() ) );
+
+    final Color foreground2 = new Color( gc.getDevice(), endColor.getRed(), endColor.getGreen(), endColor.getBlue() );
+
+    gc.setForeground( foreground2 );
     gc.drawLine( clipping.x, clipping.height / 2, clipping.width, clipping.height );
 
     // the black border
     gc.setForeground( gc.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
     gc.drawRectangle( clipping.x, clipping.y, clipping.width - 1, clipping.height - 1 );
+
+    foreground1.dispose();
+    foreground2.dispose();
   }
 
   /**
    * Produces a textual representation of this object.
-   *
+   * 
    * @return the textual representation
    */
   @Override
@@ -157,7 +161,7 @@ public class SurfaceLineSymbolizer_Impl extends Symbolizer_Impl implements Surfa
 
   /**
    * exports the content of the PolygonSymbolizer as XML formated String
-   *
+   * 
    * @return xml representation of the PolygonSymbolizer
    */
   @Override
@@ -179,11 +183,11 @@ public class SurfaceLineSymbolizer_Impl extends Symbolizer_Impl implements Surfa
     final Geometry geometry = getGeometry();
     if( geometry != null )
     {
-      sb.append( ((Marshallable) geometry).exportAsXML() );
+      sb.append( ((Marshallable)geometry).exportAsXML() );
     }
     if( m_colorMap != null )
     {
-      sb.append( ((Marshallable) m_colorMap).exportAsXML() );
+      sb.append( ((Marshallable)m_colorMap).exportAsXML() );
     }
     sb.append( "</SurfaceLineSymbolizer>" );
 
