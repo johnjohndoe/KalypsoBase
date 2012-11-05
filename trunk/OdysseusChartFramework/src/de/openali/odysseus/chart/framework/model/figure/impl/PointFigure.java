@@ -43,7 +43,7 @@ public class PointFigure extends AbstractFigure<IPointStyle>
    *          center position of the figure
    * @return The rectangles occupied by the marker for each given point
    */
-  public Rectangle[] setCenterPoints( final Point[] points )
+  public Rectangle[] setCenterPoints( final Point... points )
   {
     m_markerRectangles = new Rectangle[points.length];
 
