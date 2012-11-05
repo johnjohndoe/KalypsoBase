@@ -71,7 +71,7 @@ import org.kalypso.util.themes.position.PositionUtilities;
 
 /**
  * The legend theme is able to display available legends for all or a subset of themes in a map.
- *
+ * 
  * @author Andreas Doemming (original)
  * @author Holger Albert (modifications)
  */
@@ -115,8 +115,8 @@ public class KalypsoLegendTheme extends AbstractImageTheme
     try
     {
       /* Monitor. */
-      monitor.beginTask( Messages.getString("KalypsoLegendTheme_0"), 1000 ); //$NON-NLS-1$
-      monitor.subTask( Messages.getString("KalypsoLegendTheme_1") ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "KalypsoLegendTheme_0" ), 1000 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "KalypsoLegendTheme_1" ) ); //$NON-NLS-1$
 
       /* Initialize properties. */
       initFromProperties();
@@ -127,7 +127,7 @@ public class KalypsoLegendTheme extends AbstractImageTheme
 
       /* Monitor. */
       monitor.worked( 250 );
-      monitor.subTask( Messages.getString("KalypsoLegendTheme_2") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "KalypsoLegendTheme_2" ) ); //$NON-NLS-1$
 
       /* Create the legend. */
       final SubProgressMonitor subMonitor = new SubProgressMonitor( monitor, 250 );
@@ -142,12 +142,14 @@ public class KalypsoLegendTheme extends AbstractImageTheme
         }
       } );
 
+      rootNode.dispose();
+
       /* If something happend during the export of the legend. */
       if( image[0] == null )
         return null;
 
       /* Monitor. */
-      monitor.subTask( Messages.getString("KalypsoLegendTheme_3") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "KalypsoLegendTheme_3" ) ); //$NON-NLS-1$
 
       /* Convert to an AWT image. */
       final BufferedImage awtImage = ImageConverter.convertToAWT( image[0].getImageData() );
@@ -159,10 +161,10 @@ public class KalypsoLegendTheme extends AbstractImageTheme
 
       /* Monitor. */
       monitor.worked( 250 );
-      monitor.subTask( Messages.getString("KalypsoLegendTheme_4") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "KalypsoLegendTheme_4" ) ); //$NON-NLS-1$
 
       /* Draw a border in the AWT image. */
-      final Graphics2D graphics = (Graphics2D) awtImage.getGraphics();
+      final Graphics2D graphics = (Graphics2D)awtImage.getGraphics();
       graphics.setColor( Color.BLACK );
       graphics.setStroke( new BasicStroke( 2.0f ) );
       graphics.drawRect( 0, 0, awtImage.getWidth(), awtImage.getHeight() );

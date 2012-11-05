@@ -70,7 +70,7 @@ import org.kalypso.ogc.gml.map.themes.KalypsoLegendTheme;
 
 /**
  * Builds a legend from a {@link org.kalypso.ogc.gml.outline.nodes.IThemeNode}.
- *
+ * 
  * @author Gernot Belger
  */
 public class NodeLegendBuilder
@@ -103,7 +103,7 @@ public class NodeLegendBuilder
 
   /**
    * Creates a legend image for the given node.<br/>
-   * The callse is responsible to dispose the returned image.
+   * The caller is responsible to dispose the returned image.
    */
   public Image createLegend( final IThemeNode[] nodes, final Device device, final IProgressMonitor monitor )
   {
@@ -115,64 +115,89 @@ public class NodeLegendBuilder
     /* Monitor. */
     final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.ogc.gml.map.utilities.MapUtilities.0" ), elements.length ); //$NON-NLS-1$
 
-    final Font font = new Font( device, JFaceResources.DIALOG_FONT, m_fontSize, SWT.NORMAL );
+    GC gc = null;
+    Font font = null;
+    Color bgColor = null;
+    Transform shift = null;
+    Image image = null;
 
-    /* Compute the size for the image. */
-    final Point computeSize = computeSize( elements, font );
-
-    /* Create the image. */
-    // HM: quite complicated to create a transparent image; any other ideas?
-    final ImageData id = new ImageData( computeSize.x, computeSize.y, 32, new PaletteData( 0xFF, 0xFF00, 0xFF0000 ) );
-    id.transparentPixel = 0xfffffe;
-    final Image image = new Image( device, id );
-
-    /* Need a graphical context. */
-    final GC gc = new GC( image );
-
-    /* Set the background color. */
-    final Color bgColor = new Color( device, m_background );
-    gc.setBackground( bgColor );
-    gc.fillRectangle( image.getBounds() );
-    bgColor.dispose();
-
-    /* Set the font. */
-    gc.setFont( font );
-
-    /* Change the color. */
-    gc.setForeground( gc.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
-
-    final Transform shift = new Transform( device );
-    shift.translate( m_insets.left, m_insets.top );
-    gc.setTransform( shift );
-
-    for( final LegendElement legendElement : elements )
+    try
     {
-      /* Monitor. */
-      progress.subTask( Messages.getString( "org.kalypso.ogc.gml.map.utilities.MapUtilities.2", legendElement.getText() ) ); //$NON-NLS-1$
+      font = new Font( device, JFaceResources.DIALOG_FONT, m_fontSize, SWT.NORMAL );
 
-      final Point size = legendElement.getSize( font );
+      /* Compute the size for the image. */
+      final Point computeSize = computeSize( elements, font );
 
-      legendElement.paintLegend( gc );
+      /* Create the image. */
+      // HM: quite complicated to create a transparent image; any other ideas?
+      final ImageData id = new ImageData( computeSize.x, computeSize.y, 32, new PaletteData( 0xFF, 0xFF00, 0xFF0000 ) );
+      id.transparentPixel = 0xfffffe;
+      image = new Image( device, id );
 
-      shift.translate( 0, size.y + LegendElement.GAP );
+      /* Need a graphical context. */
+      gc = new GC( image );
+
+      /* Set the background color. */
+      bgColor = new Color( device, m_background );
+      gc.setBackground( bgColor );
+      gc.fillRectangle( image.getBounds() );
+
+      /* Set the font. */
+      gc.setFont( font );
+
+      /* Change the color. */
+      gc.setForeground( gc.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
+
+      shift = new Transform( device );
+      shift.translate( m_insets.left, m_insets.top );
       gc.setTransform( shift );
 
-      /* Dispose off the image of the legend */
-      legendElement.dispose();
+      for( final LegendElement legendElement : elements )
+      {
+        /* Monitor. */
+        progress.subTask( Messages.getString( "org.kalypso.ogc.gml.map.utilities.MapUtilities.2", legendElement.getText() ) ); //$NON-NLS-1$
 
-      ProgressUtilities.worked( progress, 1 );
+        final Point size = legendElement.getSize( font );
+
+        legendElement.paintLegend( gc );
+
+        shift.translate( 0, size.y + LegendElement.GAP );
+        gc.setTransform( shift );
+
+        // FIXME: resources not disposed on exception!
+        ProgressUtilities.worked( progress, 1 );
+      }
+
+      return image;
     }
+    catch( final Throwable e )
+    {
+      if( image != null )
+        image.dispose();
 
-    gc.dispose();
-    shift.dispose();
-    font.dispose();
+      throw e;
+    }
+    finally
+    {
+      for( final LegendElement legendElement : elements )
+        legendElement.dispose();
 
-    return image;
+      if( bgColor != null )
+        bgColor.dispose();
+
+      if( shift != null )
+        shift.dispose();
+
+      if( gc != null )
+        gc.dispose();
+      if( font != null )
+        font.dispose();
+    }
   }
 
   /**
    * This function returns true, if the current theme is allowed by the white list. Otherwise it will return false.
-   *
+   * 
    * @param whiteList
    *          The list of ids of allowed themes.
    * @return True, if the current theme is allowed. False otherwise.
@@ -186,7 +211,7 @@ public class NodeLegendBuilder
     if( !(element instanceof IKalypsoTheme) )
       return true;
 
-    final IKalypsoTheme theme = (IKalypsoTheme) element;
+    final IKalypsoTheme theme = (IKalypsoTheme)element;
 
     /* Only show themes in the white list. */
     final String id = theme.getId();
@@ -201,7 +226,7 @@ public class NodeLegendBuilder
 
   /**
    * This function collects all elements, contained in the theme.
-   *
+   * 
    * @param font
    *          The font, to use.
    * @return A list, containing all elements.
@@ -219,7 +244,7 @@ public class NodeLegendBuilder
 
   /**
    * This function collects all elements in an one level array.
-   *
+   * 
    * @param contentProvider
    *          The content provider, with which the elements can be retrieved.
    * @param font
@@ -259,7 +284,7 @@ public class NodeLegendBuilder
 
   /**
    * This function computes the size for an image with the given elements and the given font.
-   *
+   * 
    * @param elements
    *          The list of elements.
    */

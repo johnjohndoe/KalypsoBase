@@ -59,9 +59,6 @@ public class ThemeNodeLabelProvider extends LabelProvider implements IFontProvid
 {
   private ResourceManager m_resourceManager;
 
-  /**
-   * @see org.eclipse.jface.viewers.BaseLabelProvider#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -87,41 +84,35 @@ public class ThemeNodeLabelProvider extends LabelProvider implements IFontProvid
     return m_resourceManager;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-   */
   @Override
   public String getText( final Object element )
   {
-    final IThemeNode node = (IThemeNode) element;
+    final IThemeNode node = (IThemeNode)element;
     return node.getLabel();
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
-   */
   @Override
   public Image getImage( final Object element )
   {
-    final IThemeNode node = (IThemeNode) element;
+    final IThemeNode node = (IThemeNode)element;
     final ImageDescriptor descriptor = node.getImageDescriptor();
     if( descriptor == null )
       return null;
 
-    return (Image) getResourceManager().get( descriptor );
+    return (Image)getResourceManager().get( descriptor );
   }
 
   @Override
   public Font getFont( final Object element )
   {
-    final IThemeNode node = (IThemeNode) element;
-    return ((IFontProvider) node).getFont( element );
+    final IThemeNode node = (IThemeNode)element;
+    return ((IFontProvider)node).getFont( element );
   }
 
   @Override
   public String getTooltip( final Object element )
   {
-    final IThemeNode node = (IThemeNode) element;
+    final IThemeNode node = (IThemeNode)element;
     return node.getDescription();
   }
 }
