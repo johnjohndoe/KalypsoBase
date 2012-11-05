@@ -97,18 +97,24 @@ public class RangeSelection implements IRangeSelection
 
     m_selection = selection;
 
+    int selectionCount = 0;
     for( final IProfileRecord record : m_profile.getPoints() )
     {
-      ((ProfileRecord)record).setSelected( selection.contains( record.getBreite() ) );
+      final boolean isSelected = selection.contains( record.getBreite() );
+      ((ProfileRecord)record).setSelected( isSelected );
+
+      if( isSelected )
+        selectionCount++;
     }
-    if( selection.getMinimum() == selection.getMaximum() )
+
+    if( selection.getMinimum() == selection.getMaximum() && selectionCount == 0 )
     {
       final IProfileRecord previous = m_profile.findPreviousPoint( selection.getMinimum() );
       if( previous != null )
         ((ProfileRecord)previous).setSelected( !selection.contains( previous.getBreite() ) );
     }
+
     final ProfileChangeHint hint = new ProfileChangeHint( ProfileChangeHint.SELECTION_CHANGED | ProfileChangeHint.ACTIVE_POINTS_CHANGED );
-    hint.setObjectDataChanged();
     m_profile.fireProfilChanged( hint );
   }
 
@@ -124,13 +130,11 @@ public class RangeSelection implements IRangeSelection
   public final void setActivePointsInternal( final IProfileRecord... points )
   {
     for( final IProfileRecord record : m_profile.getPoints() )
-    {
       ((ProfileRecord)record).setSelected( false );
-    }
+
     for( final IProfileRecord record : points )
-    {
       ((ProfileRecord)record).setSelected( true );
-    }
+
     m_profile.fireProfilChanged( new ProfileChangeHint( ProfileChangeHint.ACTIVE_POINTS_CHANGED ) );
   }
 
@@ -145,9 +149,7 @@ public class RangeSelection implements IRangeSelection
         return;
       setRange( Range.is( width ) );
 
-      final IProfileRecord previousPoint = m_profile.findPreviousPoint( width );
-      if( previousPoint != null )
-        setActivePointsInternal( previousPoint );
+      setActivePointsInternal( point );
     }
     else
     {

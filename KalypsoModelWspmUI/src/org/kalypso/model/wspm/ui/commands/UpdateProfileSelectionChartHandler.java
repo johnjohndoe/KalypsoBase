@@ -109,7 +109,9 @@ public class UpdateProfileSelectionChartHandler extends AbstractChartHandler
     if( EventUtils.isStateButton1( e ) )
     {
       m_p1 = e.x;
-    }else{
+    }
+    else
+    {
       final IProfilChartLayer theme = SelectionChartHandlerHelper.findProfileTheme( getChart() );
       final ICoordinateMapper mapper = theme.getCoordinateMapper();
       final IAxis domAxis = mapper.getDomainAxis();
@@ -120,7 +122,6 @@ public class UpdateProfileSelectionChartHandler extends AbstractChartHandler
     }
   }
 
-  @SuppressWarnings( "rawtypes" )
   @Override
   public void mouseUp( final MouseEvent e )
   {
@@ -131,12 +132,18 @@ public class UpdateProfileSelectionChartHandler extends AbstractChartHandler
       m_p1 = null;
       return;
     }
+
+    if( m_p0 == null )
+      return;
+
     final ICoordinateMapper mapper = theme.getCoordinateMapper();
     final IAxis domAxis = mapper.getDomainAxis();
     final IProfile profile = theme.getProfil();
     final boolean isClicked = m_p1 == null || Math.abs( m_p0 - m_p1 ) < 5;
+
     final Double x1 = domAxis.screenToNumeric( m_p0 );
     final Double x2 = isClicked ? x1 : domAxis.screenToNumeric( m_p1 );
+
     final IRangeSelection selection = profile.getSelection();
 
     if( isClicked )
