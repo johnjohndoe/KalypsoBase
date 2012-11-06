@@ -57,22 +57,21 @@ import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.data.DataRange;
-import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
-import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 /**
  * ensures a specific domain date range for a chart diagram
- *
+ * 
  * @author Dirk Kuch
  */
 public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
 {
-  private final IDataOperator<Date> m_dateDataOperator = new DataOperatorHelper().getDataOperator( Date.class );
+  // private final IDataOperator<Date> m_dateDataOperator = new DataOperatorHelper().getDataOperator( Date.class );
 
   private IZmlLayerDataHandler m_dataHandler;
 
@@ -85,7 +84,7 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
   @Override
   public IZmlLayerProvider getProvider( )
   {
-    return (IZmlLayerProvider) super.getProvider();
+    return (IZmlLayerProvider)super.getProvider();
   }
 
   private void setup( final URL context )
@@ -116,6 +115,7 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
     // nothing to do
   }
 
+  @SuppressWarnings( { "rawtypes", "unchecked" } )
   @Override
   public IDataRange<Double> getDomainRange( )
   {
@@ -126,8 +126,8 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
     final Date max = getDateRange().getTo();
     if( Objects.isNull( min, max ) )
       return null;
-
-    return DataRange.create( m_dateDataOperator.logicalToNumeric( min ), m_dateDataOperator.logicalToNumeric( max ) );
+    IAxis domainAxis = getDomainAxis();
+    return new DataRange<>( domainAxis.logicalToNumeric( min ), domainAxis.logicalToNumeric( max ) );
   }
 
   @Override
@@ -169,7 +169,7 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
     if( Objects.isNull( handler ) )
       return null;
 
-    final IObservation observation = (IObservation) handler.getAdapter( IObservation.class );
+    final IObservation observation = (IObservation)handler.getAdapter( IObservation.class );
     if( Objects.isNull( observation ) )
       return null;
 

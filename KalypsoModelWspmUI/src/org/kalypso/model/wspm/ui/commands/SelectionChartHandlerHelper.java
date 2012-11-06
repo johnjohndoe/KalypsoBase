@@ -141,6 +141,10 @@ public class SelectionChartHandlerHelper
   public static final Pair<Integer, Integer> selectionToScreen( final IChartComposite chart )
   {
     final IProfilChartLayer theme = SelectionChartHandlerHelper.findProfileTheme( chart );
+    if( theme == null )
+    {
+      return null;
+    }
     final IProfile profile = theme.getProfil();
     final IRangeSelection selection = profile.getSelection();
     final ICoordinateMapper mapper = theme.getCoordinateMapper();
@@ -150,8 +154,28 @@ public class SelectionChartHandlerHelper
       return new Pair<>( domAxis.numericToScreen( selection.getRange().getMinimum() ), domAxis.numericToScreen( selection.getRange().getMaximum() ) );
     }
     return null;
+
   }
 
+  @SuppressWarnings( "rawtypes" )
+  public static final Double getNumericFromScreen( final IChartComposite chart, final int screen )
+  {
+    final IProfilChartLayer theme = SelectionChartHandlerHelper.findProfileTheme( chart );
+    if( theme == null )
+    {
+      return null;
+    }
+    final ICoordinateMapper mapper = theme.getCoordinateMapper();
+    final IAxis domainAxis = mapper.getDomainAxis();
+    final IProfile profile = theme.getProfil();
+    if( profile == null )
+      return null;
+    if( domainAxis == null )
+      return null;
+    return domainAxis.screenToNumeric( screen );
+  }
+
+  @SuppressWarnings( "rawtypes" )
   public static final Integer cursorToScreen( final IChartComposite chart )
   {
     final IProfilChartLayer theme = SelectionChartHandlerHelper.findProfileTheme( chart );
@@ -166,6 +190,22 @@ public class SelectionChartHandlerHelper
       return null;
 
     return domAxis.numericToScreen( cursor );
+  }
+
+  @SuppressWarnings( "rawtypes" )
+  public static final void updateCursor( final IChartComposite chart, final int screenX )
+  {
+    final IProfilChartLayer theme = SelectionChartHandlerHelper.findProfileTheme( chart );
+    if( theme == null )
+    {
+      return;
+    }
+    final ICoordinateMapper mapper = theme.getCoordinateMapper();
+    final IAxis domAxis = mapper.getDomainAxis();
+    final IProfile profile = theme.getProfil();
+    final Double pointX = domAxis.screenToNumeric( screenX );
+    final IRangeSelection selection = profile.getSelection();
+    selection.setCursor( pointX );
   }
 
   public static void paintRange( final IChartComposite chart, final PaintEvent e, final int min, final int max )

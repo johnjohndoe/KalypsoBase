@@ -55,14 +55,12 @@ import org.kalypso.ogc.sensor.provider.IObsProviderListener;
 
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.data.DataRange;
-import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
-import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
@@ -72,8 +70,6 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
  */
 public class ZmlForecastLayer extends AbstractChartLayer implements IObsProviderListener
 {
-  private final IDataOperator<Date> m_dateDataOperator = new DataOperatorHelper().getDataOperator( Date.class );
-
   private IObsProvider m_provider;
 
   public ZmlForecastLayer( final ILayerProvider layerProvider, final ILineStyle style )
@@ -108,7 +104,7 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
     if( m_provider == null )
       return;
 
-    final ICoordinateMapper<Number,Number> mapper = getCoordinateMapper();
+    final ICoordinateMapper<Number, Number> mapper = getCoordinateMapper();
 
     final IAxis<Number> domainAxis = mapper.getDomainAxis();
     final IAxis<Number> targetAxis = mapper.getTargetAxis();
@@ -161,10 +157,6 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
     final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
     calendar.setTime( forecastStart );
 
-// final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
-// final int timeZoneOffset = timeZone.getRawOffset();
-// calendar.add( Calendar.MILLISECOND, timeZoneOffset );
-
     return calendar;
   }
 
@@ -176,6 +168,7 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
     return instance;
   }
 
+  @SuppressWarnings( { "rawtypes", "unchecked" } )
   @Override
   public IDataRange<Double> getDomainRange( )
   {
@@ -196,8 +189,8 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
 
     from.add( bufferField, -bufferAmount );
     end.add( bufferField, bufferAmount );
-
-    return DataRange.create( m_dateDataOperator.logicalToNumeric( from.getTime() ), m_dateDataOperator.logicalToNumeric( end.getTime() ) );
+    IAxis domainAxis = getDomainAxis();
+    return new DataRange( domainAxis.logicalToNumeric( from.getTime() ), domainAxis.logicalToNumeric( end.getTime() ) );
   }
 
   @Override

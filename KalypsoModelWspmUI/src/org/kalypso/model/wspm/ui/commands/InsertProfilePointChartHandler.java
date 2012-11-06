@@ -92,38 +92,12 @@ public class InsertProfilePointChartHandler extends AbstractChartHandler
       figure.paint( e.gc );
   }
 
-//  @SuppressWarnings( "rawtypes" )
-//  private Integer snapToScreenPoint( final int screenX )
-//  {
-//    final IProfilChartLayer theme = SelectionChartHandlerHelper.findProfileTheme( getChart() );
-//    if( theme == null )
-//    {
-//      return null;
-//    }
-//    final ICoordinateMapper mapper = theme.getCoordinateMapper();
-//    final IAxis domainAxis = mapper.getDomainAxis();
-//    final IProfile profile = theme.getProfil();
-//    if( profile == null )
-//      return null;
-//    if( domainAxis == null )
-//      return null;
-//    final Double xPosition = domainAxis.screenToNumeric( screenX );
-//    final FindClosestPointVisitor visitor = new FindClosestPointVisitor( xPosition );
-//    profile.accept( visitor, 1 );
-//    final IProfileRecord point = visitor.getPoint();
-//    final Integer snappedScreen = domainAxis.numericToScreen( point.getBreite() );
-//    if( Math.abs( snappedScreen - screenX ) > 5 )
-//    {
-//      return null;
-//    }
-//    return snappedScreen;
-//  }
-
   @Override
   public void mouseMove( final MouseEvent e )
   {
     super.mouseMove( e );
     m_p1 = null;
+    SelectionChartHandlerHelper.updateCursor( getChart(), e.x );
     final Point screen = new Point( e.x, e.y );
     m_canInsert = !isOutOfRange( screen );
     final Point snapped = m_canInsert ? SelectionChartHandlerHelper.snapToScreenPoint( getChart(), screen ) : null;
@@ -138,38 +112,20 @@ public class InsertProfilePointChartHandler extends AbstractChartHandler
   public void paintControl( final PaintEvent e )
   {
     super.paintControl( e );
-
     doPaintMouse( e );
 
   }
 
-  @SuppressWarnings( "rawtypes" )
-  @Override
-  public void mouseUp( final MouseEvent e )
+  private final IProfileRecord insertPoint( final Double xPosition )
   {
-    super.mouseUp( e );
-
-    if( !m_canInsert )
-      return;
     final IProfilChartLayer theme = SelectionChartHandlerHelper.findProfileTheme( getChart() );
     if( theme == null )
     {
-      return;
+      return null;
     }
-    final ICoordinateMapper mapper = theme.getCoordinateMapper();
-    final IAxis domainAxis = mapper.getDomainAxis();
     final IProfile profile = theme.getProfil();
     if( profile == null )
-      return;
-    if( domainAxis == null )
-      return;
-    final Double xPosition = domainAxis.screenToNumeric( m_p1 );
-
-    /* Ask user */
-    final Shell shell = ((Composite)getChart()).getShell();
-    final String message = String.format( CommonMessages.INSERT_POINT_CONFIRM, xPosition );
-    if( !MessageDialog.openConfirm( shell, CommonMessages.INSERT_POINT_TITLE, message ) )
-      return;
+      return null;
     final IProfileRecord before = profile.findPreviousPoint( xPosition );
     final IProfileRecord next = profile.findNextPoint( xPosition );
     final TupleResult result = profile.getResult();
@@ -177,11 +133,32 @@ public class InsertProfilePointChartHandler extends AbstractChartHandler
     final int index = result.indexOf( before );
     final IProfileRecord record = profile.createProfilPoint();
     final IInterpolationHandler interpolation = result.getInterpolationHandler();
-
     if( interpolation.doInterpolation( result, record, index, distance ) )
     {
       profile.getResult().add( index + 1, record );
-      final IRangeSelection selection = profile.getSelection();
+      return record;
+    }
+    return null;
+  }
+
+  @Override
+  public void mouseUp( final MouseEvent e )
+  {
+    super.mouseUp( e );
+
+    if( !m_canInsert )
+      return;
+    final Double xPosition = SelectionChartHandlerHelper.getNumericFromScreen( getChart(), m_p1 );
+
+    /* Ask user */
+    final Shell shell = ((Composite)getChart()).getShell();
+    final String message = String.format( CommonMessages.INSERT_POINT_CONFIRM, xPosition );
+    if( !MessageDialog.openConfirm( shell, CommonMessages.INSERT_POINT_TITLE, message ) )
+      return;
+    final IProfileRecord record = insertPoint( xPosition );
+    if( record != null )
+    {
+      IRangeSelection selection = SelectionChartHandlerHelper.getSelectionFromChart( getChart() );
       selection.setActivePoints( record );
     }
     m_canInsert = false;

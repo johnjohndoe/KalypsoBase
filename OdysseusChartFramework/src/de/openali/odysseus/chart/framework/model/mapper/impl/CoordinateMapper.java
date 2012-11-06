@@ -56,22 +56,11 @@ public class CoordinateMapper<T_Domain, T_Target> implements ICoordinateMapper<T
 
   private final IAxis<T_Target> m_targetAxis;
 
- // private final ORIENTATION m_ori;
-
-  //private final DataOperatorHelper m_doh = new DataOperatorHelper();
-
   public CoordinateMapper( final IAxis<T_Domain> domain, final IAxis<T_Target> target )
   {
     m_domainAxis = domain;
     m_targetAxis = target;
- //   m_ori = m_domainAxis.getPosition().getOrientation();
   }
-
-//  @Override
-//  public IDataOperator< ? > getDataOperator( final Class< ? > clazz )
-//  {
-//    return m_doh.getDataOperator( clazz );
-//  }
 
   @Override
   public Point numericToScreen( final Double domVal, final Double targetVal )
@@ -79,9 +68,6 @@ public class CoordinateMapper<T_Domain, T_Target> implements ICoordinateMapper<T
     final int domScreen = m_domainAxis.numericToScreen( domVal );
     final int valScreen = m_targetAxis.numericToScreen( targetVal );
     return new Point( domScreen, valScreen );
-   // final Point unswitched = new Point( domScreen, valScreen );
-    // Koordinaten switchen
-   // return new Point( m_ori.getX( unswitched ), m_ori.getY( unswitched ) );
   }
 
   @Override
@@ -107,10 +93,6 @@ public class CoordinateMapper<T_Domain, T_Target> implements ICoordinateMapper<T
   {
     if( screenValue == null )
       return null;
-
-  //  final int domainScreen = getDomainAxis().getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) ? screenValue.x : screenValue.y;
-  //  final int targetScreen = getTargetAxis().getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) ? screenValue.x : screenValue.y;
-
     final Double domainNum = getDomainAxis().screenToNumeric( screenValue.x );
     final Double targetNum = getTargetAxis().screenToNumeric( screenValue.y );
     return new Pair<>( domainNum, targetNum );
@@ -129,5 +111,11 @@ public class CoordinateMapper<T_Domain, T_Target> implements ICoordinateMapper<T
   public IPair<T_Domain, T_Target> screenToLogical( Point screenValue )
   {
     return new Pair<>( getDomainAxis().screenToLogical( screenValue.x ), getTargetAxis().screenToLogical( screenValue.y ) );
+  }
+
+  @Override
+  public IPair<Double, Double> logicalToNumeric( T_Domain domainValue, T_Target targetValue )
+  {
+    return new Pair<>( m_domainAxis.logicalToNumeric( domainValue ), m_targetAxis.logicalToNumeric( targetValue ) );
   }
 }

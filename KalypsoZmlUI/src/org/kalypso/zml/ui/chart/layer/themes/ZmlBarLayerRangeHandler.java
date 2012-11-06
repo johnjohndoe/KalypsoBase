@@ -57,9 +57,8 @@ import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.framework.model.data.DataRange;
-import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
  * @author Dirk Kuch
@@ -67,10 +66,6 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperat
 class ZmlBarLayerRangeHandler
 {
   private final ZmlBarLayer m_layer;
-
-  private final IDataOperator<Date> m_dateDataOperator = new DataOperatorHelper().getDataOperator( Date.class );
-
-  private final IDataOperator<Number> m_numberDataOperator = new DataOperatorHelper().getDataOperator( Number.class );
 
   private IDataRange<Double> m_targetRange;
 
@@ -120,8 +115,11 @@ class ZmlBarLayerRangeHandler
         max = doAdjustMax( observation, max );
       else
         min = doAdjustMin( observation, min );
-
-      return new DataRange( getDateDataOperator().logicalToNumeric( min ), getDateDataOperator().logicalToNumeric( max ) );
+      final ICoordinateMapper mapper = m_layer.getCoordinateMapper();
+      de.openali.odysseus.chart.framework.model.mapper.IAxis domainAxis = mapper.getDomainAxis();
+      final Double numMin = domainAxis.logicalToNumeric( min );
+      final Double numMax = domainAxis.logicalToNumeric( max );
+      return new DataRange( numMin, numMax );
     }
     catch( final SensorException e )
     {
@@ -153,11 +151,6 @@ class ZmlBarLayerRangeHandler
     return new Date( min.getTime() - ms );
   }
 
-  public IDataOperator<Date> getDateDataOperator( )
-  {
-    return m_dateDataOperator;
-  }
-
   public synchronized IDataRange<Double> getTargetRange( )
   {
     if( m_targetRange == null )
@@ -184,6 +177,7 @@ class ZmlBarLayerRangeHandler
 
       /** hack for polder control which consists of boolean values */
       // FIXME: the axis is responsible for that!
+      // axis should do this now, just remove and test
       final Class< ? > dataClass = valueAxis.getDataClass();
       if( Boolean.class.equals( dataClass ) )
         return new DataRange<>( 0.0, 1.0 );
@@ -191,23 +185,17 @@ class ZmlBarLayerRangeHandler
       final IAxisRange range = model.getRange( valueAxis );
       if( range == null )
         return null;
-
-      final Number min = getNumberDataOperator().logicalToNumeric( (Number)range.getLower() );
-      final Number max = getNumberDataOperator().logicalToNumeric( (Number)range.getUpper() );
-
-      return new DataRange( min, max );
+      final ICoordinateMapper mapper = m_layer.getCoordinateMapper();
+      de.openali.odysseus.chart.framework.model.mapper.IAxis targetAxis = mapper.getTargetAxis();
+      final Double numMin = targetAxis.logicalToNumeric( range.getLower() );
+      final Double numMax = targetAxis.logicalToNumeric( range.getUpper() );
+      return new DataRange( numMin, numMax );
     }
     catch( final SensorException e )
     {
       KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-
       return null;
     }
-  }
-
-  public IDataOperator<Number> getNumberDataOperator( )
-  {
-    return m_numberDataOperator;
   }
 
   public synchronized void invalidateRange( )

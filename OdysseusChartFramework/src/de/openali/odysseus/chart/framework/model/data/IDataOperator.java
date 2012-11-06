@@ -12,11 +12,11 @@ public interface IDataOperator<T_logical> extends IStringDataConverter<T_logical
   T_logical numericToLogical( Number numVal );
 
   @Override
-  // TODO: rename to logicalToXmlString 
+  // TODO: rename to logicalToXmlString, check IStringParser Interface first
   String logicalToString( T_logical logVal );
 
   @Override
-  // TODO: rename to logicalFromXmlString 
+  // TODO: rename to logicalFromXmlString , check IStringParser Interface first
   T_logical stringToLogical( String toParse ) throws MalformedValueException;
 
   Comparator<T_logical> getComparator( );
