@@ -56,10 +56,12 @@ public interface ICoordinateMapper<T_Domain, T_Target>
   IAxis<T_Target> getTargetAxis( );
 
   Point logicalToScreen( T_Domain domainValue, T_Target targetValue );
-  
+
   Point numericToScreen( Double domainValue, Double targetValue );
 
   IPair<T_Domain, T_Target> screenToLogical( Point screenValue );
 
   IPair<Double, Double> screenToNumeric( Point screenValue );
+
+  IPair<Double, Double> logicalToNumeric( T_Domain domainValue, T_Target targetValue );
 }

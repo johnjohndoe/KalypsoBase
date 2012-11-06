@@ -104,7 +104,7 @@ public class ProfilChartModel extends ChartModel
     }
 
     final IBasicChartSettings settings = getSettings();
-    settings.setChartInsets( new Insets( 10, 0, 10, 0 ) );
+    settings.setChartInsets( new Insets( 10, 0, 0, 0 ) );
     settings.setPlotInsets( new Insets( 0, 0, 0, 0 ) );
   }
 

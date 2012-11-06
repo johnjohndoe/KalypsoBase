@@ -44,12 +44,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.chart.ui.editor.mousehandler.AbstractChartHandler;
-import org.kalypso.model.wspm.core.profil.IProfile;
-import org.kalypso.model.wspm.core.profil.IRangeSelection;
-import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.util.resource.Pair;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 
@@ -74,20 +69,11 @@ public class UpdateProfileCursorChartHandler extends AbstractChartHandler
   public void mouseMove( final MouseEvent e )
   {
     super.mouseMove( e );
-
     if( isOutOfRange( new Point( e.x, e.y ) ) )
+    {
       return;
-
-    final IProfilChartLayer theme = SelectionChartHandlerHelper.findProfileTheme( getChart() );
-    if( theme == null )
-      return;
-
-    final ICoordinateMapper mapper = theme.getCoordinateMapper();
-    final IAxis domAxis = mapper.getDomainAxis();
-    final IProfile profile = theme.getProfil();
-    final Double x2 = domAxis.screenToNumeric( e.x );
-    final IRangeSelection selection = profile.getSelection();
-    selection.setCursor( x2 );
+    }
+    SelectionChartHandlerHelper.updateCursor( getChart(), e.x );
   }
 
   @Override
