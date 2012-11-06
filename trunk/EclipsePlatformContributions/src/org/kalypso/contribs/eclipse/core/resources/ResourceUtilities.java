@@ -51,7 +51,7 @@ import org.kalypso.contribs.java.net.UrlUtilities;
  * 
  * @author schlienger (14.06.2005)
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings( "restriction" )
 public final class ResourceUtilities
 {
   private ResourceUtilities( )
@@ -233,6 +233,9 @@ public final class ResourceUtilities
         // split the string at the common part (path to workspace) and always take the second
         // part as the relative eclipse workspace path
         final String[] array = noQuery.split( rootUrl.toString() );
+        if( array.length < 2 )
+          return null;
+
         if( array[1].startsWith( ".metadata" ) ) //$NON-NLS-1$
           return null;
 
@@ -322,7 +325,7 @@ public final class ResourceUtilities
     if( start instanceof IWorkspaceRoot )
       return null;
     else if( start.getType() == IResource.PROJECT )
-      return (IProject) start;
+      return (IProject)start;
     final FindParentProjectVisitor visitor = new FindParentProjectVisitor();
     start.accept( visitor );
     return visitor.getParentProject();

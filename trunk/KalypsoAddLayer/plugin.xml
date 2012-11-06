@@ -112,9 +112,9 @@
 		</command>
 
         <command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.OpenShapeWizardCommand"
-            name="%org.kalypso.ui.map.outline.command.OpenShapeWizardCommand.name" description="%org.kalypso.ui.map.outline.command.OpenShapeWizardCommand..description"/>
+            name="%org.kalypso.ui.map.outline.command.OpenShapeWizardCommand.name" description="%org.kalypso.ui.map.outline.command.OpenShapeWizardCommand.description"/>
         <command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.OpenWmsWizardCommand"
-            name="%org.kalypso.ui.map.outline.command.OpenWmsWizardCommand.name" description="%org.kalypso.ui.map.outline.command.OpenShapeWizardCommand..description">
+            name="%org.kalypso.ui.map.outline.command.OpenWmsWizardCommand.name" description="%org.kalypso.ui.map.outline.command.OpenWmsWizardCommand.description">
       </command>
 	</extension>
 
