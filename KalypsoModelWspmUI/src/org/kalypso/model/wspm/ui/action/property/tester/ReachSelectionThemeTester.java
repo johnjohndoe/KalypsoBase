@@ -79,14 +79,14 @@ public class ReachSelectionThemeTester extends PropertyTester
     if( !(receiver instanceof IStructuredSelection) )
       return false;
 
-    final IStructuredSelection selection = (IStructuredSelection) receiver;
+    final IStructuredSelection selection = (IStructuredSelection)receiver;
     final Iterator< ? > itr = selection.iterator();
     while( itr.hasNext() )
     {
       final Object next = itr.next();
       if( next instanceof FeatureThemeNode )
       {
-        final FeatureThemeNode theme = (FeatureThemeNode) next;
+        final FeatureThemeNode theme = (FeatureThemeNode)next;
         final IKalypsoFeatureTheme element = theme.getElement();
         final FeatureList featureList = element.getFeatureList();
 
@@ -101,5 +101,4 @@ public class ReachSelectionThemeTester extends PropertyTester
 
     return false;
   }
-
 }
