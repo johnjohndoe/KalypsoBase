@@ -127,36 +127,6 @@ public class ChartPainter
     m_legendPainter = new ChartLegendCanvas( m_model, new DefaultChartLegendConfig( m_paintRect ) );
   }
 
-  private final Rectangle calculateAxisBottomRect( final Rectangle usableRect )
-  {
-    final int totalWidth = getAxisWidth( POSITION.BOTTOM );
-    // usableRect.height -= totalWidth;
-    return new Rectangle( usableRect.x, usableRect.y + usableRect.height - totalWidth, usableRect.width, totalWidth );
-  }
-
-  private final Rectangle calculateAxisLeftRect( final Rectangle usableRect )
-  {
-    final int totalWidth = getAxisWidth( POSITION.LEFT );
-    // usableRect.width -= totalWidth;
-    // usableRect.x += totalWidth;
-    return new Rectangle( usableRect.x, usableRect.y, totalWidth, usableRect.height - totalWidth );
-  }
-
-  private final Rectangle calculateAxisRightRect( final Rectangle usableRect )
-  {
-    final int totalWidth = getAxisWidth( POSITION.RIGHT );
-    // usableRect.width -= totalWidth;
-    return new Rectangle( usableRect.x + usableRect.width - totalWidth, usableRect.y, totalWidth, usableRect.height );
-  }
-
-  private final Rectangle calculateAxisTopRect( final Rectangle usableRect )
-  {
-    final int totalWidth = getAxisWidth( POSITION.TOP );
-    // usableRect.height -= totalWidth;
-    // usableRect.y += totalWidth;
-    return new Rectangle( usableRect.x, usableRect.y, usableRect.width, totalWidth );
-  }
-
   private final Rectangle calculateLegendRect( final Rectangle chartRect, final Image legendImage )
   {
     final int legendHeight = legendImage == null ? 0 : legendImage.getBounds().height;

@@ -44,7 +44,7 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
  */
 public abstract class AbstractChartLayer implements IChartLayer
 {
-  private ICoordinateMapper<?,?> m_coordinateMapper;
+  private ICoordinateMapper< ? , ? > m_coordinateMapper;
 
   private final Set<IChartLayerFilter> m_filters = new LinkedHashSet<>();
 
@@ -69,9 +69,9 @@ public abstract class AbstractChartLayer implements IChartLayer
 
   private boolean m_legendIsVisible = true;
 
- // private final Map<String, IRetinalMapper> m_mapperMap = new HashMap<>();
-
   private final ILayerProvider m_provider;
+
+  // private final Map<String, IRetinalMapper> m_mapperMap = new HashMap<>();
 
   private String m_title = null;
 
@@ -81,13 +81,6 @@ public abstract class AbstractChartLayer implements IChartLayer
 
   final ILayerManagerEventListener m_layerManagerListener = new ILayerManagerEventListener()
   {
-    @Override
-    public void redrawRequested( )
-    {
-      //Do nothing
-      //ChartImageComposite SWT.redraw
-    }
-
     @Override
     public void onActivLayerChanged( final IChartLayer layer )
     {
@@ -128,6 +121,13 @@ public abstract class AbstractChartLayer implements IChartLayer
     {
       getEventHandler().fireLayerVisibilityChanged( AbstractChartLayer.this );
     }
+
+    @Override
+    public void redrawRequested( )
+    {
+      // Do nothing
+      // ChartImageComposite SWT.redraw
+    }
   };
 
   public AbstractChartLayer( final ILayerProvider provider, final IStyleSet styleSet )
@@ -147,10 +147,20 @@ public abstract class AbstractChartLayer implements IChartLayer
   }
 
   @Override
-  public void init( )
+  public void accept( final IChartLayerVisitor2 visitor )
   {
-    // TODO Auto-generated method stub
-    // FIXME remove from here, this is an abstract class
+    final boolean doRecurse = visitor.visit( this );
+    if( !doRecurse )
+      return;
+
+    final boolean direction = visitor.getVisitDirection();
+
+    final IChartLayer[] children = getLayerManager().getLayers();
+    if( !direction )
+      ArrayUtils.reverse( children );
+
+    for( final IChartLayer child : children )
+      child.accept( visitor );
   }
 
   @Override
@@ -169,16 +179,16 @@ public abstract class AbstractChartLayer implements IChartLayer
     m_eventHandler.addListener( listener );
   }
 
-//  public void addMapper( final String role, final IRetinalMapper mapper )
-//  {
-//    m_mapperMap.put( role, mapper );
-//  }
-
   @Override
   public void dispose( )
   {
     m_layerManager.clear();
   }
+
+//  public void addMapper( final String role, final IRetinalMapper mapper )
+//  {
+//    m_mapperMap.put( role, mapper );
+//  }
 
   @Override
   public final ICoordinateMapper getCoordinateMapper( )
@@ -222,27 +232,6 @@ public abstract class AbstractChartLayer implements IChartLayer
     return m_eventHandler;
   }
 
-  @SuppressWarnings( { "unchecked", "rawtypes" } )
-  protected IDataRange<Double> getNumericRange( IAxis axis, IDataRange logicalRange )
-  {
-    if( logicalRange == null || axis == null || logicalRange.getMin() == null )
-      return new DataRange<>( null, null );
-    final Class< ? > clazz = axis.getDataClass();
-    final Class< ? > dataClass = logicalRange.getMin().getClass();
-    try
-    {
-      final Double min = axis.logicalToNumeric( logicalRange.getMin() );
-      final Double max = axis.logicalToNumeric( logicalRange.getMax() );
-      return new DataRange<>( min, max );
-    }
-    catch( ClassCastException e )
-    {
-      System.out.println( "axis " + axis.getIdentifier() + " expect " + clazz.getSimpleName() + ", " + dataClass.getSimpleName() + " given." ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-      return new DataRange<>( null, null );
-    }
-
-  }
-
   @Override
   public IChartLayerFilter[] getFilters( )
   {
@@ -268,16 +257,37 @@ public abstract class AbstractChartLayer implements IChartLayer
     return new ILegendEntry[] {};
   }
 
-//  protected IRetinalMapper getMapper( final String role )
-//  {
-//    return m_mapperMap.get( role );
-//  }
-
   @Override
   public IChartModel getModel( )
   {
     return getParent().getModel();
   }
+
+  @SuppressWarnings( { "unchecked", "rawtypes" } )
+  protected IDataRange<Double> getNumericRange( IAxis axis, IDataRange logicalRange )
+  {
+    if( logicalRange == null || axis == null || logicalRange.getMin() == null )
+      return new DataRange<>( null, null );
+    final Class< ? > clazz = axis.getDataClass();
+    final Class< ? > dataClass = logicalRange.getMin().getClass();
+    try
+    {
+      final Double min = axis.logicalToNumeric( logicalRange.getMin() );
+      final Double max = axis.logicalToNumeric( logicalRange.getMax() );
+      return new DataRange<>( min, max );
+    }
+    catch( ClassCastException e )
+    {
+      System.out.println( "axis " + axis.getIdentifier() + " expect " + clazz.getSimpleName() + ", " + dataClass.getSimpleName() + " given." ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      return new DataRange<>( null, null );
+    }
+
+  }
+
+//  protected IRetinalMapper getMapper( final String role )
+//  {
+//    return m_mapperMap.get( role );
+//  }
 
   @Override
   public ILayerContainer getParent( )
@@ -339,6 +349,13 @@ public abstract class AbstractChartLayer implements IChartLayer
   }
 
   @Override
+  public void init( )
+  {
+    // TODO Auto-generated method stub
+    // FIXME remove from here, this is an abstract class
+  }
+
+  @Override
   public boolean isActive( )
   {
     return m_isActive;
@@ -388,6 +405,12 @@ public abstract class AbstractChartLayer implements IChartLayer
   public void removeListener( final ILayerEventListener listener )
   {
     m_eventHandler.removeListener( listener );
+  }
+
+  @Override
+  public boolean requireVisibleAxis( )
+  {
+    return true;
   }
 
   @Override
@@ -501,22 +524,5 @@ public abstract class AbstractChartLayer implements IChartLayer
   public String toString( )
   {
     return String.format( "IChartLayer - id: %s, visible: %s", getIdentifier(), Boolean.valueOf( isVisible() ).toString() ); //$NON-NLS-1$
-  }
-
-  @Override
-  public void accept( final IChartLayerVisitor2 visitor )
-  {
-    final boolean doRecurse = visitor.visit( this );
-    if( !doRecurse )
-      return;
-
-    final boolean direction = visitor.getVisitDirection();
-
-    final IChartLayer[] children = getLayerManager().getLayers();
-    if( !direction )
-      ArrayUtils.reverse( children );
-
-    for( final IChartLayer child : children )
-      child.accept( visitor );
   }
 }
