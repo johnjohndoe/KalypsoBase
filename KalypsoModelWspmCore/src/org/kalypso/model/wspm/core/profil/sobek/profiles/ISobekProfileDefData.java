@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.sobek.profiles;
 
+import java.io.IOException;
 import java.io.Writer;
 
 /**
@@ -49,5 +50,5 @@ public interface ISobekProfileDefData
 {
   int getType( );
 
-  void writeContent( Writer writer );
+  void writeContent( Writer writer ) throws IOException;
 }

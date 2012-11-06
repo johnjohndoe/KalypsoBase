@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.sobek.profiles;
 
+import java.io.IOException;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ import org.kalypso.model.wspm.core.i18n.Messages;
 
 /**
  * Sobek cross section data corresponding to type "0. Tabulated cross section"
- *
+ * 
  * @author Gernot Belger
  */
 public class SobekProfileDefTabulatedCrossSection implements ISobekProfileDefData
@@ -173,7 +174,7 @@ public class SobekProfileDefTabulatedCrossSection implements ISobekProfileDefDat
 
   /**
    * This function returns the width of the main channel.
-   *
+   * 
    * @return The width of the main channel.
    */
   public BigDecimal getWm( )
@@ -183,7 +184,7 @@ public class SobekProfileDefTabulatedCrossSection implements ISobekProfileDefDat
 
   /**
    * This function returns the width of the floodplain 1 (used in River profile only, else value = 0).
-   *
+   * 
    * @return The width of the floodplain 1 (used in River profile only, else value = 0).
    */
   public BigDecimal getW1( )
@@ -193,7 +194,7 @@ public class SobekProfileDefTabulatedCrossSection implements ISobekProfileDefDat
 
   /**
    * This function returns the width of the floodplain 2 (used in River profile only, else value = 0).
-   *
+   * 
    * @return The width of the floodplain 2 (used in River profile only, else value = 0).
    */
   public BigDecimal getW2( )
@@ -204,7 +205,7 @@ public class SobekProfileDefTabulatedCrossSection implements ISobekProfileDefDat
   /**
    * This function returns the sediment transport width (not in SOBEK Urban/Rural). Default 0. Only important for module
    * sediment/morfology.
-   *
+   * 
    * @return The sediment transport width (not in SOBEK Urban/Rural). Default 0. Only important for module
    *         sediment/morfology.
    */
@@ -215,7 +216,7 @@ public class SobekProfileDefTabulatedCrossSection implements ISobekProfileDefDat
 
   /**
    * This function returns the data for the heights of a tabulated sobek profile.
-   *
+   * 
    * @return The data for the heights of a tabulated sobek profile.
    */
   public SobekProfileHeight[] getProfileHeights( )
@@ -225,7 +226,7 @@ public class SobekProfileDefTabulatedCrossSection implements ISobekProfileDefDat
 
   /**
    * This function returns summer dike (1 = active, 0 = not active) (in River profile only).
-   *
+   * 
    * @return Summer dike (1 = active, 0 = not active) (in River profile only).
    */
   public int getDk( )
@@ -235,7 +236,7 @@ public class SobekProfileDefTabulatedCrossSection implements ISobekProfileDefDat
 
   /**
    * This function returns the dike crest level (in River profile only).
-   *
+   * 
    * @return The dike crest level (in River profile only).
    */
   public BigDecimal getDc( )
@@ -245,7 +246,7 @@ public class SobekProfileDefTabulatedCrossSection implements ISobekProfileDefDat
 
   /**
    * This function returns the dike crest level (in River profile only).
-   *
+   * 
    * @return The dike crest level (in River profile only).
    */
   public BigDecimal getDb( )
@@ -255,7 +256,7 @@ public class SobekProfileDefTabulatedCrossSection implements ISobekProfileDefDat
 
   /**
    * This function returns the flow area behind the dike (in River profile only).
-   *
+   * 
    * @return The flow area behind the dike (in River profile only).
    */
   public BigDecimal getDf( )
@@ -265,7 +266,7 @@ public class SobekProfileDefTabulatedCrossSection implements ISobekProfileDefDat
 
   /**
    * This function returns the total area behind the dike (in River profile only).
-   *
+   * 
    * @return The total area behind the dike (in River profile only).
    */
   public BigDecimal getDt( )
@@ -275,7 +276,7 @@ public class SobekProfileDefTabulatedCrossSection implements ISobekProfileDefDat
 
   /**
    * This function returns the ground layer depth (meter relative to bed level).
-   *
+   * 
    * @return The ground layer depth (meter relative to bed level).
    */
   public BigDecimal getGl( )
@@ -285,7 +286,7 @@ public class SobekProfileDefTabulatedCrossSection implements ISobekProfileDefDat
 
   /**
    * This function returns the ground layer to be used within hydraulics calculation (1) or not (0).
-   *
+   * 
    * @return The ground layer to be used within hydraulics calculation (1) or not (0).
    */
   public int getGu( )
@@ -294,7 +295,7 @@ public class SobekProfileDefTabulatedCrossSection implements ISobekProfileDefDat
   }
 
   @Override
-  public void writeContent( final Writer writer )
+  public void writeContent( final Writer writer ) throws IOException
   {
     /* Create a string builder. */
     final StringBuilder line = new StringBuilder();
@@ -305,6 +306,8 @@ public class SobekProfileDefTabulatedCrossSection implements ISobekProfileDefDat
     line.append( serializeCrdsStart( profileWarnings ) );
     line.append( serializeTable( m_profileHeights, profileWarnings ) );
     line.append( serializeDikes( m_dk, m_dc, m_db, m_df, m_dt ) );
+
+    writer.write( line.toString() );
   }
 
   private String serializeCrdsStart( final List<SobekProfileWarning> profileWarnings )

@@ -111,7 +111,7 @@ public class ModifyFeatureGeometryCommand implements ICommand
 
   private void doIt( final boolean undo )
   {
-    // BUGIFX: it is NOT allowed to change positio nby position and invalidate while doing so
+    // BUGIFX: it is NOT allowed to change position by position and invalidate while doing so
     // Counter example: polygon: first and last point get translated at different times
     // FIX: First, hash according to feature/property; then work by feature/property
     final Map<List<Object>, Map<GM_Position, GM_Position>> handleHash = new HashMap<>();
@@ -150,9 +150,9 @@ public class ModifyFeatureGeometryCommand implements ICommand
 
       // Second, invalidate this property
       /* Reset the geometry value in order to invalidate the feature's envelope */
-      final Feature feature = (Feature) key.get( 0 );
-      final IValuePropertyType propertyType = (IValuePropertyType) key.get( 1 );
-      final GM_Object value = (GM_Object) feature.getProperty( propertyType );
+      final Feature feature = (Feature)key.get( 0 );
+      final IValuePropertyType propertyType = (IValuePropertyType)key.get( 1 );
+      final GM_Object value = (GM_Object)feature.getProperty( propertyType );
 
       value.invalidate();
       feature.setProperty( propertyType, value );
@@ -213,7 +213,7 @@ public class ModifyFeatureGeometryCommand implements ICommand
 
   /**
    * To get the list of feature which geometry have being translated This method never return null.
-   *
+   * 
    * @return the list of translated features
    */
   public Feature[] getTranslatedFeatures( )
