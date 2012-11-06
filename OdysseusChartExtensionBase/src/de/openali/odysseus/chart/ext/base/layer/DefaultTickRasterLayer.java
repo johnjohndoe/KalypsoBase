@@ -101,12 +101,11 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
 
     final int width = gc.getClipping().width;
     final int heigth = gc.getClipping().height;
-// final int width = domainAxis.getScreenHeight();
-// final int heigth = targetAxis.getScreenHeight();
+
     for( final Number domTick : domTicks )
     {
       final Point p1 = new Point( domainAxis.numericToScreen( domTick.doubleValue() ), chartImageInfo.getPlotRect().y );
-      final Point p2 = new Point( domainAxis.numericToScreen( domTick.doubleValue() ), chartImageInfo.getPlotRect().y+chartImageInfo.getPlotRect().height );
+      final Point p2 = new Point( domainAxis.numericToScreen( domTick.doubleValue() ), chartImageInfo.getPlotRect().y + chartImageInfo.getPlotRect().height );
 
       drawLine( gc, p1, p2 );
     }
@@ -114,21 +113,10 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
     for( final Number valTick : valTicks )
     {
       final Point p1 = new Point( chartImageInfo.getPlotRect().x, targetAxis.numericToScreen( valTick.doubleValue() ) );
-      final Point p2 = new Point( chartImageInfo.getPlotRect().x+chartImageInfo.getPlotRect().width, targetAxis.numericToScreen( valTick.doubleValue() ) );
+      final Point p2 = new Point( chartImageInfo.getPlotRect().x + chartImageInfo.getPlotRect().width, targetAxis.numericToScreen( valTick.doubleValue() ) );
 
       drawLine( gc, p1, p2 );
     }
-
-    // TODO Rahmenelement zeichnet ins chart
-// final FullRectangleFigure figureRect = new FullRectangleFigure();
-// final IPointStyle pointStyle = getPointFigure().getStyle();
-// if( pointStyle.isVisible() )
-// {
-// figureRect.setStyle( new AreaStyle( new ColorFill( pointStyle.getInlineColor() ), pointStyle.getAlpha(),
-// pointStyle.getStroke(), pointStyle.isFillVisible() ) );
-// figureRect.setRectangle( new Rectangle( -1, -1, width + 5, heigth + 5 ) );
-// figureRect.paint( gc );
-// }
 
   }
 

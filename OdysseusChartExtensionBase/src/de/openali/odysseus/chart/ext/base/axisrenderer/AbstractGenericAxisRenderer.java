@@ -106,6 +106,7 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
     return m_data.get( id );
   }
 
+  @Deprecated
   public int getGap( )
   {
     return m_axisConfig.axisInsets.top;
