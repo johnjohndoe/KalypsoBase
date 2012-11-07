@@ -135,11 +135,11 @@ public class AbstractProfileWidget extends AbstractWidget
 
       m_snapPoint = getSnapPoint( profileFeature.getJtsLine(), point );
 
-      if( Objects.isNull( m_snapPoint ) )
+      if( Objects.isNull( m_snapPoint, profile ) )
         selection.setCursor( null );
       else
       {
-        final double cursor = Profiles.getWidth( getProfile().getProfile(), m_snapPoint );
+        final double cursor = Profiles.getWidth( profile, m_snapPoint );
         selection.setCursor( cursor );
       }
     }
