@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -82,7 +83,7 @@ import org.kalypsodeegree.xml.Marshallable;
  */
 public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallable, IPoolListener
 {
-  private final Collection<IKalypsoStyleListener> m_listeners = new HashSet<>();
+  private final Collection<IKalypsoStyleListener> m_listeners = Collections.synchronizedSet( new HashSet<IKalypsoStyleListener>() );
 
   private boolean m_disposed = false;
 
@@ -343,15 +344,17 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
   @Override
   public void fireStyleChanged( )
   {
-    final IKalypsoStyleListener[] listeners = m_listeners.toArray( new IKalypsoStyleListener[m_listeners.size()] );
-    for( final IKalypsoStyleListener l : listeners )
+    // REMARK: not using array of right size here for thread sefety.
+    final IKalypsoStyleListener[] listeners = m_listeners.toArray( new IKalypsoStyleListener[0] );
+
+    for( final IKalypsoStyleListener listener : listeners )
     {
       final ISafeRunnable code = new SafeRunnable()
       {
         @Override
         public void run( ) throws Exception
         {
-          l.styleChanged();
+          listener.styleChanged();
         }
       };
 
