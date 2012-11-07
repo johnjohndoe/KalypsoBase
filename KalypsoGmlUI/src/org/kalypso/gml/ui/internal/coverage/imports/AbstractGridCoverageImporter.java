@@ -74,6 +74,15 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
  */
 abstract class AbstractGridCoverageImporter implements ICoverageImporter
 {
+  /**
+   * Default implementation that returns the source file itself. Most import only import exactly one file.
+   */
+  @Override
+  public File[] getSourceFiles( final File sourceFile )
+  {
+    return new File[] { sourceFile };
+  }
+
   static File createTargetFile( final File sourceFile, final File targetDir, final String suffix ) throws CoreException
   {
     final String basename = FilenameUtils.getBaseName( sourceFile.getName() );
@@ -119,7 +128,7 @@ abstract class AbstractGridCoverageImporter implements ICoverageImporter
     }
     catch( final MalformedURLException | URIException e )
     {
-      final String message = Messages.getString("AbstractGridCoverageImporter.0"); //$NON-NLS-1$
+      final String message = Messages.getString( "AbstractGridCoverageImporter.0" ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), message, e );
       throw new CoreException( status );
     }

@@ -53,7 +53,7 @@ import org.kalypso.contribs.java.io.FilePattern;
 import org.kalypso.gml.ui.i18n.Messages;
 
 /**
- * Helper that knows abotu all supported coverage formats.
+ * Helper that knows about all supported coverage formats.
  * 
  * @author Gernot Belger
  */
@@ -75,7 +75,7 @@ public final class CoverageFormats
 
     /* known patterns filter */
     final StringBuilder knownPatternsLabel = new StringBuilder();
-    knownPatternsLabel.append( Messages.getString("CoverageFormats_0") ); //$NON-NLS-1$
+    knownPatternsLabel.append( Messages.getString( "CoverageFormats_0" ) ); //$NON-NLS-1$
     // knownPatternsLabel.append( "All supported formats (" );
     // knownPatternsLabel.append( StringUtils.join( knownPatterns, ", " ) );
     // knownPatternsLabel.append( ')' );

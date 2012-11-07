@@ -53,6 +53,8 @@ import org.kalypso.commons.databinding.swt.FileAndHistoryData;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.gml.ui.internal.coverage.imports.CoverageFormats;
+import org.kalypso.gml.ui.internal.coverage.imports.ICoverageImporter;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
@@ -100,8 +102,8 @@ public class ImportCoverageData extends AbstractModelObject
   {
     if( firstElement instanceof Feature )
     {
-      final Feature fate = (Feature) firstElement;
-      return (ICoverageCollection) fate.getAdapter( ICoverageCollection.class );
+      final Feature fate = (Feature)firstElement;
+      return (ICoverageCollection)fate.getAdapter( ICoverageCollection.class );
     }
 
     return null;
@@ -221,5 +223,15 @@ public class ImportCoverageData extends AbstractModelObject
   public ICoverage[] getNewCoverages( )
   {
     return m_newCoverages;
+  }
+
+  /**
+   * Gets all underlying source files. Can be multiple files e.g. in case of Shape
+   */
+  public File[] getRealSourceFiles( final File sourceFile )
+  {
+    /* ask underlying importer implementation for real files */
+    final ICoverageImporter importer = CoverageFormats.findImporter( sourceFile );
+    return importer.getSourceFiles( sourceFile );
   }
 }

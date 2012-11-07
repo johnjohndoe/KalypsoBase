@@ -59,4 +59,6 @@ public interface ICoverageImporter
   FilePattern getFilePattern( );
 
   ICoverage importCoverage( ICoverageCollection coverageContainer, File dataFile, String crs, IContainer dataContainer, IProgressMonitor monitor ) throws CoreException;
+
+  File[] getSourceFiles( File sourceFile );
 }

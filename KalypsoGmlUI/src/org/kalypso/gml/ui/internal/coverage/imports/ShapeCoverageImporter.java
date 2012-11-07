@@ -41,8 +41,11 @@
 package org.kalypso.gml.ui.internal.coverage.imports;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.net.MalformedURLException;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.java.io.FilePattern;
@@ -58,17 +61,32 @@ import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 public class ShapeCoverageImporter extends AbstractTriangulatedSurfaceCoverageImporter
 {
   @Override
+  public File[] getSourceFiles( final File sourceFile )
+  {
+    final File parent = sourceFile.getParentFile();
+
+    final String shapeName = sourceFile.getName();
+    final String baseName = FilenameUtils.removeExtension( shapeName );
+
+    /* we accept all files with the same base name, so .xml and .prj files are copied as well. Should be ok for almost all cases */
+
+    final String pattern = baseName + ".*"; //$NON-NLS-1$
+
+    final WildcardFileFilter filter = new WildcardFileFilter( pattern );
+
+    return parent.listFiles( (FilenameFilter)filter );
+  }
+
+  @Override
   public FilePattern getFilePattern( )
   {
-    return new FilePattern( "*.shp", Messages.getString("ShapeCoverageImporter_0") ); //$NON-NLS-1$ //$NON-NLS-2$
+    return new FilePattern( "*.shp", Messages.getString( "ShapeCoverageImporter_0" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override
   protected GM_TriangulatedSurface readInputData( final File dataFile, final String crs, final IProgressMonitor monitor ) throws CoreException, MalformedURLException
   {
     final ShapeTriangulatedSurfaceConverter converter = new ShapeTriangulatedSurfaceConverter( crs );
-    final GM_TriangulatedSurface gmSurface = converter.convert( dataFile.toURI().toURL(), monitor );
-
-    return gmSurface;
+    return converter.convert( dataFile.toURI().toURL(), monitor );
   }
 }
