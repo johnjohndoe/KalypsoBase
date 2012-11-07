@@ -574,44 +574,44 @@ public class GMLContentProvider implements ITreeContentProvider
       synchronized( m_featureChangeStack )
       {
         Collections.addAll( m_featureChangeStack, fcme.getFeatures() );
-      }
 
-      if( m_featureChangeJob != null )
-      {
-        m_featureChangeJob.cancel();
-        m_featureChangeJob = null;
-      }
-
-      // FIXME; why recreate the job at all?
-      final UIJob featureChangeJob = new UIJob( Messages.getString( "GMLContentProvider_1" ) ) //$NON-NLS-1$
-      {
-        @Override
-        public IStatus runInUIThread( final IProgressMonitor monitor )
+        if( m_featureChangeJob != null )
         {
-          if( monitor.isCanceled() )
-            return Status.CANCEL_STATUS;
-
-          if( Objects.isNull( control ) || control.isDisposed() )
-            return Status.CANCEL_STATUS;
-
-          final Feature[] features = popChangedFeatures();
-
-          for( final Feature feature : features )
-          {
-            // FIXME: handle special case: also refresh elements of tree that reference this feature...
-
-            treeViewer.refresh( feature, true );
-          }
-
-          return Status.OK_STATUS;
+          m_featureChangeJob.cancel();
+          m_featureChangeJob = null;
         }
-      };
 
-      featureChangeJob.setSystem( true );
-      featureChangeJob.setUser( false );
-      featureChangeJob.schedule( 50 );
+        // FIXME; why recreate the job at all?
+        final UIJob featureChangeJob = new UIJob( Messages.getString( "GMLContentProvider_1" ) ) //$NON-NLS-1$
+        {
+          @Override
+          public IStatus runInUIThread( final IProgressMonitor monitor )
+          {
+            if( monitor.isCanceled() )
+              return Status.CANCEL_STATUS;
 
-      m_featureChangeJob = featureChangeJob;
+            if( Objects.isNull( control ) || control.isDisposed() )
+              return Status.CANCEL_STATUS;
+
+            final Feature[] features = popChangedFeatures();
+
+            for( final Feature feature : features )
+            {
+              // FIXME: handle special case: also refresh elements of tree that reference this feature...
+
+              treeViewer.refresh( feature, true );
+            }
+
+            return Status.OK_STATUS;
+          }
+        };
+
+        featureChangeJob.setSystem( true );
+        featureChangeJob.setUser( false );
+        featureChangeJob.schedule( 50 );
+
+        m_featureChangeJob = featureChangeJob;
+      }
     }
   }
 
