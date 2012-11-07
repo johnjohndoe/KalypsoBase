@@ -577,9 +577,13 @@ public class GMLContentProvider implements ITreeContentProvider
       }
 
       if( m_featureChangeJob != null )
+      {
         m_featureChangeJob.cancel();
+        m_featureChangeJob = null;
+      }
 
-      m_featureChangeJob = new UIJob( Messages.getString( "GMLContentProvider_1" ) ) //$NON-NLS-1$
+      // FIXME; why recreate the job at all?
+      final UIJob featureChangeJob = new UIJob( Messages.getString( "GMLContentProvider_1" ) ) //$NON-NLS-1$
       {
         @Override
         public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -603,10 +607,11 @@ public class GMLContentProvider implements ITreeContentProvider
         }
       };
 
-      m_featureChangeJob.setSystem( true );
-      m_featureChangeJob.setUser( false );
+      featureChangeJob.setSystem( true );
+      featureChangeJob.setUser( false );
+      featureChangeJob.schedule( 50 );
 
-      m_featureChangeJob.schedule( 50 );
+      m_featureChangeJob = featureChangeJob;
     }
   }
 
