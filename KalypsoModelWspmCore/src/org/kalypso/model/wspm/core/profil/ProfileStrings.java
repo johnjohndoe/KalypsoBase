@@ -27,13 +27,13 @@ import org.kalypso.model.wspm.core.i18n.Messages;
  */
 public interface ProfileStrings
 {
-  String PROFILE_OBJECT_RECORD_WIDTH_LABEL = Messages.getString("ProfileStrings_0"); //$NON-NLS-1$
+  String PROFILE_OBJECT_RECORD_WIDTH_LABEL = Messages.getString( "ProfileStrings_0" ); //$NON-NLS-1$
 
   String PROFILE_OBJECT_RECORD_WIDTH_UNIT = "m"; //$NON-NLS-1$
 
-  String PROFILE_OBJECT_RECORD_HEIGHT_LABEL = Messages.getString("ProfileStrings_2"); //$NON-NLS-1$
+  String PROFILE_OBJECT_RECORD_HEIGHT_LABEL = Messages.getString( "ProfileStrings_2" ); //$NON-NLS-1$
 
   String PROFILE_OBJECT_RECORD_HEIGHT_UNIT = "mNN"; //$NON-NLS-1$
 
-  String PROFILE_OBJECT_RECORD_CODE_LABEL = Messages.getString("ProfileStrings_4"); //$NON-NLS-1$
+  String PROFILE_OBJECT_RECORD_CODE_LABEL = Messages.getString( "ProfileStrings_4" ); //$NON-NLS-1$
 }
