@@ -207,22 +207,19 @@ public abstract class RasterColorMapEditorComposite extends Composite
   private void createGlobalComposite( final Group parent )
   {
     final Composite globalComposite = new Composite( parent, SWT.NONE );
-    final GridData globalData = new GridData( SWT.FILL, SWT.FILL, true, false );
+    final GridData globalData = new GridData( SWT.FILL, SWT.FILL, true, true );
     globalComposite.setLayoutData( globalData );
     globalComposite.setLayout( new GridLayout( 2, false ) );
 
     final Label globalMaxLabel = new Label( globalComposite, SWT.NONE );
     final GridData gridDataGlobalMax = new GridData( SWT.BEGINNING, SWT.CENTER, false, false );
-    gridDataGlobalMax.heightHint = 15;
     globalMaxLabel.setLayoutData( gridDataGlobalMax );
     globalMaxLabel.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.RasterColorMapEditorComposite.6" ) ); //$NON-NLS-1$
 
     final Label globalMaxValueLabel = new Label( globalComposite, SWT.NONE );
-    final GridData gridDataMaxValueLabel = new GridData( SWT.END, SWT.CENTER, false, false );
-    gridDataMaxValueLabel.widthHint = 40;
-    gridDataMaxValueLabel.heightHint = 15;
-
+    final GridData gridDataMaxValueLabel = new GridData( SWT.END, SWT.CENTER, true, false );
     globalMaxValueLabel.setLayoutData( gridDataMaxValueLabel );
+
     String max;
     if( m_globalMax != null )
       max = m_globalMax.toString();
@@ -236,14 +233,15 @@ public abstract class RasterColorMapEditorComposite extends Composite
     globalMinLabel.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.org.kalypso.ui.editor.sldEditor.RasterColorMapEditorComposite.8" ) ); //$NON-NLS-1$
 
     final Label globalMinValueLabel = new Label( globalComposite, SWT.NONE );
-    final GridData gridDataMinValueLabel = new GridData( SWT.END, SWT.CENTER, false, false );
-    gridDataMinValueLabel.widthHint = 40;
+    final GridData gridDataMinValueLabel = new GridData( SWT.END, SWT.CENTER, true, false );
     globalMinValueLabel.setLayoutData( gridDataMinValueLabel );
+
     String min;
     if( m_globalMin != null )
       min = m_globalMin.toString();
     else
       min = Messages.getString( "org.kalypso.ui.editor.sldEditor.RasterColorMapEditorComposite.9" ); //$NON-NLS-1$
+
     globalMinValueLabel.setText( min );
     globalMinValueLabel.setAlignment( SWT.RIGHT );
   }
@@ -251,7 +249,7 @@ public abstract class RasterColorMapEditorComposite extends Composite
   private void createDisplayComposite( final Group parent )
   {
     final Composite displayComposite = new Composite( parent, SWT.NONE );
-    final GridData displayData = new GridData( SWT.FILL, SWT.FILL, true, false );
+    final GridData displayData = new GridData( SWT.FILL, SWT.FILL, true, true );
     displayComposite.setLayoutData( displayData );
     displayComposite.setLayout( new GridLayout( 2, false ) );
 
@@ -262,8 +260,6 @@ public abstract class RasterColorMapEditorComposite extends Composite
 
     final Text maxValueText = new Text( displayComposite, SWT.BORDER | SWT.TRAIL );
     final GridData gridDataMaxText = new GridData( SWT.FILL, SWT.CENTER, true, false );
-    gridDataMaxText.widthHint = 30;
-    gridDataMaxText.heightHint = 10;
     maxValueText.setLayoutData( gridDataMaxText );
 
     final String stringMax = String.valueOf( m_maxValue );
@@ -276,8 +272,6 @@ public abstract class RasterColorMapEditorComposite extends Composite
 
     final Text minValueText = new Text( displayComposite, SWT.BORDER | SWT.TRAIL );
     final GridData gridDataMinText = new GridData( SWT.FILL, SWT.CENTER, true, false );
-    gridDataMinText.widthHint = 30;
-    gridDataMinText.heightHint = 10;
     minValueText.setLayoutData( gridDataMinText );
 
     final String stringMin = String.valueOf( m_minValue );
@@ -401,8 +395,6 @@ public abstract class RasterColorMapEditorComposite extends Composite
 
     final Text stepWidthText = new Text( displayComposite, SWT.BORDER | SWT.TRAIL );
     final GridData gridDataStepWidthText = new GridData( SWT.FILL, SWT.CENTER, true, false );
-    gridDataStepWidthText.widthHint = 30;
-    gridDataStepWidthText.heightHint = 10;
     stepWidthText.setLayoutData( gridDataStepWidthText );
 
     final String stringStepWidth = String.valueOf( m_stepWidth );
