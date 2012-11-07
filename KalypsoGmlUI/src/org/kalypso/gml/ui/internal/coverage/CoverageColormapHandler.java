@@ -64,7 +64,6 @@ import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gml.ui.i18n.Messages;
-import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTypeStyle;
 import org.kalypso.ogc.gml.IKalypsoStyle;
@@ -77,6 +76,7 @@ import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.SldHelper;
 import org.kalypsodeegree.graphics.sld.SurfacePolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.model.elevation.ElevationUtilities;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.graphics.sld.PolygonColorMap;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
@@ -319,9 +319,9 @@ public class CoverageColormapHandler
     try
     {
       /* In order to show anything to the user, create a default color map, if no colors have been defined yet */
-      final Range<BigDecimal> minMax = GeoGridUtilities.calculateRange( coverages );
-      final BigDecimal min = minMax.getMinimum();
-      final BigDecimal max = minMax.getMaximum();
+      final Range<Double> minMax = ElevationUtilities.calculateRange( coverages );
+      final Double min = minMax.getMinimum();
+      final Double max = minMax.getMaximum();
 
       // TODO: check for infinity
       if( Doubles.isNullOrInfinite( min, max ) )
@@ -331,7 +331,12 @@ public class CoverageColormapHandler
       final BigDecimal stepWidth = new BigDecimal( "0.1" ); //$NON-NLS-1$
       final Color fromColor = new Color( 0, 255, 0, 200 );
       final Color toColor = new Color( 255, 0, 0, 200 );
-      final ColorMapEntry[] colors = SldHelper.createColorMap( fromColor, toColor, stepWidth, min, max, 250 );
+
+      // TODO: scale?! -> get max scale from all coverages
+      final BigDecimal minDecimal = new BigDecimal( min );
+      final BigDecimal maxDecimal = new BigDecimal( max );
+
+      final ColorMapEntry[] colors = SldHelper.createColorMap( fromColor, toColor, stepWidth, minDecimal, maxDecimal, 250 );
       updateRasterSymbolizer( shell, colors );
     }
     catch( final CoreException e )

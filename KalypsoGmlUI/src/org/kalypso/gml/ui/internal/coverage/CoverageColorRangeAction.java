@@ -108,8 +108,8 @@ public class CoverageColorRangeAction extends Action implements IUpdateable
 
     final Range<Double> minMax = ElevationUtilities.calculateRange( coverages );
 
-    final BigDecimal min = new BigDecimal( Double.toString( minMax.getMinimum() ) );
-    final BigDecimal max = new BigDecimal( Double.toString( minMax.getMaximum() ) );
+    final BigDecimal min = asBigDecimal( minMax.getMinimum() );
+    final BigDecimal max = asBigDecimal( minMax.getMaximum() );
 
     // open dialog
     final GridStyleDialog dialog = new GridStyleDialog( event.display.getActiveShell(), entries, min, max );
@@ -119,6 +119,18 @@ public class CoverageColorRangeAction extends Action implements IUpdateable
 
       m_widget.updateStylePanel();
     }
+  }
+
+  /**
+   * protect against too many digits; still ugly, as number of digits depends on real data type...
+   */
+  private BigDecimal asBigDecimal( final Double value )
+  {
+    final BigDecimal decimal = new BigDecimal( Double.toString( value ) );
+    if( decimal.scale() < 5 )
+      return decimal;
+
+    return decimal.setScale( 4, BigDecimal.ROUND_HALF_UP );
   }
 
   @Override
