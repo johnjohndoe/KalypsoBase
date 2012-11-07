@@ -110,8 +110,11 @@ public class ShapeFile implements Closeable
   @Override
   public void close( ) throws IOException
   {
-    m_shp.close();
-    m_dbf.close();
+    if( m_shp != null )
+      m_shp.close();
+
+    if( m_dbf != null )
+      m_dbf.close();
 
     if( m_shx != null )
       m_shx.close();
