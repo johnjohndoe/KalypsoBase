@@ -196,14 +196,14 @@ public class GMLContentProvider implements ITreeContentProvider
           result.addAll( Arrays.asList( children ) );
         }
       }
-      // FIXME: showing the geometry does not make much sennse (because we have no actions on it) and
+      // FIXME: showing the geometry does not make much sense (because we have no actions on it) and
       // is ugly as well, as we have no nice label provider for it. So this is suppressed for now.
-// else if( GeometryUtilities.isGeometry( property ) )
-// {
-// final Object value = parentFE.getProperty( property );
-// if( value != null )
-// result.add( value );
-// }
+      // else if( GeometryUtilities.isGeometry( property ) )
+      // {
+      // final Object value = parentFE.getProperty( property );
+      // if( value != null )
+      // result.add( value );
+      // }
     }
   }
 
@@ -379,9 +379,6 @@ public class GMLContentProvider implements ITreeContentProvider
     return GMLXPathUtilities.query( m_rootPath, m_workspace );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -392,9 +389,6 @@ public class GMLContentProvider implements ITreeContentProvider
     m_workspace = null;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-   */
   @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
@@ -524,7 +518,7 @@ public class GMLContentProvider implements ITreeContentProvider
     }
   }
 
-  Set<Feature> m_featureChangeStack = new LinkedHashSet<>();
+  private final Set<Feature> m_featureChangeStack = new LinkedHashSet<>();
 
   private UIJob m_featureChangeJob;
 
@@ -575,8 +569,12 @@ public class GMLContentProvider implements ITreeContentProvider
     else if( modellEvent instanceof FeaturesChangedModellEvent )
     {
       final FeaturesChangedModellEvent fcme = (FeaturesChangedModellEvent)modellEvent;
-      // FIXME: highly dubious... why this globa stack???
-      Collections.addAll( m_featureChangeStack, fcme.getFeatures() );
+
+      // TODO: ugly abstraction, mover into separate class!
+      synchronized( m_featureChangeStack )
+      {
+        Collections.addAll( m_featureChangeStack, fcme.getFeatures() );
+      }
 
       if( m_featureChangeJob != null )
         m_featureChangeJob.cancel();
@@ -592,8 +590,7 @@ public class GMLContentProvider implements ITreeContentProvider
           if( Objects.isNull( control ) || control.isDisposed() )
             return Status.CANCEL_STATUS;
 
-          final Feature[] features = m_featureChangeStack.toArray( new Feature[] {} );
-          m_featureChangeStack.clear();
+          final Feature[] features = popChangedFeatures();
 
           for( final Feature feature : features )
           {
@@ -610,6 +607,16 @@ public class GMLContentProvider implements ITreeContentProvider
       m_featureChangeJob.setUser( false );
 
       m_featureChangeJob.schedule( 50 );
+    }
+  }
+
+  Feature[] popChangedFeatures( )
+  {
+    synchronized( m_featureChangeStack )
+    {
+      final Feature[] popped = m_featureChangeStack.toArray( new Feature[] {} );
+      m_featureChangeStack.clear();
+      return popped;
     }
   }
 
