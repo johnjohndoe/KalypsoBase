@@ -74,15 +74,21 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
 
   public IObservation<TupleResult> getObservation( )
   {
-    if( getValueData() == null )
+    final TupleResultDomainValueData< ? , ? > valueData = getValueData();
+    if( valueData == null )
       return null;
-    return getValueData().getObservation();
+
+    return valueData.getObservation();
   }
 
   @Override
   public IDataRange<Double> getTargetRange( final IDataRange< ? > domainIntervall )
   {
-    return getNumericRange( getTargetAxis(), getValueData().getTargetRange() );
+    final TupleResultDomainValueData< ? , ? > valueData = getValueData();
+    if( valueData == null )
+      return null;
+
+    return getNumericRange( getTargetAxis(), valueData.getTargetRange() );
   }
 
   @Override
