@@ -86,6 +86,15 @@ public abstract class AbstractTriangulatedSurfaceCoverageImporter implements ICo
   @Override
   public abstract FilePattern getFilePattern( );
 
+  /**
+   * Default implementation that returns the source file itself. Most import only import exactly one file.
+   */
+  @Override
+  public File[] getSourceFiles( final File sourceFile )
+  {
+    return new File[] { sourceFile };
+  }
+
   @Override
   public ICoverage importCoverage( final ICoverageCollection coverageContainer, final File dataFile, final String crs, final IContainer dataContainer, IProgressMonitor monitor ) throws CoreException
   {
@@ -99,14 +108,14 @@ public abstract class AbstractTriangulatedSurfaceCoverageImporter implements ICo
     try
     {
       /* Monitor. */
-      monitor.beginTask( Messages.getString("AbstractTriangulatedSurfaceCoverageImporter_0"), 300 ); //$NON-NLS-1$
-      monitor.subTask( Messages.getString("AbstractTriangulatedSurfaceCoverageImporter_1") ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "AbstractTriangulatedSurfaceCoverageImporter_0" ), 300 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "AbstractTriangulatedSurfaceCoverageImporter_1" ) ); //$NON-NLS-1$
 
       /* Read the input data. */
       final GM_TriangulatedSurface gmSurface = readInputData( dataFile, crs, new SubProgressMonitor( monitor, 100 ) );
 
       /* Monitor. */
-      monitor.subTask( Messages.getString("AbstractTriangulatedSurfaceCoverageImporter_2") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "AbstractTriangulatedSurfaceCoverageImporter_2" ) ); //$NON-NLS-1$
 
       /* Transform into the Kalypso coordinate system. */
       final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
@@ -114,15 +123,15 @@ public abstract class AbstractTriangulatedSurfaceCoverageImporter implements ICo
 
       /* Create the workspace. */
       final GMLWorkspace tmpWorkspace = FeatureFactory.createGMLWorkspace( TriangulatedSurfaceFeature.FEATURE_TRIANGULATED_SURFACE, null, null );
-      final TriangulatedSurfaceFeature rootFeature = (TriangulatedSurfaceFeature) tmpWorkspace.getRootFeature();
-      rootFeature.setTriangulatedSurface( (GM_TriangulatedSurface) transformedSurface );
+      final TriangulatedSurfaceFeature rootFeature = (TriangulatedSurfaceFeature)tmpWorkspace.getRootFeature();
+      rootFeature.setTriangulatedSurface( (GM_TriangulatedSurface)transformedSurface );
 
       /* Save the workspace. */
       GmlSerializer.serializeWorkspace( tempFile, tmpWorkspace, "UTF-8" ); //$NON-NLS-1$
 
       /* Monitor. */
       monitor.worked( 100 );
-      monitor.subTask( Messages.getString("AbstractTriangulatedSurfaceCoverageImporter_4") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "AbstractTriangulatedSurfaceCoverageImporter_4" ) ); //$NON-NLS-1$
 
       /* Get the target file. */
       final File targetDir = dataContainer.getLocation().toFile();
@@ -161,7 +170,7 @@ public abstract class AbstractTriangulatedSurfaceCoverageImporter implements ICo
     }
     catch( final Exception e )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), Messages.getString("AbstractTriangulatedSurfaceCoverageImporter_6"), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), Messages.getString( "AbstractTriangulatedSurfaceCoverageImporter_6" ), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     finally
