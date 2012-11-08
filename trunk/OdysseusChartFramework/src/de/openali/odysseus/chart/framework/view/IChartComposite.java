@@ -54,13 +54,7 @@ public interface IChartComposite extends IChartView
 {
   IChartHandlerManager getPlotHandler( );
 
-  @Deprecated
-  /**
-   * use ChartImageInfo instead
-   */
-  Rectangle getPlotRect( );
-  
-  ChartImageInfo getPlotInfo();
+  ChartImageInfo getPlotInfo( );
 
   void invalidate( );
 

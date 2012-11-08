@@ -124,12 +124,6 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   }
 
   @Override
-  public final Rectangle getPlotRect( )
-  {
-    return getPlotInfo().getPlotRect();
-  }
-
-  @Override
   public void invalidate( )
   {
     m_paintJob.cancel();
@@ -137,11 +131,11 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     // REMARK: prevent schedule if this composite is not really visible;
     // we just remember that an invalidation should take place on next redraw
     // This is a performance optimization for the case when the chart is not visible
-//    if( !isVisible() )
-//    {
-//      m_invalidatePending = true;
-//      return;
-//    }
+    // if( !isVisible() )
+    // {
+    // m_invalidatePending = true;
+    // return;
+    // }
 
     m_invalidatePending = false;
 
@@ -169,8 +163,6 @@ public class ChartImageComposite extends Canvas implements IChartComposite
 
     paintDragArea( paintGC, dragArea );
     paintEditInfo( paintGC, editInfo );
-
-    // FIXME: resource leak, if exceptions are thrown -> call in SafeRunner or similar
 
     final IChartHandlerManager manager = getPlotHandler();
     final IChartHandler[] handlers = manager.getActiveHandlers();
