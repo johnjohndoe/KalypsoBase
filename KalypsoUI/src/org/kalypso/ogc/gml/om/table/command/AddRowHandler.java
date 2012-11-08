@@ -55,8 +55,10 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IInterpolationHandler;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -83,74 +85,150 @@ public class AddRowHandler extends AbstractHandler
       throw new ExecutionException( Messages.getString( "org.kalypso.ogc.gml.om.table.command.AddRowHandler.1" ) ); //$NON-NLS-1$
 
     final Object obj = selection.getFirstElement();
-    final int index = tupleResult.indexOf( obj );
 
-    final IRecord row = tupleResult.createRecord();
+    final IRecord newRecord = addRecord( shell, commandName, tupleResult, obj );
+    if( newRecord == null )
+      return null;
 
-    if( index != -1 && index < tupleResult.size() - 2 )
+    /* select new row */
+    // select the new row; in ui job, as table is also updated in an ui event
+    final UIJob selectJob = new UIJob( "" ) //$NON-NLS-1$
     {
-      final double faktor = askForFactor( shell, commandName, tupleResult, index );
-      if( Double.isNaN( faktor ) )
-        return null; // cancel
-
-      final boolean success = tupleResult.doInterpolation( row, index, faktor );
-      if( success )
-        tupleResult.add( index + 1, row );
-
-      // select the new row; in ui job, as table is also updated in an ui event
-      new UIJob( "" ) //$NON-NLS-1$
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        @Override
-        public IStatus runInUIThread( final IProgressMonitor monitor )
-        {
-          viewer.setSelection( new StructuredSelection( row ) );
-          return Status.OK_STATUS;
-        }
-      }.schedule();
-    }
-    else
-      tupleResult.add( row );
+        viewer.setSelection( new StructuredSelection( newRecord ) );
+        return Status.OK_STATUS;
+      }
+    };
+
+    selectJob.setSystem( true );
+    // REMARK: delay is needed, because table will also have a delay for the refresh
+    selectJob.schedule( 250 );
 
     return null;
   }
 
+  private IRecord addRecord( final Shell shell, final String commandName, final TupleResult tupleResult, final Object selectedRow )
+  {
+    final int index = tupleResult.indexOf( selectedRow );
+
+    if( index != -1 && index < tupleResult.size() - 1 )
+      return addInterpolatedRecord( shell, commandName, tupleResult, index );
+    else
+    {
+      return addRecordAtEnd( shell, commandName, tupleResult, index );
+    }
+  }
+
+  private IRecord addInterpolatedRecord( final Shell shell, final String commandName, final TupleResult tupleResult, final int index )
+  {
+    final double faktor = askForFactor( shell, commandName, tupleResult, index );
+    if( Double.isNaN( faktor ) )
+      return null; // cancel
+
+    final IRecord row = tupleResult.createRecord();
+    final boolean success = tupleResult.doInterpolation( row, index, faktor );
+    if( success )
+    {
+      tupleResult.add( index + 1, row );
+      return row;
+    }
+    else
+      return null;
+  }
+
+  private IRecord addRecordAtEnd( final Shell shell, final String commandName, final TupleResult tupleResult, final int index )
+  {
+    final int keyComponentIndex = getInterpolationComponentIndex( tupleResult );
+    if( keyComponentIndex == -1 )
+      return null;
+
+    final String componentLabel = ComponentUtilities.getComponentLabel( tupleResult.getComponent( keyComponentIndex ) );
+
+    final IRecord record = tupleResult.get( index );
+
+    final double value = getNumberValue( record, keyComponentIndex );
+
+    final double min = value;
+    final double max = Double.MAX_VALUE;
+
+    final double initialValue = min + 1.0;
+
+    final double newWidth = askForDouble( shell, commandName, componentLabel, min, max, initialValue );
+    if( Double.isNaN( newWidth ) )
+      return null;
+
+    final IRecord newRow = tupleResult.createRecord();
+
+    /* copy values of last row */
+    final IInterpolationHandler interpolationHandler = tupleResult.getInterpolationHandler();
+    final String[] extrapolationsIDs = interpolationHandler.getExtrapolationsIDs();
+    for( final String extrapolationID : extrapolationsIDs )
+    {
+      final int extrapolationIndex = tupleResult.indexOfComponent( extrapolationID );
+      if( extrapolationIndex != -1 )
+        newRow.setValue( extrapolationIndex, record.getValue( extrapolationIndex ) );
+    }
+
+    newRow.setValue( keyComponentIndex, newWidth );
+
+    tupleResult.add( newRow );
+
+    return newRow;
+  }
+
   private double askForFactor( final Shell shell, final String title, final TupleResult tupleResult, final int index )
   {
-    final IInterpolationHandler interpolationHandler = tupleResult.getInterpolationHandler();
-    if( interpolationHandler == null )
-      return 0.5; // whatever
+    final int keyComponentIndex = getInterpolationComponentIndex( tupleResult );
+    if( keyComponentIndex == -1 )
+      return Double.NaN;
 
-    final String interpolationComponent = interpolationHandler.getInterpolationComponent();
-    final int indexOfComponent = tupleResult.indexOfComponent( interpolationComponent );
-    if( indexOfComponent == -1 )
-      return 0.5;
+    final String componentLabel = ComponentUtilities.getComponentLabel( tupleResult.getComponent( keyComponentIndex ) );
 
     final IRecord record1 = tupleResult.get( index );
     final IRecord record2 = tupleResult.get( index + 1 );
 
-    final Object value1 = record1.getValue( indexOfComponent );
-    final Object value2 = record2.getValue( indexOfComponent );
+    final double d1 = getNumberValue( record1, keyComponentIndex );
+    final double d2 = getNumberValue( record2, keyComponentIndex );
 
-    if( value1 instanceof Number && value2 instanceof Number )
-    {
-      final double d1 = ((Number)value1).doubleValue();
-      final double d2 = ((Number)value2).doubleValue();
-      final double min = Math.min( d1, d2 );
-      final double max = Math.max( d1, d2 );
+    if( Doubles.isNaN( d1, d2 ) )
+      return Double.NaN;
 
-      final double userInput = askForDouble( shell, title, min, max );
-      if( Double.isNaN( userInput ) )
-        return Double.NaN;
+    final double min = Math.min( d1, d2 );
+    final double max = Math.max( d1, d2 );
 
-      return (userInput - min) / (max - min);
-    }
+    final double initialValue = (max + min) / 2; //$NON-NLS-1$
 
-    return 0.5;
+    final double userInput = askForDouble( shell, title, componentLabel, min, max, initialValue );
+    if( Double.isNaN( userInput ) )
+      return Double.NaN;
+
+    return (userInput - min) / (max - min);
   }
 
-  private double askForDouble( final Shell shell, final String title, final double min, final double max )
+  private double getNumberValue( final IRecord record, final int indexOfComponent )
   {
-    final String initialValue = String.format( "%.4f", (max + min) / 2 ); //$NON-NLS-1$
+    final Object value = record.getValue( indexOfComponent );
+
+    if( value instanceof Number )
+      return ((Number)value).doubleValue();
+
+    return Double.NaN;
+  }
+
+  private int getInterpolationComponentIndex( final TupleResult tupleResult )
+  {
+    final IInterpolationHandler interpolationHandler = tupleResult.getInterpolationHandler();
+    if( interpolationHandler == null )
+      return -1;
+
+    final String interpolationComponent = interpolationHandler.getInterpolationComponent();
+    return tupleResult.indexOfComponent( interpolationComponent );
+  }
+
+  private double askForDouble( final Shell shell, final String title, final String componentLabel, final double min, final double max, final double initialValue )
+  {
     final IInputValidator validator = new IInputValidator()
     {
       @Override
@@ -167,7 +245,11 @@ public class AddRowHandler extends AbstractHandler
       }
     };
 
-    final InputDialog inputDialog = new InputDialog( shell, title, Messages.getString( "AddRowHandler.3" ), initialValue, validator ); //$NON-NLS-1$
+    final String initialText = String.format( "%.4f", initialValue ); //$NON-NLS-1$
+
+    final String dialogMessage = String.format( Messages.getString( "AddRowHandler.3" ), componentLabel );
+
+    final InputDialog inputDialog = new InputDialog( shell, title, dialogMessage, initialText, validator ); //$NON-NLS-1$
     if( inputDialog.open() == Window.CANCEL )
       return Double.NaN;
 

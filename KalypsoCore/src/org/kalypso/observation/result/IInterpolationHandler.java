@@ -53,4 +53,6 @@ public interface IInterpolationHandler
    * @throws ArithmeticException
    */
   boolean doInterpolation( TupleResult result, IRecord record, int index, double distance ) throws ArithmeticException;
+
+  String[] getExtrapolationsIDs( );
 }
