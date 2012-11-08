@@ -71,18 +71,12 @@ public class ExportHMOOperation implements ICoreRunnableWithProgress
     try
     {
       final File exportFile = m_data.getExportFile();
-// final String result = file.getAbsolutePath();
-// final String hmoFileBase;
-//    if( !result.toLowerCase().endsWith( ".hmo" ) ) //$NON-NLS-1$ //$NON-NLS-2$
-// hmoFileBase = FileUtilities.setSuffix( result, "hmo" );
-// else
-// hmoFileBase = result;
 
       final Feature[] features = m_data.getFeatures();
       // FIXME: why only the first?
       final Feature feature = features[0];
       // FIXME: is the tin always the default property?
-      final GM_TriangulatedSurface geometryProperty = (GM_TriangulatedSurface) feature.getDefaultGeometryPropertyValue();
+      final GM_TriangulatedSurface geometryProperty = (GM_TriangulatedSurface)feature.getDefaultGeometryPropertyValue();
       final Gml2HmoConverter converter = new GmlTriSurface2HmoConverter( geometryProperty );
 
       converter.writeHmo( exportFile, monitor );

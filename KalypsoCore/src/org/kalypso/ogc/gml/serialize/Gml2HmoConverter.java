@@ -41,7 +41,9 @@
 package org.kalypso.ogc.gml.serialize;
 
 import java.io.File;
+import java.io.IOException;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.core.i18n.Messages;
 
@@ -50,12 +52,12 @@ import org.kalypso.core.i18n.Messages;
  */
 public abstract class Gml2HmoConverter
 {
-  public void writeHmo( final File hmoBaseFile, final IProgressMonitor monitor ) throws Exception
+  public void writeHmo( final File hmoBaseFile, final IProgressMonitor monitor ) throws CoreException, IOException
   {
-    monitor.beginTask( Messages.getString("Gml2HmoConverter_0"), 2 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "Gml2HmoConverter_0" ), 2 ); //$NON-NLS-1$
     writeHmo( hmoBaseFile );
     monitor.done();
   }
 
-  public abstract void writeHmo( final File hmoBaseFile ) throws Exception;
+  public abstract void writeHmo( final File hmoBaseFile ) throws CoreException, IOException;
 }
