@@ -138,7 +138,7 @@ public abstract class AbstractFeatureList implements FeatureList
 
     if( m_parentFeature == null )
       return;
-      
+
     final Feature f = (Feature)object;
     final GMLWorkspace workspace = f.getWorkspace();
     if( workspace instanceof GMLWorkspace_Impl )
@@ -155,7 +155,7 @@ public abstract class AbstractFeatureList implements FeatureList
 
     if( !(object instanceof Feature) )
       return;
-      
+
     /* REMARK: If the split sort is used with features with another workspace than the parent feature */
     /* REMARK: or without a parent feature, we cannot unregister it. */
     if( m_parentFeature == null )
@@ -335,6 +335,7 @@ public abstract class AbstractFeatureList implements FeatureList
     if( targetFeature instanceof IXLinkedFeature )
       throw new IllegalArgumentException( "targetFeature may only be an inline feature" ); //$NON-NLS-1$
 
+    // / FIXME: very slow, we should first try to find the element via the spatial index
     final Object member = FeatureLinkUtils.findMember( this, targetFeature );
     return member != null;
   }
