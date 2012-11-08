@@ -135,14 +135,14 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
   {
     m_contentProvider = contentProvider;
     // FIXME: only as hot fix; we know that we have a ChartTreeLabelProvider; but feature patch does not work like this
-// -> change constructor later
+    // -> change constructor later
     m_labelProvider = (ChartTreeLabelProvider)labelProvider;
     m_eventListener = new AbstractLayerManagerEventListener()
     {
       @Override
       public void onLayerVisibilityChanged( final IChartLayer layer )
       {
-        refreshTreeViewer();
+        updateLayer( layer );
       }
 
       @Override
@@ -154,7 +154,7 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
       @Override
       public void onLayerContentChanged( final IChartLayer layer, final ContentChangeType type )
       {
-        refreshTreeViewer();
+        updateLayer( layer );
       }
 
       @Override
@@ -408,9 +408,6 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
     m_treeViewer.addDropSupport( ops, new Transfer[] { ChartLayerTransfer.getInstance() }, vda );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-   */
   @Override
   public void addSelectionChangedListener( final ISelectionChangedListener listener )
   {
@@ -470,9 +467,6 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
     super.dispose();
   }
 
-  /**
-   * @see org.eclipse.ui.part.IPage#getControl()
-   */
   @Override
   public Control getControl( )
   {
@@ -494,16 +488,6 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
   public void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_treeViewer.removeSelectionChangedListener( listener );
-  }
-
-  public void setCheckStateListener( final ICheckStateListener checkStateListener )
-  {
-    if( m_checkStateListener != null )
-    {
-      m_treeViewer.removeCheckStateListener( m_checkStateListener );
-      m_checkStateListener = null;
-    }
-    m_treeViewer.addCheckStateListener( checkStateListener );
   }
 
   public void setContentProvider( final ChartEditorTreeContentProvider contentProvider )
@@ -570,9 +554,39 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
     if( m_treeViewer == null )
       return;
 
+    m_treeViewer.getTree().setRedraw( false );
+
     final RestoreChartLegendStateVisitor visitor = new RestoreChartLegendStateVisitor( settings, m_treeViewer );
     model.accept( visitor );
 
     visitor.applyState();
+
+    m_treeViewer.getTree().setRedraw( true );
+  }
+
+  protected void updateLayer( final IChartLayer layer )
+  {
+    final String jobName = String.format( "Update outline: %s", layer.getTitle() ); //$NON-NLS-1$
+
+    final CheckboxTreeViewer treeViewer = m_treeViewer;
+    if( treeViewer == null )
+      return;
+
+    final UIJob updateJob = new UIJob( jobName )
+    {
+
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        if( !treeViewer.getControl().isDisposed() )
+          treeViewer.update( layer, null );
+        return Status.OK_STATUS;
+      }
+    };
+
+    updateJob.setUser( false );
+    updateJob.setSystem( true );
+
+    updateJob.schedule( 50 );
   }
 }

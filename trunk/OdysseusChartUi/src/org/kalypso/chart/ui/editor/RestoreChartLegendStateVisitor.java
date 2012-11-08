@@ -44,6 +44,8 @@ class RestoreChartLegendStateVisitor implements IChartLayerVisitor2
 
   private final Set<Object> m_selectedLayers = new HashSet<>();
 
+  private final Set<Object> m_expandedLayers = new HashSet<>();
+
   public RestoreChartLegendStateVisitor( final IDialogSettings settings, final CheckboxTreeViewer treeViewer )
   {
     m_settings = settings;
@@ -83,7 +85,7 @@ class RestoreChartLegendStateVisitor implements IChartLayerVisitor2
     {
       final boolean expanded = m_settings.getBoolean( identifier + SaveChartLegendStateVisitor.SETTING_EXPANDED );
       if( expanded )
-        m_treeViewer.setExpandedState( layer, expanded );
+        m_expandedLayers.add( layer );
     }
 
     return true;
@@ -92,5 +94,7 @@ class RestoreChartLegendStateVisitor implements IChartLayerVisitor2
   public void applyState( )
   {
     m_treeViewer.setSelection( new StructuredSelection( m_selectedLayers.toArray() ) );
+
+    m_treeViewer.setExpandedElements( m_expandedLayers.toArray() );
   }
 }
