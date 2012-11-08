@@ -42,10 +42,9 @@ package org.kalypso.ogc.gml.serialize;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Formatter;
 import java.util.Locale;
-
-import org.kalypso.core.i18n.Messages;
 
 /**
  * @author felipe maximino
@@ -56,13 +55,13 @@ public class HMOSerializer
 
   private final File m_hmoFile;
 
-  public HMOSerializer( final File hmoFile ) throws GmlSerializeException
+  public HMOSerializer( final File hmoFile ) throws IOException
   {
     m_hmoFile = hmoFile;
     init();
   }
 
-  public void init( ) throws GmlSerializeException
+  public void init( ) throws IOException
   {
     if( m_hmoFile.exists() )
     {
@@ -80,7 +79,8 @@ public class HMOSerializer
       {
         finish();
       }
-      throw new GmlSerializeException( Messages.getString( "org.kalypso.ogc.gml.serialize.HMOSerializer.15" ) + e.getMessage(), e ); //$NON-NLS-1$
+
+      throw e;
     }
   }
 

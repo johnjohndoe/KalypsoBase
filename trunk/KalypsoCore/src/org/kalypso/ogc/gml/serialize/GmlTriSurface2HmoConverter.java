@@ -41,11 +41,16 @@
 package org.kalypso.ogc.gml.serialize;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
@@ -106,11 +111,13 @@ public class GmlTriSurface2HmoConverter extends Gml2HmoConverter
   }
 
   @Override
-  public void writeHmo( final File hmoBaseFile ) throws GmlSerializeException
+  public void writeHmo( final File hmoBaseFile ) throws CoreException, IOException
   {
     if( m_uniquePositions.isEmpty() )
     {
-      throw new GmlSerializeException( Messages.getString( "org.kalypso.ogc.gml.serialize.HMOSerializer.11" ) ); //$NON-NLS-1$
+      final String message = Messages.getString( "org.kalypso.ogc.gml.serialize.HMOSerializer.11" ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), message );
+      throw new CoreException( status );
     }
 
     final HMOSerializer hmoSerializer = new HMOSerializer( hmoBaseFile );
