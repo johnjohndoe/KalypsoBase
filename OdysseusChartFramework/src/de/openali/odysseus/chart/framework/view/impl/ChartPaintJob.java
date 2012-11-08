@@ -179,16 +179,6 @@ public class ChartPaintJob extends Job
     }
   }
 
-//  private synchronized void setPlotRect( final Rectangle plotRect )
-//  {
-//    m_plotRect = plotRect;
-//  }
-//
-//  public synchronized Rectangle getPlotRect( )
-//  {
-//    return m_plotRect;
-//  }
-
   private synchronized Image createPlotImage( final Rectangle bounds )
   {
     Assert.isTrue( m_plotImage == null );
