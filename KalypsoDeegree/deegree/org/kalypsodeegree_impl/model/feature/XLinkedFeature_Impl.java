@@ -112,6 +112,8 @@ public class XLinkedFeature_Impl extends PlatformObject implements IXLinkedFeatu
   public final Feature getFeature( )
   {
     final GMLWorkspace workspace = m_parentFeature.getWorkspace();
+
+    // FIXME: nonsense, just cast!
     final GMLWorkspace_Impl workspaceImpl = (GMLWorkspace_Impl)workspace.getAdapter( GMLWorkspace_Impl.class );
     if( workspaceImpl == null || m_featureId == null )
     {
