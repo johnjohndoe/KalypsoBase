@@ -61,18 +61,12 @@ public abstract class AbstractFeaturesProvider implements IFeaturesProvider
     m_listeners.clear();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IFeaturesProvider#addFeaturesProviderListener(org.kalypso.ogc.gml.IFeaturesProviderListener)
-   */
   @Override
   public void addFeaturesProviderListener( final IFeaturesProviderListener l )
   {
     m_listeners.add( l );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IFeaturesProvider#removeFeaturesProviderListener(org.kalypso.ogc.gml.IFeaturesProviderListener)
-   */
   @Override
   public void removeFeaturesProviderListener( final IFeaturesProviderListener l )
   {
@@ -81,10 +75,12 @@ public abstract class AbstractFeaturesProvider implements IFeaturesProvider
 
   protected final void fireFeaturesChanged( final ModellEvent modellEvent )
   {
-    final IFeaturesProviderListener[] listeners = m_listeners.toArray( new IFeaturesProviderListener[m_listeners.size()] );
-    for( final IFeaturesProviderListener listener : listeners )
+    final Object[] listeners = m_listeners.toArray();
+    for( final Object element : listeners )
     {
-      SafeRunner.run( new SafeRunnable( "Failed to inform listener" )
+      final IFeaturesProviderListener listener = (IFeaturesProviderListener) element;
+
+      SafeRunner.run( new SafeRunnable( "Failed to inform listener" ) //$NON-NLS-1$
       {
         @Override
         public void run( ) throws Exception

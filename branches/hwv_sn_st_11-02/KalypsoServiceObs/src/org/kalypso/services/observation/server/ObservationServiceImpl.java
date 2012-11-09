@@ -77,9 +77,6 @@ public class ObservationServiceImpl implements IObservationService
    */
   private final IJobChangeListener m_listener = new JobChangeAdapter()
   {
-    /**
-     * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
-     */
     @Override
     public void done( final IJobChangeEvent event )
     {
@@ -276,6 +273,8 @@ public class ObservationServiceImpl implements IObservationService
     if( delegate != null )
       return delegate;
 
+    // FIXME: we should never return null or initialize the delegate with null, else we get tons of NPEs later. Instead, we could maybe use a default delegate that does nothing instead.
+    
     try
     {
       // FIXME: problem, if the init failed, we always return null now -> everything else fails with NPE
@@ -326,7 +325,10 @@ public class ObservationServiceImpl implements IObservationService
 
       // FIXME: keep status; and or restart
 
-      /* What to do on error or cancelation? */
+      
+      // FIXME: why? schedule with 0 ??
+      
+      /* What to do on error or cancellation? */
       // return;
     }
 

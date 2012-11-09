@@ -565,4 +565,23 @@ public final class StatusUtilities
     return Arrays.equals( children1, children2 );
   }
 
+  public static IStatus toSimpleStatus( final IStatus status )
+  {
+    if( status instanceof MultiStatus )
+    {
+      final MultiStatus simple = new MultiStatus( status.getPlugin(), status.getCode(), status.getMessage(), null );
+
+      final MultiStatus multiple = (MultiStatus) status;
+      final IStatus[] children = multiple.getChildren();
+      for( final IStatus child : children )
+      {
+        simple.add( toSimpleStatus( child ) );
+      }
+
+      return simple;
+    }
+
+    return new Status( status.getSeverity(), status.getPlugin(), status.getMessage() );
+  }
+
 }

@@ -219,7 +219,7 @@ public class WQTable
     final WQPair pm = pairs[pairs.length - 2];
     final WQPair pn = pairs[pairs.length - 1];
 
-    if( w < p1.getW() )
+    if( w <= p1.getW() )
     {
       m_eq.setPoints( p2.getW(), p2.getQ(), p1.getW(), p1.getQ() );
     }
