@@ -104,7 +104,6 @@ public final class Observations
   private static void doVisit( final IObservationVisitor visitor, final IObservation observation, final ITupleModel model, final int index ) throws CancelVisitorException, SensorException
   {
     visitor.visit( new ObservationValueContainer( model, index, observation ) );
-
   }
 
   public static DateRange findDateRange( final IObservation observation )
@@ -132,8 +131,8 @@ public final class Observations
 
       final IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
 
-      final Date from = (Date) model.get( 0, dateAxis );
-      final Date to = (Date) model.get( model.size() - 1, dateAxis );
+      final Date from = (Date)model.get( 0, dateAxis );
+      final Date to = (Date)model.get( model.size() - 1, dateAxis );
 
       return new DateRange( from, to );
     }

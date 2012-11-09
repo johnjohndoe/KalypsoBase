@@ -1,5 +1,6 @@
 package de.openali.odysseus.chart.ext.base.axis;
 
+import de.openali.odysseus.chart.framework.exception.MalformedValueException;
 import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
@@ -7,12 +8,10 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.IScreenAxis;
 
 /**
- * @author kimwerner
+ * DIESE AXIS MACHT SINN UND WIRD IMMER NOCH BENUTZT!
  * 
- * ist eher eine normalisierte Achse: 0 gibt den Startwert in pixeln der Achse, 1 den Endpunkt.
- * @deprecated use {@link AbstractAxis#logicalToScreen(Object)} instead
+ * @author kimwerner
  */
-@Deprecated
 public class ScreenCoordinateAxis extends AbstractAxis<Integer> implements IScreenAxis<Integer>
 {
   public ScreenCoordinateAxis( final String id, final POSITION pos )
@@ -29,6 +28,7 @@ public class ScreenCoordinateAxis extends AbstractAxis<Integer> implements IScre
   @Override
   public IDataRange<Double> getNumericRange( )
   {
+    // FIXME: probably nonsense
     return new DataRange<>( 0.0, 1.0 );
   }
 
@@ -40,13 +40,13 @@ public class ScreenCoordinateAxis extends AbstractAxis<Integer> implements IScre
   }
 
   @Override
-  public Double logicalToNumeric( Integer value )
+  public Double logicalToNumeric( final Integer value )
   {
     return value.doubleValue();
   }
 
   @Override
-  public Integer numericToLogical( Double value )
+  public Integer numericToLogical( final Double value )
   {
     return value.intValue();
   }
@@ -68,7 +68,6 @@ public class ScreenCoordinateAxis extends AbstractAxis<Integer> implements IScre
     }
   }
 
-  
   @Override
   public Double screenToNumeric( final int value )
   {
@@ -76,20 +75,33 @@ public class ScreenCoordinateAxis extends AbstractAxis<Integer> implements IScre
     switch( direction )
     {
       case POSITIVE:
-        return new Integer(value).doubleValue();
+        return new Integer( value ).doubleValue();
 
       case NEGATIVE:
-        return getScreenHeight() - new Integer(value).doubleValue();
+        return getScreenHeight() - new Integer( value ).doubleValue();
 
       default:
         throw new IllegalArgumentException();
     }
   }
 
-  @SuppressWarnings( "rawtypes" )
   @Override
   public void setNumericRange( final IDataRange range )
   {
     // do nothing, fixed Range
+  }
+
+  @Override
+  public Integer xmlStringToLogical( final String value ) throws MalformedValueException
+  {
+    try
+    {
+      return Integer.parseInt( value );
+    }
+    catch( final NumberFormatException e )
+    {
+      e.printStackTrace();
+      throw new MalformedValueException( e );
+    }
   }
 }

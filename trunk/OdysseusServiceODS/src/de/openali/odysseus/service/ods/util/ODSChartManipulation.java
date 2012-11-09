@@ -129,7 +129,7 @@ public class ODSChartManipulation
 
     try
     {
-      min = iaxis.XMLStringToLogical( minString );
+      min = iaxis.xmlStringToLogical( minString );
     }
     catch( final MalformedValueException e )
     {
@@ -138,7 +138,7 @@ public class ODSChartManipulation
 
     try
     {
-      max = iaxis.XMLStringToLogical( maxString );
+      max = iaxis.xmlStringToLogical( maxString );
     }
     catch( final MalformedValueException e )
     {

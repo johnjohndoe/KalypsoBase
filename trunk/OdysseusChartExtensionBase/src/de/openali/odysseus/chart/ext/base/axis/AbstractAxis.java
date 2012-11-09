@@ -40,8 +40,6 @@ public abstract class AbstractAxis<T> extends AbstractMapper implements IAxis<T>
 
   private final POSITION m_pos;
 
-  // private final IDataRange<Double> m_activeRange = null;
-
   private IAxisAdjustment m_preferredAdjustment = null;
 
   private DataRangeRestriction<Number> m_rangeRestriction = null;
@@ -193,19 +191,19 @@ public abstract class AbstractAxis<T> extends AbstractMapper implements IAxis<T>
   }
 
   @Override
-  public int logicalToScreen( T value )
+  public int logicalToScreen( final T value )
   {
     return numericToScreen( logicalToNumeric( value ) );
   }
 
   @Override
-  public String logicalToXMLString( T value )
+  public String logicalToXMLString( final T value )
   {
     return getDataOperator().logicalToString( value );
   }
 
   @Override
-  public Double normalizedToNumeric( Double value )
+  public Double normalizedToNumeric( final Double value )
   {
     final IDataRange<Double> dataRange = getNumericRange();
 
@@ -217,7 +215,7 @@ public abstract class AbstractAxis<T> extends AbstractMapper implements IAxis<T>
   }
 
   @Override
-  public int normalizedToScreen( Double value )
+  public int normalizedToScreen( final Double value )
   {
     final int range = getScreenHeight();
     final double screen = (range * (isInverted() ? 1 - value : value));
@@ -228,7 +226,7 @@ public abstract class AbstractAxis<T> extends AbstractMapper implements IAxis<T>
   }
 
   @Override
-  public Double numericToNormalized( Double value )
+  public Double numericToNormalized( final Double value )
   {
     if( value == null )
     {
@@ -242,19 +240,19 @@ public abstract class AbstractAxis<T> extends AbstractMapper implements IAxis<T>
   }
 
   @Override
-  public int numericToScreen( Double value )
+  public int numericToScreen( final Double value )
   {
     return normalizedToScreen( numericToNormalized( value ) );
   }
 
   @Override
-  public T screenToLogical( int value )
+  public T screenToLogical( final int value )
   {
     return numericToLogical( screenToNumeric( value ) );
   }
 
   @Override
-  public Double screenToNormalized( int value )
+  public Double screenToNormalized( final int value )
   {
     final int range = getScreenHeight();
     if( range == 0 )
@@ -264,7 +262,7 @@ public abstract class AbstractAxis<T> extends AbstractMapper implements IAxis<T>
   }
 
   @Override
-  public Double screenToNumeric( int value )
+  public Double screenToNumeric( final int value )
   {
     return normalizedToNumeric( screenToNormalized( value ) );
   }
@@ -293,13 +291,13 @@ public abstract class AbstractAxis<T> extends AbstractMapper implements IAxis<T>
   }
 
   @Override
-  public void setLogicalRange( IDataRange<T> range )
+  public void setLogicalRange( final IDataRange<T> range )
   {
     setNumericRange( new DataRange<>( logicalToNumeric( range.getMin() ), logicalToNumeric( range.getMax() ) ) );
   }
 
   @Override
-  public void setNumericRange( IDataRange<Double> range )
+  public void setNumericRange( final IDataRange<Double> range )
   {
     final Double rangeMin = range.getMin();
     final Double rangeMax = range.getMax();
@@ -447,10 +445,8 @@ public abstract class AbstractAxis<T> extends AbstractMapper implements IAxis<T>
   }
 
   @Override
-  public T XMLStringToLogical( String value ) throws MalformedValueException
+  public T xmlStringToLogical( final String value ) throws MalformedValueException
   {
-
     return getDataOperator().stringToLogical( value );
-
   }
 }

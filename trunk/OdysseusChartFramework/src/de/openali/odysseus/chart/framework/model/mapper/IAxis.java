@@ -82,8 +82,6 @@ public interface IAxis<T> extends IMapper
 
   int getScreenOffset( );
 
-  // IDataRange<Double> getSelection( );
-
   /**
    * @return true if this axis is used by Layers
    */
@@ -119,10 +117,10 @@ public interface IAxis<T> extends IMapper
 
   void setDirection( DIRECTION dir );
 
-  @Deprecated
   /**
    * @deprecated * @use addLabel(title) instead
    */
+  @Deprecated
   void setLabel( String label );
 
   void setLogicalRange( IDataRange<T> range );
@@ -147,7 +145,5 @@ public interface IAxis<T> extends IMapper
 
   void setVisible( final boolean visible );
 
-  // void setSelection( IDataRange<Double> range );
-
-  T XMLStringToLogical( String value ) throws MalformedValueException;
+  T xmlStringToLogical( String value ) throws MalformedValueException;
 }

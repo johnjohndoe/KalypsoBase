@@ -44,17 +44,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 
 import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
+import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINEJOIN;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
+import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
 
 /**
  * Collect the paint rectangles and optimized painting.
- *
+ * 
  * @author Gernot Belger
  */
 public class BarPaintManager
@@ -67,10 +74,18 @@ public class BarPaintManager
 
   private final IStyleSet m_styles;
 
+  private final IAreaStyle m_hoverStyle;
+
   public BarPaintManager( final GC gc, final IStyleSet styles )
   {
     m_gc = gc;
     m_styles = styles;
+
+    /* init hover style */
+    // TODO: hard coded for now; should be either configured or derived from existing styles
+    final RGB hoverColor = new RGB( 255, 0, 0 );
+    final ILineStyle stroke = new LineStyle( 3, hoverColor, 255, 0.0f, null, LINEJOIN.BEVEL, LINECAP.ROUND, 0, true );
+    m_hoverStyle = new AreaStyle( null, 255, stroke, false );
   }
 
   /**
@@ -89,9 +104,19 @@ public class BarPaintManager
 
     if( isInScreen( rectangle ) )
     {
-      /* index this element */
+      /* REMARK we can now set the hover figure for the edit info, as now the rectangle is known */
       final EditInfo info = paintRectangle.getEditInfo();
-      m_index.addElement( rectangle, info );
+      if( info != null )
+      {
+        final FullRectangleFigure hoverFigure = getHoverFigure();
+        final Rectangle hoverRect = RectangleUtils.bufferRect( rectangle, 2 );
+        hoverFigure.setRectangle( hoverRect );
+
+        final EditInfo infoWithFigure = new EditInfo( info.getLayer(), hoverFigure, null, info.getData(), info.getText(), null );
+
+        /* index this element */
+        m_index.addElement( hoverRect, infoWithFigure );
+      }
 
       /* paint element */
       final String[] styleNames = paintRectangle.getStyles();
@@ -104,6 +129,11 @@ public class BarPaintManager
     }
   }
 
+  private FullRectangleFigure getHoverFigure( )
+  {
+    return new FullRectangleFigure( m_hoverStyle );
+  }
+
   private FullRectangleFigure getFigure( final String styleName )
   {
     if( !m_figures.containsKey( styleName ) )
@@ -111,8 +141,7 @@ public class BarPaintManager
       final IStyle style = m_styles.getStyle( styleName );
       if( style instanceof IAreaStyle )
       {
-        final FullRectangleFigure figure = new FullRectangleFigure();
-        figure.setStyle( (IAreaStyle) style );
+        final FullRectangleFigure figure = new FullRectangleFigure( (IAreaStyle)style );
         m_figures.put( styleName, figure );
       }
     }
