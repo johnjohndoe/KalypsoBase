@@ -264,7 +264,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   }
 
   @SuppressWarnings( { "unchecked", "rawtypes" } )
-  protected IDataRange<Double> getNumericRange( IAxis axis, IDataRange logicalRange )
+  protected IDataRange<Double> getNumericRange( final IAxis axis, final IDataRange logicalRange )
   {
     if( logicalRange == null || axis == null || logicalRange.getMin() == null )
       return new DataRange<>( null, null );
@@ -276,7 +276,7 @@ public abstract class AbstractChartLayer implements IChartLayer
       final Double max = axis.logicalToNumeric( logicalRange.getMax() );
       return new DataRange<>( min, max );
     }
-    catch( ClassCastException e )
+    catch( final ClassCastException e )
     {
       System.out.println( "axis " + axis.getIdentifier() + " expect " + clazz.getSimpleName() + ", " + dataClass.getSimpleName() + " given." ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       return new DataRange<>( null, null );
@@ -320,27 +320,15 @@ public abstract class AbstractChartLayer implements IChartLayer
   /**
    * convenience method; same as getCoordinateMapper().getTargetAxis()
    */
-  @SuppressWarnings( "rawtypes" )
   protected IAxis getTargetAxis( )
   {
     if( getCoordinateMapper() == null )
       return null;
 
-    ICoordinateMapper coordinateMapper = getCoordinateMapper();
+    final ICoordinateMapper coordinateMapper = getCoordinateMapper();
 
     return coordinateMapper.getTargetAxis();
   }
-
-  /**
-   * Always returns null: Important: do not recurse into children, they may have different axes, so merging those ranges
-   * is just wrong.<br/>
-   * The caller of getDomainRange is responsible for recursion.
-   */
-//  @Override
-//  public IDataRange<Number> getTargetRange( final IDataRange<?> intervall )
-//  {
-//    return null;
-//  }
 
   @Override
   public String getTitle( )

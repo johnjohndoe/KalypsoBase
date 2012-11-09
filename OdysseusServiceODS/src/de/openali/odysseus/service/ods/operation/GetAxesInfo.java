@@ -214,11 +214,11 @@ public class GetAxesInfo extends AbstractODSOperation
 
     try
     {
-      final T minLogical = axis.XMLStringToLogical( stringRange.getMinValue() );
+      final T minLogical = axis.xmlStringToLogical( stringRange.getMinValue() );
       final String minString = axis.logicalToXMLString( minLogical );
       range.setMinValue( minString );
 
-      final T maxLogical = axis.XMLStringToLogical( stringRange.getMaxValue() );
+      final T maxLogical = axis.xmlStringToLogical( stringRange.getMaxValue() );
       final String maxString = axis.logicalToXMLString( maxLogical );
       range.setMaxValue( maxString );
     }

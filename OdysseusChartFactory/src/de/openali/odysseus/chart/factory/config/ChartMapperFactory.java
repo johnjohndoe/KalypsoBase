@@ -363,8 +363,8 @@ public class ChartMapperFactory extends AbstractChartFactory
         final String minValue = range.getMinValue();
         final String maxValue = range.getMaxValue();
 
-        final Double min = axis.logicalToNumeric( axis.XMLStringToLogical( minValue ) );
-        final Double max = axis.logicalToNumeric( axis.XMLStringToLogical( maxValue ) );
+        final Double min = axis.logicalToNumeric( axis.xmlStringToLogical( minValue ) );
+        final Double max = axis.logicalToNumeric( axis.xmlStringToLogical( maxValue ) );
 
         return new DataRange<>( min, max );// DataRange.createFromComparable( min, max );
       }

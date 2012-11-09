@@ -48,6 +48,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.joda.time.Period;
@@ -66,6 +67,7 @@ import org.kalypso.zml.ui.KalypsoZmlUI;
 import de.openali.odysseus.chart.ext.base.layer.BarPaintManager;
 import de.openali.odysseus.chart.ext.base.layer.BarRectangle;
 import de.openali.odysseus.chart.ext.base.layer.IBarLayerPainter;
+import de.openali.odysseus.chart.ext.base.layer.TooltipFormatter;
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
@@ -88,8 +90,6 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
 
   private final IAxis m_valueAxis;
 
-  private final ZmlBarLayerRangeHandler m_range;
-
   private final int m_baseLine;
 
   private final ICoordinateMapper<Date, Number> m_mapper;
@@ -108,13 +108,12 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
 
   private final String[] m_styleNames;
 
-  private final Double m_fixedHeight;
+  private final Number m_fixedHeight;
 
   private final ZmlBarLayer m_layer;
 
-  public ZmlBarLayerBackwardsVisitor( final ZmlBarLayer layer, final BarPaintManager paintManager, final ZmlBarLayerRangeHandler range, final IObservation observation, final IRequest request, final Period timestep, final String[] styleNames )
+  public ZmlBarLayerBackwardsVisitor( final ZmlBarLayer layer, final BarPaintManager paintManager, final IObservation observation, final IRequest request, final Period timestep, final String[] styleNames )
   {
-    m_range = range;
     m_observation = observation;
     m_request = request;
     m_timestep = timestep;
@@ -162,13 +161,8 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
       if( Objects.isNull( domainValue, targetValue ) )
         return;
 
-//      final Double numericTarget = m_range.getNumberDataOperator().logicalToNumeric( targetValue );
-//
-//      /* current x */
-//      final IDataOperator<Date> dateDataOperator = m_range.getDateDataOperator();
-//      final Double numericDomain = dateDataOperator.logicalToNumeric( domainValue );
-
-      final Point screenCurrent = m_mapper.logicalToScreen( domainValue, targetValue );// numericToScreen( numericDomain, numericTarget );
+      /* current x */
+      final Point screenCurrent = m_mapper.logicalToScreen( domainValue, targetValue );
 
       final int currentX = screenCurrent.x;
       final int currentY = screenCurrent.y;
@@ -325,23 +319,20 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
 
       final Date prevTime = new Date( currentTime.getTime() - widthMillis );
 
-//      final IDataOperator<Date> dateDataOperator = m_range.getDateDataOperator();
-//      final Double numericPrev = dateDataOperator.logicalToNumeric( prevTime );
-
       return m_mapper.getDomainAxis().logicalToScreen( prevTime );// .numericToScreen( numericPrev, 0.0 ).x;
     }
   }
 
   private EditInfo createInfo( final IObservationValueContainer editData )
   {
-    // TODO: highlight rectangle
+    // REMARK: the hover figure will be set later (in the paint manager) , because the real rectangle is still not known now
     final IPaintable hoverFigure = null;
     final IPaintable editFigure = null;
     if( editData == null )
       return null;
 
     // TODO: configure formatting via layer parameters?
-    final StringBuilder label = new StringBuilder();
+    final TooltipFormatter formatter = new TooltipFormatter( null, new String[] { "%s", "%s", "%s" }, new int[] { SWT.LEFT, SWT.RIGHT, SWT.LEFT } );
 
     final IAxis[] axes = editData.getAxes();
     for( final IAxis axis : axes )
@@ -353,11 +344,7 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
       {
         // FIXME: improve -> depends on data type; format double and dates correctly, etc...
         // FIXME: use same mechanism as is used by table
-        label.append( axis.getName() );
-        label.append( "  " ); //$NON-NLS-1$
-        label.append( editData.get( axis ) );
-        label.append( String.format( "[%s]", axis.getUnit() ) ); //$NON-NLS-1$
-        label.append( '\n' );
+        formatter.addLine( axis.getName(), editData.get( axis ), axis.getUnit() );
       }
       catch( final SensorException e )
       {
@@ -365,6 +352,8 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
       }
     }
 
-    return new EditInfo( m_layer, hoverFigure, editFigure, editData, label.toString(), null );
+    final String tooltip = formatter.format();
+
+    return new EditInfo( m_layer, hoverFigure, editFigure, editData, tooltip, null );
   }
 }

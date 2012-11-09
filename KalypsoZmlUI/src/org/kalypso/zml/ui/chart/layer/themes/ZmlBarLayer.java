@@ -52,7 +52,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.Period;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -73,6 +72,7 @@ import de.openali.odysseus.chart.ext.base.layer.AbstractBarLayer;
 import de.openali.odysseus.chart.ext.base.layer.BarPaintManager;
 import de.openali.odysseus.chart.ext.base.layer.IBarLayerPainter;
 import de.openali.odysseus.chart.framework.OdysseusChartExtensions;
+import de.openali.odysseus.chart.framework.exception.MalformedValueException;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
@@ -144,7 +144,7 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   @Override
   public IZmlLayerProvider getProvider( )
   {
-    return (IZmlLayerProvider) super.getProvider();
+    return (IZmlLayerProvider)super.getProvider();
   }
 
   @Override
@@ -159,7 +159,7 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
     if( m_labelDescriptor == null )
       return super.getTitle();
 
-    final IObservation observation = (IObservation) getDataHandler().getAdapter( IObservation.class );
+    final IObservation observation = (IObservation)getDataHandler().getAdapter( IObservation.class );
     if( observation == null )
       return m_labelDescriptor;
 
@@ -183,7 +183,7 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   @Override
   protected IBarLayerPainter createPainter( final BarPaintManager paintManager )
   {
-    final IObservation observation = (IObservation) m_handler.getAdapter( IObservation.class );
+    final IObservation observation = (IObservation)m_handler.getAdapter( IObservation.class );
     if( Objects.isNull( observation ) )
       return null;
 
@@ -195,7 +195,7 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
       final Period timestep = findtimestep( observation, request );
 
       // TODO: implement forwards
-      return new ZmlBarLayerBackwardsVisitor( this, paintManager, m_range, observation, request, timestep, styleNames );
+      return new ZmlBarLayerBackwardsVisitor( this, paintManager, observation, request, timestep, styleNames );
     }
     catch( final SensorException e )
     {
@@ -204,14 +204,24 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
     }
   }
 
-  Double getFixedHeight( )
+  Number getFixedHeight( )
   {
-    final String textValue = getProvider().getParameterContainer().getParameterValue( PARAMETER_FIXED_HEIGHT, null );
-    final double fixedHeight = NumberUtils.parseQuietDouble( textValue );
-    if( Double.isNaN( fixedHeight ) )
-      return null;
+    try
+    {
+      final String textValue = getProvider().getParameterContainer().getParameterValue( PARAMETER_FIXED_HEIGHT, null );
+      final Object logical = getTargetAxis().xmlStringToLogical( textValue );
+      if( logical instanceof Number )
+        return (Number)logical;
 
-    return fixedHeight;
+      // TODO: better error handling
+      return null;
+    }
+    catch( final MalformedValueException e )
+    {
+      // TODO: better error handling
+      e.printStackTrace();
+      return null;
+    }
   }
 
   // FIXME: too special for this layer, make more general...
@@ -344,7 +354,7 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
     {
       final MetadataList metadata = observation.getMetadataList();
       final IAxis[] axes = observation.getAxes();
-      ((IZmlChartLayerFilter) filter).init( metadata, axes );
+      ((IZmlChartLayerFilter)filter).init( metadata, axes );
     }
 
     return filter;

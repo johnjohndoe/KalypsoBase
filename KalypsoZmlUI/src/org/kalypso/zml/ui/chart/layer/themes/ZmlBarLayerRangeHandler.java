@@ -84,7 +84,6 @@ class ZmlBarLayerRangeHandler
     return m_domainRange;
   }
 
-  @SuppressWarnings( { "unchecked", "rawtypes" } )
   private IDataRange<Double> calculateDomainRange( )
   {
     try
@@ -116,7 +115,7 @@ class ZmlBarLayerRangeHandler
       else
         min = doAdjustMin( observation, min );
       final ICoordinateMapper mapper = m_layer.getCoordinateMapper();
-      de.openali.odysseus.chart.framework.model.mapper.IAxis domainAxis = mapper.getDomainAxis();
+      final de.openali.odysseus.chart.framework.model.mapper.IAxis domainAxis = mapper.getDomainAxis();
       final Double numMin = domainAxis.logicalToNumeric( min );
       final Double numMax = domainAxis.logicalToNumeric( max );
       return new DataRange( numMin, numMax );
@@ -159,7 +158,6 @@ class ZmlBarLayerRangeHandler
     return m_targetRange;
   }
 
-  @SuppressWarnings( { "unchecked", "rawtypes" } )
   private IDataRange<Double> calculateTargetRange( )
   {
     try
@@ -186,7 +184,7 @@ class ZmlBarLayerRangeHandler
       if( range == null )
         return null;
       final ICoordinateMapper mapper = m_layer.getCoordinateMapper();
-      de.openali.odysseus.chart.framework.model.mapper.IAxis targetAxis = mapper.getTargetAxis();
+      final de.openali.odysseus.chart.framework.model.mapper.IAxis targetAxis = mapper.getTargetAxis();
       final Double numMin = targetAxis.logicalToNumeric( range.getLower() );
       final Double numMax = targetAxis.logicalToNumeric( range.getUpper() );
       return new DataRange( numMin, numMax );
