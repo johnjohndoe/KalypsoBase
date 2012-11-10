@@ -82,11 +82,6 @@ public class DomainIntervallBarPainter implements IBarLayerPainter
     final Object[] domainStartComponent = m_dataContainer.getDomainDataIntervalStart();
     final Object[] domainEndComponent = m_dataContainer.getDomainDataIntervalEnd();
     final Object[] targetComponent = m_dataContainer.getTargetValues();
-//    
-//    final IDataOperator< ? > dopDomain = new DataOperatorHelper().getDataOperator( domainStartComponent[0].getClass() );
-//    final IDataOperator< ? > dopTarget = new DataOperatorHelper().getDataOperator( targetComponent[0].getClass() );
-//    if( dopDomain == null || dopTarget == null )
-//      return;
 
     for( int i = 0; i < domainStartComponent.length; i++ )
     {
@@ -101,7 +96,7 @@ public class DomainIntervallBarPainter implements IBarLayerPainter
       final EditInfo info = m_layer.getEditInfo( i );
       final BarRectangle barRect = new BarRectangle( rect, m_styleNames, info );
 
-      m_paintManager.addRectangle( barRect );
+      m_paintManager.addRectangle( barRect, null );
     }
   }
 }
