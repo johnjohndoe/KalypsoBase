@@ -66,6 +66,14 @@ import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
  */
 public class BarPaintManager
 {
+  /**
+   * Callback for generation of tooltips. Needed, in order to create tooltips only for visible items, as string operations are usually slow.
+   */
+  public interface ITooltipCallback
+  {
+    String buildTooltip( EditInfo info );
+  }
+
   private final HoverIndex m_index = new HoverIndex();
 
   private final Map<String, FullRectangleFigure> m_figures = new HashMap<>();
@@ -76,10 +84,14 @@ public class BarPaintManager
 
   private final IAreaStyle m_hoverStyle;
 
+  private final Rectangle m_clipping;
+
   public BarPaintManager( final GC gc, final IStyleSet styles )
   {
     m_gc = gc;
     m_styles = styles;
+
+    m_clipping = m_gc.getClipping();
 
     /* init hover style */
     // TODO: hard coded for now; should be either configured or derived from existing styles
@@ -94,11 +106,14 @@ public class BarPaintManager
    */
   public boolean isInScreen( final Rectangle rectangle )
   {
-    final Rectangle clipping = m_gc.getClipping();
-    return clipping.intersects( rectangle );
+    return m_clipping.intersects( rectangle );
   }
 
-  public void addRectangle( final BarRectangle paintRectangle )
+  /**
+   * @param tooltipCallback
+   *          If non-<code>null</code>, will be used to create the tooltip based on the currently set {@link EditInfo}. If <code>null</code>, the curretn tooltip will be used.
+   */
+  public void addRectangle( final BarRectangle paintRectangle, final ITooltipCallback tooltipCallback )
   {
     final Rectangle rectangle = paintRectangle.getRectangle();
 
@@ -106,16 +121,22 @@ public class BarPaintManager
     {
       /* REMARK we can now set the hover figure for the edit info, as now the rectangle is known */
       final EditInfo info = paintRectangle.getEditInfo();
+
       if( info != null )
       {
         final FullRectangleFigure hoverFigure = getHoverFigure();
-        final Rectangle hoverRect = RectangleUtils.bufferRect( rectangle, 2 );
+        final Rectangle hoverRect = RectangleUtils.bufferRect( rectangle, 1 );
         hoverFigure.setRectangle( hoverRect );
 
-        final EditInfo infoWithFigure = new EditInfo( info.getLayer(), hoverFigure, null, info.getData(), info.getText(), null );
+        /* build tooltip based on callback */
+        final String currenTtooltip = info.getText();
+        final String tooltip = tooltipCallback == null ? currenTtooltip : tooltipCallback.buildTooltip( info );
+
+        final EditInfo infoWithFigure = new EditInfo( info.getLayer(), hoverFigure, null, info.getData(), tooltip, null );
 
         /* index this element */
-        m_index.addElement( hoverRect, infoWithFigure );
+        final Rectangle indexRect = RectangleUtils.bufferRect( hoverRect, 2 );
+        m_index.addElement( indexRect, infoWithFigure );
       }
 
       /* paint element */
