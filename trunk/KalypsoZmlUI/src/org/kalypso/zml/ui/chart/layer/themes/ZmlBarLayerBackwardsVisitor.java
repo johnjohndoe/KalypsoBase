@@ -48,7 +48,6 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.joda.time.Period;
@@ -65,9 +64,9 @@ import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.ext.base.layer.BarPaintManager;
+import de.openali.odysseus.chart.ext.base.layer.BarPaintManager.ITooltipCallback;
 import de.openali.odysseus.chart.ext.base.layer.BarRectangle;
 import de.openali.odysseus.chart.ext.base.layer.IBarLayerPainter;
-import de.openali.odysseus.chart.ext.base.layer.TooltipFormatter;
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
@@ -84,6 +83,8 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  */
 class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPainter
 {
+  private final ITooltipCallback m_tooltipCallback = new ZmlBarLayerTooltipCallback();
+
   private final Map<String, IChartLayerFilter> m_filters = new HashMap<>();
 
   private final IAxis m_dateAxis;
@@ -182,8 +183,14 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
       final int newHeight = Math.abs( currentY - m_baseLine );
       final Rectangle rectangle = new Rectangle( newX, newY, 0, newHeight );
 
+      // REMARK: we continue even off-screen, in order to correctly handle the first rectangle
+
+      // REMARK: union needed to be sure negative/positive bars are both correctly handled
+      currentRectangle.add( rectangle );
+
       /* Only check for style if rectangle is visible at all */
-      if( m_paintManager.isInScreen( rectangle ) )
+      // REMRK: always use currentRectangle that is already inflated with last width
+      if( m_paintManager.isInScreen( currentRectangle ) )
       {
         /* find styles and set current max data */
         final String[] currentStyles = getCurrentStyles( container );
@@ -194,18 +201,13 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
         m_currentBar.setEditInfo( info );
       }
 
-      // TODO: we continue even offscreen, in order to correctly handle the first rectangle
-
-      // REMARK: union needed to be sure negative/positive bars are both correctly handled
-      currentRectangle.add( rectangle );
-
       /* Paint or store last rectangle */
       if( currentRectangle.width > 0 )
       {
         if( currentRectangle.height == 0 )
           currentRectangle.height = 1;
 
-        m_paintManager.addRectangle( m_currentBar );
+        m_paintManager.addRectangle( m_currentBar, m_tooltipCallback );
 
         /* reset rectangle */
         currentRectangle.x = currentRectangle.x + currentRectangle.width;
@@ -289,7 +291,7 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
     if( m_currentBar != null )
     {
       // FIXME: use real data object
-      m_paintManager.addRectangle( m_currentBar );
+      m_paintManager.addRectangle( m_currentBar, m_tooltipCallback );
     }
   }
 
@@ -325,34 +327,15 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
 
   private EditInfo createInfo( final IObservationValueContainer editData )
   {
-    // REMARK: the hover figure will be set later (in the paint manager) , because the real rectangle is still not known now
-    final IPaintable hoverFigure = null;
-    final IPaintable editFigure = null;
     if( editData == null )
       return null;
 
-    // TODO: configure formatting via layer parameters?
-    final TooltipFormatter formatter = new TooltipFormatter( null, new String[] { "%s", "%s", "%s" }, new int[] { SWT.LEFT, SWT.RIGHT, SWT.LEFT } );
+    // REMARK: the hover figure will be set later (in the paint manager) , because the real rectangle is still not known now
+    final IPaintable hoverFigure = null;
+    final IPaintable editFigure = null;
 
-    final IAxis[] axes = editData.getAxes();
-    for( final IAxis axis : axes )
-    {
-      if( AxisUtils.isDataSrcAxis( axis ) || AxisUtils.isStatusAxis( axis ) )
-        continue;
-
-      try
-      {
-        // FIXME: improve -> depends on data type; format double and dates correctly, etc...
-        // FIXME: use same mechanism as is used by table
-        formatter.addLine( axis.getName(), editData.get( axis ), axis.getUnit() );
-      }
-      catch( final SensorException e )
-      {
-        e.printStackTrace();
-      }
-    }
-
-    final String tooltip = formatter.format();
+    // REMARK: also the tooltip will be processed later for performance reasons (only create as many tooltips as necessary)
+    final String tooltip = null;
 
     return new EditInfo( m_layer, hoverFigure, editFigure, editData, tooltip, null );
   }
