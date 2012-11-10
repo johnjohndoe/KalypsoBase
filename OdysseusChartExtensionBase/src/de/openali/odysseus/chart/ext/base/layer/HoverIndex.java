@@ -133,7 +133,7 @@ public class HoverIndex
 
     final Polygon bounds = pair.getLeft();
     final com.vividsolutions.jts.geom.Point searchLocation = bounds.getFactory().createPoint( new Coordinate( pos.x, pos.y ) );
-    if( !bounds.contains( searchLocation ) )
+    if( bounds.distance( searchLocation ) > 1 )
       return null;
 
     /* Exact position was not set during creation of info..., so we set it now */
