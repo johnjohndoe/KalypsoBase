@@ -113,14 +113,14 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
 
   private final ZmlBarLayer m_layer;
 
-  public ZmlBarLayerBackwardsVisitor( final ZmlBarLayer layer, final BarPaintManager paintManager, final IObservation observation, final IRequest request, final Period timestep, final String[] styleNames )
+  public ZmlBarLayerBackwardsVisitor( final ZmlBarLayer layer, final BarPaintManager paintManager, final IObservation observation, final IAxis valueAxis, final IRequest request, final Period timestep, final String[] styleNames )
   {
     m_observation = observation;
     m_request = request;
     m_timestep = timestep;
     m_styleNames = styleNames;
     m_fixedHeight = layer.getFixedHeight();
-    m_valueAxis = AxisUtils.findValueAxis( observation.getAxes() );
+    m_valueAxis = valueAxis;
     m_dateAxis = AxisUtils.findDateAxis( observation.getAxes() );
 
     m_layer = layer;

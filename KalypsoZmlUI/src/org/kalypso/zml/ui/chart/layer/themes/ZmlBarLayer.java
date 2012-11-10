@@ -194,8 +194,10 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
       final IRequest request = m_handler.getRequest();
       final Period timestep = findtimestep( observation, request );
 
+      final IAxis valueAxis = m_handler.getValueAxis();
+
       // TODO: implement forwards
-      return new ZmlBarLayerBackwardsVisitor( this, paintManager, observation, request, timestep, styleNames );
+      return new ZmlBarLayerBackwardsVisitor( this, paintManager, observation, valueAxis, request, timestep, styleNames );
     }
     catch( final SensorException e )
     {

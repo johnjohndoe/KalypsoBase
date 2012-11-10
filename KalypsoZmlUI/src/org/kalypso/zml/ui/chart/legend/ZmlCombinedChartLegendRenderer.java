@@ -76,22 +76,15 @@ public class ZmlCombinedChartLegendRenderer implements IChartLegendRenderer
     return m_lastRenderer.calculateSize( canvas, config );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer#getIdentifier()
-   */
   @Override
   public String getIdentifier( )
   {
     return ID;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer#rowSize()
-   */
   @Override
   public int rowSize( )
   {
     return -1;
   }
-
 }
