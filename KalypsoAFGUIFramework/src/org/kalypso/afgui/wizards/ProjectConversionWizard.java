@@ -131,7 +131,7 @@ public class ProjectConversionWizard extends NewProjectWizard
   @Override
   public IStatus postCreateProject( final IProject project, final ProjectTemplate template, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString("ProjectConversionWizard_1"), 100 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "ProjectConversionWizard_1" ), 100 ); //$NON-NLS-1$
 
     if( m_handler != null )
       m_handler.postCreateProject( project, template, new SubProgressMonitor( monitor, 10 ) );
@@ -141,7 +141,7 @@ public class ProjectConversionWizard extends NewProjectWizard
     // How can we wait for the refresh to finish??
 
     final File inputDir = m_conversionPage.getProjectDir();
-    return doConvertProject( inputDir, project, new SubProgressMonitor( monitor, 90 ) );
+    return doConvertProject( inputDir, project, new SubProgressMonitor( monitor, 90, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK ) );
   }
 
   private IStatus doConvertProject( final File sourceDir, final IProject targetProject, final IProgressMonitor monitor )
@@ -167,7 +167,7 @@ public class ProjectConversionWizard extends NewProjectWizard
     {
       e.printStackTrace();
       final Throwable targetException = e.getTargetException();
-      return new Status( IStatus.ERROR, KalypsoAFGUIFrameworkPlugin.PLUGIN_ID, Messages.getString("ProjectConversionWizard_2"), targetException ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoAFGUIFrameworkPlugin.PLUGIN_ID, Messages.getString( "ProjectConversionWizard_2" ), targetException ); //$NON-NLS-1$
     }
     catch( final InterruptedException e )
     {
