@@ -103,7 +103,7 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
       project.close( progress.newChild( 10 ) );
 
       /* Unpack project from template */
-      monitor.subTask( Messages.getString("UnpackProjectTemplateOperation.1") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "UnpackProjectTemplateOperation.1" ) ); //$NON-NLS-1$
       final File destinationDir = project.getLocation().toFile();
       unpackProjectData( dataLocation, destinationDir );
       ProgressUtilities.worked( progress, 30 );
@@ -125,7 +125,7 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
       if( handler == null )
         return;
 
-      final IStatus postCreateStatus = handler.postCreateProject( project, template, progress.newChild( 30 ) );
+      final IStatus postCreateStatus = handler.postCreateProject( project, template, progress.newChild( 30, SubMonitor.SUPPRESS_NONE ) );
       if( !postCreateStatus.matches( IStatus.ERROR ) )
         handler.openProject( project );
 
@@ -150,7 +150,7 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
       }
 
       if( status.matches( IStatus.CANCEL ) )
-        throw new InterruptedException( Messages.getString("UnpackProjectTemplateOperation.2") ); //$NON-NLS-1$
+        throw new InterruptedException( Messages.getString( "UnpackProjectTemplateOperation.2" ) ); //$NON-NLS-1$
 
       throw t;
     }
@@ -247,7 +247,7 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
     new File( destinationDir, "plugin.xml" ).delete(); //$NON-NLS-1$
     new File( destinationDir, "build.properties" ).delete(); //$NON-NLS-1$
 
-    final File[] propertyFiles = destinationDir.listFiles( (FilenameFilter) new WildcardFileFilter( "plugin*.properties" ) ); //$NON-NLS-1$
+    final File[] propertyFiles = destinationDir.listFiles( (FilenameFilter)new WildcardFileFilter( "plugin*.properties" ) ); //$NON-NLS-1$
     if( propertyFiles != null )
     {
       for( final File file : propertyFiles )
