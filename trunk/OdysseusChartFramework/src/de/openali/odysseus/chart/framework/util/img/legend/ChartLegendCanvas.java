@@ -100,9 +100,6 @@ public class ChartLegendCanvas implements IChartLegendCanvas
     return legendRenderer.createImage( this, m_config );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.legend.IChartLegendCanvas#getModel()
-   */
   @Override
   public IChartModel getModel( )
   {

@@ -127,9 +127,11 @@ public class ChartPainter
     m_legendPainter = new ChartLegendCanvas( m_model, new DefaultChartLegendConfig( m_paintRect ) );
   }
 
-  private final Rectangle calculateLegendRect( final Rectangle chartRect, final Image legendImage )
+  private final Rectangle calculateLegendRect( final Rectangle chartRect )
   {
-    final int legendHeight = legendImage == null ? 0 : legendImage.getBounds().height;
+    final Rectangle legendSize = m_legendPainter.getSize();
+
+    final int legendHeight = legendSize.height;
     return new Rectangle( chartRect.x, chartRect.y + chartRect.height - legendHeight, chartRect.width, legendHeight );
   }
 
@@ -241,10 +243,12 @@ public class ChartPainter
     if( monitor.isCanceled() )
       return Status.CANCEL_STATUS;
 
-    final Image legendImage = m_legendPainter.createImage();
     final ChartImageInfo infoObject = new ChartImageInfo();
 
+    Image legendImage = null;
+
     final GC gc = new GC( m_image );
+
     try
     {
       gc.setAntialias( SWT.ON );
@@ -257,8 +261,11 @@ public class ChartPainter
 
       final Rectangle titleRect = calculateTitleRect( m_paintRect );
       infoObject.setTitleRect( titleRect );
-      final Rectangle legendRect = calculateLegendRect( m_paintRect, legendImage );
+
+      // REMARK: must be called BEFORE legnedImage is created
+      final Rectangle legendRect = calculateLegendRect( m_paintRect );
       infoObject.setLegendRect( legendRect );
+
       final Rectangle usableAxisRect = new Rectangle( m_paintRect.x, m_paintRect.y + titleRect.height, m_paintRect.width, m_paintRect.height - titleRect.height - legendRect.height );
       final int axisLeftWidth = getAxisWidth( POSITION.LEFT );
       final int axisRightWidth = getAxisWidth( POSITION.RIGHT );
@@ -286,6 +293,7 @@ public class ChartPainter
       m_titlePainter.paint( gc, titleRect );
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
+
       paintFrameRect( gc, plotRect );
       paintAxes( POSITION.TOP, gc, plotRect.x, axisTopRect.y + axisTopRect.height, plotInsets.left, axisTopRect.width, 0, true );
       if( monitor.isCanceled() )
@@ -303,6 +311,7 @@ public class ChartPainter
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
 
+      legendImage = m_legendPainter.createImage();
       if( legendImage != null )
         gc.drawImage( legendImage, legendRect.x, legendRect.y );
 
