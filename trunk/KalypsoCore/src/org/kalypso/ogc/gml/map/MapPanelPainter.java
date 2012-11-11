@@ -69,14 +69,17 @@ public class MapPanelPainter implements IPaintable
 
   private final IMapLayer[] m_layers;
 
+  private final MapPanel m_mapPanel;
+
   /**
    * Creates this painter. Call {@link #schedule()} immediately after creation in order to create the buffered image.
    * 
    * @param bgColor
    *          If set, the buffer image is filled with this color before any layer will be painted.
    */
-  public MapPanelPainter( final IMapLayer[] layers, final IMapModell modell, final GeoTransform world2screen )
+  public MapPanelPainter( final MapPanel mapPanel, final IMapLayer[] layers, final IMapModell modell, final GeoTransform world2screen )
   {
+    m_mapPanel = mapPanel;
     m_layers = layers;
     m_modell = modell;
     m_world2screen = world2screen;
@@ -87,25 +90,19 @@ public class MapPanelPainter implements IPaintable
     return m_world2screen;
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {
     return Messages.getString( "org.kalypso.ogc.gml.map.MapPanelPainter.0", m_modell.getLabel() ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jobs.BufferPaintJob.IPaintable#getSize()
-   */
   @Override
   public Point getSize( )
   {
     if( m_world2screen == null )
       return new Point( 0, 0 );
 
-    return new Point( (int) m_world2screen.getDestWidth(), (int) m_world2screen.getDestHeight() );
+    return new Point( (int)m_world2screen.getDestWidth(), (int)m_world2screen.getDestHeight() );
   }
 
   @Override
@@ -113,10 +110,13 @@ public class MapPanelPainter implements IPaintable
   {
     monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.map.MapPanelPainter.1" ), m_layers.length + 1 ); //$NON-NLS-1$
 
+    /* handle null bounding box in mapPanel; moved to this point, because (as accessing the full extent), this might take very long. */
+    m_mapPanel.checkBoundingBox();
+
     /* Draw background */
-    monitor.subTask( Messages.getString("MapPanelPainter.0") ); //$NON-NLS-1$
-    final int screenWidth = (int) m_world2screen.getDestWidth();
-    final int screenHeight = (int) m_world2screen.getDestHeight();
+    monitor.subTask( Messages.getString( "MapPanelPainter.0" ) ); //$NON-NLS-1$
+    final int screenWidth = (int)m_world2screen.getDestWidth();
+    final int screenHeight = (int)m_world2screen.getDestHeight();
     // setClip, necessary, as some display element use the clip bounds to determine the screen-size
     g.setClip( 0, 0, screenWidth, screenHeight );
 

@@ -579,18 +579,12 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     return null;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getSchedulingRule()
-   */
   @Override
   public ISchedulingRule getSchedulingRule( )
   {
     return m_commandTarget.getSchedulingRule();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureListVisible(org.kalypsodeegree.model.geometry.GM_Envelope)
-   */
   @Override
   public FeatureList getFeatureListVisible( final GM_Envelope env )
   {
@@ -599,9 +593,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     return null;
   }
 
-  /**
-   * @see org.kalypso.loader.IPooledObject#isLoaded()
-   */
   @Override
   public boolean isLoaded( )
   {
