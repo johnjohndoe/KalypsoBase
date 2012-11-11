@@ -351,7 +351,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     return m_featureList;
   }
 
-  // FIXME: returning a featureList here is problemativ, becauce this recreates the geo index which cost much time.
+  // FIXME: returning a featureList here is problematic, because this recreates the geo index which cost much time.
   // Make deprecated and return a list of features instead.<br/>
   // Client should either use the simple list; or do a query on the original list instead
   @Override
@@ -404,7 +404,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   @Override
   public void styleChanged( )
   {
-    requestInvalidation( new FeatureThemeInvalidation( getFullExtent(), true ) );
+    // REMARK: use null instead of fullExtent here, as this is called very early and often blocks th eui thread.
+    requestInvalidation( new FeatureThemeInvalidation( null, true ) );
 
     fireStatusChanged( this );
   }

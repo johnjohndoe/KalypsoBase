@@ -59,7 +59,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 /**
  * A {@link Job} that paints a IPaintable onto a {@link BufferedImage}.<br>
  * Its own paint method, paints the current state of the {@link BufferedImage}.<br>
- *
+ * 
  * @author Gernot Belger
  */
 public class BufferPaintJob extends Job
@@ -93,7 +93,7 @@ public class BufferPaintJob extends Job
 
   /**
    * Needed because we use {@link java.lang.ref.SoftReference}'s.
-   *
+   * 
    * @see java.lang.Object#finalize()
    */
   @Override
@@ -126,7 +126,7 @@ public class BufferPaintJob extends Job
 
   /**
    * Returns the current state of the buffered image.
-   *
+   * 
    * @return The buffered image; <code>null</code>, if the job has not yet started.
    */
   public synchronized BufferedImage getImage( )
@@ -134,9 +134,6 @@ public class BufferPaintJob extends Job
     return m_image;
   }
 
-  /**
-   * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus run( final IProgressMonitor monitor )
   {
@@ -234,8 +231,7 @@ public class BufferPaintJob extends Job
   }
 
   /**
-   * Configures the graphics-context before actual painting is started (i.e.
-   * {@link IPaintable#paint(Graphics2D, IProgressMonitor)} is called).<br>
+   * Configures the graphics-context before actual painting is started (i.e. {@link IPaintable#paint(Graphics2D, IProgressMonitor)} is called).<br>
    * Default behaviour is to set activate anti-aliasing (normal and text).<br>
    * Overwrite to change.
    */

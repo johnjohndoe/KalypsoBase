@@ -118,7 +118,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * AWT canvas that displays a {@link org.kalypso.ogc.gml.mapmodel.MapModell}.
- *
+ * 
  * @author Andreas von Dömming
  * @author Gernot Belger
  */
@@ -129,7 +129,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   /**
    * Maximum delay by which repaints to the map are produced.
-   *
+   * 
    * @see java.awt.Component#repaint(long)
    */
   private static final long LAYER_REPAINT_MILLIS = 500;
@@ -482,7 +482,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   {
     final ISelectionChangedListener[] listenersArray = m_selectionListeners.toArray( new ISelectionChangedListener[m_selectionListeners.size()] );
 
-    final IStructuredSelection selection = (IStructuredSelection) getSelection();
+    final IStructuredSelection selection = (IStructuredSelection)getSelection();
     final SelectionChangedEvent e = new SelectionChangedEvent( this, selection );
     for( final ISelectionChangedListener l : listenersArray )
     {
@@ -496,7 +496,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
           {
             /**
              * Overwritten because opening the message dialog here results in a NPE
-             *
+             * 
              * @see org.eclipse.jface.util.SafeRunnable#handleException(java.lang.Throwable)
              */
             @Override
@@ -535,7 +535,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   /**
    * calculates the current map scale (denominator) as defined in the OGC SLD 1.0.0 specification
-   *
+   * 
    * @return scale of the map
    */
   @Override
@@ -617,8 +617,9 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   {
     synchronized( this )
     {
-      if( m_boundingBox == null )
-        setBoundingBox( m_wishBBox, false, false );
+      // FIXME...
+//      if( m_boundingBox == null )
+//        setBoundingBox( m_wishBBox, false, false );
 
       /* Cancel old job if still running. */
       if( m_bufferPaintJob != null )
@@ -671,7 +672,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     }
 
     final IMapLayer[] layers = getLayersForRendering();
-    return new MapPanelPainter( layers, mapModell, projection );
+    return new MapPanelPainter( this, layers, mapModell, projection );
   }
 
   /**
@@ -682,7 +683,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
    * <li>all 'paint-listeners'</li>
    * <li>the current widget</li>
    * </ul>
-   *
+   * 
    * @see java.awt.Component#paint(java.awt.Graphics)
    */
   @Override
@@ -764,7 +765,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     final IPaintable paintable = bufferPaintJob.getPaintable();
     if( paintable instanceof MapPanelPainter )
     {
-      final MapPanelPainter mapPaintable = (MapPanelPainter) paintable;
+      final MapPanelPainter mapPaintable = (MapPanelPainter)paintable;
       final GeoTransform world2screen = mapPaintable.getWorld2screen();
       return world2screen.getSourceRect();
     }
@@ -836,7 +837,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   /**
    * This function sets the bounding box to this map panel and all its themes.
-   *
+   * 
    * @param wishBBox
    *          The new extent, will be adapted so it fits into the current size of the panel.
    */
@@ -966,7 +967,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   {
     if( selection instanceof IFeatureSelection )
     {
-      final IFeatureSelection featureSelection = (IFeatureSelection) selection;
+      final IFeatureSelection featureSelection = (IFeatureSelection)selection;
       final EasyFeatureWrapper[] allFeatures = featureSelection.getAllFeatures();
       getSelectionManager().setSelection( allFeatures );
     }
@@ -1074,7 +1075,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
           result.add( layer );
 
           if( theme instanceof IKalypsoFeatureTheme )
-            visibleFestureThemes.add( (IKalypsoFeatureTheme) theme );
+            visibleFestureThemes.add( (IKalypsoFeatureTheme)theme );
 
           return true;
         }
@@ -1170,5 +1171,11 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   public Object getMTObject( )
   {
     return m_mtObject;
+  }
+
+  void checkBoundingBox( )
+  {
+    if( m_boundingBox == null )
+      setBoundingBox( m_wishBBox, false, false );
   }
 }
