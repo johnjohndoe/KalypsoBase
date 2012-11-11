@@ -126,7 +126,7 @@ public class IntervalValuesOperation
 
     for( int i = 0; i < m_sourceModel.size(); i++ )
     {
-      final Date date = (Date) m_sourceModel.get( i, dateAxis );
+      final Date date = (Date)m_sourceModel.get( i, dateAxis );
 
       final DateTime to = new DateTime( date, zone );
       final DateTime from = to.minus( step );
@@ -208,11 +208,12 @@ public class IntervalValuesOperation
      * source interval
      */
     final double factor = sourcePartDuration / sourceDuration;
+    // FIXME: performance hot spot...
     final TupleModelDataSet[] clonedValues = TupleModelDataSet.clone( sourceData.getDataSets() );
 
     for( final TupleModelDataSet clone : clonedValues )
     {
-      clone.setValue( ((Number) clone.getValue()).doubleValue() * factor );
+      clone.setValue( ((Number)clone.getValue()).doubleValue() * factor );
     }
 
     return new IntervalData( sourcePart, clonedValues );
