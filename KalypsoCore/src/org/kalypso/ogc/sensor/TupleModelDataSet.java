@@ -103,7 +103,7 @@ public class TupleModelDataSet
     if( Objects.isNotNull( m_value ) )
     {
       if( m_value instanceof Number )
-        builder.append( String.format( "Value:\t\t%.2f\n", ((Number) m_value).doubleValue() ) ); //$NON-NLS-1$
+        builder.append( String.format( "Value:\t\t%.2f\n", ((Number)m_value).doubleValue() ) ); //$NON-NLS-1$
       else
         builder.append( String.format( "Value:\t\t%s\n", m_value ) ); //$NON-NLS-1$
     }
@@ -120,9 +120,15 @@ public class TupleModelDataSet
   @Override
   public TupleModelDataSet clone( )
   {
-    final Object value = Objects.clone( getValue() );
-    final Integer status = (Integer) Objects.clone( getStatus() );
-    final String source = (String) Objects.clone( getSource() );
+    // REMARK: deep clone not necessary, as all objects are always immutable
+    final Object value = getValue();
+    if( !(value instanceof Number) )
+    {
+      System.out.println( "oups" ); //$NON-NLS-1$
+    }
+
+    final Integer status = getStatus();
+    final String source = getSource();
 
     return new TupleModelDataSet( getValueAxis(), value, status, source );
   }
@@ -172,7 +178,7 @@ public class TupleModelDataSet
     {
       final Object objStatus = container.get( statusAxis );
       if( objStatus instanceof Number )
-        status = ((Number) objStatus).intValue();
+        status = ((Number)objStatus).intValue();
     }
 
     if( dataSourceAxis != null )
@@ -180,7 +186,7 @@ public class TupleModelDataSet
       final Object objDataSourceIndex = container.get( dataSourceAxis );
       if( objDataSourceIndex instanceof Number )
       {
-        final int dataSourceIndex = ((Number) objDataSourceIndex).intValue();
+        final int dataSourceIndex = ((Number)objDataSourceIndex).intValue();
         final DataSourceHandler handler = new DataSourceHandler( metadata );
         source = handler.getDataSourceIdentifier( dataSourceIndex );
       }
