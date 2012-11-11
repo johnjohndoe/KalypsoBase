@@ -82,7 +82,7 @@ public class ProjectConversionOperation implements IProjectConversionOperation
 
     try
     {
-      return m_converter.execute( new SubProgressMonitor( monitor, 90 ) );
+      return m_converter.execute( new SubProgressMonitor( monitor, 90, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK ) );
     }
     finally
     {
