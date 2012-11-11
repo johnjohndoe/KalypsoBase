@@ -54,7 +54,6 @@ import org.kalypso.ogc.sensor.SensorException;
  */
 public final class DateRanges
 {
-
   private DateRanges( )
   {
 
@@ -63,6 +62,7 @@ public final class DateRanges
   /**
    * removes unnecessary seconds and milliseconds from date range
    */
+  // FIXME: bad name -> normalize should make sure from < to.
   public static DateRange normalize( final DateRange dateRange )
   {
     if( Objects.isNull( dateRange ) )
@@ -77,7 +77,7 @@ public final class DateRanges
   /**
    * removes unnecessary seconds and milliseconds from date
    */
-  public static Date normalize( final Date date )
+  private static Date normalize( final Date date )
   {
     if( Objects.isNull( date ) )
       return null;
@@ -103,10 +103,28 @@ public final class DateRanges
       return d1;
 
     if( !d1.intersects( d2 ) || !d2.intersects( d1 ) )
-      throw new SensorException( Messages.getString("DateRanges_0") ); //$NON-NLS-1$
+      throw new SensorException( Messages.getString( "DateRanges_0" ) ); //$NON-NLS-1$
 
     final Long from = getMax( d1.getFrom(), d2.getFrom() );
     final Long to = getMin( d1.getTo(), d2.getTo() );
+
+    return new DateRange( new Date( from ), new Date( to ) );
+  }
+
+  /**
+   * @return the minimal interval that contains both date ranges d1 and d2.
+   */
+  public static DateRange union( final DateRange d1, final DateRange d2 )
+  {
+    if( Objects.allNull( d1, d2 ) )
+      return new DateRange();
+    else if( Objects.isNull( d1 ) )
+      return d2;
+    else if( Objects.isNull( d2 ) )
+      return d1;
+
+    final Long from = getMin( d1.getFrom(), d2.getFrom() );
+    final Long to = getMax( d1.getTo(), d2.getTo() );
 
     return new DateRange( new Date( from ), new Date( to ) );
   }
