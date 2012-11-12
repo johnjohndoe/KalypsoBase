@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.ILogListener;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
@@ -78,29 +79,45 @@ public class GeoStatusLog implements ILog
    */
   private IStatusCollection m_statusCollection;
 
+  private final String m_bundleID;
+
   /**
    * The constructor.
    * 
    * @param logFile
    *          The log file.
+   * @deprecated Use {@link #GeoStatusLog(File, String)} instead.
    */
+  @Deprecated
   public GeoStatusLog( final File logFile )
   {
+    this( logFile, null );
+  }
+
+  public GeoStatusLog( final File logFile, final String bundleID )
+  {
     m_logFile = logFile;
+    m_bundleID = bundleID;
     m_workspace = createWorkspace();
     m_statusCollection = null;
     if( m_workspace != null )
-      m_statusCollection = (IStatusCollection) m_workspace.getRootFeature().getAdapter( IStatusCollection.class );
+      m_statusCollection = (IStatusCollection)m_workspace.getRootFeature().getAdapter( IStatusCollection.class );
   }
 
+  /**
+   * @deprecated Use {@link #GeoStatusLog(IFile, String)} instead.
+   */
+  @Deprecated
   public GeoStatusLog( final IFile iFile )
   {
     this( iFile.getLocation().toFile() );
   }
 
-  /**
-   * @see org.eclipse.core.runtime.ILog#log(org.eclipse.core.runtime.IStatus)
-   */
+  public GeoStatusLog( final IFile iFile, final String bundleID )
+  {
+    this( iFile.getLocation().toFile(), bundleID );
+  }
+
   @Override
   public void log( final IStatus status )
   {
@@ -112,29 +129,20 @@ public class GeoStatusLog implements ILog
     m_statusCollection.createGeoStatus( status );
   }
 
-  /**
-   * @see org.eclipse.core.runtime.ILog#addLogListener(org.eclipse.core.runtime.ILogListener)
-   */
   @Override
   public void addLogListener( final ILogListener listener )
   {
   }
 
-  /**
-   * @see org.eclipse.core.runtime.ILog#removeLogListener(org.eclipse.core.runtime.ILogListener)
-   */
   @Override
   public void removeLogListener( final ILogListener listener )
   {
   }
 
-  /**
-   * @see org.eclipse.core.runtime.ILog#getBundle()
-   */
   @Override
   public Bundle getBundle( )
   {
-    return null;
+    return Platform.getBundle( m_bundleID );
   }
 
   /**
@@ -144,11 +152,11 @@ public class GeoStatusLog implements ILog
   {
     /* Without a log file, nothing can be done. */
     if( m_logFile == null )
-      throw new CoreException( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), Messages.getString("GeoStatusLog_0") ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), Messages.getString( "GeoStatusLog_0" ) ) ); //$NON-NLS-1$
 
     /* Without workspace, nothing can be done. */
     if( m_workspace == null )
-      throw new CoreException( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), Messages.getString("GeoStatusLog_1") ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), Messages.getString( "GeoStatusLog_1" ) ) ); //$NON-NLS-1$
 
     try
     {
@@ -158,7 +166,7 @@ public class GeoStatusLog implements ILog
     catch( final Exception e )
     {
       e.printStackTrace();
-      final String message = String.format( Messages.getString("GeoStatusLog_3"), m_logFile ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "GeoStatusLog_3" ), m_logFile ); //$NON-NLS-1$
       throw new CoreException( new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), message ) );
     }
   }
