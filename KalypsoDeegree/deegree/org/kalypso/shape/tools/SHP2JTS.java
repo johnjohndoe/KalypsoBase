@@ -65,7 +65,7 @@ import com.vividsolutions.jts.geom.impl.CoordinateArraySequence;
 
 /**
  * Transforms {@link ISHPGeometry}s to JTS {@link com.vividsolutions.jts.geom.Geometry}s.
- *
+ * 
  * @author Gernot Belger
  */
 public final class SHP2JTS
@@ -111,7 +111,7 @@ public final class SHP2JTS
       for( int p = start; p < end; p++ )
       {
         final ISHPPoint point = points[p];
-        crds[p] = new Coordinate( point.getX(), point.getY(), point.getZ() );
+        crds[p - start] = new Coordinate( point.getX(), point.getY(), point.getZ() );
       }
 
       sequences[i] = new CoordinateArraySequence( crds );
@@ -222,7 +222,7 @@ public final class SHP2JTS
 
     if( geometry instanceof GeometryCollection )
     {
-      final GeometryCollection collection = (GeometryCollection) geometry;
+      final GeometryCollection collection = (GeometryCollection)geometry;
       final int numGeometries = collection.getNumGeometries();
       for( int i = 0; i < numGeometries; i++ )
         collection.getGeometryN( i ).setSRID( srid );
@@ -238,11 +238,11 @@ public final class SHP2JTS
       return null;
 
     if( shpGeom instanceof ISHPPoint )
-      return transformPoint( (ISHPPoint) shpGeom );
+      return transformPoint( (ISHPPoint)shpGeom );
 
     if( shpGeom instanceof ISHPMultiPoint )
     {
-      final Point[] points = transformMultiPoint( (ISHPMultiPoint) shpGeom );
+      final Point[] points = transformMultiPoint( (ISHPMultiPoint)shpGeom );
       if( points == null )
         return null;
 
@@ -251,7 +251,7 @@ public final class SHP2JTS
 
     if( shpGeom instanceof SHPPolyLine || shpGeom instanceof SHPPolyLinez )
     {
-      final LineString[] curves = transformPolyLine( (ISHPParts) shpGeom );
+      final LineString[] curves = transformPolyLine( (ISHPParts)shpGeom );
       if( curves == null )
         return null;
 
@@ -260,7 +260,7 @@ public final class SHP2JTS
 
     if( shpGeom instanceof SHPPolygon || shpGeom instanceof SHPPolygonz )
     {
-      final Polygon[] polygons = transformPolygon( (ISHPParts) shpGeom );
+      final Polygon[] polygons = transformPolygon( (ISHPParts)shpGeom );
       if( polygons == null || polygons.length <= 0 )
         return null;
 
