@@ -42,6 +42,7 @@ package org.kalypso.gml.processes.constDelaunay;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import org.kalypsodeegree.model.geometry.GM_Position;
 
@@ -113,7 +114,7 @@ public class TriangleVertex
 
   public String getLine( )
   {
-    final String pos = m_position.getX() + " " + m_position.getY(); //$NON-NLS-1$
+    final String pos = String.format( Locale.US, "%.3f %.3f", m_position.getX(), m_position.getY() ); //$NON-NLS-1$
     String att = ""; //$NON-NLS-1$
     for( final double attribute : m_attributes )
     {

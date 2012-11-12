@@ -127,6 +127,10 @@ public class LineGeometryBuilder implements IGeometryBuilder
   @Override
   public GM_Object addPoint( final GM_Point p ) throws Exception
   {
+    // ensure points are distinct
+    if( !m_points.isEmpty() && m_points.get( m_points.size() - 1 ).distance( p ) < 0.001 )
+      return null;
+
     m_points.add( p );
 
     if( m_points.size() > 1 && m_points.size() == m_cnt_points )
