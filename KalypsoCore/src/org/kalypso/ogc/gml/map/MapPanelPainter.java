@@ -111,6 +111,7 @@ public class MapPanelPainter implements IPaintable
     monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.map.MapPanelPainter.1" ), m_layers.length + 1 ); //$NON-NLS-1$
 
     /* handle null bounding box in mapPanel; moved to this point, because (as accessing the full extent), this might take very long. */
+    // FIXME: still not a good place, especially as this point is not cancellable; we should either make it canelable, or find another solution
     m_mapPanel.checkBoundingBox();
 
     /* Draw background */

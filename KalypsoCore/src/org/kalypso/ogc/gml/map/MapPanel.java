@@ -334,18 +334,12 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     m_selectionListeners.add( listener );
   }
 
-  /**
-   * @see java.awt.event.ComponentListener#componentHidden(java.awt.event.ComponentEvent)
-   */
   @Override
   public void componentHidden( final ComponentEvent e )
   {
     //
   }
 
-  /**
-   * @see java.awt.event.ComponentListener#componentMoved(java.awt.event.ComponentEvent)
-   */
   @Override
   public void componentMoved( final ComponentEvent e )
   {
@@ -885,14 +879,19 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   /**
    * Determines the real bounding box from the current wish box.<br>
-   * If the wish box is currently null, we always maximise the map. This is specially nice for previously empty maps,
+   * If the wish box is currently null, we always maximize the map. This is specially nice for previously empty maps,
    * and a new theme is added.
    */
   private GM_Envelope determineBoundingBox( )
   {
     /* Adjust the new extent (using the wish bounding box). */
     final double ratio = MapPanelUtilities.getRatio( this );
+
+    // FIXME: if m_wishBox == null at this point, full extent will be called at this point, which is very slow.
+    // Probably we should put this in a separate job
+
     final GM_Envelope boundingBox = MapModellHelper.adjustBoundingBox( m_model, m_wishBBox, ratio );
+
     if( boundingBox != null )
     {
       KalypsoCoreDebug.MAP_PANEL.printf( "MinX: %d%n", boundingBox.getMin().getX() ); //$NON-NLS-1$
@@ -1120,7 +1119,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
         // Render asynchronous: no
         // Repaint during rendering: yes
-        newLayer = new BufferedRescaleMapLayer( this, theme, m_layerMutex, true, m_layerImageCache, LAYER_REPAINT_MILLIS );
+        newLayer = new BufferedRescaleMapLayer( this, theme, new MutexRule(), true, m_layerImageCache, LAYER_REPAINT_MILLIS );
       }
       else if( theme.getClass().getName().endsWith( "KalypsoWMSTheme" ) ) //$NON-NLS-1$
       {
