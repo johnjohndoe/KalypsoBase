@@ -163,7 +163,7 @@
       <command
             categoryId="de.renew.workflow.tasks.category"
             id="org.kalypso.afgui.commands.SetAsBaseScenarioCommand"
-            name="Set as base scenario...">
+            name="%org.kalypso.afgui.commands.SetAsBaseScenarioCommand.name">
       </command>
    </extension>
    <extension point="org.eclipse.ui.commandImages">
