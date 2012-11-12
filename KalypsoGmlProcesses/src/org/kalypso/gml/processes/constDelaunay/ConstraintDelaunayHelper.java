@@ -54,7 +54,6 @@ import org.kalypso.gml.processes.constDelaunay.DelaunayImpl.QuadraticAlgorithm;
 import org.kalypso.gml.processes.constDelaunay.DelaunayImpl.TriangulationDT;
 import org.kalypso.gml.processes.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_LineString;
@@ -223,16 +222,11 @@ public class ConstraintDelaunayHelper
     }
   }
 
-  public static GM_Triangle[] convertToTriangles( final GM_Position[] positions, final String crs )
-  {
-    return convertToTriangles( positions, crs, true );
-  }
-
-  public static GM_Triangle[] convertToTriangles( final GM_Position[] positions, final String crs, final boolean useTriangleExe )
+  public static GM_Triangle[] convertToTriangles( final GM_Polygon boundary, final String crs, final boolean useTriangleExe )
   {
     final List<GM_Triangle> triangleList = new LinkedList<>();
 
-    final GM_Triangle[] triangles = createGM_Triangles( positions, null, crs, useTriangleExe );
+    final GM_Triangle[] triangles = createGM_Triangles( boundary, null, crs, useTriangleExe );
 
     triangleList.addAll( Arrays.asList( triangles ) );
 
@@ -273,54 +267,50 @@ public class ConstraintDelaunayHelper
   {
     final List<GM_Triangle> triangleList = new LinkedList<>();
     final boolean lBoolConvex = pSurface.getConvexHull().difference( pSurface ) == null;
-    for( final GM_AbstractSurfacePatch surfacePatch : pSurface )
+
+    final GM_Triangle[] lArrTriangles;
+    lArrTriangles = createGM_Triangles( pSurface, null, crs, useTriangleExe, triangleArgs );
+    if( lArrTriangles != null )
     {
-      final GM_Position[] exterior = surfacePatch.getExteriorRing();
-
-      final GM_Triangle[] lArrTriangles;
-      lArrTriangles = createGM_Triangles( exterior, null, crs, useTriangleExe, triangleArgs );
-
-      if( lArrTriangles != null )
+      for( final GM_Triangle lTriangle : lArrTriangles )
       {
-        for( final GM_Triangle lTriangle : lArrTriangles )
+        if( !lBoolConvex )
         {
-          if( !lBoolConvex )
+          if( !pSurface.contains( lTriangle.getCentroid().getPosition() ) )
           {
-            if( !pSurface.contains( lTriangle.getCentroid().getPosition() ) )
-            {
-              continue;
-            }
+            continue;
           }
-
-          triangleList.add( lTriangle );
         }
+
+        triangleList.add( lTriangle );
       }
     }
     // can be used for reducing of all angles in triangles
     return triangleList.toArray( new GM_Triangle[triangleList.size()] );
   }
 
-  public static GM_Triangle[] createGM_Triangles( final GM_Position[] exterior, final GM_Curve[] breaklines, final String crs, final String... triangleArgs )
+  public static GM_Triangle[] createGM_Triangles( final GM_Polygon boundary, final GM_Curve[] breaklines, final String crs, final String... triangleArgs )
   {
-    return createGM_Triangles( exterior, breaklines, crs, true, triangleArgs );
+    return createGM_Triangles( boundary, breaklines, crs, true, triangleArgs );
   }
 
   /**
    * converts an array of {@link GM_Position} into a list of {@link GM_Triangle}. If there are more than 3 positions in
    * the array the positions gets triangulated by Triangle.exe The positions must build a closed polygon.
    */
-  public static GM_Triangle[] createGM_Triangles( final GM_Position[] exterior, final GM_Curve[] breaklines, final String crs, final boolean useTriangleExe, final String... triangleArgs )
+  public static GM_Triangle[] createGM_Triangles( final GM_Polygon boundary, final GM_Curve[] breaklines, final String crs, final boolean useTriangleExe, final String... triangleArgs )
   {
     // check if pos arrays are closed polygons
 
     // first, check the exterior ring. If it is not closed or has less than 4 positions cancel operation.
-    if( checkForPolygon( exterior ) == false )
-      throw new UnsupportedOperationException( Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.26" ) ); //$NON-NLS-1$
+//    if( checkForPolygon( boundary ) == false )
+//      throw new UnsupportedOperationException( Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.26" ) ); //$NON-NLS-1$
 
     // if there are more than 3 corner positions triangulate the pos array.
+    final GM_Position[] exterior = boundary.getSurfacePatch().getExteriorRing();
     if( exterior.length > 4 )
     {
-      return triangulatePolygon( exterior, breaklines, crs, useTriangleExe, triangleArgs );
+      return triangulatePolygon( boundary, breaklines, crs, useTriangleExe, triangleArgs );
     }
     else
     {
@@ -348,12 +338,12 @@ public class ConstraintDelaunayHelper
     return false;
   }
 
-  public static GM_Triangle[] triangulatePolygon( final GM_Position[] exterior, final GM_Curve[] breaklines, final String crs, final String... triangleArgs )
+  public static GM_Triangle[] triangulatePolygon( final GM_Polygon boundary, final GM_Curve[] breaklines, final String crs, final String... triangleArgs )
   {
-    return triangulatePolygon( exterior, breaklines, crs, true, triangleArgs );
+    return triangulatePolygon( boundary, breaklines, crs, true, triangleArgs );
   }
 
-  public static GM_Triangle[] triangulatePolygon( final GM_Position[] exterior, final GM_Curve[] breaklines, final String crs, final boolean useTriangleExe, final String... triangleArgs )
+  public static GM_Triangle[] triangulatePolygon( final GM_Polygon boundary, final GM_Curve[] breaklines, final String crs, final boolean useTriangleExe, final String... triangleArgs )
   {
     final File triangleExe = TriangleExe.findTriangleExe();
 
@@ -363,6 +353,7 @@ public class ConstraintDelaunayHelper
     if( !useTriangleExe || !triangleExe.exists() )
     {
       // triangulate without triangle.exe
+      final GM_Position[] exterior = boundary.getSurfacePatch().getExteriorRing();
       final TriangulationDT lTriangulationDT = new TriangulationDT( exterior, crs );
       final QuadraticAlgorithm lAlgorithmRunner = new QuadraticAlgorithm();
       lAlgorithmRunner.triangulate( lTriangulationDT );
@@ -372,6 +363,6 @@ public class ConstraintDelaunayHelper
     }
 
     final TriangleExe triangleHelper = new TriangleExe( crs, triangleArgs );
-    return triangleHelper.triangulate( exterior, breaklines );
+    return triangleHelper.triangulate( boundary, breaklines );
   }
 }

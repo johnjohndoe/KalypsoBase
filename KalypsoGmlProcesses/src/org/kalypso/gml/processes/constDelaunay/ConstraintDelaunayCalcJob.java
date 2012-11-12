@@ -33,8 +33,8 @@ import org.kalypso.simulation.core.util.LogHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
@@ -214,9 +214,9 @@ public class ConstraintDelaunayCalcJob implements ISimulation
     final QName featureName = new QName( GmlProcessesUrlCatalog.NS_MESH, "Triangle" ); //$NON-NLS-1$
     final QName geomName = new QName( GmlProcessesUrlCatalog.NS_MESH, "triangle" ); //$NON-NLS-1$
 
-    final List<GM_Polygon> surfaces = TriangleExe.parseTriangleElementOutput( eleReader, crs, points );
+    final List<GM_Triangle> surfaces = TriangleExe.parseTriangleElementOutput( eleReader, crs, points );
 
-    for( final GM_Polygon surface : surfaces )
+    for( final GM_Triangle surface : surfaces )
     {
       final Feature newFeature = FeatureHelper.addFeature( rootFeature, memberName, featureName );
       newFeature.setProperty( geomName, surface );

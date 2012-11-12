@@ -48,7 +48,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.util.Map;
 
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -75,6 +79,32 @@ public abstract class AbstractWidget implements IWidget
    * The map of all parameter. May be null.
    */
   private Map<String, String> m_parameter;
+
+  public AbstractWidget( final String commandId )
+  {
+    final ICommandService cs = (ICommandService)PlatformUI.getWorkbench().getService( ICommandService.class );
+    final Command command = cs.getCommand( commandId );
+    if( !command.isDefined() )
+    {
+      m_name = "undefined";
+      m_toolTip = "undefined";
+    }
+    else
+    {
+      try
+      {
+        m_name = command.getName();
+        m_toolTip = command.getDescription();
+      }
+      catch( final NotDefinedException e )
+      {
+        throw new IllegalStateException( e );
+      }
+    }
+    m_mapPanel = null;
+    m_commandPoster = null;
+    m_parameter = null;
+  }
 
   public AbstractWidget( final String name, final String toolTip )
   {
