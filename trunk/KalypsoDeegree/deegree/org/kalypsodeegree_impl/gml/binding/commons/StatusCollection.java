@@ -52,7 +52,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * A collection of geo status objects.
- *
+ * 
  * @author Gernot Belger
  */
 public class StatusCollection extends Feature_Impl implements IStatusCollection
@@ -67,7 +67,10 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
   @Override
   public IGeoStatus createGeoStatus( final IStatus status )
   {
-    return createGeoStatus( status, null, null );
+    final GM_Object location = status instanceof IGeoStatus ? ((IGeoStatus)status).getLocation() : null;
+    final Date time = status instanceof IStatusWithTime ? ((IStatusWithTime)status).getTime() : null;
+
+    return createGeoStatus( status, location, time );
   }
 
   @Override
@@ -178,7 +181,7 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
     /* Get the children. */
     final IStatus[] children = geoStatus.getChildren();
     for( final IStatus element : children )
-      addToMultiGeoStatus( multiGeoStatus, (IGeoStatus) element );
+      addToMultiGeoStatus( multiGeoStatus, (IGeoStatus)element );
 
     return multiGeoStatus;
   }
@@ -208,7 +211,7 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
     /* Get the children. */
     final IStatus[] children = geoStatus.getChildren();
     for( final IStatus element : children )
-      addToMultiGeoStatus( multiGeoStatus, (IGeoStatus) element );
+      addToMultiGeoStatus( multiGeoStatus, (IGeoStatus)element );
   }
 
   @Override
@@ -222,7 +225,7 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
       if( !(object instanceof GeoStatus) )
         continue;
 
-      final GeoStatus status = (GeoStatus) object;
+      final GeoStatus status = (GeoStatus)object;
       children.add( status );
     }
 
@@ -263,7 +266,7 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
 
     /* Handle a status with time priorized. */
     if( status instanceof IStatusWithTime )
-      geoStatus.setTime( ((IStatusWithTime) status).getTime() );
+      geoStatus.setTime( ((IStatusWithTime)status).getTime() );
     else
       geoStatus.setTime( time );
   }
