@@ -47,6 +47,7 @@ import java.util.Iterator;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.dbf.IDBFField;
@@ -57,7 +58,7 @@ import org.kalypso.transformation.PrjHelper;
 
 /**
  * Writes a {@link ShapeFile} based on data from a {@link IShapeDataProvider}.
- *
+ * 
  * @author Gernot Belger
  */
 public class ShapeWriter
@@ -73,11 +74,11 @@ public class ShapeWriter
    * @param shapeFileBase
    *          The absolute file path to the shape file that will be written.
    */
-  public void write( final String shapeFileBase, final IProgressMonitor monitor ) throws IOException, DBaseException, SHPException, ShapeDataException
+  public void write( final String shapeFileBase, final IProgressMonitor pm ) throws IOException, DBaseException, SHPException, ShapeDataException
   {
     final String taskMsg = String.format( "Writing shape %s", shapeFileBase );
 
-    monitor.beginTask( taskMsg, m_data.size() );
+    final SubMonitor monitor = SubMonitor.convert( pm, taskMsg, m_data.size() );
 
     final Charset charset = m_data.getCharset();
     final ShapeType shapeType = m_data.getShapeType();

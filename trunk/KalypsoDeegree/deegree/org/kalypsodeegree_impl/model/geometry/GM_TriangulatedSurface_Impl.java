@@ -37,10 +37,15 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import gnu.trove.TIntProcedure;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.Range;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.transformation.transformer.GeoTransformerException;
+import org.kalypsodeegree.model.elevation.ElevationException;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -49,6 +54,7 @@ import org.kalypsodeegree.model.geometry.GM_PolyhedralSurface;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
+import org.kalypsodeegree.model.geometry.MinMaxSurfacePatchVisitor;
 
 import com.infomatiq.jsi.Rectangle;
 
@@ -58,6 +64,10 @@ import com.infomatiq.jsi.Rectangle;
 public class GM_TriangulatedSurface_Impl extends GM_PolyhedralSurface_Impl<GM_Triangle> implements GM_TriangulatedSurface
 {
   private GM_Triangle m_lastHit = null;
+
+  private boolean m_hasStatistics = false;
+
+  private Range<BigDecimal> m_minMax;
 
   public GM_TriangulatedSurface_Impl( final String crs ) throws GM_Exception
   {
@@ -96,7 +106,7 @@ public class GM_TriangulatedSurface_Impl extends GM_PolyhedralSurface_Impl<GM_Tr
   {
     try
     {
-      final GM_Point transformedLocation = (GM_Point) location.transform( getCoordinateSystem() );
+      final GM_Point transformedLocation = (GM_Point)location.transform( getCoordinateSystem() );
       final GM_Position position = transformedLocation.getPosition();
       return getValue( position );
     }
@@ -128,7 +138,7 @@ public class GM_TriangulatedSurface_Impl extends GM_PolyhedralSurface_Impl<GM_Tr
         return lastHit;
     }
 
-    final Rectangle searchEnv = new Rectangle( (float) position.getX(), (float) position.getY(), (float) position.getX(), (float) position.getY() );
+    final Rectangle searchEnv = new Rectangle( (float)position.getX(), (float)position.getY(), (float)position.getX(), (float)position.getY() );
 
     final GM_Triangle[] result = new GM_Triangle[] { null };
 
@@ -170,7 +180,7 @@ public class GM_TriangulatedSurface_Impl extends GM_PolyhedralSurface_Impl<GM_Tr
       final int cnt = size();
       final GM_Triangle[] triangles = new GM_Triangle[cnt];
       for( int i = 0; i < cnt; i++ )
-        triangles[i] = (GM_Triangle) get( i ).transform( targetCRS );
+        triangles[i] = (GM_Triangle)get( i ).transform( targetCRS );
 
       return GeometryFactory.createGM_TriangulatedSurface( triangles, targetCRS );
     }
@@ -193,14 +203,37 @@ public class GM_TriangulatedSurface_Impl extends GM_PolyhedralSurface_Impl<GM_Tr
   }
 
   @Override
-  public double getMinElevation( )
+  public double getMinElevation( ) throws ElevationException
   {
-    throw new UnsupportedOperationException();
+    buildStatistics();
+    return m_minMax.getMinimum().doubleValue();
   }
 
   @Override
-  public double getMaxElevation( )
+  public double getMaxElevation( ) throws ElevationException
   {
-    throw new UnsupportedOperationException();
+    buildStatistics();
+    return m_minMax.getMaximum().doubleValue();
+  }
+
+  private void buildStatistics( ) throws ElevationException
+  {
+    if( m_hasStatistics )
+      return;
+    final MinMaxSurfacePatchVisitor<GM_Triangle> minMaxVisitor = new MinMaxSurfacePatchVisitor<>();
+    final GM_Envelope maxBox = getEnvelope();
+    try
+    {
+      acceptSurfacePatches( maxBox, minMaxVisitor, new NullProgressMonitor() );
+    }
+    catch( final CoreException e )
+    {
+      throw new ElevationException( e.getStatus().getMessage(), e );
+    }
+
+    final BigDecimal min = minMaxVisitor.getMin();
+    final BigDecimal max = minMaxVisitor.getMax();
+
+    m_minMax = Range.between( min, max );
   }
 }
