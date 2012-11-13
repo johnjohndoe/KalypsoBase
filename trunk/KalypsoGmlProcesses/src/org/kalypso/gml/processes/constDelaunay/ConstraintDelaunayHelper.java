@@ -60,6 +60,7 @@ import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -302,20 +303,17 @@ public class ConstraintDelaunayHelper
   {
     // check if pos arrays are closed polygons
 
-    // first, check the exterior ring. If it is not closed or has less than 4 positions cancel operation.
-//    if( checkForPolygon( boundary ) == false )
-//      throw new UnsupportedOperationException( Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.26" ) ); //$NON-NLS-1$
-
     // if there are more than 3 corner positions triangulate the pos array.
-    final GM_Position[] exterior = boundary.getSurfacePatch().getExteriorRing();
-    if( exterior.length > 4 )
-    {
+    final GM_PolygonPatch surfacePatch = boundary.getSurfacePatch();
+    final GM_Position[] exterior = surfacePatch.getExteriorRing();
+
+    final GM_Position[][] interiorRings = surfacePatch.getInteriorRings();
+    final boolean hasInteriorRings = interiorRings != null && interiorRings.length > 0;
+
+    if( exterior.length > 4 || hasInteriorRings )
       return triangulatePolygon( boundary, breaklines, crs, useTriangleExe, triangleArgs );
-    }
-    else
-    {
-      return new GM_Triangle[] { GeometryFactory.createGM_Triangle( exterior[0], exterior[1], exterior[2], crs ) };
-    }
+
+    return new GM_Triangle[] { GeometryFactory.createGM_Triangle( exterior[0], exterior[1], exterior[2], crs ) };
   }
 
   /**
