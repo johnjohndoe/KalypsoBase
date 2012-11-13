@@ -349,7 +349,7 @@ public class ConstraintDelaunayHelper
 
     // FIXME mega ugly: this is not transparent to the user, wether triangle exe was used or not. Makes much more
     // explicit.
-    // TODO: instead of the flag, we should split the whole helper class into two trinagulation classes, using the same interface
+    // TODO: instead of the flag, we should split the whole helper class into two triangulation classes, using the same interface
     if( !useTriangleExe || !triangleExe.exists() )
     {
       // triangulate without triangle.exe
