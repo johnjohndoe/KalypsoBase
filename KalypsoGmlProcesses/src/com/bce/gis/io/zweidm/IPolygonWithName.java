@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package com.bce.gis.io.zweidm;
 
+import org.eclipse.core.runtime.IStatus;
+
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Polygon;
 
@@ -58,4 +60,8 @@ public interface IPolygonWithName
   Envelope getEnvelope( );
 
   Polygon getPolygon( );
+
+  void setStatus( IStatus status );
+
+  IStatus getStatus( );
 }

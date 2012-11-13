@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package com.bce.gis.io.zweidm;
 
+import org.eclipse.core.runtime.IStatus;
+
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Polygon;
 
@@ -51,6 +53,8 @@ public class PolygonWithName implements IPolygonWithName
   private final String m_name;
 
   private final Polygon m_polygon;
+
+  private IStatus m_status;
 
   public PolygonWithName( final String name, final Polygon polygon )
   {
@@ -74,5 +78,17 @@ public class PolygonWithName implements IPolygonWithName
   public Polygon getPolygon( )
   {
     return m_polygon;
+  }
+
+  @Override
+  public void setStatus( final IStatus status )
+  {
+    m_status = status;
+  }
+
+  @Override
+  public IStatus getStatus( )
+  {
+    return m_status;
   }
 }
