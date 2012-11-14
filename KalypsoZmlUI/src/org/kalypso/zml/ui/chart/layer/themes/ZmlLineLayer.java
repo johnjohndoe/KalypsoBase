@@ -87,6 +87,7 @@ import de.openali.odysseus.chart.framework.util.resource.IPair;
  */
 public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
 {
+
   private IZmlLayerDataHandler m_dataHandler;
 
   private String m_labelDescriptor;
@@ -107,7 +108,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   @Override
   public IZmlLayerProvider getProvider( )
   {
-    return (IZmlLayerProvider) super.getProvider();
+    return (IZmlLayerProvider)super.getProvider();
   }
 
   private void setup( final URL context )
@@ -179,7 +180,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     if( m_labelDescriptor == null )
       return super.getTitle();
 
-    final IObservation observation = (IObservation) getDataHandler().getAdapter( IObservation.class );
+    final IObservation observation = (IObservation)getDataHandler().getAdapter( IObservation.class );
     if( observation == null )
       return m_labelDescriptor;
 
@@ -213,10 +214,10 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     }
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings( "unchecked" )
   IPair<Number, Number>[] getFilteredPoints( final IDataRange<Number> domainIntervall, final IProgressMonitor monitor ) throws SensorException
   {
-    final IObservation observation = (IObservation) m_dataHandler.getAdapter( IObservation.class );
+    final IObservation observation = (IObservation)m_dataHandler.getAdapter( IObservation.class );
     if( observation == null )
       return new IPair[0];
 
@@ -240,8 +241,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     if( clip != null && !clip.contains( point.getDomain().doubleValue(), point.getTarget().doubleValue() ) )
       return;
 
-    @SuppressWarnings("unchecked")
-    final IPair<Number,Number>[] points = new IPair[]{point};
+    @SuppressWarnings( "unchecked" ) final IPair<Number, Number>[] points = new IPair[] { point };
 
     final ICoordinateMapper mapper = getCoordinateMapper();
 
@@ -301,7 +301,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     if( domainValue == null )
       return defaultValue;
 
-    return getCoordinateMapper().getDomainAxis().logicalToNumeric( domainValue );//getRangeHandler().getDateDataOperator().logicalToNumeric( domainValue );
+    return getCoordinateMapper().getDomainAxis().logicalToNumeric( domainValue );// getRangeHandler().getDateDataOperator().logicalToNumeric( domainValue );
   }
 
   private DateRange getRange( )

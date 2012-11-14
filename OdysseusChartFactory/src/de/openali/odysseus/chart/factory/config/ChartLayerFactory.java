@@ -417,6 +417,7 @@ public class ChartLayerFactory extends AbstractChartFactory
 
     layer.setLegend( layerType.getLegend() );
     layer.setVisible( layerType.getVisible() );
+    layer.setHideIfNoData( layerType.getHideIfNoData() );
   }
 
   private IAxis buildMapper( final ReferencingType reference )

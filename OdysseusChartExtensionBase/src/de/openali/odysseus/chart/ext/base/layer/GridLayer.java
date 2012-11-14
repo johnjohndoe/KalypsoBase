@@ -32,6 +32,13 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 public class GridLayer extends AbstractChartLayer
 {
 
+  @Override
+  public boolean isVisible( )
+  {
+    // TODO Auto-generated method stub
+    return super.isVisible();
+  }
+
   public enum GridOrientation
   {
     HORIZONTAL,
