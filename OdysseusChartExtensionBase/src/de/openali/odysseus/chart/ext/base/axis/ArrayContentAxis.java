@@ -9,6 +9,7 @@ import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 /**
  * @author kimwerner
  */
+
 public class ArrayContentAxis extends AbstractAxis<Integer>
 {
   @Override
@@ -45,7 +46,7 @@ public class ArrayContentAxis extends AbstractAxis<Integer>
     final int start = getNumericRange().getMin().intValue();
     return getScreenOffset() + (value.intValue() - start) * m_fixedWidth;
   }
-
+//FIXME: use API logicalToNumeric and refactor axis<INTEGER> to axis<Content>
   public Object numericToContent( final int index )
   {
     if( m_contentProvider == null )

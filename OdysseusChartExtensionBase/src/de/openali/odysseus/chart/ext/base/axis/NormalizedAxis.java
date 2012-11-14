@@ -7,9 +7,9 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 /**
  * @author kimwerner
  */
-public class ScreenCoordinateAxis extends IntegerAxis
+public class NormalizedAxis extends IntegerAxis
 {
-  public ScreenCoordinateAxis( final String id, final POSITION pos )
+  public NormalizedAxis( final String id, final POSITION pos )
   {
     super( id, pos );
   }
@@ -18,9 +18,10 @@ public class ScreenCoordinateAxis extends IntegerAxis
   @Override
   public IDataRange<Double> getNumericRange( )
   {
-    // use screenCoordinates as DataRange
-    final Integer screenMax = getScreenHeight();
-    return new DataRange<>( 0.0, screenMax.doubleValue() );
+    // use fixed normalized values
+    // see IAxisConstants ALIGNMENT
+    // 0.0 => alignment Top, 1.0=>alignment Bottom, 0,5 => Center
+    return new DataRange<>( 0.0, 1.0);
   }
 
   @Override
@@ -35,7 +36,7 @@ public class ScreenCoordinateAxis extends IntegerAxis
   @Override
   public void setNumericRange( final IDataRange range )
   {
-    // do nothing, fixed Range from screenCoordinates
+    // do nothing, fixed Range <0,1>
   }
 
  

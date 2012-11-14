@@ -80,10 +80,11 @@ public class AutoScaleVisitor implements IAxisVisitor
 
   private IDataRange<Number> adjustRange( final IAxisAdjustment adj, final IDataRange<Number> mergedDataRange )
   {
-    if( adj == null )
+    if( adj == null || mergedDataRange == null || mergedDataRange.getMax() == null || mergedDataRange.getMin() == null )
       return mergedDataRange;
 
-    // FIXME: comments!
+    // prozentualer offset vor und hinter dem Datenbereich beim maximieren
+    // before+range+after=100
     final double adjBefore = adj.getBefore();
     final double adjRange = adj.getRange();
     final double adjAfter = adj.getAfter();
@@ -115,7 +116,7 @@ public class AutoScaleVisitor implements IAxisVisitor
     final double newMin = rangeMin - rangeSize * adjBefore / adjRange;
     final double newMax = rangeMax + rangeSize * adjAfter / adjRange;
 
-    return DataRange.createFromComparable( (Number) newMin, (Number) newMax );
+    return DataRange.createFromComparable( (Number)newMin, (Number)newMax );
   }
 
   private IDataRange<Number> getChartRanges( final IAxis axis )
