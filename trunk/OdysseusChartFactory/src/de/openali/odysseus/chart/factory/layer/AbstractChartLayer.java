@@ -364,6 +364,9 @@ public abstract class AbstractChartLayer implements IChartLayer
   @Override
   public boolean isVisible( )
   {
+//    if( m_hideIfNoData ) 
+//      return hasData() && m_isVisible;
+    
     return m_isVisible;
   }
 

@@ -45,7 +45,6 @@ import java.util.List;
 
 import org.kalypso.commons.exception.CancelVisitorException;
 
-import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor2;
@@ -136,9 +135,8 @@ public class AxisRangeVisitor implements IChartLayerVisitor2
 
     // if mergedDataRange is null, we keep the old range - if there is any
     if( m_axis.getNumericRange() != null )
-      return null;
+      return m_axis.getNumericRange();
 
-    // otherwise, we use a default range
-    return DataRange.createFromComparable( (Number) 0, (Number) 1 );
+    return null;// DataRange.createFromComparable( (Number) 0, (Number) 1 );
   }
 }
