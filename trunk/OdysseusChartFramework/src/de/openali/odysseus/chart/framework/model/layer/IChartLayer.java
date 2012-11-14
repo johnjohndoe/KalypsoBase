@@ -16,6 +16,8 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
  */
 public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEventListener>
 {
+  void addFilter( IChartLayerFilter... filter );
+
   void dispose( );
 
   ICoordinateMapper getCoordinateMapper( );
@@ -33,10 +35,12 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
   // FIXME: please, please, comment: what kind should the layer return here, logical or numeric???
   IDataRange<Double> getDomainRange( );
 
+  IChartLayerFilter[] getFilters( );
+  
   ILegendEntry[] getLegendEntries( );
-
+  
   ILayerProvider getProvider( );
-
+  
   /**
    * @param domainIntervall
    *          shrinks the TargetRange, pass null to retrieve full dataRange
@@ -47,6 +51,8 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
    * @return the layers title
    */
   String getTitle( );
+
+  boolean hasData();
 
   /**
    * Initialization method; will be called after setCoordinateMapper
@@ -59,6 +65,10 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
    */
   boolean isActive( );
 
+  boolean isAutoScale( );
+
+  boolean isHideIfNoData( );
+
   /**
    * @return layer is visible in chart legend
    */
@@ -70,6 +80,10 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
    * draws the layer using the given GC and Device
    */
   void paint( final GC gc, ChartImageInfo chartImageInfo, IProgressMonitor monitor );
+
+  void removeFilter( IChartLayerFilter... filter );
+
+  boolean requireVisibleAxis();
 
   void setActive( boolean isActive );
 
@@ -86,6 +100,10 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
    */
   void setDescription( String description );
 
+  void setFilter( IChartLayerFilter... filters );
+
+  void setHideIfNoData( boolean hideIfNoData );
+
   /**
    * @param isVisible
    *          layer is visible in chart legend
@@ -93,23 +111,11 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
   void setLegend( final boolean isVisible );
 
   void setParent( ILayerContainer parent );
-
+  
   /**
    * sets the layers title (which will be shown in the legend)
    */
   void setTitle( final String title );
 
   void setVisible( final boolean isVisible );
-
-  void addFilter( IChartLayerFilter... filter );
-
-  void removeFilter( IChartLayerFilter... filter );
-
-  void setFilter( IChartLayerFilter... filters );
-
-  IChartLayerFilter[] getFilters( );
-  
-  boolean requireVisibleAxis();
-
-  boolean isAutoScale( );
 }

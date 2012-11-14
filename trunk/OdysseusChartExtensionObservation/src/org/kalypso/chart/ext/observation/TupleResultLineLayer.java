@@ -33,6 +33,50 @@ import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipChartLayer
 {
 //  private static String TOOLTIP_FORMAT = "%-12s %s %n%-12s %s"; //$NON-NLS-1$
+  private int m_targetValueSize = -1;
+
+  private int m_domainValueSize = -1;
+
+  @Override
+  public boolean hasData( )
+  {
+    final TupleResultDomainValueData< ? , ? > data = getValueData();
+    if( data == null )
+      return false;
+    if( m_targetValueSize < 0 )
+    {
+      Object[] targetValues = data.getTargetValues();
+      if( targetValues == null )
+        return false;
+      m_targetValueSize = 0;
+      for( int i = 0; i < targetValues.length; i++ )
+      {
+        if( targetValues[i] != null )
+        {
+          m_targetValueSize = targetValues.length;
+          break;
+        }
+      }
+    }
+    //Ganglinien (Hydrograph) können null Werte haben
+    // spezialfall: Code verschieben?
+    if( m_domainValueSize < 0 )
+    {
+      Object[] domainValues = data.getDomainValues();
+      if( domainValues == null )
+        return false;
+      m_domainValueSize = 0;
+      for( int i = 0; i < domainValues.length; i++ )
+      {
+        if( domainValues[i] != null )
+        {
+          m_domainValueSize = domainValues.length;
+          break;
+        }
+      }
+    }
+    return m_targetValueSize > 0 && m_domainValueSize > 0;
+  }
 
   private final TupleResultDomainValueData< ? , ? > m_valueData;
 

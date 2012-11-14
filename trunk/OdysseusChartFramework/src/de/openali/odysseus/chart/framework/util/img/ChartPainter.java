@@ -143,9 +143,9 @@ public class ChartPainter
 
   private final int getAxisWidth( final POSITION position )
   {
-    final IAxis[] axes = m_model.getMapperRegistry().getAxesAt( position );
+    final IAxis< ? >[] axes = m_model.getMapperRegistry().getAxesAt( position );
     int totalWidth = 0;
-    for( final IAxis axis : axes )
+    for( final IAxis< ? > axis : axes )
     {
       final IAxisRenderer renderer = axis.getRenderer();
       if( renderer != null )
@@ -163,7 +163,7 @@ public class ChartPainter
 
   private void paintAxes( final POSITION position, final GC gc, final int anchorX, final int anchorY, final int startOffset, final int screenWidth, final int rotation, final boolean invertVertical )
   {
-    final IAxis[] axes = m_model.getMapperRegistry().getAxesAt( position );
+    final IAxis< ? >[] axes = m_model.getMapperRegistry().getAxesAt( position );
 
     final Transform oldTransform = new Transform( gc.getDevice() );
     final Transform newTransform = new Transform( gc.getDevice() );
@@ -177,7 +177,7 @@ public class ChartPainter
 
     try
     {
-      for( final IAxis axis : axes )
+      for( final IAxis< ? > axis : axes )
       {
         if( !axis.isVisible() )
           continue;
@@ -225,17 +225,18 @@ public class ChartPainter
         final ILineStyle lineStyle = StyleUtils.getDefaultLineStyle();
         lineStyle.setWidth( 1 );
         edge.setLineStyle( lineStyle );
-        for( final IAxis axis : m_model.getMapperRegistry().getAxesAt( position ) )
-        {
-          if( axis.isVisible() )
-          {
-            edge.setLineStyle( axis.getRenderer().getLineStyle() );
-            break;
-          }
-        }
+//        for( final IAxis<?> axis : m_model.getMapperRegistry().getAxesAt( position ) )
+//        {
+//          if( axis.isVisible() )
+//          {
+//            edge.setLineStyle( axis.getRenderer().getLineStyle() );
+//            break;
+//          }
+//        }
       }
     }
-    plotFrame.paint( gc, rect );
+    //TODO check this
+    plotFrame.paint( gc, new Rectangle( rect.x - 1, rect.y, rect.width+1, rect.height ) );
   }
 
   public final IStatus paintImage( final IProgressMonitor monitor )

@@ -132,6 +132,11 @@
             <documentation>display layer in chart legend</documentation>
           </annotation>
         </attribute>
+        <attribute name="hideIfNoData" type="boolean" default="false">
+          <annotation>
+            <documentation>allows layer to hide, if layer has no Data</documentation>
+          </annotation>
+        </attribute>
       </extension>
     </complexContent>
   </complexType>
@@ -277,6 +282,9 @@
   </complexType>
 
   <complexType name="ScreenAxisType">
+  	<annotation>
+    	<documentation>deprecated, use normal Axis instead and a ScreenAxisProvider</documentation>
+    </annotation>
     <complexContent>
       <extension base="ods:MapperType">
         <sequence>

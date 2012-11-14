@@ -61,8 +61,10 @@ public abstract class AbstractChartLayer implements IChartLayer
 
   private boolean m_isActive = false;
 
-  private boolean m_isVisible = true;
+  private boolean m_hideIfNoData =false;
 
+  private boolean m_isVisible = true;
+  
   private boolean m_isAutoScale = true;
 
   private final ILayerManager m_layerManager = new LayerManager( this );
@@ -71,11 +73,11 @@ public abstract class AbstractChartLayer implements IChartLayer
 
   private final ILayerProvider m_provider;
 
-  // private final Map<String, IRetinalMapper> m_mapperMap = new HashMap<>();
-
   private String m_title = null;
 
   private IStyleSet m_styleSet;
+
+  // private final Map<String, IRetinalMapper> m_mapperMap = new HashMap<>();
 
   private ILayerContainer m_parent;
 
@@ -185,11 +187,6 @@ public abstract class AbstractChartLayer implements IChartLayer
     m_layerManager.clear();
   }
 
-//  public void addMapper( final String role, final IRetinalMapper mapper )
-//  {
-//    m_mapperMap.put( role, mapper );
-//  }
-
   @Override
   public final ICoordinateMapper getCoordinateMapper( )
   {
@@ -201,6 +198,11 @@ public abstract class AbstractChartLayer implements IChartLayer
   {
     return m_data.get( id );
   }
+
+//  public void addMapper( final String role, final IRetinalMapper mapper )
+//  {
+//    m_mapperMap.put( role, mapper );
+//  }
 
   @Override
   public String getDescription( )
@@ -284,11 +286,6 @@ public abstract class AbstractChartLayer implements IChartLayer
 
   }
 
-//  protected IRetinalMapper getMapper( final String role )
-//  {
-//    return m_mapperMap.get( role );
-//  }
-
   @Override
   public ILayerContainer getParent( )
   {
@@ -300,6 +297,11 @@ public abstract class AbstractChartLayer implements IChartLayer
   {
     return m_provider;
   }
+
+//  protected IRetinalMapper getMapper( final String role )
+//  {
+//    return m_mapperMap.get( role );
+//  }
 
   protected final <T extends IStyle> T getStyle( final Class<T> clazz )
   {
@@ -320,6 +322,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   /**
    * convenience method; same as getCoordinateMapper().getTargetAxis()
    */
+  @SuppressWarnings( "rawtypes" )
   protected IAxis getTargetAxis( )
   {
     if( getCoordinateMapper() == null )
@@ -334,6 +337,13 @@ public abstract class AbstractChartLayer implements IChartLayer
   public String getTitle( )
   {
     return m_title;
+  }
+
+  @Override
+  public boolean hasData( )
+  {
+    // TODO Auto-generated method stub
+    return true;
   }
 
   @Override
@@ -356,6 +366,12 @@ public abstract class AbstractChartLayer implements IChartLayer
   }
 
   @Override
+  public boolean isHideIfNoData( )
+  {
+    return m_hideIfNoData;
+  }
+
+  @Override
   public boolean isLegend( )
   {
     return m_legendIsVisible;
@@ -364,8 +380,8 @@ public abstract class AbstractChartLayer implements IChartLayer
   @Override
   public boolean isVisible( )
   {
-//    if( m_hideIfNoData ) 
-//      return hasData() && m_isVisible;
+    if( m_hideIfNoData )
+      return hasData() && m_isVisible;
     
     return m_isVisible;
   }
@@ -469,6 +485,12 @@ public abstract class AbstractChartLayer implements IChartLayer
       if( Objects.isNotNull( filter ) )
         addFilter( filter );
     }
+  }
+
+  @Override
+  public void setHideIfNoData( boolean hideIfNoData )
+  {
+    m_hideIfNoData = hideIfNoData;
   }
 
   @Override
