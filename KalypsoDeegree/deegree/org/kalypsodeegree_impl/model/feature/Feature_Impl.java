@@ -687,14 +687,25 @@ public class Feature_Impl extends PlatformObject implements Feature
       setProperty( relation, null );
       return null;
     }
-    else
+
+    /* Create link and set to myself as property */
+    final IXLinkedFeature link = new XLinkedFeature_Impl( this, relation, featureType, href );
+
+    // REMARK: backwards compatibility; insert local href as string instead of xlink
+    // else, old client code that not correctly resolves the links will break
+    final Object linkOrString;
+    if( link.getUri() == null )
     {
-      /* Create link and set to myself as property */
-      final IXLinkedFeature link = new XLinkedFeature_Impl( this, relation, featureType, href );
-      final Object linkOrString = link.getUri() == null ? href : link;
-      setProperty( relation, linkOrString );
-      return link;
+      if( href.startsWith( "#" ) ) //$NON-NLS-1$
+        linkOrString = href.substring( 1 );
+      else
+        linkOrString = href;
     }
+    else
+      linkOrString = link;
+
+    setProperty( relation, linkOrString );
+    return link;
   }
 
   @Override
