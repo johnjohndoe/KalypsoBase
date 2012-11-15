@@ -118,7 +118,7 @@ public class TriangleVertex
     String att = ""; //$NON-NLS-1$
     for( final double attribute : m_attributes )
     {
-      att = att + " " + attribute; //$NON-NLS-1$
+      att = att + String.format( Locale.US, " %.3f", attribute ); //$NON-NLS-1$
     }
     return pos + att;
 
