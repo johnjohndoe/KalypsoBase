@@ -60,11 +60,6 @@ import de.openali.odysseus.chart.framework.util.img.ChartPainter;
  */
 public class ChartPaintJob extends Job
 {
-  public ChartImageInfo getPlotInfo( )
-  {
-    return m_plotInfo;
-  }
-
   private final ChartImageComposite m_chart;
 
   private Image m_plotImage;
@@ -81,7 +76,7 @@ public class ChartPaintJob extends Job
 
   public ChartPaintJob( final ChartImageComposite chart )
   {
-    super( "Painting chart" );
+    super( "Painting chart" ); //$NON-NLS-1$
 
     m_chart = chart;
 
@@ -116,12 +111,17 @@ public class ChartPaintJob extends Job
     return status;
   }
 
+  public ChartImageInfo getPlotInfo( )
+  {
+    return m_plotInfo;
+  }
+
   private synchronized void setDoRedraw( final boolean doRedraw )
   {
     m_doRedraw = doRedraw;
 
     /* Even if stopping, redraw one last time */
-    m_redrawJob.schedule( 50 );
+    m_redrawJob.schedule( 250 );
   }
 
   synchronized boolean isDoRedraw( )
@@ -146,6 +146,9 @@ public class ChartPaintJob extends Job
 
     if( monitor.isCanceled() )
       return Status.CANCEL_STATUS;
+
+    if( bounds.width == 0 || bounds.height == 0 )
+      return Status.OK_STATUS;
 
     final Image plotImage = createPlotImage( bounds );
     if( plotImage == null )

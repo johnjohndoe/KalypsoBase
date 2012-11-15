@@ -86,6 +86,6 @@ final class ChartRedrawJob extends UIJob
   void handleJobDone( )
   {
     if( m_chartPaintJob.isDoRedraw() )
-      schedule( 250 );
+      schedule( 100 );
   }
 }
