@@ -106,36 +106,29 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 /**
  * The Feature View shows a single feature as a form.
  * <p>
- * The view analyses the currently selection, and shows the first element which is a
- * {@link org.kalypsodeegree.model.feature.Feature}.
+ * The view analyses the currently selection, and shows the first element which is a {@link org.kalypsodeegree.model.feature.Feature}.
  * <p>
  * <p>
  * Features:
  * </p>
  * <ul>
- * <li>Shows the current selected feature in either a view or an editor. The latter can only be recieved, if the editor
- * adapts {@link org.eclipse.jface.viewers.ISelectionProvider} or {@linked
+ * <li>Shows the current selected feature in either a view or an editor. The latter can only be recieved, if the editor adapts {@link org.eclipse.jface.viewers.ISelectionProvider} or {@linked
  * org.eclipse.jface.viewers.IPostSelectionProvider}.</li>
  * <li>In preference, the view listens to post-selections, in order to change the shown feature not too often.</li>
- * <li>If the returned selection is a {@link org.kalypso.ogc.gml.selection.IFeatureSelection}, changes (i.e. made by the
- * user) in the feature-control will be immediately postet into the given
+ * <li>If the returned selection is a {@link org.kalypso.ogc.gml.selection.IFeatureSelection}, changes (i.e. made by the user) in the feature-control will be immediately postet into the given
  * {@link org.kalypso.ogc.gml.mapmodel.CommandableWorkspace}.</li>
- * <li>If the current selection changes to something not viewable, the last shown feature continues to be shown. If the
- * source of the shown feature is closed, the view releases the feature.</li>
+ * <li>If the current selection changes to something not viewable, the last shown feature continues to be shown. If the source of the shown feature is closed, the view releases the feature.</li>
  * <li>While the view is updated (a new feature was selected),</li>
- * <li>If the feature changes (either by editing it inside the view or from outside), the view will redisplay the new
- * content.</li>
+ * <li>If the feature changes (either by editing it inside the view or from outside), the view will redisplay the new content.</li>
  * <li></li>
  * </ul>
  * TODO 's:
  * <ul>
- * <li>Save data: ceate a global action handler to save gml-data. Every workbench part which changes a GmlWorkspace,
- * including this view, should register for this handler.</li>
- * <li>Are there any global (feature-)actions which apply to this view? If yes, it may be a good idea to implement
- * ISelectionProvider</li>
+ * <li>Save data: ceate a global action handler to save gml-data. Every workbench part which changes a GmlWorkspace, including this view, should register for this handler.</li>
+ * <li>Are there any global (feature-)actions which apply to this view? If yes, it may be a good idea to implement ISelectionProvider</li>
  * <li></li>
  * </ul>
- *
+ * 
  * @see org.eclipse.jface.viewers.IPostSelectionProvider
  */
 public class FeatureView extends ViewPart implements ModellEventListener
@@ -221,6 +214,16 @@ public class FeatureView extends ViewPart implements ModellEventListener
     }
   };
 
+  private final UIJob m_updateControlJob = new UIJob( "Update feature control" ) //$NON-NLS-1$
+  {
+    @Override
+    public IStatus runInUIThread( final IProgressMonitor monitor )
+    {
+      doUpdateFeatureControl();
+      return Status.OK_STATUS;
+    }
+  };
+
   private IDialogSettings m_settings;
 
   private Action m_showTablesAction = null;
@@ -239,6 +242,9 @@ public class FeatureView extends ViewPart implements ModellEventListener
   public FeatureView( )
   {
     final IDialogSettings viewsSettings = KalypsoFeatureViewPlugin.getDefault().getDialogSettings();
+
+    m_updateControlJob.setUser( false );
+    m_updateControlJob.setSystem( true );
 
     m_settings = viewsSettings.getSection( STORE_SECTION );
     if( m_settings == null )
@@ -321,7 +327,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
     if( selection instanceof IFeatureSelection )
     {
-      final IFeatureSelection featureSel = (IFeatureSelection) selection;
+      final IFeatureSelection featureSel = (IFeatureSelection)selection;
 
       final Feature feature = featureFromSelection( featureSel );
       m_commandManager = featureSel.getWorkspace( feature );
@@ -350,7 +356,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     {
       final Object object = sIt.next();
       if( object instanceof Feature )
-        return (Feature) object;
+        return (Feature)object;
     }
     return null;
   }
@@ -537,38 +543,40 @@ public class FeatureView extends ViewPart implements ModellEventListener
     // siteService.schedule( job, 0 /* now */, true /* use half-busy cursor in part */);
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
-   */
   @Override
   public void onModellChange( final ModellEvent modellEvent )
   {
     // TODO: why doesn't the feature composite itself is a modelllistener and reacts to the changes?
     if( modellEvent.isType( ModellEvent.FEATURE_CHANGE ) )
-    {
+      startUpdateFeatureControl();
+  }
 
-      final Group mainGroup = m_mainGroup;
-      final Control control = m_featureComposite.getControl();
-      if( mainGroup != null && !mainGroup.isDisposed() && control != null && !control.isDisposed() )
-      {
-        final Runnable runnable = new Runnable()
-        {
-          @Override
-          public void run( )
-          {
-            // As the label of the main group may depend on the values of the feature, we must update it as well.
-            final Feature feature = m_featureComposite.getFeature();
-            final String groupLabel = feature == null ? _KEIN_FEATURE_SELEKTIERT_ : FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
-            if( !mainGroup.isDisposed() )
-              mainGroup.setText( groupLabel );
+  private void startUpdateFeatureControl( )
+  {
+    final Group mainGroup = m_mainGroup;
+    final Control control = m_featureComposite.getControl();
 
-            if( !control.isDisposed() )
-              m_featureComposite.updateControl();
-          }
-        };
-        control.getDisplay().asyncExec( runnable );
-      }
-    }
+    if( mainGroup == null || mainGroup.isDisposed() || control == null || control.isDisposed() )
+      return;
+
+    // REMARK: in order to protect against too many changes, delay the update at this point
+    m_updateControlJob.cancel();
+    m_updateControlJob.schedule( 50 );
+  }
+
+  protected void doUpdateFeatureControl( )
+  {
+    final Control control = m_featureComposite.getControl();
+
+    if( m_mainGroup == null || m_mainGroup.isDisposed() || control == null || control.isDisposed() )
+      return;
+
+    // As the label of the main group may depend on the values of the feature, we must update it as well.
+    final Feature feature = m_featureComposite.getFeature();
+    final String groupLabel = feature == null ? _KEIN_FEATURE_SELEKTIERT_ : FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
+    m_mainGroup.setText( groupLabel );
+
+    m_featureComposite.updateControl();
   }
 
   public GMLWorkspace getCurrentWorkspace( )
