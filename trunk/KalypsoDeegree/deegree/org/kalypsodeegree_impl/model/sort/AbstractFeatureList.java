@@ -272,7 +272,7 @@ public abstract class AbstractFeatureList implements FeatureList
     }
     else if( link.getUri() == null )
     {
-      if( href.startsWith( "#" ) )
+      if( href.startsWith( "#" ) ) //$NON-NLS-1$
         linkOrString = href.substring( 1 );
       else
         linkOrString = href;
