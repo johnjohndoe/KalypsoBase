@@ -69,7 +69,7 @@ import org.kalypso.observation.result.IComponent;
 
 /**
  * Guess roughness class from existing ks / kst value
- *
+ * 
  * @author Dirk Kuch
  */
 public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
@@ -113,11 +113,11 @@ public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
       if( !UpdateVegetationProperties.isWritable( m_overwriteValues, point, propertyClazz ) )
         continue;
 
-      final Double value = (Double) point.getValue( property );
+      final Double value = (Double)point.getValue( property );
       if( Objects.isNull( value ) )
       {
 
-        final Double width = (Double) point.getValue( m_profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE ) );
+        final Double width = (Double)point.getValue( m_profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE ) );
         final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString( "GuessRoughessClassesRunnable_1" ), width, componentLabel ) ); //$NON-NLS-1$
         statis.add( status );
 
@@ -148,6 +148,8 @@ public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
     for( final IRoughnessClass roughness : roughnesses )
     {
       final BigDecimal v = roughness.getValue( m_property );
+      if( v == null )
+        continue;
 
       /* roughness is in range? */
       final double delta = Math.abs( v.doubleValue() - value );
