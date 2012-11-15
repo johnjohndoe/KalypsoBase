@@ -45,8 +45,10 @@ import org.kalypso.shape.geometry.ISHPParts;
 import org.kalypso.shape.geometry.ISHPPoint;
 import org.kalypso.shape.geometry.SHPNullShape;
 import org.kalypso.shape.geometry.SHPPolyLine;
+import org.kalypso.shape.geometry.SHPPolyLinem;
 import org.kalypso.shape.geometry.SHPPolyLinez;
 import org.kalypso.shape.geometry.SHPPolygon;
+import org.kalypso.shape.geometry.SHPPolygonm;
 import org.kalypso.shape.geometry.SHPPolygonz;
 
 import com.vividsolutions.jts.algorithm.CGAlgorithms;
@@ -249,7 +251,7 @@ public final class SHP2JTS
       return m_factory.createMultiPoint( points );
     }
 
-    if( shpGeom instanceof SHPPolyLine || shpGeom instanceof SHPPolyLinez )
+    if( shpGeom instanceof SHPPolyLine || shpGeom instanceof SHPPolyLinez || shpGeom instanceof SHPPolyLinem )
     {
       final LineString[] curves = transformPolyLine( (ISHPParts)shpGeom );
       if( curves == null )
@@ -258,7 +260,7 @@ public final class SHP2JTS
       return m_factory.createMultiLineString( curves );
     }
 
-    if( shpGeom instanceof SHPPolygon || shpGeom instanceof SHPPolygonz )
+    if( shpGeom instanceof SHPPolygon || shpGeom instanceof SHPPolygonz || shpGeom instanceof SHPPolygonm )
     {
       final Polygon[] polygons = transformPolygon( (ISHPParts)shpGeom );
       if( polygons == null || polygons.length <= 0 )
