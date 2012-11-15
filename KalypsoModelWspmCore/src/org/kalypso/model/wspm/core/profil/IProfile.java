@@ -84,13 +84,6 @@ public interface IProfile extends IObservation<TupleResult>
 
   void addPointProperty( IComponent pointProperty, Object defaultValue );
 
-  /**
-   * remove the current ProfileObject and adds the given ProfileObject
-   *
-   * @return the oldObject
-   * @param building
-   *          must not be null, in this case use removeProfileObject()
-   */
   IProfileObject[] addProfileObjects( IProfileObject... profileObjects );
 
   void addProfilListener( IProfileListener listener );
@@ -247,7 +240,7 @@ public interface IProfile extends IObservation<TupleResult>
 
   /**
    * Locks all change events until {@link #stopTransaction(Object, ProfilChangeHint)} is called.
-   *
+   * 
    * @deprecated use {@link IProfil#doTransaction(IProfileTransaction)}
    */
   @Deprecated
@@ -255,7 +248,7 @@ public interface IProfile extends IObservation<TupleResult>
 
   /**
    * Unlocks change events and fire one big event with the given hint.
-   *
+   * 
    * @deprecated use {@link IProfil#doTransaction(IProfileTransaction)}
    */
   @Deprecated
