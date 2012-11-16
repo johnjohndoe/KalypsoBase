@@ -102,6 +102,11 @@ public class DatabindingForm implements IDataBinding
       m_support = FormSupport.create( scrolledForm, m_bindingContext );
   }
 
+  public Form getForm( )
+  {
+    return m_form;
+  }
+
   @Override
   public void dispose( )
   {
@@ -177,9 +182,9 @@ public class DatabindingForm implements IDataBinding
   {
     if( targetValue instanceof ISWTObservable )
     {
-      final Widget widget = ((ISWTObservable) targetValue).getWidget();
+      final Widget widget = ((ISWTObservable)targetValue).getWidget();
       if( widget instanceof Control )
-        return (Control) widget;
+        return (Control)widget;
     }
 
     return null;
