@@ -250,10 +250,4 @@ public class AbstractProfileWidget extends AbstractWidget
 
     repaintMap();
   }
-
-  @Override
-  protected void repaintMap( )
-  {
-    super.repaintMap();
-  }
 }

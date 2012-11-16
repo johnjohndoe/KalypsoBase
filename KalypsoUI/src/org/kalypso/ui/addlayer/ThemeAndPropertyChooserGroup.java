@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.profil.wizard.utils;
+package org.kalypso.ui.addlayer;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
