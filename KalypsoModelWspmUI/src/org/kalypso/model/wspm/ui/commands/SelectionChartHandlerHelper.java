@@ -179,6 +179,9 @@ public class SelectionChartHandlerHelper
   public static final Integer cursorToScreen( final IChartComposite chart )
   {
     final IProfilChartLayer theme = SelectionChartHandlerHelper.findProfileTheme( chart );
+    if( theme == null )
+      return null;
+
     final IProfile profile = theme.getProfil();
     final IRangeSelection selection = profile.getSelection();
     final ICoordinateMapper mapper = theme.getCoordinateMapper();
