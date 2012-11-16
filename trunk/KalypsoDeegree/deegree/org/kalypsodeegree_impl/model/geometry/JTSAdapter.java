@@ -52,6 +52,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
+import org.kalypsodeegree.model.geometry.GM_PolyhedralSurface;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
@@ -131,6 +132,7 @@ public final class JTSAdapter
     return export;
   }
 
+  @SuppressWarnings( { "rawtypes", "unchecked" } )
   protected static Geometry doExport( final GM_Object gmObject ) throws GM_Exception
   {
     if( gmObject == null )
@@ -150,6 +152,9 @@ public final class JTSAdapter
 
     if( gmObject instanceof GM_Polygon )
       return export( (GM_Polygon)gmObject );
+
+    if( gmObject instanceof GM_PolyhedralSurface )
+      return export( (GM_PolyhedralSurface)gmObject );
 
     if( gmObject instanceof GM_MultiSurface )
       return export( (GM_MultiSurface)gmObject );
@@ -403,6 +408,25 @@ public final class JTSAdapter
     for( int i = 0; i < surfaces.length; i++ )
     {
       polygons[i] = export( surfaces[i] );
+    }
+    return jtsFactory.createMultiPolygon( polygons );
+  }
+
+  /**
+   * Converts a <tt>GM_PolyhedralSurface</tt> to a <tt>MultiPolygon</tt>.
+   * 
+   * @param msurface
+   *          a <tt>GM_MultiSurface</tt>
+   * @return the corresponding <tt>MultiPolygon</tt> object
+   */
+  private static MultiPolygon export( final GM_PolyhedralSurface<GM_PolygonPatch> msurface ) throws GM_Exception
+  {
+    final int patchCount = msurface.size();
+    final Polygon[] polygons = new Polygon[patchCount];
+
+    for( int i = 0; i < patchCount; i++ )
+    {
+      polygons[i] = export( GeometryFactory.createGM_Surface( msurface.get( i ) ) );
     }
     return jtsFactory.createMultiPolygon( polygons );
   }
