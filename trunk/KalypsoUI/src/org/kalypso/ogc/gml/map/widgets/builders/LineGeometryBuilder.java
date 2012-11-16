@@ -121,15 +121,12 @@ public class LineGeometryBuilder implements IGeometryBuilder
     this( cnt_points, targetCrs, null );
   }
 
-  /**
-   * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#addPoint(org.kalypsodeegree.model.geometry.GM_Position)
-   */
   @Override
   public GM_Object addPoint( final GM_Point p ) throws Exception
   {
     // ensure points are distinct
-    if( !m_points.isEmpty() && m_points.get( m_points.size() - 1 ).distance( p ) < 0.001 )
-      return null;
+//    if( !m_points.isEmpty() && m_points.get( m_points.size() - 1 ).distance( p ) < 0.001 )
+//      return null;
 
     m_points.add( p );
 
@@ -154,9 +151,6 @@ public class LineGeometryBuilder implements IGeometryBuilder
       g.drawRect( x[i] - sizeOuter / 2, y[i] - sizeOuter / 2, sizeOuter, sizeOuter );
   }
 
-  /**
-   * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#finish()
-   */
   @Override
   public GM_Object finish( ) throws Exception
   {
@@ -235,9 +229,6 @@ public class LineGeometryBuilder implements IGeometryBuilder
     m_renderer.paint( g );
   }
 
-  /**
-   * @see org.kalypso.nofdpidss.ui.view.wizard.measure.construction.create.builders.geometry.IMyGeometryBuilder#removeLastPoint()
-   */
   @Override
   public void removeLastPoint( )
   {
@@ -245,14 +236,12 @@ public class LineGeometryBuilder implements IGeometryBuilder
       m_points.remove( m_points.size() - 1 );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#reset()
-   */
   @Override
   public void reset( )
   {
     m_points.clear();
     m_result = null;
+
     if( m_extender != null )
       m_extender.setCursor( CROSSHAIR_CURSOR );
   }
