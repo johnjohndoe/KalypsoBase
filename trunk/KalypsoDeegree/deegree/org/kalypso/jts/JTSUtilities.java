@@ -73,6 +73,7 @@ import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.util.GeometryEditor;
 import com.vividsolutions.jts.linearref.LengthIndexedLine;
 import com.vividsolutions.jts.operation.valid.IsValidOp;
 import com.vividsolutions.jts.operation.valid.TopologyValidationError;
@@ -1468,6 +1469,10 @@ public final class JTSUtilities
       }
     }
 
+    // nothing to do if there are no z values anywhere
+    if( zsList.isEmpty() )
+      return input;
+
     final Double[] distances = distancesWithZsList.toArray( new Double[distancesWithZsList.size()] );
     final Double[] zs = zsList.toArray( new Double[zsList.size()] );
 
@@ -1495,5 +1500,55 @@ public final class JTSUtilities
     final LineString output = input.getFactory().createLineString( coordinatesWithZ );
     output.setSRID( input.getSRID() );
     return output;
+  }
+
+  /**
+   * Removes points closer to
+   */
+  public static Polygon removeCoincidentPoints( final Polygon polygon, final double distanceTolerance )
+  {
+    final LinearRing exteriorRing = (LinearRing)polygon.getExteriorRing();
+    final LinearRing newExteriorRing = removeCoincidentPoints( exteriorRing, distanceTolerance );
+    final int ringCount = polygon.getNumInteriorRing();
+    final LinearRing[] newInteriorRings = new LinearRing[ringCount];
+    for( int i = 0; i < ringCount; i++ )
+      newInteriorRings[i] = removeCoincidentPoints( (LinearRing)polygon.getInteriorRingN( i ), distanceTolerance );
+    return polygon.getFactory().createPolygon( newExteriorRing, newInteriorRings );
+  }
+
+  /**
+   * Removes interior points of this line that are within the given distance from another point
+   */
+  @SuppressWarnings( "unchecked" )
+  public static <T extends LineString> T removeCoincidentPoints( final T linestring, final double distanceTolerance )
+  {
+    final GeometryEditor editor = new GeometryEditor();
+    final Geometry result = editor.edit( linestring, new GeometryEditor.CoordinateOperation()
+    {
+
+      @Override
+      public Coordinate[] edit( final Coordinate[] coordinates, final Geometry geometry )
+      {
+        final CoordinateList coordList = new CoordinateList();
+        coordList.add( coordinates[0] );
+        for( int i = 1; i < coordinates.length - 1; i++ )
+        {
+          final Coordinate p0 = coordList.getCoordinate( coordList.size() - 1 );
+          final Coordinate p1 = coordinates[i];
+          final Coordinate p2 = coordinates[i + 1];
+          if( p1.distance( p0 ) <= distanceTolerance || p1.distance( p2 ) <= distanceTolerance )
+          {
+            final boolean nearlyColinear = new LineSegment( p0, p2 ).distance( p1 ) < distanceTolerance / 6;
+            if( nearlyColinear )
+              // gobble
+              continue;
+          }
+          coordList.add( p1 );
+        }
+        coordList.add( coordinates[coordinates.length - 1] );
+        return coordList.toCoordinateArray();
+      }
+    } );
+    return (T)result;
   }
 }
