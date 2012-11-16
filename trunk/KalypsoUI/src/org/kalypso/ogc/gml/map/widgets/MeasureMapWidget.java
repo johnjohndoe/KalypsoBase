@@ -137,9 +137,6 @@ public class MeasureMapWidget extends DeprecatedMouseWidget
       m_tooltip.paintToolTip( m_currentPoint, g, bounds );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget#keyPressed(java.awt.event.KeyEvent)
-   */
   @Override
   public void keyPressed( final KeyEvent e )
   {
@@ -167,18 +164,12 @@ public class MeasureMapWidget extends DeprecatedMouseWidget
     super.keyPressed( e );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#dragged(java.awt.Point)
-   */
   @Override
   public void dragged( final Point p )
   {
     moved( p );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
-   */
   @Override
   public void moved( final Point p )
   {
@@ -236,9 +227,6 @@ public class MeasureMapWidget extends DeprecatedMouseWidget
     return Double.NaN;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#leftPressed(java.awt.Point)
-   */
   @Override
   public void leftPressed( final Point p )
   {
@@ -267,9 +255,6 @@ public class MeasureMapWidget extends DeprecatedMouseWidget
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#doubleClickedLeft(java.awt.Point)
-   */
   @Override
   public void doubleClickedLeft( final Point p )
   {
