@@ -18,10 +18,18 @@
  */
 package org.kalypso.zml.ui.chart.layer.themes;
 
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+
 import org.eclipse.swt.SWT;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
 
 import de.openali.odysseus.chart.ext.base.layer.BarPaintManager.ITooltipCallback;
@@ -33,6 +41,14 @@ import de.openali.odysseus.chart.framework.model.layer.EditInfo;
  */
 class ZmlBarLayerTooltipCallback implements ITooltipCallback
 {
+  private final DateFormat m_df = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.MEDIUM );
+
+  public ZmlBarLayerTooltipCallback( )
+  {
+    final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+    m_df.setTimeZone( timeZone );
+  }
+
   @Override
   public String buildTooltip( final EditInfo info )
   {
@@ -52,9 +68,10 @@ class ZmlBarLayerTooltipCallback implements ITooltipCallback
 
       try
       {
-        // FIXME: improve -> depends on data type; format double and dates correctly, etc...
-        // FIXME: use same mechanism as is used by table
-        formatter.addLine( axis.getName(), data.get( axis ), axis.getUnit() );
+        final Object value = data.get( axis );
+        final String formattedValue = formatValue( value );
+
+        formatter.addLine( axis.getName(), formattedValue, axis.getUnit() );
       }
       catch( final SensorException e )
       {
@@ -63,5 +80,28 @@ class ZmlBarLayerTooltipCallback implements ITooltipCallback
     }
 
     return formatter.format();
+  }
+
+  // FIXME: improve -> depends on data type; format double and dates correctly, etc...
+  // FIXME: use same mechanism as is used by table
+  private String formatValue( final Object value )
+  {
+    if( value == null )
+      return null;
+
+    if( value instanceof String )
+      return (String)value;
+
+    if( value instanceof Date || value instanceof Calendar )
+      return TimeseriesUtils.getDateFormat().format( value );
+
+    if( value instanceof BigDecimal )
+      return ((BigDecimal)value).toPlainString();
+
+    // TODO: not nice: %f without fraction always gives 6 digits... we need unit dependend formatting here!
+//    if( value instanceof Double || value instanceof Float )
+//      return String.format( "%f", value ); //$NON-NLS-1$
+
+    return value.toString();
   }
 }
