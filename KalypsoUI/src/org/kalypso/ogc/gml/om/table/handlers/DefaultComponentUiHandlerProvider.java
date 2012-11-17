@@ -59,7 +59,10 @@ import org.kalypso.observation.result.TupleResult;
  * Creates columns for all components of the given observation according to its types.
  * 
  * @author Gernot Belger
+ * @deprecated To be used in combinasion with the deprecated {@link org.kalypso.ogc.gml.om.table.TupleResultContentProvider}. Use {@link DefaultComponentUiHandlerProvider2} instead, if the new
+ *             {@link org.kalypso.ogc.gml.om.table.TupleResultContentProvider2} is used.
  */
+@Deprecated
 public class DefaultComponentUiHandlerProvider implements IComponentUiHandlerProvider
 {
   @Override
