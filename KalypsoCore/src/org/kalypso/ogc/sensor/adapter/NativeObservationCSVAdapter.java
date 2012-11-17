@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.LineNumberReader;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -53,6 +54,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.core.i18n.Messages;
@@ -73,6 +75,11 @@ public class NativeObservationCSVAdapter extends AbstractObservationImporter
 
   private static final Pattern DATE_PATTERN = Pattern.compile( "([0-9 ]{2}) ([0-9 ]{2}) ([0-9]{2,4}) ([0-9 ]{2}) ([0-9 ]{2})" ); //$NON-NLS-1$
 
+  public NativeObservationCSVAdapter( )
+  {
+    // TODO Auto-generated constructor stub
+  }
+
   @Override
   protected List<NativeObservationDataSet> parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws Exception
   {
@@ -84,77 +91,86 @@ public class NativeObservationCSVAdapter extends AbstractObservationImporter
     final DateFormat sdf4 = new SimpleDateFormat( "dd MM yyyy HH mm" ); //$NON-NLS-1$
     sdf4.setTimeZone( timeZone );
 
-    final FileReader fileReader = new FileReader( source );
-    final LineNumberReader reader = new LineNumberReader( fileReader );
-    String[] lineIn = null;
+    final char separator = ';';
 
-    final CSVReader csv = new CSVReader( reader, ';' );
-
-    while( ArrayUtils.isNotEmpty( lineIn = csv.readNext() ) )
+    try( final FileReader fileReader = new FileReader( source ); final LineNumberReader reader = new LineNumberReader( fileReader ); final CSVReader csv = new CSVReader( reader, separator ) )
     {
-      if( !continueWithErrors && getErrorCount() > getMaxErrorCount() )
-        return datasets;
-
-      try
+      String[] lineIn = null;
+      while( ArrayUtils.isNotEmpty( lineIn = csv.readNext() ) )
       {
-        if( ArrayUtils.getLength( lineIn ) == 2 )
+        if( !continueWithErrors && getErrorCount() > getMaxErrorCount() )
+          return datasets;
+
+        final int lineNumber = reader.getLineNumber();
+
+        try
         {
-          final String dateString = lineIn[0];
-          final String valueString = lineIn[1];
-
-          final String formatedvalue = valueString.replaceAll( "\\,", "\\." ); //$NON-NLS-1$ //$NON-NLS-2$
-          final Double value = new Double( Double.parseDouble( formatedvalue ) );
-
-          final String formatedDate = dateString.replaceAll( "[:;\\.]", " " ); //$NON-NLS-1$ //$NON-NLS-2$
-
-          final Matcher dateMatcher = DATE_PATTERN.matcher( formatedDate );
-          if( dateMatcher.matches() )
-          {
-            final StringBuffer buffer = new StringBuffer();
-
-            DateFormat sdf = sdf2;
-            for( int i = 1; i <= dateMatcher.groupCount(); i++ )
-            {
-              // separator
-              if( i > 1 )
-                buffer.append( " " ); //$NON-NLS-1$
-
-              /* Get the group. */
-              final String group = dateMatcher.group( i );
-              if( i == 3 && group.length() == 4 )
-                sdf = sdf4;
-
-              // correct empty fields
-              buffer.append( group.replaceAll( " ", "0" ) ); // //$NON-NLS-1$ //$NON-NLS-2$
-            }
-
-            // FIXME: Why add the 00 here? Seconds do not appear in the pattern or is this the timezone?
-            buffer.append( " 00" ); //$NON-NLS-1$
-
-            final String correctDate = buffer.toString();
-            final Date date = sdf.parse( correctDate );
-
-            datasets.add( new NativeObservationDataSet( date, value, KalypsoStati.BIT_OK, SOURCE_ID ) );
-          }
-          else
-          {
-            stati.add( IStatus.WARNING, String.format( Messages.getString( "NativeObservationCSVAdapter_0" ), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
-            tickErrorCount();
-          }
+          readLine( stati, datasets, sdf2, sdf4, separator, lineIn, lineNumber );
         }
-        else
+        catch( final Exception e )
         {
-          stati.add( IStatus.WARNING, String.format( Messages.getString( "NativeObservationCSVAdapter_1" ), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
+          stati.add( IStatus.ERROR, String.format( Messages.getString( "NativeObservationCSVAdapter_2" ), lineNumber, e.getLocalizedMessage() ) ); //$NON-NLS-1$
           tickErrorCount();
         }
-      }
-      catch( final Exception e )
-      {
-        stati.add( IStatus.ERROR, String.format( Messages.getString( "NativeObservationCSVAdapter_2" ), reader.getLineNumber(), e.getLocalizedMessage() ) ); //$NON-NLS-1$
-        tickErrorCount();
       }
     }
 
     return datasets;
+  }
+
+  private void readLine( final IStatusCollector stati, final List<NativeObservationDataSet> datasets, final DateFormat sdf2, final DateFormat sdf4, final char separator, final String[] lineIn, final int lineNumber ) throws ParseException
+  {
+    if( ArrayUtils.getLength( lineIn ) == 2 )
+    {
+      final String dateString = lineIn[0];
+      final String valueString = lineIn[1];
+
+      final String formatedvalue = valueString.replaceAll( "\\,", "\\." ); //$NON-NLS-1$ //$NON-NLS-2$
+      final Double value = new Double( Double.parseDouble( formatedvalue ) );
+
+      final String formatedDate = dateString.replaceAll( "[:;\\.]", " " ); //$NON-NLS-1$ //$NON-NLS-2$
+
+      final Matcher dateMatcher = DATE_PATTERN.matcher( formatedDate );
+      if( dateMatcher.matches() )
+      {
+        final StringBuffer buffer = new StringBuffer();
+
+        DateFormat sdf = sdf2;
+        for( int i = 1; i <= dateMatcher.groupCount(); i++ )
+        {
+          // separator
+          if( i > 1 )
+            buffer.append( " " ); //$NON-NLS-1$
+
+          /* Get the group. */
+          final String group = dateMatcher.group( i );
+          if( i == 3 && group.length() == 4 )
+            sdf = sdf4;
+
+          // correct empty fields
+          buffer.append( group.replaceAll( " ", "0" ) ); // //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
+        // FIXME: Why add the 00 here? Seconds do not appear in the pattern or is this the timezone?
+        buffer.append( " 00" ); //$NON-NLS-1$
+
+        final String correctDate = buffer.toString();
+        final Date date = sdf.parse( correctDate );
+
+        datasets.add( new NativeObservationDataSet( date, value, KalypsoStati.BIT_OK, SOURCE_ID ) );
+      }
+      else
+      {
+        final String line = StringUtils.join( lineIn, separator );
+        stati.add( IStatus.WARNING, String.format( Messages.getString( "NativeObservationCSVAdapter_0" ), lineNumber, line ) ); //$NON-NLS-1$
+        tickErrorCount();
+      }
+    }
+    else
+    {
+      final String line = StringUtils.join( lineIn, separator );
+      stati.add( IStatus.WARNING, String.format( Messages.getString( "NativeObservationCSVAdapter_1" ), lineNumber, line ) ); //$NON-NLS-1$
+      tickErrorCount();
+    }
   }
 }
