@@ -62,6 +62,8 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTSTYLE;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTWEIGHT;
+import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
+import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINEJOIN;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
@@ -77,6 +79,9 @@ import de.openali.odysseus.chartconfig.x020.ColorFillType;
 import de.openali.odysseus.chartconfig.x020.FillType;
 import de.openali.odysseus.chartconfig.x020.ImageFillType;
 import de.openali.odysseus.chartconfig.x020.ImageMarkerType;
+import de.openali.odysseus.chartconfig.x020.LineCapType;
+import de.openali.odysseus.chartconfig.x020.LineCapType.Enum;
+import de.openali.odysseus.chartconfig.x020.LineJoinType;
 import de.openali.odysseus.chartconfig.x020.LineStyleType;
 import de.openali.odysseus.chartconfig.x020.PointStyleType;
 import de.openali.odysseus.chartconfig.x020.PointType;
@@ -198,19 +203,19 @@ public final class StyleFactory
 //          }
 //          else
 //          {
-            final AbstractStyleType styleType = resolver.findStyleType( reference, context );
-            if( styleType == null )
-            {
-              System.out.println( String.format( "StyleFactory - Missing style refernce: %s", reference ) ); //$NON-NLS-1$
-              continue;
-            }
+          final AbstractStyleType styleType = resolver.findStyleType( reference, context );
+          if( styleType == null )
+          {
+            System.out.println( String.format( "StyleFactory - Missing style refernce: %s", reference ) ); //$NON-NLS-1$
+            continue;
+          }
 
-            final IStyle style = StyleFactory.createStyle( styleType, context );
+          final IStyle style = StyleFactory.createStyle( styleType, context );
 
-            // save configuration type so it can be used for saving to chart file
-            style.setData( AbstractChartFactory.CONFIGURATION_TYPE_KEY, style );
-            styleSet.addStyle( styleType.getRole(), style );
-         // }
+          // save configuration type so it can be used for saving to chart file
+          style.setData( AbstractChartFactory.CONFIGURATION_TYPE_KEY, style );
+          styleSet.addStyle( styleType.getRole(), style );
+          // }
 
         }
         catch( final CoreException e )
@@ -229,19 +234,19 @@ public final class StyleFactory
       return null;
     else if( styleType instanceof AreaStyleType )
     {
-      return createAreaStyle( (AreaStyleType) styleType, context );
+      return createAreaStyle( (AreaStyleType)styleType, context );
     }
     else if( styleType instanceof PointStyleType )
     {
-      return createPointStyle( (PointStyleType) styleType, context );
+      return createPointStyle( (PointStyleType)styleType, context );
     }
     else if( styleType instanceof LineStyleType )
     {
-      return createLineStyle( (LineStyleType) styleType );
+      return createLineStyle( (LineStyleType)styleType );
     }
     else if( styleType instanceof TextStyleType )
     {
-      return createTextStyle( (TextStyleType) styleType );
+      return createTextStyle( (TextStyleType)styleType );
     }
 
     throw new UnsupportedOperationException();
@@ -330,10 +335,6 @@ public final class StyleFactory
   {
     final ILineStyle style = StyleUtils.getDefaultLineStyle();
 
-    // final String title = lst.getTitle();
-
-    // style.setTitle( title );
-
     // visible
     if( lst.isSetIsVisible() )
     {
@@ -361,7 +362,7 @@ public final class StyleFactory
       {
         final Object elt = dashArray1.get( i );
         if( elt instanceof Integer )
-          dashArray[i] = ((Number) elt).floatValue();
+          dashArray[i] = ((Number)elt).floatValue();
       }
     }
     if( lst.isSetDashOffset() )
@@ -372,7 +373,49 @@ public final class StyleFactory
     if( lst.isSetLineColor() )
       style.setColor( StyleHelper.colorByteToRGB( lst.getLineColor() ) );
 
+    /* linecap */
+    if( lst.isSetLineCap() )
+      style.setLineCap( getLineCap( lst.getLineCap() ) );
+
+    /* linejoin */
+    if( lst.isSetLineJoin() )
+      style.setLineJoin( getLineJoin( lst.getLineJoin() ) );
+
     return style;
+  }
+
+  private static LINEJOIN getLineJoin( final de.openali.odysseus.chartconfig.x020.LineJoinType.Enum lineJoin )
+  {
+    switch( lineJoin.intValue() )
+    {
+      case LineJoinType.INT_BEVEL:
+        return LINEJOIN.BEVEL;
+
+      case LineJoinType.INT_MITER:
+        return LINEJOIN.MITER;
+
+      case LineJoinType.INT_ROUND:
+        return LINEJOIN.ROUND;
+    }
+
+    throw new IllegalArgumentException();
+  }
+
+  private static LINECAP getLineCap( final Enum lineCap )
+  {
+    switch( lineCap.intValue() )
+    {
+      case LineCapType.INT_BUTT:
+        return LINECAP.FLAT;
+
+      case LineCapType.INT_ROUND:
+        return LINECAP.ROUND;
+
+      case LineCapType.INT_SQUARE:
+        return LINECAP.SQUARE;
+    }
+
+    throw new IllegalArgumentException();
   }
 
   /**
@@ -409,7 +452,7 @@ public final class StyleFactory
       {
         final Object elt = dashArray1.get( i );
         if( elt instanceof Integer )
-          dashArray[i] = ((Number) elt).floatValue();
+          dashArray[i] = ((Number)elt).floatValue();
       }
     }
     if( st.isSetDashOffset() )
