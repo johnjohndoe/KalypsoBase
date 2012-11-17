@@ -49,8 +49,6 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.ui.progress.UIJob;
 
-import com.vividsolutions.jts.util.Assert;
-
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 import de.openali.odysseus.chart.framework.util.img.ChartPainter;
@@ -150,9 +148,16 @@ public class ChartPaintJob extends Job
     if( bounds.width == 0 || bounds.height == 0 )
       return Status.OK_STATUS;
 
-    final Image plotImage = createPlotImage( bounds );
-    if( plotImage == null )
-      return Status.OK_STATUS;
+    // final Image plotImage = createPlotImage( bounds );
+    // Hotfix: cacheing the image leads to a race condition and sometimes only a blank image is shown initially.
+    final Image plotImage = new Image( m_chart.getDisplay(), bounds.width, bounds.height );
+    synchronized( this )
+    {
+      m_plotImage = plotImage;
+    }
+
+    // if( plotImage == null )
+    // return Status.OK_STATUS;
 
     try
     {
@@ -182,15 +187,15 @@ public class ChartPaintJob extends Job
     }
   }
 
-  private synchronized Image createPlotImage( final Rectangle bounds )
-  {
-    Assert.isTrue( m_plotImage == null );
-
-    if( bounds.width > 0 && bounds.height > 0 )
-      m_plotImage = new Image( m_chart.getDisplay(), bounds.width, bounds.height );
-
-    return m_plotImage;
-  }
+//  private synchronized Image createPlotImage( final Rectangle bounds )
+//  {
+//    Assert.isTrue( m_plotImage == null );
+//
+//    if( bounds.width > 0 && bounds.height > 0 )
+//      m_plotImage = new Image( m_chart.getDisplay(), bounds.width, bounds.height );
+//
+//    return m_plotImage;
+//  }
 
   public synchronized void dispose( )
   {
