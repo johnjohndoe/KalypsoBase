@@ -820,8 +820,8 @@
 		</themeInfo>
 	</extension>
 	<extension point="org.kalypso.ui.componentUiHandlerProvider">
-		<provider class="org.kalypso.ogc.gml.om.table.handlers.DefaultComponentUiHandlerProvider" id="org.kalypso.ogc.gml.om.table.handlers.DefaultComponentUiHandlerProvider">
-		</provider>
+		<provider class="org.kalypso.ogc.gml.om.table.handlers.DefaultComponentUiHandlerProvider" id="org.kalypso.ogc.gml.om.table.handlers.DefaultComponentUiHandlerProvider"/>
+		<provider class="org.kalypso.ogc.gml.om.table.handlers.DefaultComponentUiHandlerProvider2" id="org.kalypso.ogc.gml.om.table.handlers.DefaultComponentUiHandlerProvider2"/>
 	</extension>
 	<extension point="org.eclipse.ui.commands">
 		<category description="%category.description.2" id="org.kalypso.ui.tupleResult.category" name="%category.name.7">
