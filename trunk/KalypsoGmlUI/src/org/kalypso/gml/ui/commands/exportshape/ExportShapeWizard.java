@@ -87,6 +87,7 @@ public class ExportShapeWizard extends Wizard implements IWorkbenchWizard
 
   protected ShapeSignature createSignature( final Feature[] featureArray )
   {
+    // FIXME: we need a extensio point here to create specific signatures for known types
     return StandardShapeDataFactory.createDefaultSignature( featureArray );
   }
 
@@ -107,6 +108,7 @@ public class ExportShapeWizard extends Wizard implements IWorkbenchWizard
     addPage( m_selectFeaturesPage );
 
     m_signature = createSignature( featureArray );
+
     // FIXME: commented out as this is not yet finished
 // m_shapeSignaturePage = new ExportShapeSignaturePage( "exportShapeSignaturePage", m_signature );
 // addPage( m_shapeSignaturePage );
