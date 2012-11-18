@@ -40,12 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.internal.i18n.Messages;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Gernot Belger
@@ -54,11 +58,15 @@ public class DeleteSubFeatureAction extends Action
 {
   private final SubFeatureControl m_featureControl;
 
-  public DeleteSubFeatureAction( final SubFeatureControl featureControl )
+  public DeleteSubFeatureAction( final SubFeatureControl featureControl, final Feature subFeature )
   {
-    super( String.format( Messages.getString( "DeleteSubFeatureAction_0" ), featureControl.getFeatureTypeProperty().getAnnotation().getLabel() ) ); //$NON-NLS-1$
+    super( StringUtils.EMPTY );
 
     m_featureControl = featureControl;
+
+    final String label = FeatureHelper.getAnnotationValue( subFeature, IAnnotation.ANNO_LABEL );
+    final String text = String.format( Messages.getString( "DeleteSubFeatureAction_0" ), label ); //$NON-NLS-1$
+    setText( text );
 
     setImageDescriptor( ImageProvider.IMAGE_FEATURE_DELETE );
   }
