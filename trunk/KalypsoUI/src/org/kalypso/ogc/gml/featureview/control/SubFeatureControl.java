@@ -38,11 +38,14 @@ public class SubFeatureControl extends AbstractFeatureControl
 
   private ImageHyperlink m_deleteButton;
 
-  public SubFeatureControl( final IPropertyType ftp, final IFeatureComposite parentFeatureComposite, final String selector )
+  private final boolean m_deleteEnabled;
+
+  public SubFeatureControl( final IPropertyType ftp, final IFeatureComposite parentFeatureComposite, final String selector, final boolean deleteEnabled )
   {
     super( ftp );
 
     m_parentFeatureComposite = parentFeatureComposite;
+    m_deleteEnabled = deleteEnabled;
 
     if( selector != null && ftp != null )
       // TODO: NO! Please ALWAYS use full qnames inside the .gft!! The namespace of the property is not always the
@@ -124,9 +127,9 @@ public class SubFeatureControl extends AbstractFeatureControl
 
     m_fc.createControl( toolkit, m_container, SWT.NONE );
 
-    if( featureToSet != null && (ftp.isNillable() || ftp.getMinOccurs() == 0) )
+    if( m_deleteEnabled && featureToSet != null && (ftp.isNillable() || ftp.getMinOccurs() == 0) )
     {
-      final Action deleteFeatureAction = new DeleteSubFeatureAction( this );
+      final Action deleteFeatureAction = new DeleteSubFeatureAction( this, featureToSet );
       m_deleteButton = ActionHyperlink.createHyperlink( toolkit, m_container, SWT.None, deleteFeatureAction );
     }
 

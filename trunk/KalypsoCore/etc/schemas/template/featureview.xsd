@@ -445,10 +445,14 @@ image, label, tooltip, enablement, etc.</xs:documentation>
 			<xs:extension base="fv:PropertyControlType">
 				<!-- TODO: at LEAST change to qname; never just use the property-tag-name, its not unique! BETTER: use gml-xpath to select property. See ControlType-enableOperation for an example. -->
 				<xs:attribute name="selector" type="xs:string" use="optional" />
+				<xs:attribute name="deleteEnabled" type="xs:boolean" use="optional" default="true">
+                    <xs:annotation>
+                        <xs:documentation>Enables or disables the button that deletes the currently shown feature. Defaults to 'true' because of backwards compatibility.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-
 
 	<xs:element name="layout" type="fv:LayoutType" abstract="true" />
 	<xs:element name="gridLayout" substitutionGroup="fv:layout">
