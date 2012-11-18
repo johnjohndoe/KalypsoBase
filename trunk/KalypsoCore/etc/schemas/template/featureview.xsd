@@ -1,575 +1,576 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2005 sp2 U (http://www.altova.com) by Gernot Belger (BCE GmbH) -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fv="featureview.template.kalypso.org" xmlns:tv="gistableview.template.kalypso.org" xmlns:kalypso="types.template.kalypso.org" targetNamespace="featureview.template.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified">
-	<xs:import namespace="types.template.kalypso.org" schemaLocation="./layerTypes.xsd" />
-	<xs:import namespace="gistableview.template.kalypso.org" schemaLocation="./gistableview.xsd" />
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:fv="featureview.template.kalypso.org" xmlns:tv="gistableview.template.kalypso.org" xmlns:kalypso="types.template.kalypso.org" targetNamespace="featureview.template.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <import namespace="types.template.kalypso.org" schemaLocation="./layerTypes.xsd" />
+  <import namespace="gistableview.template.kalypso.org" schemaLocation="./gistableview.xsd" />
 
-	<xs:element name="featuretemplate">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="translator" type="kalypso:I18nTranslatorType" minOccurs="0" />
-				<xs:element name="layer" minOccurs="0">
-					<xs:complexType>
-						<xs:complexContent>
-							<xs:extension base="kalypso:layerType" />
-						</xs:complexContent>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="view" type="fv:FeatureviewType" minOccurs="0" maxOccurs="unbounded"></xs:element>
-			</xs:sequence>
-			<xs:attribute name="name" type="xs:string" use="optional" />
-			<xs:attribute name="toolkit" type="xs:boolean" use="optional" default="false">
-				<xs:annotation>
-					<xs:documentation>
-						<p>Use form toolkit for rendering the resulting feature view?</p>
-					</xs:documentation>
-				</xs:annotation>
-			</xs:attribute>
-			<xs:attribute name="swtflags" type="xs:string" use="optional" default="">
-				<xs:annotation>
-					<xs:documentation>
-						<p>Enclose feature view by a border</p>
-					</xs:documentation>
-				</xs:annotation>
-			</xs:attribute>
-			<xs:attribute name="viewtitle" type="xs:string" use="optional" default="">
-				<xs:annotation>
-					<xs:documentation>
-						<p>Custom Title of Feature View</p>
-					</xs:documentation>
-				</xs:annotation>
-			</xs:attribute>
-		</xs:complexType>
-	</xs:element>
+  <element name="featuretemplate">
+    <complexType>
+      <sequence>
+        <element name="translator" type="kalypso:I18nTranslatorType" minOccurs="0" />
+        <element name="layer" minOccurs="0">
+          <complexType>
+            <complexContent>
+              <extension base="kalypso:layerType" />
+            </complexContent>
+          </complexType>
+        </element>
+        <element name="view" type="fv:FeatureviewType" minOccurs="0" maxOccurs="unbounded"></element>
+      </sequence>
+      <attribute name="name" type="string" use="optional" />
+      <attribute name="toolkit" type="boolean" use="optional" default="false">
+        <annotation>
+          <documentation>
+            <p>Use form toolkit for rendering the resulting feature view?</p>
+          </documentation>
+        </annotation>
+      </attribute>
+      <attribute name="swtflags" type="string" use="optional" default="">
+        <annotation>
+          <documentation>
+            <p>Enclose feature view by a border</p>
+          </documentation>
+        </annotation>
+      </attribute>
+      <attribute name="viewtitle" type="string" use="optional" default="">
+        <annotation>
+          <documentation>
+            <p>Custom Title of Feature View</p>
+          </documentation>
+        </annotation>
+      </attribute>
+    </complexType>
+  </element>
 
-	<xs:element name="featureview" type="fv:FeatureviewType" />
-	<xs:complexType name="FeatureviewType">
-		<xs:complexContent>
-			<xs:extension base="fv:compositeType">
-                <xs:sequence>
-                  <xs:element name="translator" type="kalypso:I18nTranslatorType" minOccurs="0" />
-                </xs:sequence>
-				<xs:attribute name="typename" type="xs:QName" use="required" />
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="ControlType">
-		<xs:sequence>
-			<xs:element name="backgroundColor" type="xs:anyType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation>
-						<p>The background-color of the control.</p>
-					</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="visibleOperation" type="xs:anyType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation>
-						<p>The visibility of the control.</p>
-						<p>If set, replaces the 'visible' attribute.</p>
-						<p>The type of this element must be of type ogc:FilterType of the ogc filter specification (http://www.opengis.net/ogc).</p>
-						<p>REMARK: the type is anyType here to reuse the 'buildFromDom' methods of the deegree Operation implementation.</p>
-					</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="enabledOperation" type="xs:anyType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation>
-						<p>The enablement of the control.</p>
-						<p>See also 'visibleOperation'.</p>
-					</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element minOccurs="0" ref="fv:layoutData" />
-		</xs:sequence>
-		<xs:attribute name="style" type="xs:string" use="required" />
-		<xs:attribute name="tooltip" type="xs:string" use="optional" default="" />
-		<xs:attribute name="visible" type="xs:boolean" use="optional" default="true" />
-		<xs:attribute name="enabled" type="xs:boolean" use="optional" default="true" />
-	</xs:complexType>
-	<xs:complexType name="PropertyControlType">
-		<xs:complexContent>
-			<xs:extension base="fv:ControlType">
-				<xs:attribute name="property" type="xs:QName" use="required" />
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="LayoutType" />
-	<xs:complexType name="layoutDataType" />
-	<xs:complexType name="compositeType">
-		<xs:complexContent>
-			<xs:extension base="fv:ControlType">
-				<xs:sequence minOccurs="0">
-					<xs:element ref="fv:layout" />
-					<xs:element ref="fv:control" minOccurs="0" maxOccurs="unbounded" />
-				</xs:sequence>
-				<xs:attribute name="property" type="xs:QName" use="optional" />
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:element name="composite" type="fv:compositeType" substitutionGroup="fv:control" />
-	<xs:element name="group" substitutionGroup="fv:composite">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="fv:compositeType">
-					<xs:attribute name="text" type="xs:string" use="optional" />
-				</xs:extension>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-    <xs:element name="section" substitutionGroup="fv:control">
-        <xs:complexType>
-            <xs:complexContent>
-                <xs:extension base="fv:ControlType">
-                    <xs:sequence minOccurs="0">
-                        <xs:element name="description" type="xs:string" minOccurs="0" />
-                        <xs:element ref="fv:control"/>
-                    </xs:sequence>
-                    <xs:attribute name="title" type="xs:string" use="optional" />
-                </xs:extension>
-            </xs:complexContent>
-        </xs:complexType>
-    </xs:element>
-	<xs:element name="tabFolder" substitutionGroup="fv:control">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="fv:ControlType">
-					<xs:sequence minOccurs="0" maxOccurs="unbounded">
-						<xs:element name="tabItem">
-							<xs:complexType>
-								<xs:sequence>
-									<xs:element name="tabLabel" type="xs:string" />
-									<xs:element ref="fv:control" minOccurs="1" maxOccurs="1" />
-								</xs:sequence>
-							</xs:complexType>
-						</xs:element>
-					</xs:sequence>
-				</xs:extension>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="dynamicTabFolder" substitutionGroup="fv:control">
-		<xs:annotation>
-			<xs:documentation>The dynamicTabFolder shows a list of features as tab-items in a tabFolder.
-				The given property must hence denote a list of features (or links to features).</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="fv:PropertyControlType">
-					<!-- <xs:attribute name="tabLabel" type="xs:QName" use="required" > <xs:annotation> <xs:documentation>The property that is used to label the tab-items.</xs:documentation> </xs:annotation> </xs:attribute> -->
-				</xs:extension>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="control" type="fv:ControlType" />
-	<xs:element name="label" type="fv:LabelType" substitutionGroup="fv:control" />
-	<xs:complexType name="LabelType">
-		<xs:complexContent>
-			<xs:extension base="fv:PropertyControlType">
-				<xs:attribute name="text" type="xs:string" use="optional" default="" />
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
+  <element name="featureview" type="fv:FeatureviewType" />
+  <complexType name="FeatureviewType">
+    <complexContent>
+      <extension base="fv:compositeType">
+        <sequence>
+          <element name="translator" type="kalypso:I18nTranslatorType" minOccurs="0" />
+        </sequence>
+        <attribute name="typename" type="QName" use="required" />
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="ControlType">
+    <sequence>
+      <element name="backgroundColor" type="anyType" minOccurs="0">
+        <annotation>
+          <documentation>
+            <p>The background-color of the control.</p>
+          </documentation>
+        </annotation>
+      </element>
+      <element name="visibleOperation" type="anyType" minOccurs="0">
+        <annotation>
+          <documentation>
+            <p>The visibility of the control.</p>
+            <p>If set, replaces the 'visible' attribute.</p>
+            <p>The type of this element must be of type ogc:FilterType of the ogc filter specification (http://www.opengis.net/ogc).</p>
+            <p>REMARK: the type is anyType here to reuse the 'buildFromDom' methods of the deegree Operation implementation.</p>
+          </documentation>
+        </annotation>
+      </element>
+      <element name="enabledOperation" type="anyType" minOccurs="0">
+        <annotation>
+          <documentation>
+            <p>The enablement of the control.</p>
+            <p>See also 'visibleOperation'.</p>
+          </documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" ref="fv:layoutData" />
+    </sequence>
+    <attribute name="style" type="string" use="required" />
+    <attribute name="tooltip" type="string" use="optional" default="" />
+    <attribute name="visible" type="boolean" use="optional" default="true" />
+    <attribute name="enabled" type="boolean" use="optional" default="true" />
+  </complexType>
+  <complexType name="PropertyControlType">
+    <complexContent>
+      <extension base="fv:ControlType">
+        <attribute name="property" type="QName" use="required" />
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="LayoutType" />
+  <complexType name="layoutDataType" />
+  <complexType name="compositeType">
+    <complexContent>
+      <extension base="fv:ControlType">
+        <sequence minOccurs="0">
+          <element ref="fv:layout" />
+          <element ref="fv:control" minOccurs="0" maxOccurs="unbounded" />
+        </sequence>
+        <attribute name="property" type="QName" use="optional" />
+      </extension>
+    </complexContent>
+  </complexType>
+  <element name="composite" type="fv:compositeType" substitutionGroup="fv:control" />
+  <element name="group" substitutionGroup="fv:composite">
+    <complexType>
+      <complexContent>
+        <extension base="fv:compositeType">
+          <attribute name="text" type="string" use="optional" />
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+  <element name="section" substitutionGroup="fv:control">
+    <complexType>
+      <complexContent>
+        <extension base="fv:ControlType">
+          <sequence minOccurs="0">
+            <element name="description" type="string" minOccurs="0" />
+            <element ref="fv:control" />
+          </sequence>
+          <attribute name="title" type="string" use="optional" />
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+  <element name="tabFolder" substitutionGroup="fv:control">
+    <complexType>
+      <complexContent>
+        <extension base="fv:ControlType">
+          <sequence minOccurs="0" maxOccurs="unbounded">
+            <element name="tabItem">
+              <complexType>
+                <sequence>
+                  <element name="tabLabel" type="string" />
+                  <element ref="fv:control" minOccurs="1" maxOccurs="1" />
+                </sequence>
+              </complexType>
+            </element>
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+  <element name="dynamicTabFolder" substitutionGroup="fv:control">
+    <annotation>
+      <documentation>The dynamicTabFolder shows a list of features as tab-items in a tabFolder.
+        The given property must hence denote a list of features (or links to features).
+      </documentation>
+    </annotation>
+    <complexType>
+      <complexContent>
+        <extension base="fv:PropertyControlType">
+          <!-- <attribute name="tabLabel" type="QName" use="required" > <annotation> <documentation>The property that is used to label the tab-items.</documentation> </annotation> </attribute> -->
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+  <element name="control" type="fv:ControlType" />
+  <element name="label" type="fv:LabelType" substitutionGroup="fv:control" />
+  <complexType name="LabelType">
+    <complexContent>
+      <extension base="fv:PropertyControlType">
+        <attribute name="text" type="string" use="optional" default="" />
+      </extension>
+    </complexContent>
+  </complexType>
 
-	<xs:element name="validatorlabel" type="fv:ValidatorLabelType" substitutionGroup="fv:control" />
-	<xs:complexType name="ValidatorLabelType">
-		<xs:complexContent>
-			<xs:extension base="fv:PropertyControlType" />
-		</xs:complexContent>
-	</xs:complexType>
+  <element name="validatorlabel" type="fv:ValidatorLabelType" substitutionGroup="fv:control" />
+  <complexType name="ValidatorLabelType">
+    <complexContent>
+      <extension base="fv:PropertyControlType" />
+    </complexContent>
+  </complexType>
 
-	<xs:element name="geometrylabel" type="fv:GeometryLabelType" substitutionGroup="fv:control" />
-	<xs:complexType name="GeometryLabelType">
-		<xs:complexContent>
-			<xs:extension base="fv:PropertyControlType" />
-		</xs:complexContent>
-	</xs:complexType>
+  <element name="geometrylabel" type="fv:GeometryLabelType" substitutionGroup="fv:control" />
+  <complexType name="GeometryLabelType">
+    <complexContent>
+      <extension base="fv:PropertyControlType" />
+    </complexContent>
+  </complexType>
 
-	<xs:element name="colorlabel" type="fv:ColorLabelType" substitutionGroup="fv:control" />
-	<xs:complexType name="ColorLabelType">
-		<xs:complexContent>
-			<xs:extension base="fv:PropertyControlType" />
-		</xs:complexContent>
-	</xs:complexType>
+  <element name="colorlabel" type="fv:ColorLabelType" substitutionGroup="fv:control" />
+  <complexType name="ColorLabelType">
+    <complexContent>
+      <extension base="fv:PropertyControlType" />
+    </complexContent>
+  </complexType>
 
-	<xs:element name="text" substitutionGroup="fv:control">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="fv:PropertyControlType">
-					<xs:sequence>
-						<xs:element name="format" type="xs:anyType" minOccurs="0">
-							<xs:annotation>
-								<xs:documentation>
-									<p>The format for this textfield.</p>
-								</xs:documentation>
-							</xs:annotation>
-						</xs:element>
-					</xs:sequence>
-					<xs:attribute name="editable" type="xs:boolean" use="optional" default="true" />
-				</xs:extension>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="button" substitutionGroup="fv:control">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="fv:PropertyControlType" />
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="radiobutton" substitutionGroup="fv:control">
-		<xs:annotation>
-			<xs:documentation>The radio button just sets the value of a feature to the given value</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="fv:PropertyControlType">
-					<xs:attribute name="text" type="xs:string" use="optional" default="" />
-					<xs:attribute name="valueToSet" type="xs:string" use="required" />
-				</xs:extension>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="combo" substitutionGroup="fv:control">
-		<xs:annotation>
-			<xs:documentation>A combo let the user choose between several values.</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="fv:PropertyControlType">
-					<xs:sequence>
-						<xs:element name="sorter" minOccurs="0" maxOccurs="1">
-							<xs:complexType>
-								<xs:sequence>
-									<xs:annotation>
-										<xs:documentation>The list of parameters for the sorter. Will be given to the implementation of the extension-point.</xs:documentation>
-									</xs:annotation>
-									<xs:element name="param" minOccurs="0" maxOccurs="unbounded">
-										<xs:annotation>
-											<xs:documentation>An arbitrary key/value-pair of strings.</xs:documentation>
-										</xs:annotation>
-										<xs:complexType>
-											<xs:attribute name="name" type="xs:string" />
-											<xs:attribute name="value" type="xs:string" />
-										</xs:complexType>
-									</xs:element>
-								</xs:sequence>
-								<xs:attribute name="id" type="xs:string" use="optional" />
-							</xs:complexType>
-						</xs:element>
-						<xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
-							<xs:annotation>
-								<xs:documentation>
-									An entry represant a selectable item from the combo box. The label is the string displayed to the user. The value (string element content) will be parsed by the
-									appropriate IMarhsallingTypeHandler to the required value.
-								</xs:documentation>
-							</xs:annotation>
-							<xs:complexType>
-								<xs:simpleContent>
-									<xs:extension base="xs:string">
-										<xs:attribute name="label" type="xs:string" />
-									</xs:extension>
-								</xs:simpleContent>
-							</xs:complexType>
-						</xs:element>
-						<xs:element name="filter" minOccurs="0" maxOccurs="1">
-							<xs:complexType>
-								<xs:sequence>
-									<xs:element name="expression" type="xs:anyType" minOccurs="0">
-										<xs:annotation>
-											<xs:documentation>
-												<p>Filter expression in order to filter the list of shown elements.</p>
-											</xs:documentation>
-										</xs:annotation>
-									</xs:element>
-								</xs:sequence>
-								<xs:attribute name="id" type="xs:string" use="optional" />
-							</xs:complexType>
-						</xs:element>
-					</xs:sequence>
-				</xs:extension>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="checkbox" substitutionGroup="fv:control">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="fv:PropertyControlType">
-					<xs:sequence>
-						<xs:element name="text" type="xs:string" minOccurs="0" />
-					</xs:sequence>
-				</xs:extension>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="spinner" substitutionGroup="fv:control">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="fv:PropertyControlType">
-					<xs:attribute name="increment" type="xs:unsignedInt" use="optional" default="1" />
-					<xs:attribute name="pageIncrement" type="xs:unsignedInt" use="optional" default="10" />
-				</xs:extension>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-    <xs:element name="commandHyperlink" substitutionGroup="fv:control">
-        <xs:annotation>
-            <xs:documentation>Hyperlink that is based on a command. Most properties of this element are taken from the command such as
-image, label, tooltip, enablement, etc.</xs:documentation>
-        </xs:annotation>
-        <xs:complexType>
-            <xs:complexContent>
-                <xs:extension base="fv:ControlType">
-                    <xs:sequence>
-                        <xs:element name="commandID" type="xs:string">
-                            <xs:annotation>
-                                <xs:documentation>ID of the command that is represented by this hyperlink.</xs:documentation>
-                            </xs:annotation>
-                        </xs:element>
-                    </xs:sequence>
-                </xs:extension>
-            </xs:complexContent>
-        </xs:complexType>
-    </xs:element>
+  <element name="text" substitutionGroup="fv:control">
+    <complexType>
+      <complexContent>
+        <extension base="fv:PropertyControlType">
+          <sequence>
+            <element name="format" type="anyType" minOccurs="0">
+              <annotation>
+                <documentation>
+                  <p>The format for this textfield.</p>
+                </documentation>
+              </annotation>
+            </element>
+          </sequence>
+          <attribute name="editable" type="boolean" use="optional" default="true" />
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+  <element name="button" substitutionGroup="fv:control">
+    <complexType>
+      <complexContent>
+        <extension base="fv:PropertyControlType" />
+      </complexContent>
+    </complexType>
+  </element>
+  <element name="radiobutton" substitutionGroup="fv:control">
+    <annotation>
+      <documentation>The radio button just sets the value of a feature to the given value</documentation>
+    </annotation>
+    <complexType>
+      <complexContent>
+        <extension base="fv:PropertyControlType">
+          <attribute name="text" type="string" use="optional" default="" />
+          <attribute name="valueToSet" type="string" use="required" />
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+  <element name="combo" substitutionGroup="fv:control">
+    <annotation>
+      <documentation>A combo let the user choose between several values.</documentation>
+    </annotation>
+    <complexType>
+      <complexContent>
+        <extension base="fv:PropertyControlType">
+          <sequence>
+            <element name="sorter" minOccurs="0" maxOccurs="1">
+              <complexType>
+                <sequence>
+                  <annotation>
+                    <documentation>The list of parameters for the sorter. Will be given to the implementation of the extension-point.</documentation>
+                  </annotation>
+                  <element name="param" minOccurs="0" maxOccurs="unbounded">
+                    <annotation>
+                      <documentation>An arbitrary key/value-pair of strings.</documentation>
+                    </annotation>
+                    <complexType>
+                      <attribute name="name" type="string" />
+                      <attribute name="value" type="string" />
+                    </complexType>
+                  </element>
+                </sequence>
+                <attribute name="id" type="string" use="optional" />
+              </complexType>
+            </element>
+            <element name="entry" minOccurs="0" maxOccurs="unbounded">
+              <annotation>
+                <documentation>
+                  An entry represant a selectable item from the combo box. The label is the string displayed to the user. The value (string element content) will be parsed by the
+                  appropriate IMarhsallingTypeHandler to the required value.
+                </documentation>
+              </annotation>
+              <complexType>
+                <simpleContent>
+                  <extension base="string">
+                    <attribute name="label" type="string" />
+                  </extension>
+                </simpleContent>
+              </complexType>
+            </element>
+            <element name="filter" minOccurs="0" maxOccurs="1">
+              <complexType>
+                <sequence>
+                  <element name="expression" type="anyType" minOccurs="0">
+                    <annotation>
+                      <documentation>
+                        <p>Filter expression in order to filter the list of shown elements.</p>
+                      </documentation>
+                    </annotation>
+                  </element>
+                </sequence>
+                <attribute name="id" type="string" use="optional" />
+              </complexType>
+            </element>
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+  <element name="checkbox" substitutionGroup="fv:control">
+    <complexType>
+      <complexContent>
+        <extension base="fv:PropertyControlType">
+          <sequence>
+            <element name="text" type="string" minOccurs="0" />
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+  <element name="spinner" substitutionGroup="fv:control">
+    <complexType>
+      <complexContent>
+        <extension base="fv:PropertyControlType">
+          <attribute name="increment" type="unsignedInt" use="optional" default="1" />
+          <attribute name="pageIncrement" type="unsignedInt" use="optional" default="10" />
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+  <element name="commandHyperlink" substitutionGroup="fv:control">
+    <annotation>
+      <documentation>Hyperlink that is based on a command. Most properties of this element are taken from the command such as
+        image, label, tooltip, enablement, etc.
+      </documentation>
+    </annotation>
+    <complexType>
+      <complexContent>
+        <extension base="fv:ControlType">
+          <sequence>
+            <element name="commandID" type="string">
+              <annotation>
+                <documentation>ID of the command that is represented by this hyperlink.</documentation>
+              </annotation>
+            </element>
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
 
-	<xs:element name="image" substitutionGroup="fv:control">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="fv:PropertyControlType" />
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="extensioncontrol" substitutionGroup="fv:control">
-		<xs:annotation>
-			<xs:documentation>A (generic) control which implementation is provided by extensions of the extension-point 'org.kalypso.ui.featureViewExtensionControl'</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="fv:PropertyControlType">
-					<xs:sequence>
-						<xs:annotation>
-							<xs:documentation>The list of parameters for this control. Will be given to the implementation of the extension-point.</xs:documentation>
-						</xs:annotation>
-						<xs:element name="param" minOccurs="0" maxOccurs="unbounded">
-							<xs:annotation>
-								<xs:documentation>An arbitrary key/value-pair of strings.</xs:documentation>
-							</xs:annotation>
-							<xs:complexType>
-								<xs:attribute name="name" type="xs:string" />
-								<xs:attribute name="value" type="xs:string" />
-							</xs:complexType>
-						</xs:element>
-					</xs:sequence>
-					<xs:attribute name="extension-id" type="xs:string">
-						<xs:annotation>
-							<xs:documentation>The id of the extension which implements this control.</xs:documentation>
-						</xs:annotation>
-					</xs:attribute>
-				</xs:extension>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
+  <element name="image" substitutionGroup="fv:control">
+    <complexType>
+      <complexContent>
+        <extension base="fv:PropertyControlType" />
+      </complexContent>
+    </complexType>
+  </element>
+  <element name="extensioncontrol" substitutionGroup="fv:control">
+    <annotation>
+      <documentation>A (generic) control which implementation is provided by extensions of the extension-point 'org.kalypso.ui.featureViewExtensionControl'</documentation>
+    </annotation>
+    <complexType>
+      <complexContent>
+        <extension base="fv:PropertyControlType">
+          <sequence>
+            <annotation>
+              <documentation>The list of parameters for this control. Will be given to the implementation of the extension-point.</documentation>
+            </annotation>
+            <element name="param" minOccurs="0" maxOccurs="unbounded">
+              <annotation>
+                <documentation>An arbitrary key/value-pair of strings.</documentation>
+              </annotation>
+              <complexType>
+                <attribute name="name" type="string" />
+                <attribute name="value" type="string" />
+              </complexType>
+            </element>
+          </sequence>
+          <attribute name="extension-id" type="string">
+            <annotation>
+              <documentation>The id of the extension which implements this control.</documentation>
+            </annotation>
+          </attribute>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
 
-	<xs:element name="tupleResult" substitutionGroup="fv:control">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="fv:PropertyControlType">
-					<xs:sequence>
-						<xs:element name="recordsFixed" type="xs:boolean" default="false" minOccurs="0" maxOccurs="1">
-							<xs:annotation>
-								<xs:documentation xml:lang="en">If set to true, adding, removing and moving records is forbidden.</xs:documentation>
-							</xs:annotation>
-						</xs:element>
+  <element name="tupleResult" substitutionGroup="fv:control">
+    <complexType>
+      <complexContent>
+        <extension base="fv:PropertyControlType">
+          <sequence>
+            <element name="recordsFixed" type="boolean" default="false" minOccurs="0" maxOccurs="1">
+              <annotation>
+                <documentation xml:lang="en">If set to true, adding, removing and moving records is forbidden.</documentation>
+              </annotation>
+            </element>
 
-						<xs:element ref="fv:toolbar" />
-						<xs:choice>
-							<xs:element name="columnProviderId" type="xs:string">
-								<xs:annotation>
-									<xs:documentation xml:lang="en">
-										Id of a columnProvider which provides the column to be shown in a more dynamic way than the static columnDescriptors. See extension-point
-										org.kalypso.core.columnProvider
-									</xs:documentation>
-								</xs:annotation>
-							</xs:element>
-							<xs:element name="columnDescriptor" type="fv:ColumnDescriptor" minOccurs="0" maxOccurs="unbounded">
-								<xs:annotation>
-									<xs:documentation xml:lang="en">This list of column descriptors describes which column and how are to be shown in the table.</xs:documentation>
-								</xs:annotation>
-							</xs:element>
-						</xs:choice>
-					</xs:sequence>
-				</xs:extension>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
+            <element ref="fv:toolbar" />
+            <choice>
+              <element name="columnProviderId" type="string">
+                <annotation>
+                  <documentation xml:lang="en">
+                    Id of a columnProvider which provides the column to be shown in a more dynamic way than the static columnDescriptors. See extension-point
+                    org.kalypso.core.columnProvider
+                  </documentation>
+                </annotation>
+              </element>
+              <element name="columnDescriptor" type="fv:ColumnDescriptor" minOccurs="0" maxOccurs="unbounded">
+                <annotation>
+                  <documentation xml:lang="en">This list of column descriptors describes which column and how are to be shown in the table.</documentation>
+                </annotation>
+              </element>
+            </choice>
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
 
-	<xs:element name="toolbar">
-		<xs:complexType>
-			<xs:annotation>
-				<xs:documentation><![CDATA[Command based toolbar]]></xs:documentation>
-			</xs:annotation>
+  <element name="toolbar">
+    <complexType>
+      <annotation>
+        <documentation><![CDATA[Command based toolbar]]></documentation>
+      </annotation>
 
-			<xs:sequence>
-				<xs:element name="command" minOccurs="0" maxOccurs="unbounded">
-					<xs:complexType>
-						<xs:attribute name="commandId" type="xs:string" use="required" />
-						<xs:attribute name="style" type="xs:string" use="required" />
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="menuContribution" minOccurs="0" maxOccurs="unbounded">
-					<xs:complexType>
-						<xs:attribute name="uri" type="xs:string" use="required" />
-					</xs:complexType>
-				</xs:element>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
+      <sequence>
+        <element name="command" minOccurs="0" maxOccurs="unbounded">
+          <complexType>
+            <attribute name="commandId" type="string" use="required" />
+            <attribute name="style" type="string" use="required" />
+          </complexType>
+        </element>
+        <element name="menuContribution" minOccurs="0" maxOccurs="unbounded">
+          <complexType>
+            <attribute name="uri" type="string" use="required" />
+          </complexType>
+        </element>
+      </sequence>
+    </complexType>
+  </element>
 
-	<xs:element name="table" substitutionGroup="fv:control">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="fv:PropertyControlType">
-					<xs:sequence>
-						<xs:element ref="fv:toolbar" minOccurs="0" />
-						<xs:element ref="tv:gistableview" />
-					</xs:sequence>
-					<xs:attribute name="showToolbar" type="xs:boolean" use="optional" default="true"/>
-					<xs:attribute name="showContextMenu" type="xs:boolean" use="optional" default="false" />
-				</xs:extension>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="subcomposite" type="fv:SubcompositeType" substitutionGroup="fv:control" />
-	<xs:complexType name="SubcompositeType">
-		<xs:complexContent>
-			<xs:extension base="fv:PropertyControlType">
-				<!-- TODO: at LEAST change to qname; never just use the property-tag-name, its not unique! BETTER: use gml-xpath to select property. See ControlType-enableOperation for an example. -->
-				<xs:attribute name="selector" type="xs:string" use="optional" />
-				<xs:attribute name="deleteEnabled" type="xs:boolean" use="optional" default="true">
-                    <xs:annotation>
-                        <xs:documentation>Enables or disables the button that deletes the currently shown feature. Defaults to 'true' because of backwards compatibility.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
+  <element name="table" substitutionGroup="fv:control">
+    <complexType>
+      <complexContent>
+        <extension base="fv:PropertyControlType">
+          <sequence>
+            <element ref="fv:toolbar" minOccurs="0" />
+            <element ref="tv:gistableview" />
+          </sequence>
+          <attribute name="showToolbar" type="boolean" use="optional" default="true" />
+          <attribute name="showContextMenu" type="boolean" use="optional" default="false" />
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+  <element name="subcomposite" type="fv:SubcompositeType" substitutionGroup="fv:control" />
+  <complexType name="SubcompositeType">
+    <complexContent>
+      <extension base="fv:PropertyControlType">
+        <!-- TODO: at LEAST change to qname; never just use the property-tag-name, its not unique! BETTER: use gml-xpath to select property. See ControlType-enableOperation for an example. -->
+        <attribute name="selector" type="string" use="optional" />
+        <attribute name="deleteEnabled" type="boolean" use="optional" default="true">
+          <annotation>
+            <documentation>Enables or disables the button that deletes the currently shown feature. Defaults to 'true' because of backwards compatibility.</documentation>
+          </annotation>
+        </attribute>
+      </extension>
+    </complexContent>
+  </complexType>
 
-	<xs:element name="layout" type="fv:LayoutType" abstract="true" />
-	<xs:element name="gridLayout" substitutionGroup="fv:layout">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="fv:LayoutType">
-					<xs:attribute name="horizontalSpacing" type="xs:int" use="optional" default="5" />
-					<xs:attribute name="verticalSpacing" type="xs:int" use="optional" default="5" />
-					<xs:attribute name="marginWidth" type="xs:int" use="optional" default="5" />
-					<xs:attribute name="marginHeight" type="xs:int" use="optional" default="5" />
-					<xs:attribute name="marginTop" type="xs:int" use="optional" default="0" />
-					<xs:attribute name="marginLeft" type="xs:int" use="optional" default="0" />
-					<xs:attribute name="marginRight" type="xs:int" use="optional" default="0" />
-					<xs:attribute name="marginBottom" type="xs:int" use="optional" default="0" />
-					<xs:attribute name="numColumns" type="xs:int" use="optional" default="1" />
-					<xs:attribute name="makeColumnsEqualWidth" type="xs:boolean" use="optional" default="false" />
-				</xs:extension>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="layoutData" type="fv:layoutDataType" abstract="true" />
+  <element name="layout" type="fv:LayoutType" abstract="true" />
+  <element name="gridLayout" substitutionGroup="fv:layout">
+    <complexType>
+      <complexContent>
+        <extension base="fv:LayoutType">
+          <attribute name="horizontalSpacing" type="int" use="optional" default="5" />
+          <attribute name="verticalSpacing" type="int" use="optional" default="5" />
+          <attribute name="marginWidth" type="int" use="optional" default="5" />
+          <attribute name="marginHeight" type="int" use="optional" default="5" />
+          <attribute name="marginTop" type="int" use="optional" default="0" />
+          <attribute name="marginLeft" type="int" use="optional" default="0" />
+          <attribute name="marginRight" type="int" use="optional" default="0" />
+          <attribute name="marginBottom" type="int" use="optional" default="0" />
+          <attribute name="numColumns" type="int" use="optional" default="1" />
+          <attribute name="makeColumnsEqualWidth" type="boolean" use="optional" default="false" />
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+  <element name="layoutData" type="fv:layoutDataType" abstract="true" />
 
-	<xs:element name="gridData" type="fv:GridDataType" substitutionGroup="fv:layoutData" />
-	<xs:complexType name="GridDataType">
-		<xs:complexContent>
-			<xs:extension base="fv:layoutDataType">
-				<xs:sequence>
-					<xs:element name="excludeOperation" type="xs:anyType" minOccurs="0">
-						<xs:annotation>
-							<xs:documentation>
-								<p>The 'exclude' member of the GridData.</p>
-								<p>See also 'visibleOperation' of the type 'ControlType'.</p>
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-				</xs:sequence>
-				<xs:attribute name="verticalAlignment" type="xs:string" use="optional" default="2" />
-				<xs:attribute name="horizontalAlignment" type="xs:string" use="optional" default="2" />
-				<xs:attribute name="widthHint" type="xs:int" use="optional" default="-1" />
-				<xs:attribute name="heightHint" type="xs:int" use="optional" default="-1" />
-				<xs:attribute name="horizontalIndent" type="xs:int" use="optional" default="0" />
-				<xs:attribute name="horizontalSpan" type="xs:int" use="optional" default="1" />
-				<xs:attribute name="verticalSpan" type="xs:int" use="optional" default="1" />
-				<xs:attribute name="grabExcessHorizontalSpace" type="xs:boolean" use="optional" default="false" />
-				<xs:attribute name="grabExcessVerticalSpace" type="xs:boolean" use="optional" default="false" />
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
+  <element name="gridData" type="fv:GridDataType" substitutionGroup="fv:layoutData" />
+  <complexType name="GridDataType">
+    <complexContent>
+      <extension base="fv:layoutDataType">
+        <sequence>
+          <element name="excludeOperation" type="anyType" minOccurs="0">
+            <annotation>
+              <documentation>
+                <p>The 'exclude' member of the GridData.</p>
+                <p>See also 'visibleOperation' of the type 'ControlType'.</p>
+              </documentation>
+            </annotation>
+          </element>
+        </sequence>
+        <attribute name="verticalAlignment" type="string" use="optional" default="2" />
+        <attribute name="horizontalAlignment" type="string" use="optional" default="2" />
+        <attribute name="widthHint" type="int" use="optional" default="-1" />
+        <attribute name="heightHint" type="int" use="optional" default="-1" />
+        <attribute name="horizontalIndent" type="int" use="optional" default="0" />
+        <attribute name="horizontalSpan" type="int" use="optional" default="1" />
+        <attribute name="verticalSpan" type="int" use="optional" default="1" />
+        <attribute name="grabExcessHorizontalSpace" type="boolean" use="optional" default="false" />
+        <attribute name="grabExcessVerticalSpace" type="boolean" use="optional" default="false" />
+      </extension>
+    </complexContent>
+  </complexType>
 
-	<xs:complexType name="ColumnDescriptor">
-		<xs:attribute name="component" type="xs:string" use="required">
-			<xs:annotation>
-				<xs:documentation>Id of the component this descriptions applies to.</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-		<xs:attribute name="editable" type="xs:boolean" use="optional" default="true">
-			<xs:annotation>
-				<xs:documentation>If false, the column will not be editable for the user. Defaults to true.</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-		<xs:attribute name="optional" type="xs:boolean" use="optional" default="false">
-			<xs:annotation>
-				<xs:documentation>
-					If true, the given component must be available in the data, else an error message will occur. If false, the column will be just ignored if the component is not available.
-				</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-		<xs:attribute name="width" type="xs:int" use="optional" default="100">
-			<xs:annotation>
-				<xs:documentation>The width in pixels of the column. Defaults to 100.</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-		<xs:attribute name="widthPercent" type="xs:int" use="optional" default="-1">
-			<xs:annotation>
-				<xs:documentation>
-					The width in percent of the column i respect of the total width of the table. If not -1, each resize adjusts the columns width according to this setting. If not -1, the width
-					attribute is regarded as minimum width. Defaults to -1.
-				</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-		<xs:attribute name="alignment" type="xs:string" use="optional" default="SWT.CENTER">
-			<xs:annotation>
-				<xs:documentation>Alignment of the column: valid values: SWT.LEFT, SWT.RIGHT, SWT.CENTER.</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-		<xs:attribute name="resizeable" type="xs:boolean" use="optional" default="true">
-			<xs:annotation>
-				<xs:documentation>If false, the column cannot be resized by the user. Defaults to true.</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-		<xs:attribute name="moveable" type="xs:boolean" use="optional" default="true">
-			<xs:annotation>
-				<xs:documentation>If false, the column cannot be moved by the user. Defaults to true.</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-		<xs:attribute name="displayFormat" type="xs:string" use="optional">
-			<xs:annotation>
-				<xs:documentation>Format string used to format entries (in order to display them) of this column. See String.format for valid values.</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-		<xs:attribute name="nullFormat" type="xs:string" use="optional">
-			<xs:annotation>
-				<xs:documentation>String used for display if the value is null.</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-		<xs:attribute name="parseFormat" type="xs:string" use="optional">
-			<xs:annotation>
-				<xs:documentation>
-					Format string used to parse user edited entries of this column. Possible values are type dependend. Used within the XsdBaseGuiTypeHandler implementations.
-				</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-		<xs:attribute name="label" type="xs:string" use="optional">
-			<xs:annotation>
-				<xs:documentation>Label of the column header. If not set, the name of the associated phenomenon is used.</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-	</xs:complexType>
-
-</xs:schema>
+  <complexType name="ColumnDescriptor">
+    <attribute name="component" type="string" use="required">
+      <annotation>
+        <documentation>Id of the component this descriptions applies to.</documentation>
+      </annotation>
+    </attribute>
+    <attribute name="editable" type="boolean" use="optional" default="true">
+      <annotation>
+        <documentation>If false, the column will not be editable for the user. Defaults to true.</documentation>
+      </annotation>
+    </attribute>
+    <attribute name="optional" type="boolean" use="optional" default="false">
+      <annotation>
+        <documentation>
+          If true, the given component must be available in the data, else an error message will occur. If false, the column will be just ignored if the component is not available.
+        </documentation>
+      </annotation>
+    </attribute>
+    <attribute name="width" type="int" use="optional" default="100">
+      <annotation>
+        <documentation>The width in pixels of the column. Defaults to 100.</documentation>
+      </annotation>
+    </attribute>
+    <attribute name="widthPercent" type="int" use="optional" default="-1">
+      <annotation>
+        <documentation>
+          The width in percent of the column i respect of the total width of the table. If not -1, each resize adjusts the columns width according to this setting. If not -1, the width
+          attribute is regarded as minimum width. Defaults to -1.
+        </documentation>
+      </annotation>
+    </attribute>
+    <attribute name="alignment" type="string" use="optional" default="SWT.CENTER">
+      <annotation>
+        <documentation>Alignment of the column: valid values: SWT.LEFT, SWT.RIGHT, SWT.CENTER.</documentation>
+      </annotation>
+    </attribute>
+    <attribute name="resizeable" type="boolean" use="optional" default="true">
+      <annotation>
+        <documentation>If false, the column cannot be resized by the user. Defaults to true.</documentation>
+      </annotation>
+    </attribute>
+    <attribute name="moveable" type="boolean" use="optional" default="true">
+      <annotation>
+        <documentation>If false, the column cannot be moved by the user. Defaults to true.</documentation>
+      </annotation>
+    </attribute>
+    <attribute name="displayFormat" type="string" use="optional">
+      <annotation>
+        <documentation>Format string used to format entries (in order to display them) of this column. See String.format for valid values.</documentation>
+      </annotation>
+    </attribute>
+    <attribute name="nullFormat" type="string" use="optional">
+      <annotation>
+        <documentation>String used for display if the value is null.</documentation>
+      </annotation>
+    </attribute>
+    <attribute name="parseFormat" type="string" use="optional">
+      <annotation>
+        <documentation>
+          Format string used to parse user edited entries of this column. Possible values are type dependend. Used within the XsdBaseGuiTypeHandler implementations.
+        </documentation>
+      </annotation>
+    </attribute>
+    <attribute name="label" type="string" use="optional">
+      <annotation>
+        <documentation>Label of the column header. If not set, the name of the associated phenomenon is used.</documentation>
+      </annotation>
+    </attribute>
+  </complexType>
+</schema>
