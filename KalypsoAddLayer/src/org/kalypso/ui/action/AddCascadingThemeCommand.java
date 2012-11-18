@@ -97,9 +97,7 @@ public class AddCascadingThemeCommand implements IThemeCommand
     m_position = position;
 
     for( final ICommand command : layerCommands )
-    {
       m_layerCommands.add( command );
-    }
   }
 
   public AddCascadingThemeCommand( final IKalypsoLayerModell mapModell, final String name, final ADD_THEME_POSITION position )
@@ -204,9 +202,6 @@ public class AddCascadingThemeCommand implements IThemeCommand
     return layer;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
-   */
   @Override
   public boolean isUndoable( )
   {
@@ -255,17 +250,11 @@ public class AddCascadingThemeCommand implements IThemeCommand
     return 0;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#redo()
-   */
   @Override
   public void redo( ) throws Exception
   {
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#undo()
-   */
   @Override
   public void undo( ) throws Exception
   {
@@ -276,9 +265,6 @@ public class AddCascadingThemeCommand implements IThemeCommand
     m_visibility = visibility;
   }
 
-  /**
-   * @see org.kalypso.ui.action.IThemeCommand#toStyledLayerType()
-   */
   @Override
   public StyledLayerType toStyledLayerType( )
   {
@@ -300,5 +286,4 @@ public class AddCascadingThemeCommand implements IThemeCommand
 
     return layer;
   }
-
 }

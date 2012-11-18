@@ -97,7 +97,7 @@ public class AddThemeCommand implements IThemeCommand
 
   /**
    * This command adds a new theme to a map.
-   *
+   * 
    * @param model
    *          active GisTemplateMapModell from the active Map
    * @param name
@@ -125,7 +125,7 @@ public class AddThemeCommand implements IThemeCommand
 
   /**
    * This command adds a new theme to a map.
-   *
+   * 
    * @param model
    *          active GisTemplateMapModell from the active Map
    * @param name
@@ -186,9 +186,6 @@ public class AddThemeCommand implements IThemeCommand
     m_properties.put( key, value );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
-   */
   @Override
   public String getDescription( )
   {
@@ -228,9 +225,6 @@ public class AddThemeCommand implements IThemeCommand
     return layer;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
-   */
   @Override
   public boolean isUndoable( )
   {
@@ -244,7 +238,6 @@ public class AddThemeCommand implements IThemeCommand
 
     doInsertLayer();
   }
-
 
   @Override
   public void redo( ) throws Exception
