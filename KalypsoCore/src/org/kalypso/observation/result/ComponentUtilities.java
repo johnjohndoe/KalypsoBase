@@ -52,7 +52,7 @@ import org.kalypso.ogc.gml.om.FeatureComponent;
 
 /**
  * Utility methods for components
- *
+ * 
  * @author schlienger
  */
 public final class ComponentUtilities
@@ -106,7 +106,7 @@ public final class ComponentUtilities
 
   /**
    * TODO: move into helper class of restrictions!
-   *
+   * 
    * @author Dirk Kuch
    */
   public static boolean restrictionContainsEnumeration( final IRestriction[] restrictions )
@@ -122,7 +122,7 @@ public final class ComponentUtilities
 
   /**
    * Searches for a component by id.
-   *
+   * 
    * @return <code>null</code>, if no compoentn with the given id is found, else the first found component.
    */
   public static IComponent findComponentByID( final IComponent[] components, final String componentID )
@@ -196,7 +196,7 @@ public final class ComponentUtilities
   /**
    * Returns the scale (number of decimal digits) of this component.<br>
    * This works only for components that contain a {@link FractionDigitRestriction}.<br>
-   *
+   * 
    * @return -1 If no scale can be determined.
    * @see org.kalypso.observation.result.IComponent#getPrecision()
    */
@@ -205,7 +205,7 @@ public final class ComponentUtilities
     for( final IRestriction restriction : component.getRestrictions() )
     {
       if( restriction instanceof FractionDigitRestriction )
-        return ((FractionDigitRestriction) restriction).getFractionDigits();
+        return ((FractionDigitRestriction)restriction).getFractionDigits();
     }
 
     return -1;
@@ -236,7 +236,7 @@ public final class ComponentUtilities
 
   /**
    * Either gets and existing component, or creates it if it doesn't exist yet.
-   *
+   * 
    * @return The index of the component
    */
   public static int getOrCreateComponent( final TupleResult result, final String componentID )
@@ -247,5 +247,14 @@ public final class ComponentUtilities
 
     result.addComponent( ComponentUtilities.getFeatureComponent( componentID ) );
     return result.indexOfComponent( componentID );
+  }
+
+  public static String getDecimalFormat( final IComponent component )
+  {
+    final int scale = getScale( component );
+    if( scale == -1 )
+      return "%f"; //$NON-NLS-1$
+
+    return String.format( "%%.%df", scale );
   }
 }
