@@ -17,6 +17,9 @@
   <nextCatalog catalog="platform:/resource/KalypsoModelRCM/etc/schema/catalog.xml" />
   <nextCatalog catalog="platform:/resource/KalypsoModelWspmSchema/src/org/kalypso/model/wspm/schema/catalog.xml" />
   <nextCatalog catalog="platform:/resource/WorkflowModel/etc/catalog.xml" />
+
+  <nextCatalog catalog="platform:/resource/KalypsoModelSimulationBase/src/org/kalypso/kalypsosimulationmodel/schema/catalog.xml" />
+  <nextCatalog catalog="platform:/resource/KalypsoModel1D2D/src/org/kalypso/kalypsomodel1d2d/schema/catalog.xml" />
     
   <!-- Prognose -->
   <nextCatalog catalog="platform:/resource/KalypsoHwvCore/etc/schemes/catalog.xml" />
