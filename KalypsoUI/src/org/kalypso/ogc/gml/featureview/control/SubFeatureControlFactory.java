@@ -55,7 +55,10 @@ public class SubFeatureControlFactory implements IFeatureControlFactory
   public IFeatureControl createFeatureControl( final IFeatureComposite parentComposite, final Feature feature, final IPropertyType pt, final ControlType controlType, final IAnnotation annotation )
   {
     final SubcompositeType compoType = (SubcompositeType)controlType;
-    final IFeatureControl fc = new SubFeatureControl( pt, parentComposite, compoType.getSelector() );
+
+    final boolean deleteEnabled = compoType.isDeleteEnabled();
+
+    final IFeatureControl fc = new SubFeatureControl( pt, parentComposite, compoType.getSelector(), deleteEnabled );
 
     fc.setFeature( feature );
 
