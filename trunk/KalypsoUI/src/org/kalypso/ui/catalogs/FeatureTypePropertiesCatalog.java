@@ -44,12 +44,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
@@ -69,46 +70,55 @@ public final class FeatureTypePropertiesCatalog
 {
   private static final String BASETYPE = "uiproperties"; //$NON-NLS-1$
 
-  private static Map<String, Properties> PROPERTIES_CACHE = new HashMap<>();
+  private static final FeatureTypePropertiesCatalog INSTANCE = new FeatureTypePropertiesCatalog();
 
-  private static Properties DEFAULT_VALUES = new Properties();
+  private final Map<String, Properties> m_propertiesCache = new HashMap<>();
 
-  static
+  private final Properties m_defaultValues = new Properties();
+
+  /** cache for hidden children propertties */
+  private final Map<QName, Set<QName>> m_hiddenChildren = new HashMap<>();
+
+  public static FeatureTypePropertiesCatalog getInstance( )
   {
-    DEFAULT_VALUES.setProperty( IFeatureTypePropertiesConstants.FEATURE_CREATION_DEPTH, "0" ); //$NON-NLS-1$
-    DEFAULT_VALUES.setProperty( IFeatureTypePropertiesConstants.GMLTREE_SHOW_CHILDREN, "true" ); //$NON-NLS-1$
-    DEFAULT_VALUES.setProperty( IFeatureTypePropertiesConstants.GMLTREE_NEW_MENU_ON_FEATURE, "true" ); //$NON-NLS-1$
-    DEFAULT_VALUES.setProperty( IFeatureTypePropertiesConstants.GMLTREE_NEW_MENU_SHOW_SUB_FEATURES, "false" ); //$NON-NLS-1$
-    DEFAULT_VALUES.setProperty( IFeatureTypePropertiesConstants.GMLTREE_SHOW_DUPLICATION_MENU, "true" ); //$NON-NLS-1$
-    DEFAULT_VALUES.setProperty( IFeatureTypePropertiesConstants.THEME_INFO_ID, StringUtils.EMPTY );
+    return INSTANCE;
   }
 
   private FeatureTypePropertiesCatalog( )
   {
-    throw new UnsupportedOperationException();
+    m_defaultValues.setProperty( IFeatureTypePropertiesConstants.FEATURE_CREATION_DEPTH, "0" ); //$NON-NLS-1$
+    m_defaultValues.setProperty( IFeatureTypePropertiesConstants.GMLTREE_SHOW_CHILDREN, "true" ); //$NON-NLS-1$
+    m_defaultValues.setProperty( IFeatureTypePropertiesConstants.GMLTREE_NEW_MENU_ON_FEATURE, "true" ); //$NON-NLS-1$
+    m_defaultValues.setProperty( IFeatureTypePropertiesConstants.GMLTREE_NEW_MENU_SHOW_SUB_FEATURES, "false" ); //$NON-NLS-1$
+    m_defaultValues.setProperty( IFeatureTypePropertiesConstants.GMLTREE_SHOW_DUPLICATION_MENU, "true" ); //$NON-NLS-1$
+    m_defaultValues.setProperty( IFeatureTypePropertiesConstants.THEME_INFO_ID, StringUtils.EMPTY );
   }
 
-  // FIXME: synchronize
   public static Properties getProperties( final URL context, final QName qname )
   {
-    /* Try to get cached image descriptor */
+    return INSTANCE.getProperties2( context, qname );
+  }
+
+  public synchronized Properties getProperties2( final URL context, final QName qname )
+  {
+    /* Try to get cached properties */
     final String contextStr = context == null ? "null" : context.toExternalForm(); //$NON-NLS-1$
     final String qnameStr = qname == null ? "null" : qname.toString(); //$NON-NLS-1$
     final String cacheKey = contextStr + '#' + qnameStr;
 
-    if( PROPERTIES_CACHE.containsKey( cacheKey ) )
-      return PROPERTIES_CACHE.get( cacheKey );
+    if( m_propertiesCache.containsKey( cacheKey ) )
+      return m_propertiesCache.get( cacheKey );
 
     final Properties properties = new Properties();
+    /* Allways add properties, so this lookup takes only place once (not finding anything is very expensive) */
+    m_propertiesCache.put( cacheKey, properties );
 
-    InputStream is = null;
-    try
+    final URL url = FeatureTypeCatalog.getURL( BASETYPE, context, qname );
+    if( url == null )
+      return properties;
+
+    try( InputStream is = url.openStream() )
     {
-      final URL url = FeatureTypeCatalog.getURL( BASETYPE, context, qname );
-      if( url == null )
-        return properties;
-
-      is = url.openStream();
       properties.load( is );
       is.close();
     }
@@ -116,13 +126,6 @@ public final class FeatureTypePropertiesCatalog
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       KalypsoCorePlugin.getDefault().getLog().log( status );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( is );
-
-      /* Allways add properties, so this lookup takes only place once (not finding anything is very expensive) */
-      PROPERTIES_CACHE.put( cacheKey, properties );
     }
 
     return properties;
@@ -142,13 +145,62 @@ public final class FeatureTypePropertiesCatalog
 
   public static boolean isPropertyOn( final QName qname, final URL context, final String property )
   {
-    final Properties properties = FeatureTypePropertiesCatalog.getProperties( context, qname );
+    return INSTANCE.isPropertyOn2( qname, context, property );
+  }
 
-    final String defaultValue = DEFAULT_VALUES.getProperty( property );
+  public boolean isPropertyOn2( final QName qname, final URL context, final String property )
+  {
+    final Properties properties = getProperties2( context, qname );
+
+    final String defaultValue = m_defaultValues.getProperty( property );
     // Default values must always be defined
     Assert.isNotNull( defaultValue );
 
     final String value = properties.getProperty( property, defaultValue );
     return Boolean.parseBoolean( value );
+  }
+
+  public boolean isChildHiddenInTree( final QName parentName, final QName childName, final URL context )
+  {
+    final Set<QName> hiddenChildren = getHiddenChildren( parentName, context );
+    return hiddenChildren.contains( childName );
+  }
+
+  private synchronized Set<QName> getHiddenChildren( final QName parentName, final URL context )
+  {
+    if( !m_hiddenChildren.containsKey( parentName ) )
+    {
+      final Properties properties = getProperties2( context, parentName );
+      final String hiddenChildrenValue = properties.getProperty( IFeatureTypePropertiesConstants.GMLTREE_HIDDEN_CHILDREN );
+
+      final Set<QName> hiddenChildren = parseHiddenChildren( hiddenChildrenValue );
+      m_hiddenChildren.put( parentName, hiddenChildren );
+    }
+
+    return m_hiddenChildren.get( parentName );
+  }
+
+  private Set<QName> parseHiddenChildren( final String hiddenChildrenValue )
+  {
+    final Set<QName> hiddenChildren = new HashSet<>();
+
+    if( StringUtils.isBlank( hiddenChildrenValue ) )
+      return hiddenChildren;
+
+    final String[] split = StringUtils.split( hiddenChildrenValue, ',' );
+    for( final String element : split )
+    {
+      try
+      {
+        final QName qname = QName.valueOf( element );
+        hiddenChildren.add( qname );
+      }
+      catch( final IllegalArgumentException e )
+      {
+        e.printStackTrace();
+      }
+    }
+
+    return hiddenChildren;
   }
 }
