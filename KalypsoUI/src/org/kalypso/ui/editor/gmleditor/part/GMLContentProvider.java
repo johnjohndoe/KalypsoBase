@@ -188,6 +188,13 @@ public class GMLContentProvider implements ITreeContentProvider
       if( property instanceof IRelationType )
       {
         final FeatureAssociationTypeElement fate = new FeatureAssociationTypeElement( (Feature)parentElement, (IRelationType)property );
+
+        /* suppress explicitely hidden children */
+        final QName propertyName = property.getQName();
+        final boolean childHiddenInTree = FeatureTypePropertiesCatalog.getInstance().isChildHiddenInTree( parentFE.getQualifiedName(), propertyName, m_workspace.getContext() );
+        if( childHiddenInTree )
+          continue;
+
         if( m_showAssociations )
           result.add( fate );
         else
@@ -310,9 +317,6 @@ public class GMLContentProvider implements ITreeContentProvider
     return null;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
-   */
   @Override
   public boolean hasChildren( final Object element )
   {
@@ -323,9 +327,6 @@ public class GMLContentProvider implements ITreeContentProvider
     return childCount > 0;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
-   */
   @Override
   public Object[] getElements( final Object inputElement )
   {
