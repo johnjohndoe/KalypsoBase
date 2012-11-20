@@ -584,4 +584,16 @@ public final class StatusUtilities
     return new Status( status.getSeverity(), status.getPlugin(), status.getMessage() );
   }
 
+  public static boolean hasOnlyWarnings( final IStatus[] stati )
+  {
+    for( final IStatus status : stati )
+    {
+      if( status.getSeverity() == IStatus.WARNING )
+        continue;
+
+      return false;
+    }
+
+    return true;
+  }
 }
