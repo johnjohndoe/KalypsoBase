@@ -117,7 +117,12 @@ public class StatusCollector implements IStatusCollector
   public MultiStatus asMultiStatus( final String msg )
   {
     final IStatus[] children = getAllStati();
-    return new MultiStatus( m_pluginID, IStatus.OK, children, msg, null );
+    return createMultiStatus( m_pluginID, IStatus.OK, children, msg, null );
+  }
+
+  protected MultiStatus createMultiStatus( final String pluginID, final int code, final IStatus[] children, final String msg, final Throwable exception )
+  {
+    return new MultiStatus( pluginID, code, children, msg, exception );
   }
 
   @Override

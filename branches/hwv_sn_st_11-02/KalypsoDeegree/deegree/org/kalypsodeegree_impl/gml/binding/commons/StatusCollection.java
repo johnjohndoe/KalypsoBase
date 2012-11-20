@@ -40,6 +40,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusWithTime;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -69,7 +70,10 @@ public class StatusCollection extends FeatureWrapperCollection<IGeoStatus> imple
   @Override
   public IGeoStatus createGeoStatus( final IStatus status )
   {
-    return createGeoStatus( status, null, null );
+    final Date time = status instanceof IStatusWithTime ? ((IStatusWithTime) status).getTime() : null;
+    final GM_Object location = status instanceof IGeoStatus ? ((IGeoStatus) status).getLocation() : null;
+
+    return createGeoStatus( status, location, time );
   }
 
   /**
@@ -151,14 +155,17 @@ public class StatusCollection extends FeatureWrapperCollection<IGeoStatus> imple
 
     /* Get the children. */
     final IStatus[] children = status.getChildren();
-    for( int i = 0; i < children.length; i++ )
-      addToMultiGeoStatus( multiGeoStatus, children[i], location, time );
+    for( final IStatus element : children )
+      addToMultiGeoStatus( multiGeoStatus, element );
 
     return multiGeoStatus;
   }
 
-  private void addToMultiGeoStatus( final IGeoStatus parent, final IStatus status, final GM_Object location, final Date time )
+  private void addToMultiGeoStatus( final IGeoStatus parent, final IStatus status )
   {
+    final Date time = status instanceof IStatusWithTime ? ((IStatusWithTime) status).getTime() : null;
+    final GM_Object location = status instanceof IGeoStatus ? ((IGeoStatus) status).getLocation() : null;
+
     /* If the given status is no multi status, simply add a new geo status and return. */
     if( !status.isMultiStatus() )
     {
@@ -201,8 +208,8 @@ public class StatusCollection extends FeatureWrapperCollection<IGeoStatus> imple
 
     /* Get the children. */
     final IStatus[] children = status.getChildren();
-    for( int i = 0; i < children.length; i++ )
-      addToMultiGeoStatus( multiGeoStatus, children[i], location, time );
+    for( final IStatus element : children )
+      addToMultiGeoStatus( multiGeoStatus, element );
   }
 
   private IGeoStatus createMultiGeoStatus( final IGeoStatus geoStatus )
@@ -227,8 +234,8 @@ public class StatusCollection extends FeatureWrapperCollection<IGeoStatus> imple
 
     /* Get the children. */
     final IStatus[] children = geoStatus.getChildren();
-    for( int i = 0; i < children.length; i++ )
-      addToMultiGeoStatus( multiGeoStatus, (IGeoStatus) children[i] );
+    for( final IStatus element : children )
+      addToMultiGeoStatus( multiGeoStatus, (IGeoStatus) element );
 
     return multiGeoStatus;
   }
@@ -279,8 +286,8 @@ public class StatusCollection extends FeatureWrapperCollection<IGeoStatus> imple
 
     /* Get the children. */
     final IStatus[] children = geoStatus.getChildren();
-    for( int i = 0; i < children.length; i++ )
-      addToMultiGeoStatus( multiGeoStatus, (IGeoStatus) children[i] );
+    for( final IStatus element : children )
+      addToMultiGeoStatus( multiGeoStatus, (IGeoStatus) element );
   }
 
   public final IStatus toStatus( )

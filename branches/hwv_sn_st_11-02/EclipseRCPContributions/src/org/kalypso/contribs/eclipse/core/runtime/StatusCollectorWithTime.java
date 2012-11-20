@@ -43,6 +43,7 @@ package org.kalypso.contribs.eclipse.core.runtime;
 import java.util.Date;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 
 /**
  * A {@link IStatusCollector} implementation that makes sure that all added stati get the current timestamp.
@@ -51,9 +52,13 @@ import org.eclipse.core.runtime.IStatus;
  */
 public class StatusCollectorWithTime extends StatusCollector
 {
+  private final Date m_startTime;
+
   public StatusCollectorWithTime( final String pluginId )
   {
     super( pluginId );
+
+    m_startTime = new Date();
   }
 
   @Override
@@ -68,5 +73,11 @@ public class StatusCollectorWithTime extends StatusCollector
       return new MultiStatusWithTime( status, now );
 
     return new StatusWithTime( status, now );
+  }
+
+  @Override
+  protected MultiStatus createMultiStatus( final String pluginID, final int code, final IStatus[] children, final String msg, final Throwable exception )
+  {
+    return new MultiStatusWithTime( pluginID, code, children, msg, m_startTime, exception );
   }
 }
