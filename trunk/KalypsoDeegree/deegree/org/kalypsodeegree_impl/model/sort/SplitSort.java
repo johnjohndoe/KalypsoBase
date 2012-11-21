@@ -239,7 +239,6 @@ public class SplitSort extends AbstractFeatureList
     // remove all items from index and workspace
     removedItemIndices.forEach( new TIntProcedure()
     {
-
       @Override
       public boolean execute( final int index )
       {
@@ -281,14 +280,15 @@ public class SplitSort extends AbstractFeatureList
     }
     else
     {
-      int countRemoved = 0; // loop over all items and remove those in the list of indices, corrected by the number of items already removed
-      for( final ListIterator<Object> listIterator = m_items.listIterator( firstIndex ); listIterator.hasNext() && countRemoved < removeCount; listIterator.next() )
-        if( listIterator.nextIndex() > removedItemIndices.get( countRemoved ) - countRemoved )
+      removedItemIndices.forEachDescending( new TIntProcedure()
+      {
+        @Override
+        public boolean execute( final int value )
         {
-          // this is the item to be removed
-          listIterator.remove();
-          countRemoved++;
+          m_items.remove( value );
+          return true;
         }
+      } );
     }
 
     if( m_index != null )
