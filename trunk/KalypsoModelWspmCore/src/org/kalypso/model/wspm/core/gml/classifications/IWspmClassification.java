@@ -86,4 +86,10 @@ public interface IWspmClassification extends Feature
   IFeatureBindingCollection<IStyleDefinition> getStyleDefinitionCollection( );
 
   IStyleDefinition findStyleDefinition( String name );
+
+  /**
+   * Find the vegetation class for undefined values.<br/>
+   * Actually, the first class where all vegatation parameter are 0.0.
+   */
+  IVegetationClass findUnknownVegetationClass( );
 }

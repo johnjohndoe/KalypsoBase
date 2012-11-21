@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml.classifications;
 
+import java.math.BigDecimal;
+
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -198,5 +200,32 @@ public class WspmClassification extends Feature_Impl implements IWspmClassificat
     }
 
     return null;
+  }
+
+  @Override
+  public IVegetationClass findUnknownVegetationClass( )
+  {
+    final IVegetationClass[] vegetationClasses = getVegetationClasses();
+    for( final IVegetationClass vegetationClass : vegetationClasses )
+    {
+      final BigDecimal ax = vegetationClass.getAx();
+      final BigDecimal ay = vegetationClass.getAy();
+      final BigDecimal dp = vegetationClass.getDp();
+
+      if( is0( ax ) && is0( ay ) && is0( dp ) )
+        return vegetationClass;
+    }
+
+    return null;
+  }
+
+  private boolean is0( final BigDecimal value )
+  {
+    if( value == null )
+      return true;
+
+    final BigDecimal value0 = new BigDecimal( "0" ); //$NON-NLS-1$
+
+    return value0.compareTo( value ) == 0;
   }
 }
