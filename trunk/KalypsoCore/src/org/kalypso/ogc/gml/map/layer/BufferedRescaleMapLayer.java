@@ -278,9 +278,6 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.layer.AbstractMapLayer#stopPainting()
-   */
   @Override
   protected synchronized void stopPainting( )
   {
