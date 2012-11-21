@@ -51,8 +51,7 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
-import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.contribs.eclipse.osgi.FrameworkUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.services.observation.KalypsoServiceObs;
@@ -63,12 +62,11 @@ import org.kalypso.services.observation.sei.ObservationBean;
 import org.kalypso.services.observation.sei.StatusBean;
 
 /**
- * Kalypso Observation Service.<br>
+ * Kalypso Observation Service.<br/>
  * It delegates to the correct observation service, which is reinitialized after a period of time.
  * 
  * @author Holger Albert
  */
-@SuppressWarnings("restriction")
 @WebService(endpointInterface = "org.kalypso.services.observation.sei.IObservationService")
 public class ObservationServiceImpl implements IObservationService
 {
@@ -98,38 +96,44 @@ public class ObservationServiceImpl implements IObservationService
   private Job m_observationServiceJob;
 
   /**
-   * This variable stores the reinitialize time intervall.
+   * This variable stores the reinitialize time interval.
    */
-  private final long m_intervall;
+  private final long m_interval;
 
   /**
    * The observation service delegate. It is reloaded after a period of time.
    */
   private IObservationService m_delegate;
 
+  /**
+   * The constructor.
+   */
   public ObservationServiceImpl( )
   {
     m_observationServiceJob = null;
-    m_delegate = null;
-
-    final String reinitStr = FrameworkProperties.getProperty( KalypsoServiceObs.SYSPROP_REINIT_SERVICE, "600000" ); //$NON-NLS-1$
-    long reinit = 600000; // 10 min
-    try
-    {
-      reinit = Long.parseLong( reinitStr );
-    }
-    catch( final NumberFormatException e )
-    {
-      e.printStackTrace();
-    }
-    m_intervall = reinit;
+    m_delegate = new NullObservationService();
+    m_interval = initInterval();
 
     /* Start the reloading. */
     m_observationServiceJob = new ObservationServiceJob( this );
     m_observationServiceJob.addJobChangeListener( m_listener );
-    // TRICKY: give a bit of time for first schedule, as this will access a HttpResource,
-    // which may not be accessible right now
+    // TRICKY: give a bit of time for first schedule,
+    // as this will access a HttpResource, which may not be accessible right now
     m_observationServiceJob.schedule( 5000 );
+  }
+
+  private long initInterval( )
+  {
+    try
+    {
+      final String reinitStr = FrameworkUtilities.getProperty( KalypsoServiceObs.SYSPROP_REINIT_SERVICE, "600000" ); //$NON-NLS-1$
+      return Long.parseLong( reinitStr );
+    }
+    catch( final NumberFormatException e )
+    {
+      e.printStackTrace();
+      return 600000; // 10 min
+    }
   }
 
   /**
@@ -138,110 +142,52 @@ public class ObservationServiceImpl implements IObservationService
   @Override
   public ObservationBean adaptItem( final ItemBean ib ) throws SensorException
   {
-    /* Get the observation service delegate. */
     final IObservationService delegate = getDelegate();
-
-    /* If it is existing, delegate to it. */
-    if( delegate != null )
-      return delegate.adaptItem( ib );
-
-    return null;
+    return delegate.adaptItem( ib );
   }
 
-  /**
-   * @see org.kalypso.services.observation.sei.IObservationService#clearTempData(java.lang.String)
-   */
   @Override
   public void clearTempData( final String dataId ) throws SensorException
   {
-    /* Get the observation service delegate. */
     final IObservationService delegate = getDelegate();
-
-    /* If it is existing, delegate to it. */
-    if( delegate != null )
-      delegate.clearTempData( dataId );
+    delegate.clearTempData( dataId );
   }
 
   @Override
   public int getServiceVersion( ) throws RemoteException
   {
-    /* Get the observation service delegate. */
     final IObservationService delegate = getDelegate();
-
-    /* If it is existing, delegate to it. */
-    if( delegate != null )
-      return delegate.getServiceVersion();
-
-    return 0;
+    return delegate.getServiceVersion();
   }
 
-  /**
-   * @see org.kalypso.services.observation.sei.IObservationService#readData(java.lang.String)
-   */
   @Override
   public DataBean readData( final String href ) throws SensorException
   {
-    /* Get the observation service delegate. */
     final IObservationService delegate = getDelegate();
-
-    /* If it is existing, delegate to it. */
-    if( delegate != null )
-      return delegate.readData( href );
-
-    return null;
+    return delegate.readData( href );
   }
 
-  /**
-   * @see org.kalypso.services.observation.sei.IRepositoryService#findItem(java.lang.String)
-   */
   @Override
   public ItemBean findItem( final String id ) throws RepositoryException
   {
-    /* Get the observation service delegate. */
     final IObservationService delegate = getDelegate();
-
-    /* If it is existing, delegate to it. */
-    if( delegate != null )
-      return delegate.findItem( id );
-
-    return null;
+    return delegate.findItem( id );
   }
 
-  /**
-   * @see org.kalypso.services.observation.sei.IRepositoryService#getChildren(org.kalypso.services.observation.sei.ItemBean)
-   */
   @Override
   public ItemBean[] getChildren( final ItemBean parent ) throws RepositoryException
   {
-    /* Get the observation service delegate. */
     final IObservationService delegate = getDelegate();
-
-    /* If it is existing, delegate to it. */
-    if( delegate != null )
-      return delegate.getChildren( parent );
-
-    return new ItemBean[] {};
+    return delegate.getChildren( parent );
   }
 
-  /**
-   * @see org.kalypso.services.observation.sei.IRepositoryService#hasChildren(org.kalypso.services.observation.sei.ItemBean)
-   */
   @Override
   public boolean hasChildren( final ItemBean parent ) throws RepositoryException
   {
-    /* Get the observation service delegate. */
     final IObservationService delegate = getDelegate();
-
-    /* If it is existing, delegate to it. */
-    if( delegate != null )
-      return delegate.hasChildren( parent );
-
-    return false;
+    return delegate.hasChildren( parent );
   }
 
-  /**
-   * @see org.kalypso.services.observation.sei.IRepositoryService#reload()
-   */
   @Override
   public void reload( )
   {
@@ -263,22 +209,18 @@ public class ObservationServiceImpl implements IObservationService
 
   /**
    * This function returns the delegate and waits for it to be initialized, if neccessary. If the initialization fails,
-   * the result could be null.
+   * the result could be a {@link NullObservationService}.
    * 
-   * @return The delegate or null.
+   * @return The delegate or a {@link NullObservationService}.
    */
   protected IObservationService getDelegate( )
   {
     final IObservationService delegate = getDelegateInternal();
-    if( delegate != null )
+    if( !(delegate instanceof NullObservationService) )
       return delegate;
 
-    // FIXME: we should never return null or initialize the delegate with null, else we get tons of NPEs later. Instead, we could maybe use a default delegate that does nothing instead.
-    
     try
     {
-      // FIXME: problem, if the init failed, we always return null now -> everything else fails with NPE
-
       /* Wait for the job, if he has finished loading. */
       m_observationServiceJob.join();
     }
@@ -308,6 +250,12 @@ public class ObservationServiceImpl implements IObservationService
    */
   protected synchronized void setDelegate( final IObservationService delegate )
   {
+    if( delegate == null )
+    {
+      m_delegate = new NullObservationService();
+      return;
+    }
+
     m_delegate = delegate;
   }
 
@@ -321,99 +269,66 @@ public class ObservationServiceImpl implements IObservationService
   {
     if( !status.isOK() )
     {
-      // FIXME: put statu sin log!
-
+      // FIXME: put status in log!
       // FIXME: keep status; and or restart
-
-      
       // FIXME: why? schedule with 0 ??
-      
       /* What to do on error or cancellation? */
       // return;
     }
 
     /* Reschedule the job. */
-    m_observationServiceJob.schedule( m_intervall );
+    m_observationServiceJob.schedule( m_interval );
   }
 
-  /**
-   * @see org.kalypso.services.observation.sei.IRepositoryService#makeItem(java.lang.String)
-   */
   @Override
   public void makeItem( final String identifier ) throws RepositoryException
   {
-    getDelegate().makeItem( identifier );
+    final IObservationService delegate = getDelegate();
+    delegate.makeItem( identifier );
   }
 
-  /**
-   * @see org.kalypso.services.observation.sei.IRepositoryService#deleteItem(java.lang.String)
-   */
   @Override
   public void deleteItem( final String identifier ) throws RepositoryException
   {
-    getDelegate().deleteItem( identifier );
+    final IObservationService delegate = getDelegate();
+    delegate.deleteItem( identifier );
   }
 
-  /**
-   * @see org.kalypso.services.observation.sei.IRepositoryService#setItemData(java.lang.String, java.lang.Object)
-   */
   @Override
   public void setItemData( final String identifier, final Object serializable ) throws RepositoryException
   {
-    if( serializable instanceof Serializable )
-    {
-      getDelegate().setItemData( identifier, serializable );
-    }
-    else
+    if( !(serializable instanceof Serializable) )
       throw new NotImplementedException();
 
+    final IObservationService delegate = getDelegate();
+    delegate.setItemData( identifier, serializable );
   }
 
-  /**
-   * @see org.kalypso.services.observation.sei.IRepositoryService#setItemName(java.lang.String, java.lang.String)
-   */
   @Override
   public void setItemName( final String identifier, final String name ) throws RepositoryException
   {
-    getDelegate().setItemName( identifier, name );
+    final IObservationService delegate = getDelegate();
+    delegate.setItemName( identifier, name );
   }
 
-  /**
-   * @see org.kalypso.services.observation.sei.IRepositoryService#isMultipleSourceItem(java.lang.String)
-   */
   @Override
   public boolean isMultipleSourceItem( final String identifier ) throws RepositoryException
   {
-    /* Get the observation service delegate. */
     final IObservationService delegate = getDelegate();
-
-    /* If it is existing, delegate to it. */
-    if( delegate != null )
-      return delegate.isMultipleSourceItem( identifier );
-
-    return false;
+    return delegate.isMultipleSourceItem( identifier );
   }
 
   @Override
   public StatusBean getStatus( final String type )
   {
     final IObservationService delegate = getDelegate();
-    if( Objects.isNotNull( delegate ) )
-      return delegate.getStatus( type );
-
-    return new StatusBean( IStatus.ERROR, KalypsoServiceObs.ID, "Service not available. IObservationService delegate is null." );
+    return delegate.getStatus( type );
   }
 
   @Override
   public ItemBean getParent( final String identifier ) throws RepositoryException
   {
-    /* Get the observation service delegate. */
     final IObservationService delegate = getDelegate();
-
-    /* If it is existing, delegate to it. */
-    if( delegate != null )
-      return delegate.getParent( identifier );
-
-    return null;
+    return delegate.getParent( identifier );
   }
 }

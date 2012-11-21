@@ -140,7 +140,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
   /**
    * Constructs the service by reading the configuration.
    */
-  public ObservationServiceDelegate( ) throws RepositoryException
+  public ObservationServiceDelegate( )
   {
     m_repositories = new Vector<IRepository>();
     m_mapBeanId2Item = new Hashtable<String, IRepositoryItem>( 512 );
@@ -216,12 +216,11 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
    * 
    * @throws RemoteException
    */
-  protected final synchronized void init( ) throws RepositoryException
+  protected final synchronized void init( )
   {
     // TODO: at the moment, we silently ignore this implementation if no
-    // service location was given: this is necessary, because if
-    // the help system is running (jetty!), this implementation is also available at the
-    // client side...
+    // service location was given: this is necessary, because if the help
+    // system is running (jetty!), this implementation is also available at the client side...
     // TODO Solution: remove this server code from the client side... (but in order to do that, we must split-up the
     // observation service plug-ins)
     if( m_initialized || m_configurationLocation == null )
@@ -231,52 +230,25 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
 
     clearCache();
 
-    final Properties props = new Properties();
-
     try
     {
+      // this call also closes the stream
       final URL confLocation = new URL( m_configurationLocation );
       final URL confUrl = UrlResolverSingleton.resolveUrl( confLocation, "repositories_server.xml" ); //$NON-NLS-1$
-
-      // this call also closes the stream
       final RepositoryFactoryConfig[] facConfs = RepositoryConfigUtils.loadConfig( confUrl );
 
       // load the service properties
       final URL urlProps = UrlResolverSingleton.resolveUrl( confLocation, "service.properties" ); //$NON-NLS-1$
-
-      InputStream ins = null;
-      try
-      {
-        ins = urlProps.openStream();
-        props.load( ins );
-        ins.close();
-      }
-      catch( final IOException e )
-      {
-        m_logger.warning( "Cannot read properties-file: " + e.getLocalizedMessage() ); //$NON-NLS-1$
-      }
-      finally
-      {
-        IOUtils.closeQuietly( ins );
-      }
+      final Properties props = loadProperties( urlProps );
 
       /* Configure logging according to configuration */
-      try
-      {
-        final String logLevelString = props.getProperty( "LOG_LEVEL", Level.INFO.getName() ); //$NON-NLS-1$
-        final Level logLevel = Level.parse( logLevelString );
-        Logger.getLogger( "" ).setLevel( logLevel ); //$NON-NLS-1$
-      }
-      catch( final Throwable t )
-      {
-        // Catch everything, changing the log level should not prohibit this service to run
-        t.printStackTrace();
-      }
+      configureLogger( props );
 
       /* Load Repositories */
       for( final RepositoryFactoryConfig item : facConfs )
       {
         final IRepositoryFactory fact = item.getFactory();
+
         try
         {
           final IRepository rep = fact.createRepository();
@@ -301,21 +273,53 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
       m_logger.throwing( getClass().getName(), "init", e ); //$NON-NLS-1$
 
       /** don't throw exception - in sachsen anhalt it's normal that the wiski repository don't exists on server side */
-//      throw new RepositoryException( "Exception in KalypsoObservationService.init()", e ); //$NON-NLS-1$
+      // throw new RepositoryException( "Exception in KalypsoObservationService.init()", e ); //$NON-NLS-1$
+    }
+  }
+
+  private void configureLogger( final Properties props )
+  {
+    try
+    {
+      final String logLevelString = props.getProperty( "LOG_LEVEL", Level.INFO.getName() ); //$NON-NLS-1$
+      final Level logLevel = Level.parse( logLevelString );
+      Logger.getLogger( "" ).setLevel( logLevel ); //$NON-NLS-1$
+    }
+    catch( final Throwable t )
+    {
+      // Catch everything, changing the log level should not prohibit this service to run
+      t.printStackTrace();
+    }
+  }
+
+  private Properties loadProperties( final URL urlProps )
+  {
+    InputStream ins = null;
+
+    try
+    {
+      final Properties props = new Properties();
+      ins = urlProps.openStream();
+      props.load( ins );
+      ins.close();
+
+      return props;
+    }
+    catch( final IOException e )
+    {
+      m_logger.warning( "Cannot read properties-file: " + e.getLocalizedMessage() ); //$NON-NLS-1$
+      return new Properties();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( ins );
     }
   }
 
   @Override
   public final DataBean readData( final String href ) throws SensorException
   {
-    try
-    {
-      init();
-    }
-    catch( final RepositoryException e1 )
-    {
-      throw new SensorException( e1 );
-    }
+    init();
 
     final String hereHref = ObservationServiceUtils.removeServerSideId( href );
     final String obsId = org.kalypso.ogc.sensor.zml.ZmlURL.getIdentifierPart( hereHref );
@@ -595,7 +599,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
    * @see org.kalypso.repository.service.IRepositoryService#reload()
    */
   @Override
-  public final void reload( ) throws RepositoryException
+  public final void reload( )
   {
     m_initialized = false;
 
@@ -746,9 +750,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
   {
     final Set<IStatus> stati = new LinkedHashSet<IStatus>();
     for( final IRepository repository : m_repositories )
-    {
       stati.add( repository.getStatus( type ) );
-    }
 
     final IStatus status = StatusUtilities.createStatus( stati, "Repository states" );
 
