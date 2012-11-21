@@ -48,7 +48,6 @@ import org.eclipse.ui.services.IDisposable;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilityException;
-import org.kalypso.repository.RepositoryException;
 import org.kalypso.services.observation.sei.IObservationService;
 
 /**
@@ -73,9 +72,6 @@ public class ObservationServiceJob extends Job
     m_observationServiceWrapper = observationServiceWrapper;
   }
 
-  /**
-   * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   protected IStatus run( final IProgressMonitor monitor )
   {
@@ -111,9 +107,9 @@ public class ObservationServiceJob extends Job
     }
   }
 
-  private IObservationService loadService( ) throws RepositoryException, ClassUtilityException
+  private IObservationService loadService( ) throws ClassUtilityException
   {
-    final String property = System.getProperty( SERVICE_IMPLEMENTATION, "" );
+    final String property = System.getProperty( SERVICE_IMPLEMENTATION, null );
     if( property == null || "".equals( property.trim() ) )
       return new ObservationServiceDelegate();
 
