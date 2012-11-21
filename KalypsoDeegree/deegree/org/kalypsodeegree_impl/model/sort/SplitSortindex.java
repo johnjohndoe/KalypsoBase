@@ -183,8 +183,8 @@ class SplitSortindex
       final int newIndex = newIndices.getQuick( i );
 
       /* Fix invalid item indices */
-      m_invalidIndices.remove( oldIndex );
-      m_invalidIndices.add( newIndex );
+      if( m_invalidIndices.remove( oldIndex ) )
+        m_invalidIndices.add( newIndex );
 
       final Object oldItem = m_parent.get( oldIndex );
       final Rectangle envelope = m_itemEnvelopes.get( oldItem );
@@ -278,7 +278,7 @@ class SplitSortindex
 
   void assertSize( )
   {
-//    Assert.isTrue( m_size == m_parent.size() );
-//    Assert.isTrue( m_itemEnvelopes.size() == m_spatialIndex.size() );
+    Assert.isTrue( m_size == m_parent.size() );
+    Assert.isTrue( m_itemEnvelopes.size() == m_spatialIndex.size() );
   }
 }
