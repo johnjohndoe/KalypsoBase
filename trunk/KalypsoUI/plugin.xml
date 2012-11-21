@@ -296,10 +296,10 @@
         name="Get Feature Info">
   </command>
 		<command categoryId="org.kalypso.ogc.gml.map.category" description="%command.description.12" id="org.kalypso.ogc.gml.map.OpenOutlineCommand" name="%command.name.14" />
-		<command categoryId="org.kalypso.ogc.gml.map.category" description="Selektiert das erste Feature in der Karte" name="Erstes" id="org.kalypso.ui.map.selectFirstFeatureCommand" />
-		<command categoryId="org.kalypso.ogc.gml.map.category" description="Selektiert das nächste Feature in der Karte" name="Nächstes" id="org.kalypso.ui.map.selectNextFeatureCommand" />
-		<command categoryId="org.kalypso.ogc.gml.map.category" description="Selektiert das vorhergehende Feature in der Karte" name="Vorhergehendes" id="org.kalypso.ui.map.selectPreviousFeatureCommand" />
-		<command categoryId="org.kalypso.ogc.gml.map.category" description="Selektiert das letzte Feature in der Karte" name="Letztes" id="org.kalypso.ui.map.selectLastFeatureCommand" />
+		<command categoryId="org.kalypso.ogc.gml.map.category" description="%org.kalypso.ui.map.selectFirstFeatureCommand.description" name="%org.kalypso.ui.map.selectFirstFeatureCommand.name" id="org.kalypso.ui.map.selectFirstFeatureCommand" />
+		<command categoryId="org.kalypso.ogc.gml.map.category" description="%org.kalypso.ui.map.selectNextFeatureCommand.description" name="%org.kalypso.ui.map.selectNextFeatureCommand.name" id="org.kalypso.ui.map.selectNextFeatureCommand" />
+		<command categoryId="org.kalypso.ogc.gml.map.category" description="%org.kalypso.ui.map.selectPreviousFeatureCommand.description" name="%org.kalypso.ui.map.selectPreviousFeatureCommand.name" id="org.kalypso.ui.map.selectPreviousFeatureCommand" />
+		<command categoryId="org.kalypso.ogc.gml.map.category" description="%org.kalypso.ui.map.selectLastFeatureCommand.description" name="%org.kalypso.ui.map.selectLastFeatureCommand.name" id="org.kalypso.ui.map.selectLastFeatureCommand" />
 		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.MeasureMapCommand" name="%org.kalypso.ogc.gml.map.MeasureMapCommand.label" description="%org.kalypso.ogc.gml.map.MeasureMapCommand.tooltip"/>
 		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.FindElementMapCommand" name="%org.kalypso.ogc.gml.map.FindElementMapCommand.label" description="%org.kalypso.ogc.gml.map.FindElementMapCommand.tooltip"/>
 		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.SelectFeatureCommand" name="%org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate.label" />
@@ -321,9 +321,9 @@
 	<extension point="org.eclipse.ui.commands">
 		<category id="org.kalypso.ui.map.outline.category" description="%org.kalypso.ui.views.outline.category.description"  name="%org.kalypso.ui.views.outline.category.name" />
 
-		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.ToggleCompactOutline" name="Compact" description="Hide elements for a more compact outline"/>
-		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.CollapseOutline" name="Collapse All" description="Collapse all Outline Elements"/>
-		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.ExpandOutline" name="Expand All" description="Expand all Outline Elements"/>
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.ToggleCompactOutline" name="%org.kalypso.ui.map.outline.command.ToggleCompactOutline.name" description="%org.kalypso.ui.map.outline.command.ToggleCompactOutline.description"/>
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.CollapseOutline" name="%org.kalypso.ui.map.outline.command.CollapseOutline.name" description="%org.kalypso.ui.map.outline.command.CollapseOutline.description"/>
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.ExpandOutline" name="%org.kalypso.ui.map.outline.command.ExpandOutline.name" description="%org.kalypso.ui.map.outline.command.ExpandOutline.description"/>
 
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.ZoomToSelectedTheme" name="%org.kalypso.ogc.gml.outline.ZoomToSelectedLayer.label"  description="%org.kalypso.ogc.gml.outline.ZoomToSelectedLayer.tooltip"/>
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.ActivateTheme" name="%org.kalypso.ogc.gml.outline.ActivateThemeAction.label"  description="%org.kalypso.ogc.gml.outline.ActivateThemeAction.tooltip"/>
@@ -333,8 +333,8 @@
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.OpenStyleDialog" name="%org.kalypso.ogc.gml.outline.OpenStyleDialogAction.label"  description="%org.kalypso.ogc.gml.outline.OpenStyleDialogAction.tooltip"/>
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.NodeProperties" name="%action.label.25" description="%action.tooltip.6"/>
 
-		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.AddNode" name="Add" description="Adds a new element."/>
-		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RemoveNode" name="Remove" description="Removes the selected element."/>
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.AddNode" name="%org.kalypso.ui.map.outline.command.AddNode.name" description="%org.kalypso.ui.map.outline.command.AddNode.description"/>
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RemoveNode" name="%org.kalypso.ui.map.outline.command.RemoveNode.name" description="%org.kalypso.ui.map.outline.command.RemoveNode.description"/>
 	</extension>
 	
 	<extension point="org.eclipse.ui.bindings">
@@ -824,27 +824,20 @@
 		<provider class="org.kalypso.ogc.gml.om.table.handlers.DefaultComponentUiHandlerProvider2" id="org.kalypso.ogc.gml.om.table.handlers.DefaultComponentUiHandlerProvider2"/>
 	</extension>
 	<extension point="org.eclipse.ui.commands">
-		<category description="%category.description.2" id="org.kalypso.ui.tupleResult.category" name="%category.name.7">
-		</category>
+		<category description="%category.description.2" id="org.kalypso.ui.tupleResult.category" name="%category.name.7"/>
+		
 		<command categoryId="org.kalypso.ui.tupleResult.category" description="%command.description.22" id="org.kalypso.ui.tupleResult.copyToClipboardCommand" name="%command.name.26"/>
 		<command categoryId="org.kalypso.ui.tupleResult.category" description="%org.kalypso.ui.tupleResult.selectAll.description" id="org.kalypso.ui.tupleResult.selectAll" name="%org.kalypso.ui.tupleResult.selectAll.name"/>
-		<command categoryId="org.kalypso.ui.tupleResult.category" description="%command.description.23" id="org.kalypso.ui.tupleResult.pasteFromClipboardCommand" name="%command.name.27">
-		</command>
-		<command categoryId="org.kalypso.ui.tupleResult.category" description="%command.description.24" id="org.kalypso.ui.tupleResult.deleteSelectedRowsCommand" name="%command.name.28">
-		</command>
-		<command categoryId="org.kalypso.ui.tupleResult.category" description="%command.description.25" id="org.kalypso.ui.tupleResult.moveUpSelectedRowsCommand" name="%command.name.29">
-		</command>
-		<command categoryId="org.kalypso.ui.tupleResult.category" description="%command.description.26" id="org.kalypso.ui.tupleResult.addRowCommand" name="%command.name.30">
-		</command>
-		<command categoryId="org.kalypso.ui.tupleResult.category" description="%org.kalypso.ui.tupleResult.insertRowCommand.description" id="org.kalypso.ui.tupleResult.insertRowCommand" name="%org.kalypso.ui.tupleResult.insertRowCommand.name">
-		</command>
-		<command categoryId="org.kalypso.ui.tupleResult.category" description="%command.description.27" id="org.kalypso.ui.tupleResult.moveDownSelectedRowsCommand" name="%command.name.31">
-		</command>
+		<command categoryId="org.kalypso.ui.tupleResult.category" description="%command.description.23" id="org.kalypso.ui.tupleResult.pasteFromClipboardCommand" name="%command.name.27"/>
+		<command categoryId="org.kalypso.ui.tupleResult.category" description="%command.description.24" id="org.kalypso.ui.tupleResult.deleteSelectedRowsCommand" name="%command.name.28"/>
+		<command categoryId="org.kalypso.ui.tupleResult.category" description="%command.description.25" id="org.kalypso.ui.tupleResult.moveUpSelectedRowsCommand" name="%command.name.29"/>
+		<command categoryId="org.kalypso.ui.tupleResult.category" description="%command.description.26" id="org.kalypso.ui.tupleResult.addRowCommand" name="%command.name.30"/>
+		<command categoryId="org.kalypso.ui.tupleResult.category" description="%org.kalypso.ui.tupleResult.insertRowCommand.description" id="org.kalypso.ui.tupleResult.insertRowCommand" name="%org.kalypso.ui.tupleResult.insertRowCommand.name"/>
+		<command categoryId="org.kalypso.ui.tupleResult.category" description="%command.description.27" id="org.kalypso.ui.tupleResult.moveDownSelectedRowsCommand" name="%command.name.31"/>
+		
 		<!-- FIXME: wrong category! -->
-		<command categoryId="org.kalypso.ui.tupleResult.category" description="Add feature command" id="org.kalypso.ogc.gml.featureview.toolbar.AddFeatureHandler" name="Add feature command">
-		</command>
-		<command categoryId="org.kalypso.ui.tupleResult.category" description="Delete feature command" id="org.kalypso.ogc.gml.featureview.toolbar.DeleteFeatureHandler" name="Delete feature command">
-		</command>
+		<command categoryId="org.kalypso.ui.tupleResult.category" description="%org.kalypso.ogc.gml.featureview.toolbar.AddFeatureHandler.description" id="org.kalypso.ogc.gml.featureview.toolbar.AddFeatureHandler" name="%org.kalypso.ogc.gml.featureview.toolbar.AddFeatureHandler.name"/>
+		<command categoryId="org.kalypso.ui.tupleResult.category" description="%org.kalypso.ogc.gml.featureview.toolbar.DeleteFeatureHandler.description" id="org.kalypso.ogc.gml.featureview.toolbar.DeleteFeatureHandler" name="%org.kalypso.ogc.gml.featureview.toolbar.DeleteFeatureHandler.name"/>
 	</extension>
 	<extension point="org.eclipse.ui.bindings">
 	       <key commandId="org.kalypso.ui.tupleResult.selectAll" contextId="org.kalypso.ogc.gml.map.context" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="M1+A" />
@@ -1500,21 +1493,9 @@
   
   <!-- GMV- (aka GML-) Tree -->
   <extension point="org.eclipse.ui.commands">
-     <category
-           description="GIS Tree Commands"
-           id="org.kalypso.ogc.gml.gmltree.category"
-           name="GIS Tree">
-     </category>
-     <command
-           categoryId="org.kalypso.ogc.gml.gmltree.category"
-           description="%org.kalypso.ui.editor.gmleditor.actions.SaveGmlDelegate.tooltip"
-           id="org.kalypso.ui.gmvtree.command.saveData"
-           name="%org.kalypso.ui.editor.gmleditor.actions.SaveGmlDelegate.label"/>
-     <command
-           categoryId="org.kalypso.ogc.gml.gmltree.category"
-           description="Reload the contents of the tree and discards local changes."
-           id="org.kalypso.ui.gmvtree.command.reloadData"
-           name="Reload"/>
+     <category description="GIS Tree Commands" id="org.kalypso.ogc.gml.gmltree.category" name="GIS Tree"/>
+     <command categoryId="org.kalypso.ogc.gml.gmltree.category" description="%org.kalypso.ui.editor.gmleditor.actions.SaveGmlDelegate.tooltip" id="org.kalypso.ui.gmvtree.command.saveData" name="%org.kalypso.ui.editor.gmleditor.actions.SaveGmlDelegate.label"/>
+     <command categoryId="org.kalypso.ogc.gml.gmltree.category" description="%org.kalypso.ui.gmvtree.command.reloadData.description" id="org.kalypso.ui.gmvtree.command.reloadData" name="%org.kalypso.ui.gmvtree.command.reloadData.name"/>
   </extension>
   <extension point="org.eclipse.ui.commandImages">
      <image commandId="org.kalypso.ui.gmvtree.command.saveData" icon="icons/feature/save_GML.gif" disabledIcon="icons/map/save_edit_disabled.gif"/>
@@ -1543,14 +1524,8 @@
   
   <!-- General purpose commands -->
   <extension point="org.eclipse.ui.commands">
-     <command
-           description="Import external data into the selected items"
-           id="org.kalypso.ui.command.import"
-           name="Import..."/>
-     <command
-           description="Exports the selected items in various formats"
-           id="org.kalypso.ui.command.export"
-           name="Export..."/>
+     <command description="%org.kalypso.ui.command.import.description" id="org.kalypso.ui.command.import" name="%org.kalypso.ui.command.import.name"/>
+     <command description="%org.kalypso.ui.command.export.description" id="org.kalypso.ui.command.export" name="%org.kalypso.ui.command.export.name"/>
   </extension>
   <extension point="org.eclipse.ui.commandImages">
      <image commandId="org.kalypso.ui.command.import" icon="icons/util/import_wiz.gif"/>
@@ -1640,11 +1615,7 @@
   </extension>
   
     <extension point="org.eclipse.ui.commands">
-         <category
-               description="GIS Table Commands"
-               id="org.kalypso.ogc.gml.table.category"
-               name="GIS Table">
-         </category>
+         <category description="GIS Table Commands" id="org.kalypso.ogc.gml.table.category" name="GIS Table"/>
     </extension>
 
   <extension point="org.kalypso.core.layout">
