@@ -367,8 +367,10 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     if( ObjectUtils.equals( m_size, size ) )
       return;
 
-//    if( size != null && size.width == 0 && size.height == 0 )
-//      return;
+    if( size != null && size.width == 0 && size.height == 0 )
+      return;
+    if( ObjectUtils.equals( m_size, size ) )
+      return;
 
     m_size = size;
 
@@ -543,9 +545,6 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     return projection.getScale();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#getMapModell()
-   */
   @Override
   public IKalypsoLayerModell getMapModell( )
   {
