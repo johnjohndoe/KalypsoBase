@@ -159,8 +159,6 @@ public class WspLayer extends AbstractProfilTheme
   @Override
   public EditInfo getHover( final Point pos )
   {
-    // TODO: create hover infos this during paint
-
     final WaterlevelRenderData[] renderData = getRenderData();
 
     final IAxis< ? > domainAxis = getDomainAxis();
