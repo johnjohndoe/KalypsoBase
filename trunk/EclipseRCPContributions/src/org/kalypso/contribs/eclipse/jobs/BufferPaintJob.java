@@ -45,6 +45,7 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -82,7 +83,7 @@ public class BufferPaintJob extends Job
 
   public BufferPaintJob( final IPaintable paintable, final ImageCache imageCache )
   {
-    super( "" );
+    super( StringUtils.EMPTY );
 
     m_paintable = paintable;
     m_imageCache = imageCache;
@@ -93,8 +94,6 @@ public class BufferPaintJob extends Job
 
   /**
    * Needed because we use {@link java.lang.ref.SoftReference}'s.
-   * 
-   * @see java.lang.Object#finalize()
    */
   @Override
   protected void finalize( ) throws Throwable
