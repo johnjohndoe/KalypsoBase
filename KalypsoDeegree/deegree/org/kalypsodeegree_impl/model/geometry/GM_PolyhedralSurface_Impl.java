@@ -51,23 +51,24 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Boundary;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_PolyhedralSurface;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -300,7 +301,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_PolygonPatch> extends GM_Abs
     {
       final GM_PolyhedralSurface<T> clone = createCloneInstance();
       for( final T polygon : this )
-        clone.add( (T) polygon.clone() );
+        clone.add( (T)polygon.clone() );
       return clone;
     }
     catch( final GM_Exception e )
@@ -364,7 +365,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_PolygonPatch> extends GM_Abs
     {
       final List<GM_Point> pointList = new LinkedList<>();
 
-      final T[] polygons = (T[]) m_items.toArray( new GM_PolygonPatch[m_items.size()] );
+      final T[] polygons = (T[])m_items.toArray( new GM_PolygonPatch[m_items.size()] );
       for( final T polygon : polygons )
       {
         pointList.add( polygon.getCentroid() );
@@ -445,8 +446,9 @@ public class GM_PolyhedralSurface_Impl<T extends GM_PolygonPatch> extends GM_Abs
   }
 
   @Override
-  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<T> surfacePatchVisitor, final IProgressMonitor monitor ) throws CoreException
+  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<T> surfacePatchVisitor, final IProgressMonitor pm ) throws CoreException
   {
+    final SubMonitor monitor = SubMonitor.convert( pm );
     monitor.beginTask( StringUtils.EMPTY, IProgressMonitor.UNKNOWN );
 
     final TIntProcedure ip = new TIntProcedure()
@@ -474,7 +476,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_PolygonPatch> extends GM_Abs
   }
 
   @Override
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings( "unchecked" )
   public GM_Object transform( final String targetCRS ) throws GeoTransformerException
   {
     try
@@ -485,10 +487,10 @@ public class GM_PolyhedralSurface_Impl<T extends GM_PolygonPatch> extends GM_Abs
         return this;
 
       final int cnt = size();
-      final T[] polygons = (T[]) new GM_PolygonPatch[cnt];
+      final T[] polygons = (T[])new GM_PolygonPatch[cnt];
 
       for( int i = 0; i < cnt; i++ )
-        polygons[i] = (T) get( i ).transform( targetCRS );
+        polygons[i] = (T)get( i ).transform( targetCRS );
 
       return GeometryFactory.createGM_PolyhedralSurface( polygons, targetCRS );
     }
@@ -501,5 +503,31 @@ public class GM_PolyhedralSurface_Impl<T extends GM_PolygonPatch> extends GM_Abs
   protected SpatialIndex getIndex( )
   {
     return m_index;
+  }
+
+  @SuppressWarnings( "rawtypes" )
+  @Override
+  public boolean equals( final Object that )
+  {
+    if( that == this )
+      return true;
+
+    if( that == null || !(that instanceof GM_PolyhedralSurface_Impl) )
+      return false;
+
+    if( getCoordinateSystem() != null )
+    {
+      if( !getCoordinateSystem().equals( ((GM_Object)that).getCoordinateSystem() ) )
+        return false;
+    }
+    else
+    {
+      if( ((GM_Object)that).getCoordinateSystem() != null )
+      {
+        return false;
+      }
+    }
+
+    return m_items.equals( ((GM_PolyhedralSurface_Impl)that).m_items );
   }
 }
