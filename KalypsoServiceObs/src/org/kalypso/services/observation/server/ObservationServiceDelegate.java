@@ -464,9 +464,6 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     throw new NoSuchElementException( "Unknown Repository or item. Repository: " + repId + ", Item: " + id ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  /**
-   * @see org.kalypso.repository.service.IRepositoryService#hasChildren(org.kalypso.repository.service.ItemBean)
-   */
   @Override
   public final boolean hasChildren( final ItemBean parent ) throws RepositoryException
   {
@@ -489,9 +486,6 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     }
   }
 
-  /**
-   * @see org.kalypso.repository.service.IRepositoryService#getChildren(org.kalypso.repository.service.ItemBean)
-   */
   @Override
   public final ItemBean[] getChildren( final ItemBean pbean ) throws RepositoryException
   {
@@ -560,9 +554,6 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     }
   }
 
-  /**
-   * @see org.kalypso.services.sensor.IObservationService#adaptItem(org.kalypso.repository.service.ItemBean)
-   */
   @Override
   public final ObservationBean adaptItem( final ItemBean ib ) throws SensorException
   {
@@ -595,9 +586,6 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     return 0;
   }
 
-  /**
-   * @see org.kalypso.repository.service.IRepositoryService#reload()
-   */
   @Override
   public final void reload( )
   {
@@ -683,9 +671,6 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     }
   }
 
-  /**
-   * @see org.kalypso.services.observation.sei.IRepositoryService#setItemData(java.lang.String, java.lang.Object)
-   */
   @Override
   public final void setItemData( final String identifier, final Object serializable ) throws RepositoryException
   {
@@ -709,9 +694,6 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     }
   }
 
-  /**
-   * @see org.kalypso.services.observation.sei.IRepositoryService#setItemName(java.lang.String, java.lang.String)
-   */
   @Override
   public final void setItemName( final String identifier, final String name ) throws RepositoryException
   {
@@ -729,9 +711,6 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     }
   }
 
-  /**
-   * @see org.kalypso.services.observation.sei.IRepositoryService#isMultipleSourceItem(java.lang.String)
-   */
   @Override
   public boolean isMultipleSourceItem( final String identifier ) throws RepositoryException
   {

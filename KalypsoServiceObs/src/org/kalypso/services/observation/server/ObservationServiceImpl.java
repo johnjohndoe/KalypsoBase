@@ -46,7 +46,9 @@ import java.rmi.RemoteException;
 import javax.jws.WebService;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
@@ -96,6 +98,11 @@ public class ObservationServiceImpl implements IObservationService
   private Job m_observationServiceJob;
 
   /**
+   * The status of the observation service job.
+   */
+  private IStatus m_jobStatus;
+
+  /**
    * This variable stores the reinitialize time interval.
    */
   private final long m_interval;
@@ -111,15 +118,11 @@ public class ObservationServiceImpl implements IObservationService
   public ObservationServiceImpl( )
   {
     m_observationServiceJob = null;
+    m_jobStatus = new Status( IStatus.INFO, KalypsoServiceObs.ID, "Initialisiere Observation-Service" );
     m_delegate = new NullObservationService();
     m_interval = initInterval();
 
-    /* Start the reloading. */
-    m_observationServiceJob = new ObservationServiceJob( this );
-    m_observationServiceJob.addJobChangeListener( m_listener );
-    // TRICKY: give a bit of time for first schedule,
-    // as this will access a HttpResource, which may not be accessible right now
-    m_observationServiceJob.schedule( 5000 );
+    initObservationServiceJob();
   }
 
   private long initInterval( )
@@ -136,9 +139,18 @@ public class ObservationServiceImpl implements IObservationService
     }
   }
 
-  /**
-   * @see org.kalypso.services.observation.sei.IObservationService#adaptItem(org.kalypso.services.observation.sei.ItemBean)
-   */
+  private void initObservationServiceJob( )
+  {
+    /* Create the observation service job. */
+    m_observationServiceJob = new ObservationServiceJob( this );
+    m_observationServiceJob.addJobChangeListener( m_listener );
+
+    /* Schedule it. */
+    // TRICKY: Give a bit of time for first schedule,
+    // as this will access a HttpResource, which may not be accessible right now.
+    m_observationServiceJob.schedule( 5000 );
+  }
+
   @Override
   public ObservationBean adaptItem( final ItemBean ib ) throws SensorException
   {
@@ -199,7 +211,7 @@ public class ObservationServiceImpl implements IObservationService
     // m_observationServiceJob.removeJobChangeListener( m_listener );
     //
     // /* Set to null, so all requests will wait, not only these after the first initializing. */
-    // m_delegate = null;
+    // m_delegate = new NullObservationService();
     //
     // /* Reschedule it with no delay. */
     // m_observationServiceJob = new ObservationServiceJob( this );
@@ -267,13 +279,16 @@ public class ObservationServiceImpl implements IObservationService
    */
   protected void onJobFinished( final IStatus status )
   {
+    /* Store the status. */
+    m_jobStatus = status;
+
+    /* If the status is not okay, log it. */
     if( !status.isOK() )
     {
-      // FIXME: put status in log!
-      // FIXME: keep status; and or restart
-      // FIXME: why? schedule with 0 ??
-      /* What to do on error or cancellation? */
-      // return;
+      /* Log the error. */
+      final KalypsoServiceObs plugin = KalypsoServiceObs.getDefault();
+      final ILog log = plugin.getLog();
+      log.log( status );
     }
 
     /* Reschedule the job. */
@@ -321,6 +336,11 @@ public class ObservationServiceImpl implements IObservationService
   @Override
   public StatusBean getStatus( final String type )
   {
+    /* If the job had an error, return this status. */
+    if( !m_jobStatus.isOK() )
+      return new StatusBean( m_jobStatus );
+
+    /* Otherwise ask the delegate. */
     final IObservationService delegate = getDelegate();
     return delegate.getStatus( type );
   }
