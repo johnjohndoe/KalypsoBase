@@ -193,7 +193,10 @@ public final class SHP2JTS
       final LinearRing[] inrings = innerOfOuter.toArray( new LinearRing[innerOfOuter.size()] );
       polygons.add( m_factory.createPolygon( out_ring, inrings ) );
     }
-
+    if( outerRings.isEmpty() && innerRings.size() == 1 )
+    {
+      polygons.add( m_factory.createPolygon( innerRings.get( 0 ), null ) );
+    }
     return polygons.toArray( new Polygon[polygons.size()] );
   }
 
