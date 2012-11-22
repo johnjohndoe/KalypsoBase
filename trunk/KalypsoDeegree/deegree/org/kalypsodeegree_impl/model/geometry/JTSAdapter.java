@@ -38,6 +38,7 @@ package org.kalypsodeegree_impl.model.geometry;
 import java.lang.reflect.Array;
 
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.jts.Triangle;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -390,6 +391,13 @@ public final class JTSAdapter
     return jtsFactory.createPolygon( shell, holes );
   }
 
+  public static Triangle export( final GM_Triangle triangle )
+  {
+    final Coordinate[] exteriorRing = export( triangle.getExteriorRing() );
+    final Triangle jtsTriangle = new Triangle( exteriorRing[0], exteriorRing[1], exteriorRing[2], jtsFactory );
+    return jtsTriangle;
+  }
+
   /**
    * Converts a <tt>GM_MultiSurface</tt> to a <tt>MultiPolygon</tt>.
    * <p>
@@ -545,6 +553,12 @@ public final class JTSAdapter
     final GM_PolygonPatch patch = new GM_PolygonPatch_Impl( exteriorRing, interiorRings, crs );
 
     return new GM_Polygon_Impl( patch );
+  }
+
+  public static GM_Triangle wrap( final Triangle triangle, final String crs )
+  {
+    final GM_Position[] coordinates = wrap( triangle.getCoordinates() );
+    return new GM_Triangle_Impl( coordinates[0], coordinates[1], coordinates[2], crs );
   }
 
   /**
