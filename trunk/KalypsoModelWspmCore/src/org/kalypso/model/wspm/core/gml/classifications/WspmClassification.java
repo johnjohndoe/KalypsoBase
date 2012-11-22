@@ -219,6 +219,22 @@ public class WspmClassification extends Feature_Impl implements IWspmClassificat
     return null;
   }
 
+  @Override
+  public IRoughnessClass findUnknownRoughnessClass( )
+  {
+    final IRoughnessClass[] roughnessClasses = getRoughnessClasses();
+    for( final IRoughnessClass roughnessClass : roughnessClasses )
+    {
+      final BigDecimal ks = roughnessClass.getKsValue();
+      final BigDecimal kst = roughnessClass.getKstValue();
+
+      if( is0( ks ) && is0( kst ) )
+        return roughnessClass;
+    }
+
+    return null;
+  }
+
   private boolean is0( final BigDecimal value )
   {
     if( value == null )

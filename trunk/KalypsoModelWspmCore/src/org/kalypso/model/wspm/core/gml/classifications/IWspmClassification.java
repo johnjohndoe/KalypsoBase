@@ -89,7 +89,13 @@ public interface IWspmClassification extends Feature
 
   /**
    * Find the vegetation class for undefined values.<br/>
-   * Actually, the first class where all vegatation parameter are 0.0.
+   * Actually, the first class where all vegatation parameters are 0.0.
    */
   IVegetationClass findUnknownVegetationClass( );
+
+  /**
+   * Find the roughness class for undefined values.<br/>
+   * Actually, the first class where all parameters are 0.0.
+   */
+  IRoughnessClass findUnknownRoughnessClass( );
 }
