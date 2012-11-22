@@ -169,7 +169,7 @@ public class GM_Ring_Impl extends GM_AbstractCurve_Impl implements GM_Ring
     m_points = positions;
 
     // checks if the ring has more than 3 elements [!(points.length > 3)]
-    if( positions.length < 3 )
+    if( positions.length < 4 )
     {
       throw new GM_Exception( "invalid length of a Ring!" );
     }
