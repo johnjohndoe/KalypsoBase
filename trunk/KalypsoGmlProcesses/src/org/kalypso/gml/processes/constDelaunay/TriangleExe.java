@@ -327,7 +327,7 @@ public class TriangleExe
     /* final int coordCount = */Integer.parseInt( firstTokenizer.nextToken() );
     final int attCount = Integer.parseInt( firstTokenizer.nextToken() );
 
-    final GM_Position[] points = new GM_Position[pointCount + 1];
+    final GM_Position[] points = new GM_Position[pointCount];
 
     while( nodeReader.ready() )
     {
