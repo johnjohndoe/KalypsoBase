@@ -111,7 +111,7 @@ public abstract class AbstractProfilePointSelectionWidget extends AbstractProfil
     getMapPanel().removeSelectionChangedListener( m_mapPanelListener );
 
     /* Reset the selection within this widget. */
-    setSelection( (ProfilesSelection) null ); // purge profile change listener
+    setSelection( (ProfilesSelection)null ); // purge profile change listener
 
     /* Reset & repaint. */
     reset();
@@ -177,6 +177,9 @@ public abstract class AbstractProfilePointSelectionWidget extends AbstractProfil
   public void paint( final Graphics g )
   {
     final GeoTransform projection = getMapPanel().getProjection();
+    if( projection == null )
+      return;
+
     final SLDPainter painter = new SLDPainter( projection, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
 
     final IProfileFeature profile = getProfile();
