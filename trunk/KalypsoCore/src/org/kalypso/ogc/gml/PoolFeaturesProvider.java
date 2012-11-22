@@ -151,27 +151,18 @@ public class PoolFeaturesProvider extends AbstractFeaturesProvider implements IL
     return m_delegate.getFeatureType();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IFeaturesProvider#getFeatures()
-   */
   @Override
   public FeatureList getFeatureList( )
   {
     return m_delegate.getFeatureList();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IFeaturesProvider#getFeatures()
-   */
   @Override
   public List<Feature> getFeatures( )
   {
     return m_delegate.getFeatures();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IFeaturesProvider#getWorkspace()
-   */
   @Override
   public CommandableWorkspace getWorkspace( )
   {
