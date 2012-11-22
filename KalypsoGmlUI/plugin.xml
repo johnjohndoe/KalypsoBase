@@ -10,7 +10,7 @@
    
    <extension point="org.eclipse.ui.commands">
       <command categoryId="org.kalypso.ogc.gml.map.category" description="%org.kalypso.ogc.gml.map.CoverageManagementCommand.description" id="org.kalypso.ogc.gml.map.CoverageManagementCommand" name="%org.kalypso.ogc.gml.map.CoverageManagementCommand.name" />
-      <command id="org.kalypso.gml.ui.toolWizards" name="Tools..." description="Tools on the selected element"/>
+      <command id="org.kalypso.gml.ui.toolWizards" name="%org.kalypso.gml.ui.toolWizards.name" description="%org.kalypso.gml.ui.toolWizards.description"/>
       <command
             description="%org.kalyso.gml.ui.command.editFeature.description"
             id="org.kalyso.gml.ui.command.editFeature"
@@ -48,7 +48,7 @@
       </command>
      <command
            id="org.kalypso.gml.ui.commands.OpenLegendCommand" categoryId="org.kalypso.ogc.gml.map.category"
-           name="Legende anzeigen" description="Zeigt die Legende an">
+           name="%org.kalypso.gml.ui.commands.OpenLegendCommand.name" description="%org.kalypso.gml.ui.commands.OpenLegendCommand..description">
            <commandParameter id="themeProperty" name="Theme Property" optional="true"/>
      </command>
    </extension>
@@ -337,8 +337,8 @@
              hasPages="true"
              icon="icons/obj16/file_shp.gif"
              id="org.kalypso.gml.ui.shape.ShapeFileNewWizard"
-             name="Shape File">
-            <description>Creates a new shape file</description>
+             name="%org.kalypso.gml.ui.shape.ShapeFileNewWizard.name">
+            <description>%org.kalypso.gml.ui.shape.ShapeFileNewWizard.description</description>
             <selection class="org.eclipse.core.resources.IResource" />
        </wizard>
     </extension>
@@ -359,10 +359,7 @@
     </extension>
     <extension
           point="org.kalypso.ui.exportWizards">
-       <category
-             id="shapeExportWizards"
-             name="ESRI Shape"
-             parentCategory="exportWizards">
+       <category id="shapeExportWizards" name="%shapeExportWizards.name" parentCategory="exportWizards">
        </category>
        <wizard
              category="exportWizards/shapeExportWizards"
@@ -397,8 +394,8 @@
            class="org.kalypso.gml.ui.commands.exportgrid.RectifiedGridCoverageExportWizard"
            id="org.kalypso.gml.ui.commands.exportgrid.RectifiedGridCoverageExportWizard"
            icon="icons/obj16/gridImport.gif"
-           name="Raster exportieren">
-           <description>Export das selektierte Coverage in eine externe Rasterdatei</description>
+           name="%org.kalypso.gml.ui.commands.exportgrid.RectifiedGridCoverageExportWizard.name">
+           <description>%org.kalypso.gml.ui.commands.exportgrid.RectifiedGridCoverageExportWizard.description</description>
      </wizard>
     </extension>
     <extension
@@ -407,8 +404,8 @@
              class="org.kalypso.gml.ui.internal.coverage.imports.ImportCoveragesWizard"
              id="org.kalypso.gml.ui.commands.importgrid.AddRectifiedGridCoveragesWizard"
              icon="icons/obj16/gridImport.gif"
-             name="Raster importieren">
-             <description>Importiert ein Raster als GML-Coverage</description>
+             name="%org.kalypso.gml.ui.commands.importgrid.AddRectifiedGridCoveragesWizard.name">
+             <description>%org.kalypso.gml.ui.commands.importgrid.AddRectifiedGridCoveragesWizard.description</description>
        </wizard>
     </extension>
     <extension
@@ -512,8 +509,8 @@
             class="org.kalypso.gml.ui.internal.shape.CreateShapeSourceWizard"
             icon="icons/obj16/file_shp.gif"
             id="org.kalypso.gml.ui.createShapeThemeWizard"
-            name="ESRI (tm) Shape (create new)">
-         <description>Creates a new shape file and adds it a theme to the map.</description>
+            name="%org.kalypso.gml.ui.createShapeThemeWizard.name">
+         <description>%org.kalypso.gml.ui.createShapeThemeWizard.description</description>
       </wizard>
     
       <wizardSelection description="Default selection used for the map editor." id="org.kalypso.ui.addlayer.wizardselection.default">
@@ -531,5 +528,4 @@
          <wizardRef wizardId="org.kalypso.ui.wizard.others.TextThemeWizard"/>
       </wizardSelection>
     </extension>
-    
 </plugin>
