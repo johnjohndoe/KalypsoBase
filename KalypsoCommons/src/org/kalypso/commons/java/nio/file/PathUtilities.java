@@ -18,6 +18,7 @@
  */
 package org.kalypso.commons.java.nio.file;
 
+import java.nio.file.FileSystem;
 import java.nio.file.Path;
 
 /**
@@ -29,6 +30,15 @@ public class PathUtilities
   {
   }
 
+  /**
+   * This function returns the complete path until the given segment. Each segement after the given segment is cut.
+   * 
+   * @param path
+   *          The path. It must contain the root element and should be absolute.
+   * @param segmentName
+   *          The name of the segment.
+   * @return The complete path until the given segment.
+   */
   public static Path findPathToSegment( final Path path, final String segmentName )
   {
     final int nameCount = path.getNameCount();
@@ -44,5 +54,25 @@ public class PathUtilities
     }
 
     return null;
+  }
+
+  /**
+   * This function returns the string representation of the path.
+   * It makes sure that the filesystem separator is present at the end.
+   * 
+   * @param path
+   *          The path.
+   * @return The string representation of the path.
+   */
+  public static String toString( final Path path )
+  {
+    final FileSystem fileSystem = path.getFileSystem();
+    final String separator = fileSystem.getSeparator();
+
+    final String pathString = path.toString();
+    if( pathString.endsWith( separator ) )
+      return pathString;
+
+    return String.format( "%s%s", pathString, separator );
   }
 }
