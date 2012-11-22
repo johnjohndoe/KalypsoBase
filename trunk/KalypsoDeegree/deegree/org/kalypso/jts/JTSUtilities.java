@@ -1443,6 +1443,20 @@ public final class JTSUtilities
     return Math.sqrt( dx * dx + dy * dy + dz * dz );
   }
 
+  public static Polygon interpolateMissingZ( final Polygon input )
+  {
+    final GeometryFactory geomFactory = input.getFactory();
+    final LineString exteriorRing = input.getExteriorRing();
+    final LinearRing exteriorZ = geomFactory.createLinearRing( interpolateMissingZ( exteriorRing ).getCoordinates() );
+    final LinearRing[] interiorZ = new LinearRing[input.getNumInteriorRing()];
+    for( int i = 0; i < input.getNumInteriorRing(); i++ )
+    {
+      final LineString interiorRing = input.getInteriorRingN( i );
+      interiorZ[i] = geomFactory.createLinearRing( interpolateMissingZ( interiorRing ).getCoordinates() );
+    }
+    return geomFactory.createPolygon( exteriorZ, interiorZ );
+  }
+
   /**
    * Interpolate missing z values for all vertices from vertices that already have a z value.<br/>
    * For each vertex, the z value is interpolated from the two nearest adjacent vertices with z values. If only one
@@ -1505,14 +1519,14 @@ public final class JTSUtilities
   /**
    * Removes points closer to
    */
-  public static Polygon removeCoincidentPoints( final Polygon polygon, final double distanceTolerance )
+  public static Polygon removeCoincidentPoints( final Polygon polygon, final double nearDistance, final double distanceTolerance )
   {
     final LinearRing exteriorRing = (LinearRing)polygon.getExteriorRing();
-    final LinearRing newExteriorRing = removeCoincidentPoints( exteriorRing, distanceTolerance );
+    final LinearRing newExteriorRing = removeCoincidentPoints( exteriorRing, nearDistance, distanceTolerance );
     final int ringCount = polygon.getNumInteriorRing();
     final LinearRing[] newInteriorRings = new LinearRing[ringCount];
     for( int i = 0; i < ringCount; i++ )
-      newInteriorRings[i] = removeCoincidentPoints( (LinearRing)polygon.getInteriorRingN( i ), distanceTolerance );
+      newInteriorRings[i] = removeCoincidentPoints( (LinearRing)polygon.getInteriorRingN( i ), nearDistance, distanceTolerance );
     return polygon.getFactory().createPolygon( newExteriorRing, newInteriorRings );
   }
 
@@ -1520,7 +1534,7 @@ public final class JTSUtilities
    * Removes interior points of this line that are within the given distance from another point
    */
   @SuppressWarnings( "unchecked" )
-  public static <T extends LineString> T removeCoincidentPoints( final T linestring, final double distanceTolerance )
+  public static <T extends LineString> T removeCoincidentPoints( final T linestring, final double nearDistance, final double distanceTolerance )
   {
     final GeometryEditor editor = new GeometryEditor();
     final Geometry result = editor.edit( linestring, new GeometryEditor.CoordinateOperation()
@@ -1536,9 +1550,9 @@ public final class JTSUtilities
           final Coordinate p0 = coordList.getCoordinate( coordList.size() - 1 );
           final Coordinate p1 = coordinates[i];
           final Coordinate p2 = coordinates[i + 1];
-          if( p1.distance( p0 ) <= distanceTolerance || p1.distance( p2 ) <= distanceTolerance )
+          if( p1.distance( p0 ) <= nearDistance || p1.distance( p2 ) <= nearDistance )
           {
-            final boolean nearlyColinear = new LineSegment( p0, p2 ).distance( p1 ) < distanceTolerance / 6;
+            final boolean nearlyColinear = new LineSegment( p0, p2 ).distance( p1 ) < distanceTolerance;
             if( nearlyColinear )
               // gobble
               continue;
