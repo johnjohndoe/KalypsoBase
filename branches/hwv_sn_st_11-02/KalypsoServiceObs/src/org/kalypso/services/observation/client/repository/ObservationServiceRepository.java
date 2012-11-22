@@ -65,17 +65,21 @@ import org.kalypso.services.observation.sei.StatusBean;
  */
 public class ObservationServiceRepository extends AbstractRepository implements IModifyableRepository, IWriteableRepository
 {
-  /** URL-Scheme that identifies the observation service */
+  /**
+   * URL-Scheme that identifies the observation service.
+   */
   public static final String ID = "kalypso-ocs"; //$NON-NLS-1$ 
 
   private static String ID_COLON = ID + ":"; //$NON-NLS-1$
 
-  /** root item is identified by the null bean */
+  /**
+   * Root item is identified by the null bean.
+   */
   private static final ItemBean ROOT_ITEM = null;
 
   /**
    * @throws ServiceException
-   *           when the underlying service is not available
+   *           When the underlying service is not available.
    */
   public ObservationServiceRepository( final String name, final String label, final String factory, final boolean readOnly, final boolean cached ) throws RepositoryException
   {
@@ -157,7 +161,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
       for( final ItemBean bean : beans )
         items.add( beanToItem( bean ) );
 
-      /** @hack single repository? skip one hierarchy level and return children of repository item */
+      /* @HACK Single repository? Skip one hierarchy level and return children of repository item. */
       if( items.size() == 1 )
         return items.get( 0 ).getChildren();
 
@@ -225,7 +229,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
     if( parentBean == null )
       return null;
 
-    /** item bean == IRepository? */
+    /* item bean == IRepository? */
     final String parentIdentifier = parentBean.getId();
     if( StringUtils.isEmpty( RepositoryItems.getPlainId( parentIdentifier ) ) )
       return this;

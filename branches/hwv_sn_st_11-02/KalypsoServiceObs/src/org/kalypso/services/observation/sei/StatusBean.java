@@ -60,11 +60,16 @@ public class StatusBean implements Serializable
     this( IStatus.CANCEL, "", "" );
   }
 
+  public StatusBean( final IStatus status )
+  {
+    this( status.getSeverity(), status.getPlugin(), status.getMessage() );
+  }
+
   public StatusBean( final Integer severity, final String plugin, final String message )
   {
-    setSeverity( severity );
-    setPlugin( plugin );
-    setMessage( message );
+    m_severity = severity;
+    m_plugin = plugin;
+    m_message = message;
   }
 
   public void setMessage( final String message )
@@ -96,5 +101,4 @@ public class StatusBean implements Serializable
   {
     return m_severity;
   }
-
 }
