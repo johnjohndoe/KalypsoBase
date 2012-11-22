@@ -291,9 +291,9 @@
 		<command categoryId="org.kalypso.ogc.gml.map.category" description="%command.description.11" id="org.kalypso.ogc.gml.map.ThemeInfoCommand" name="%command.name.13" />
   <command
         categoryId="org.kalypso.ogc.gml.map.category"
-        description="Requests info about a feature in the map."
+        description="%org.kalypso.ogc.gml.map.GetFeatureInfoCommand.description"
         id="org.kalypso.ogc.gml.map.GetFeatureInfoCommand"
-        name="Get Feature Info">
+        name="%org.kalypso.ogc.gml.map.GetFeatureInfoCommand.name">
   </command>
 		<command categoryId="org.kalypso.ogc.gml.map.category" description="%command.description.12" id="org.kalypso.ogc.gml.map.OpenOutlineCommand" name="%command.name.14" />
 		<command categoryId="org.kalypso.ogc.gml.map.category" description="%org.kalypso.ui.map.selectFirstFeatureCommand.description" name="%org.kalypso.ui.map.selectFirstFeatureCommand.name" id="org.kalypso.ui.map.selectFirstFeatureCommand" />
