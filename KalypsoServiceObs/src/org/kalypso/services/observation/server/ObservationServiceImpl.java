@@ -135,7 +135,7 @@ public class ObservationServiceImpl implements IObservationService
     catch( final NumberFormatException e )
     {
       e.printStackTrace();
-      return 600000; // 10 min
+      return -1;
     }
   }
 
@@ -260,7 +260,7 @@ public class ObservationServiceImpl implements IObservationService
    * @param delegate
    *          The delegate.
    */
-  protected synchronized void setDelegate( final IObservationService delegate )
+  synchronized void setDelegate( final IObservationService delegate )
   {
     if( delegate == null )
     {
@@ -282,17 +282,23 @@ public class ObservationServiceImpl implements IObservationService
     /* Store the status. */
     m_jobStatus = status;
 
-    /* If the status is not okay, log it. */
+    /* If the status is not okay, log it and reschedule the job. */
     if( !status.isOK() )
     {
       /* Log the error. */
       final KalypsoServiceObs plugin = KalypsoServiceObs.getDefault();
       final ILog log = plugin.getLog();
       log.log( status );
+
+      /* Reschedule the job, regardless of the interval setting. */
+      m_observationServiceJob.schedule( 150000 );
+
+      return;
     }
 
     /* Reschedule the job. */
-    m_observationServiceJob.schedule( m_interval );
+    if( m_interval > 0 )
+      m_observationServiceJob.schedule( m_interval );
   }
 
   @Override

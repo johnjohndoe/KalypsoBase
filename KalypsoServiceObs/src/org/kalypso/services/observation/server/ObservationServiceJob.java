@@ -55,7 +55,7 @@ import org.kalypso.services.observation.sei.IObservationService;
  * 
  * @author Holger Albert
  */
-public class ObservationServiceJob extends Job
+class ObservationServiceJob extends Job
 {
   public static final String SERVICE_IMPLEMENTATION = "org.kalypso.services.observation.server.implementation"; //$NON-NLS-1$
 
