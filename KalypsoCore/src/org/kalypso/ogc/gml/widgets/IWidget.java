@@ -47,9 +47,11 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelListener;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
 
 /**
  * @author bce
@@ -80,8 +82,11 @@ public interface IWidget extends MouseListener, MouseMotionListener, MouseWheelL
 
   void keyTyped( KeyEvent e );
 
-  // Graphics
-  void paint( Graphics g );
+  // Map graphics
+  void paint( Graphics g, GeoTransform world2screen, IProgressMonitor progressMonitor );
+  
+  // widget graphics
+  void paint( Graphics g);
 
   void finish( );
 
@@ -104,7 +109,7 @@ public interface IWidget extends MouseListener, MouseMotionListener, MouseWheelL
 
   /**
    * This function sets the map of all parameter.
-   *
+   * 
    * @param parameter
    *          The map of all parameter. May be null.
    */

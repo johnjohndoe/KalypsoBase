@@ -50,6 +50,7 @@ import java.util.Map;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.common.NotDefinedException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
@@ -233,11 +234,12 @@ public abstract class AbstractWidget implements IWidget
   {
   }
 
-  /**
-   * TODO: give World2Screen Transformation into paint method
-   * 
-   * @see org.kalypso.ogc.gml.widgets.IWidget#paint(java.awt.Graphics)
-   */
+  @Override
+  public void paint( final Graphics g, final GeoTransform world2screen, final IProgressMonitor progressMonitor )
+  {
+    // not implemented by default
+  }
+
   @Override
   public void paint( final Graphics g )
   {
