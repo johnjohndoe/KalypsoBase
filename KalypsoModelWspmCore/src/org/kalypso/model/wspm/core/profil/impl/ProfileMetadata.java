@@ -34,9 +34,12 @@ class ProfileMetadata implements IProfileMetadata
 
   private final Map<String, String> m_metadata;
 
-  public ProfileMetadata( final ProfileMetadataObserver parent )
+  private final int m_hintMask;
+
+  public ProfileMetadata( final ProfileMetadataObserver parent, final int hintMask )
   {
     m_parent = parent;
+    m_hintMask = hintMask;
     m_metadata = new HashMap<>();
   }
 
@@ -77,8 +80,7 @@ class ProfileMetadata implements IProfileMetadata
       return;
 
     /* Create the profile change hint. */
-    final ProfileChangeHint hint = new ProfileChangeHint();
-    hint.setObjectChanged();
+    final ProfileChangeHint hint = new ProfileChangeHint( m_hintMask );
 
     /* Fire the profile changed event. */
     m_parent.fireProfilChanged( hint );
