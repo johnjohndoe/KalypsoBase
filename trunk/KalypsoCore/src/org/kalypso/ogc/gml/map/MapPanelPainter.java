@@ -49,7 +49,6 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.jobs.BufferPaintJob.IPaintable;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.i18n.Messages;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 
 /**
@@ -65,7 +64,7 @@ public class MapPanelPainter implements IPaintable
 {
   private final GeoTransform m_world2screen;
 
-  private final IMapModell m_modell;
+  private final String m_label;
 
   private final IMapLayer[] m_layers;
 
@@ -77,11 +76,11 @@ public class MapPanelPainter implements IPaintable
    * @param bgColor
    *          If set, the buffer image is filled with this color before any layer will be painted.
    */
-  public MapPanelPainter( final MapPanel mapPanel, final IMapLayer[] layers, final IMapModell modell, final GeoTransform world2screen )
+  public MapPanelPainter( final MapPanel mapPanel, final IMapLayer[] layers, final String label, final GeoTransform world2screen )
   {
     m_mapPanel = mapPanel;
     m_layers = layers;
-    m_modell = modell;
+    m_label = label;
     m_world2screen = world2screen;
   }
 
@@ -93,7 +92,7 @@ public class MapPanelPainter implements IPaintable
   @Override
   public String toString( )
   {
-    return Messages.getString( "org.kalypso.ogc.gml.map.MapPanelPainter.0", m_modell.getLabel() ); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.gml.map.MapPanelPainter.0", m_label ); //$NON-NLS-1$
   }
 
   @Override

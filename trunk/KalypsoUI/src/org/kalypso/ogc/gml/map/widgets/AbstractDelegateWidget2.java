@@ -45,11 +45,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.widgets.IWidget;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
 
 /**
  * @author Thomas Jung
@@ -141,6 +143,13 @@ public class AbstractDelegateWidget2 extends AbstractWidget
       return super.getToolTip();
   }
 
+  @Override
+  public void paint( final Graphics g, final GeoTransform world2screen, final IProgressMonitor progressMonitor )
+  {
+    if( m_delegate != null )
+      m_delegate.paint( g, world2screen, progressMonitor );
+  }
+  
   @Override
   public void paint( final Graphics g )
   {

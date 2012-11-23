@@ -68,7 +68,7 @@ import org.kalypso.ogc.gml.widgets.base.MouseWheelZoomWidget;
 
 /**
  * widget controller of map view
- *
+ * 
  * @author vdoemming
  * @author Dirk Kuch
  */
@@ -275,24 +275,6 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
     }
   }
 
-  public void paintWidget( final Graphics g )
-  {
-    final IWidget[] widgets = getWidgets();
-    ArrayUtils.reverse( widgets ); // paint background and toggle widgets first
-
-    for( final IWidget widget : widgets )
-    {
-      try
-      {
-        widget.paint( g );
-      }
-      catch( final Throwable t )
-      {
-        t.printStackTrace();
-      }
-    }
-  }
-
   @Override
   public IWidget[] getWidgets( )
   {
@@ -431,5 +413,23 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
       return false;
 
     return true;
+  }
+
+  public void paintWidget( final Graphics g )
+  {
+    final IWidget[] widgets = getWidgets();
+    ArrayUtils.reverse( widgets ); // paint background and toggle widgets first
+
+    for( final IWidget widget : widgets )
+    {
+      try
+      {
+        widget.paint( g );
+      }
+      catch( final Throwable t )
+      {
+        t.printStackTrace();
+      }
+    }
   }
 }

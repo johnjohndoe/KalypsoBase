@@ -665,7 +665,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     }
 
     final IMapLayer[] layers = getLayersForRendering();
-    return new MapPanelPainter( this, layers, mapModell, projection );
+    return new MapPanelPainter( this, layers, mapModell.getLabel(), projection );
   }
 
   /**
@@ -796,17 +796,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
     g.drawString( message, (width - stringWidth) / 2, height / 2 );
   }
-
-  /**
-   * Lets the active widget paint itself.
-   */
-  private void paintWidget( final Graphics g )
-  {
-    // TODO: either reset the GC completely or do not set anything at all
-    g.setColor( Color.RED );
-    m_widgetManager.paintWidget( g );
-  }
-
+  
   /**
    * Removes this listener from the mapPanel.
    */
@@ -1093,6 +1083,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     ArrayUtils.reverse( selectionThemes );
     // TODO: care for disposal of SelectionMapLayer
     result.add( new SelectionMapLayer( this, selectionThemes ) );
+    result.add( new WidgetLayer( this, m_widgetManager ) );
 
     return result.toArray( new IMapLayer[result.size()] );
   }
@@ -1175,5 +1166,15 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   {
     if( m_boundingBox == null )
       setBoundingBox( m_wishBBox, false, false );
+  }
+
+  /**
+   * Lets the active widget paint itself.
+   */
+  private void paintWidget( final Graphics g )
+  {
+    // TODO: either reset the GC completely or do not set anything at all
+    g.setColor( Color.RED );
+    m_widgetManager.paintWidget( g );
   }
 }

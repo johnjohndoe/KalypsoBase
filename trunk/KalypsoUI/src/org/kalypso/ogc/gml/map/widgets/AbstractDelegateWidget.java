@@ -44,12 +44,14 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypso.ogc.gml.widgets.IDeprecatedMouseWidget;
 import org.kalypso.ogc.gml.widgets.IWidget;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
 
 /**
  * @author Thomas Jung
@@ -208,6 +210,13 @@ public class AbstractDelegateWidget extends DeprecatedMouseWidget implements IWi
   {
     if( m_delegate != null )
       m_delegate.moved( p );
+  }
+
+  @Override
+  public void paint( final Graphics g, final GeoTransform world2screen, final IProgressMonitor progressMonitor )
+  {
+    if( m_delegate != null )
+      m_delegate.paint( g, world2screen, progressMonitor );
   }
 
   @Override
