@@ -68,7 +68,8 @@ public abstract class AbstractProfileObject extends ProfileMetadataObserver impl
 
   private final IProfileObjectRecords m_records = new ProfileObjectRecords( this );
 
-  private final IProfileMetadata m_metadata = new ProfileMetadata( this );
+  // FIXME: we need another hint
+  private final IProfileMetadata m_metadata = new ProfileMetadata( this, ProfileChangeHint.PROFILE_PROPERTY_CHANGED );
 
   protected AbstractProfileObject( )
   {

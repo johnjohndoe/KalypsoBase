@@ -58,7 +58,7 @@ public class ProfileTupleResultChangeListener implements ITupleResultChangedList
 {
   private final AbstractProfile m_profil;
 
- // private final IProfilChange m_onMarkerMovedDelete = null;
+  // private final IProfilChange m_onMarkerMovedDelete = null;
 
   public ProfileTupleResultChangeListener( final AbstractProfile profil )
   {
@@ -90,6 +90,7 @@ public class ProfileTupleResultChangeListener implements ITupleResultChangedList
   @Override
   public void recordsChanged( final IRecord[] records, final TYPE type )
   {
+    // FIXME: this hint is nonsense!
     m_profil.fireProfilChanged( new ProfileChangeHint( ProfileChangeHint.PROFILE_PROPERTY_CHANGED ) );
   }
 

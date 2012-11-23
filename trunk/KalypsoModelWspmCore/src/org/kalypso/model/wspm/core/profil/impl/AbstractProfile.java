@@ -131,7 +131,9 @@ public abstract class AbstractProfile extends ProfileMetadataObserver implements
     m_source = source;
 
     m_selection = new RangeSelection( this );
-    m_metadata = new ProfileMetadata( this );
+
+    // FIXME: we need another hint for the metadata
+    m_metadata = new ProfileMetadata( this, ProfileChangeHint.PROFILE_PROPERTY_CHANGED );
 
     m_result = new TupleResult( new ProfileRecordFactory( this ) );
 
@@ -412,7 +414,7 @@ public abstract class AbstractProfile extends ProfileMetadataObserver implements
 
   /**
    * CREATES A NEW POINT PROPERTY.
-   *
+   * 
    * @return a pointProperty from PointPropertyProvider, see {@code IProfilPointPropertyProvider#getPointProperty(String)}
    *         <p>
    *         you must check {@link #hasPointProperty(IComponent)}, if false you must call {@link #addPointProperty(IComponent)}
@@ -429,7 +431,7 @@ public abstract class AbstractProfile extends ProfileMetadataObserver implements
   {
     final TupleResult result = getResult();
 
-      return result.toArray( new IProfileRecord[result.size()] );
+    return result.toArray( new IProfileRecord[result.size()] );
   }
 
   @Override
