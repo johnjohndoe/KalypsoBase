@@ -382,7 +382,7 @@ public class TupleResult implements List<IRecord>
 
     if( result )
     {
-      fireRecordsChanged( new IRecord[] { (IRecord) o }, TYPE.REMOVED );
+      fireRecordsChanged( new IRecord[] { (IRecord)o }, TYPE.REMOVED );
     }
 
     return result;
@@ -396,7 +396,7 @@ public class TupleResult implements List<IRecord>
     final Object[] objects = c.toArray();
     final IRecord[] removedRecords = new IRecord[objects.length];
     for( int i = 0; i < objects.length; i++ )
-      removedRecords[i] = (IRecord) objects[i];
+      removedRecords[i] = (IRecord)objects[i];
 
     fireRecordsChanged( removedRecords, TYPE.REMOVED );
 
@@ -494,7 +494,7 @@ public class TupleResult implements List<IRecord>
 
     for( final IRecord record : this )
     {
-      final Record r = (Record) record;
+      final Record r = (Record)record;
       r.set( m_components.size() - 1, comp.getDefaultValue() );
     }
 
@@ -519,7 +519,7 @@ public class TupleResult implements List<IRecord>
 
     for( final IRecord record : this )
     {
-      final Record r = (Record) record;
+      final Record r = (Record)record;
       if( index > -1 )
         r.set( m_components.size() - 1, record.getValue( index ) );
       else
@@ -544,7 +544,7 @@ public class TupleResult implements List<IRecord>
 
     for( final IRecord record : this )
     {
-      final Record r = (Record) record;
+      final Record r = (Record)record;
       r.set( m_components.size() - 1, defaultValue );
     }
 
@@ -558,7 +558,7 @@ public class TupleResult implements List<IRecord>
   public boolean removeComponent( final int index )
   {
     for( final IRecord record : m_records )
-      ((Record) record).remove( index );
+      ((Record)record).remove( index );
 
     final IComponent comp = m_components.remove( index );
     fireComponentsChanged( new IComponent[] { comp }, TYPE.REMOVED );
@@ -613,7 +613,9 @@ public class TupleResult implements List<IRecord>
 
   /* default */void fireRecordsChanged( final IRecord[] records, final TYPE type )
   {
+    // FIXME: major performance hotspot for obsrvation with the ugly 'ordinal component'
     renumber();
+
     final ITupleResultChangedListener[] listeners = m_listeners.toArray( new ITupleResultChangedListener[m_listeners.size()] );
     for( final ITupleResultChangedListener l : listeners )
     {

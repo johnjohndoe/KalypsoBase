@@ -116,6 +116,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
   private static final QName QNAME_P_SORTED_COMPONENT = new QName( NS.SWE_EXTENSIONS, "sortedComponent" ); //$NON-NLS-1$
 
+  // FIXME: nonsense!
   private static final QName QNAME_P_ORDINALNUMBER_COMPONENT = new QName( NS.SWE_EXTENSIONS, "ordinalNumberComponent" ); //$NON-NLS-1$
 
   /**
@@ -205,7 +206,6 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final IComponent[] sortComponents = ObservationFeatureFactory.buildSortComponents( recordDefinition );
     final IComponent ordinalNumberComponent = ObservationFeatureFactory.getOrdinalNumberComponent( recordDefinition );
     final XsdBaseTypeHandler< ? >[] typeHandlers = ObservationFeatureFactory.typeHandlersForComponents( components );
-
 
     for( final IComponent component : components )
       tupleResult.addComponent( component );
@@ -407,6 +407,8 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     final IComponent[] components = result.getComponents();
     final IComponent[] sortComponents = result.getSortComponents();
+
+    // FIXME: nonsense!
     final IComponent ordinalNumberComponent = result.getOrdinalNumberComponent();
 
     final IRelationType targetObsFeatureRelation = (IRelationType)featureType.getProperty( ObservationFeatureFactory.OM_RESULTDEFINITION );
@@ -450,7 +452,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
   /**
    * Helper: builds the record definition according to the components of the tuple result.
-   *
+   * 
    * @param map
    *          ATTENTION: the recordset is written in the same order as this map
    */
@@ -490,6 +492,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
       }
     }
 
+    // FIXME: nonsense!
     if( ordinalNumberComponent != null )
     {
       final IRelationType ordinalNumberItemDefRelation = (IRelationType)featureRD.getFeatureType().getProperty( ObservationFeatureFactory.QNAME_P_ORDINALNUMBER_COMPONENT );
