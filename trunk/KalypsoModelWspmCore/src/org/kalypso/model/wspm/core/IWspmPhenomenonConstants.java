@@ -49,6 +49,9 @@ public interface IWspmPhenomenonConstants
 {
   String PHENOMENON_COMMONS_BASE = "urn:ogc:gml:kalypso:dict:phenomenon:core#"; //$NON-NLS-1$
 
+  /**
+   * Deprecated separate profile objects with type W_POINTS or W_SEGMENTS instead.
+   */
+  @Deprecated
   String PHENOMENON_WATERLEVEL_2D = PHENOMENON_COMMONS_BASE + "wasserstand2d"; //$NON-NLS-1$
-
 }
