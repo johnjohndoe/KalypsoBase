@@ -61,10 +61,10 @@ public abstract class AbstractChartLayer implements IChartLayer
 
   private boolean m_isActive = false;
 
-  private boolean m_hideIfNoData =false;
+  private boolean m_hideIfNoData = false;
 
   private boolean m_isVisible = true;
-  
+
   private boolean m_isAutoScale = true;
 
   private final ILayerManager m_layerManager = new LayerManager( this );
@@ -382,7 +382,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   {
     if( m_hideIfNoData )
       return hasData() && m_isVisible;
-    
+
     return m_isVisible;
   }
 
@@ -436,7 +436,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   }
 
   @Override
-  public final void setCoordinateMapper( final ICoordinateMapper coordinateMapper )
+  public void setCoordinateMapper( final ICoordinateMapper coordinateMapper )
   {
     m_coordinateMapper = coordinateMapper;
   }
@@ -488,7 +488,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   }
 
   @Override
-  public void setHideIfNoData( boolean hideIfNoData )
+  public void setHideIfNoData( final boolean hideIfNoData )
   {
     m_hideIfNoData = hideIfNoData;
   }

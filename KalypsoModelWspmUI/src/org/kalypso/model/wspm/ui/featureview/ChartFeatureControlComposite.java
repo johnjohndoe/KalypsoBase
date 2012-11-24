@@ -136,6 +136,9 @@ class ChartFeatureControlComposite extends Composite implements IChartPart
     final IChartLayer[] layers = layerManager.getLayers();
     for( final IChartLayer layer : layers )
     {
+      // FIXME: we should hasData instead
+      // layer.hasData();
+
       final IDataRange< ? > domainRange = layer.getDomainRange();
       final IDataRange< ? > targetRange = layer.getTargetRange( null );
       if( domainRange != null && targetRange != null )
