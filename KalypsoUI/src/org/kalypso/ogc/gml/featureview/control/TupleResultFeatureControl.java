@@ -267,19 +267,14 @@ public class TupleResultFeatureControl extends AbstractToolbarFeatureControl imp
   public void valuesChanged( final ValueChange[] changes )
   {
     fireChanges( false );
-    // fireModified();
   }
 
   @Override
   public void recordsChanged( final IRecord[] records, final TYPE type )
   {
     fireChanges( false );
-    // fireModified();
   }
 
-  /**
-   * @see org.kalypso.observation.result.ITupleResultChangedListener#componentsChanged(org.kalypso.observation.result.IComponent[], org.kalypso.observation.result.ITupleResultChangedListener.TYPE)
-   */
   @Override
   public void componentsChanged( final IComponent[] components, final TYPE type )
   {
