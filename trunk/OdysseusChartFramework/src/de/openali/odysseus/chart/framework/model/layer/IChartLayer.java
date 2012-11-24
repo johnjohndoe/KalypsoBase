@@ -36,11 +36,11 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
   IDataRange<Double> getDomainRange( );
 
   IChartLayerFilter[] getFilters( );
-  
+
   ILegendEntry[] getLegendEntries( );
-  
+
   ILayerProvider getProvider( );
-  
+
   /**
    * @param domainIntervall
    *          shrinks the TargetRange, pass null to retrieve full dataRange
@@ -52,7 +52,7 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
    */
   String getTitle( );
 
-  boolean hasData();
+  boolean hasData( );
 
   /**
    * Initialization method; will be called after setCoordinateMapper
@@ -83,11 +83,11 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
 
   void removeFilter( IChartLayerFilter... filter );
 
-  boolean requireVisibleAxis();
+  boolean requireVisibleAxis( );
 
   void setActive( boolean isActive );
 
-  // FIXME: bad; layer should always get mapper in constructor! What layers changes the axis during it's live?
+  // FIXME: bad; layer should always get mapper in constructor! What layers changes the axis during it's live? None -> needs to be removed!
   void setCoordinateMapper( ICoordinateMapper coordinateMapper );
 
   /**
@@ -111,7 +111,7 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
   void setLegend( final boolean isVisible );
 
   void setParent( ILayerContainer parent );
-  
+
   /**
    * sets the layers title (which will be shown in the legend)
    */
