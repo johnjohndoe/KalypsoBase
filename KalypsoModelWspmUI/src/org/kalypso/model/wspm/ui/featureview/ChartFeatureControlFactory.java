@@ -122,8 +122,8 @@ public class ChartFeatureControlFactory implements IExtensionsFeatureControlFact
 
   private CommandWithStyle[] parseCommands( final String cmdIds, final String cmdStyles )
   {
-    final String[] commandIds = cmdIds.split( ";" ); //$NON-NLS-1$
-    final String[] commandStyles = cmdStyles.split( ";" ); //$NON-NLS-1$
+    final String[] commandIds = StringUtils.splitPreserveAllTokens( cmdIds, ';' );
+    final String[] commandStyles = StringUtils.splitPreserveAllTokens( cmdStyles, ';' );
 
     final Collection<CommandWithStyle> commands = new ArrayList<>();
 
