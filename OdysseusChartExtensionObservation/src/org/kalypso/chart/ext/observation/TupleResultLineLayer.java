@@ -45,30 +45,30 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
       return false;
     if( m_targetValueSize < 0 )
     {
-      Object[] targetValues = data.getTargetValues();
+      final Object[] targetValues = data.getTargetValues();
       if( targetValues == null )
         return false;
       m_targetValueSize = 0;
-      for( int i = 0; i < targetValues.length; i++ )
+      for( final Object targetValue : targetValues )
       {
-        if( targetValues[i] != null )
+        if( targetValue != null )
         {
           m_targetValueSize = targetValues.length;
           break;
         }
       }
     }
-    //Ganglinien (Hydrograph) können null Werte haben
+    // Ganglinien (Hydrograph) können null Werte haben
     // spezialfall: Code verschieben?
     if( m_domainValueSize < 0 )
     {
-      Object[] domainValues = data.getDomainValues();
+      final Object[] domainValues = data.getDomainValues();
       if( domainValues == null )
         return false;
       m_domainValueSize = 0;
-      for( int i = 0; i < domainValues.length; i++ )
+      for( final Object domainValue : domainValues )
       {
-        if( domainValues[i] != null )
+        if( domainValue != null )
         {
           m_domainValueSize = domainValues.length;
           break;
@@ -104,7 +104,11 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
   @Override
   public IDataRange<Double> getDomainRange( )
   {
-    return getNumericRange( getDomainAxis(), getValueData().getDomainRange() );
+    final TupleResultDomainValueData< ? , ? > valueData = getValueData();
+    if( valueData == null )
+      return null;
+
+    return getNumericRange( getDomainAxis(), valueData.getDomainRange() );
   }
 
   @Override
