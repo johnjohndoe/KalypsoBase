@@ -161,7 +161,7 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
   {
     final String[] tooltipComponents = new String[] { m_valueData.getDomainComponentName(), m_valueData.getTargetComponentName() };
 
-    final String[] columnFormats = new String[] { "%s", "%s", "[%s]" }; //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    final String[] columnFormats = new String[] { "%s", "%s", "%s" }; //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     final int[] columnAlignments = new int[] { SWT.LEFT, SWT.RIGHT, SWT.LEFT };
     final TooltipFormatter tooltip = new TooltipFormatter( null, columnFormats, columnAlignments );
 
