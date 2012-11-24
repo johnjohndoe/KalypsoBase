@@ -32,52 +32,6 @@ import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 
 public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipChartLayer
 {
-//  private static String TOOLTIP_FORMAT = "%-12s %s %n%-12s %s"; //$NON-NLS-1$
-  private int m_targetValueSize = -1;
-
-  private int m_domainValueSize = -1;
-
-  @Override
-  public boolean hasData( )
-  {
-    final TupleResultDomainValueData< ? , ? > data = getValueData();
-    if( data == null )
-      return false;
-    if( m_targetValueSize < 0 )
-    {
-      final Object[] targetValues = data.getTargetValues();
-      if( targetValues == null )
-        return false;
-      m_targetValueSize = 0;
-      for( final Object targetValue : targetValues )
-      {
-        if( targetValue != null )
-        {
-          m_targetValueSize = targetValues.length;
-          break;
-        }
-      }
-    }
-    // Ganglinien (Hydrograph) können null Werte haben
-    // spezialfall: Code verschieben?
-    if( m_domainValueSize < 0 )
-    {
-      final Object[] domainValues = data.getDomainValues();
-      if( domainValues == null )
-        return false;
-      m_domainValueSize = 0;
-      for( final Object domainValue : domainValues )
-      {
-        if( domainValue != null )
-        {
-          m_domainValueSize = domainValues.length;
-          break;
-        }
-      }
-    }
-    return m_targetValueSize > 0 && m_domainValueSize > 0;
-  }
-
   private final TupleResultDomainValueData< ? , ? > m_valueData;
 
   private HoverIndex m_infoIndex = null;
@@ -296,5 +250,51 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
     m_infoIndex = null;
 
     getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
+  }
+
+  @Override
+  public boolean hasData( )
+  {
+    int targetValueSize = -1;
+
+    int domainValueSize = -1;
+
+    final TupleResultDomainValueData< ? , ? > data = getValueData();
+    if( data == null )
+      return false;
+
+    if( targetValueSize < 0 )
+    {
+      final Object[] targetValues = data.getTargetValues();
+      if( targetValues == null )
+        return false;
+      targetValueSize = 0;
+      for( final Object targetValue : targetValues )
+      {
+        if( targetValue != null )
+        {
+          targetValueSize = targetValues.length;
+          break;
+        }
+      }
+    }
+    // Ganglinien (Hydrograph) können null Werte haben
+    // spezialfall: Code verschieben?
+    if( domainValueSize < 0 )
+    {
+      final Object[] domainValues = data.getDomainValues();
+      if( domainValues == null )
+        return false;
+      domainValueSize = 0;
+      for( final Object domainValue : domainValues )
+      {
+        if( domainValue != null )
+        {
+          domainValueSize = domainValues.length;
+          break;
+        }
+      }
+    }
+    return targetValueSize > 0 && domainValueSize > 0;
   }
 }

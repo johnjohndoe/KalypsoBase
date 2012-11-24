@@ -58,6 +58,7 @@ public interface IChartComposite extends IChartView
 
   void invalidate( );
 
+  // FIXME: does not belong here!
   void setDragArea( Rectangle dragRect );
 
   void setEditInfo( final EditInfo editInfo );
