@@ -44,7 +44,6 @@ import java.net.URI;
 import java.net.URL;
 
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.GmlSerializerFeatureProviderFactory;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -68,7 +67,7 @@ public class DictionaryCache
 
   public DictionaryCache( )
   {
-    // REMARK: we give a long period, as we cannod void the registration of the reaper-timer
+    // REMARK: we give a long period, as we cannot avoid the registration of the reaper-timer
     final Cache cache = new LruCacheFactory().newInstance( "DictionaryCache" + System.currentTimeMillis(), 1000 * 60 * 5, CACHE_SIZE ); //$NON-NLS-1$
 
     final MissHandler missHandler = new MissHandler()
@@ -76,7 +75,7 @@ public class DictionaryCache
       @Override
       public Object fetchObject( final Object key ) throws Exception
       {
-        final String urn = (String) key;
+        final String urn = (String)key;
         return loadWorkspace( urn );
       }
     };
@@ -92,16 +91,16 @@ public class DictionaryCache
     if( uri.startsWith( "urn:" ) ) //$NON-NLS-1$
     {
       // id was not found in catalog, what to do?
-      throw new IllegalArgumentException( Messages.getString("DictionaryCache_2") + urn ); //$NON-NLS-1$
+      throw new IllegalArgumentException( "Unknown dictionary: " + urn ); //$NON-NLS-1$
     }
 
     final URL url = new URI( uri ).toURL();
+
     return GmlSerializer.createGMLWorkspace( url, m_factory );
   }
 
   public GMLWorkspace get( final String urn )
   {
-    return (GMLWorkspace) m_cacheMap.get( urn );
+    return (GMLWorkspace)m_cacheMap.get( urn );
   }
-
 }

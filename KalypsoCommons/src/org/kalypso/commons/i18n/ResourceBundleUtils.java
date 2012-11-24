@@ -52,7 +52,7 @@ import org.kalypso.commons.KalypsoCommonsDebug;
 
 /**
  * Helper class for {@link java.util.ResourceBundle}
- *
+ * 
  * @author Gernot Belger
  */
 public final class ResourceBundleUtils
@@ -68,8 +68,7 @@ public final class ResourceBundleUtils
    *          If <code>baseUrl</code> is something like <code>http://somehost/myfile.txt</code>, we try to load
    *          properties like <code>http://somehost/myfile.properties</code>.<br>
    *          Urls with query part or anchor are not supported.
-   * @return <code>null</code>, if no such resource bundle is found. Any exceptions are reported to the
-   *         {@link org.eclipse.core.runtime.ILog}-facilities.
+   * @return <code>null</code>, if no such resource bundle is found. Any exceptions are reported to the {@link org.eclipse.core.runtime.ILog}-facilities.
    */
   public static ResourceBundle loadResourceBundle( final URL baseURL )
   {
@@ -84,9 +83,6 @@ public final class ResourceBundleUtils
       // This allows us to use the full functionality of the ResourceBundle#getBundle implementation.
       final ClassLoader loader = new ClassLoader()
       {
-        /**
-         * @see java.lang.ClassLoader#findResource(java.lang.String)
-         */
         @Override
         protected URL findResource( final String name )
         {
@@ -135,14 +131,12 @@ public final class ResourceBundleUtils
    * returned.<br>
    * If the given string starts with '%', but the bundle does not contain a corresponding entry, the original string is
    * returned.
-   *
+   * 
    * @param translatableString
    *          If <code>null</code>, <code>null</code> is returned.
    * @param resourceBundle
    *          If <code>null</code>, we always return <code>translatableString</code>.
-   * @return If <code>translatableString</code> starts with '%',
-   *         <code>resourceBundle.getString( translatableString.substring(1) )</code> is returned. Else return
-   *         <code>translatableString</code>.
+   * @return If <code>translatableString</code> starts with '%', <code>resourceBundle.getString( translatableString.substring(1) )</code> is returned. Else return <code>translatableString</code>.
    */
   public static String getI18NString( final String translatableString, final ResourceBundle resourceBundle )
   {
@@ -179,5 +173,4 @@ public final class ResourceBundleUtils
 
     return null;
   }
-
 }

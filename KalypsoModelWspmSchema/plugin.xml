@@ -28,17 +28,5 @@
             id="org.kalypso.model.wspm.functionProperty.fixedResultDefinition"
             name="Fixed-ResultDefinition"/>
    </extension>
-   <extension
-         point="org.kalypso.deegree.gmlWorkspaceListener">
-      <listener
-            class="org.kalypso.model.wspm.schema.gml.DictI18nGmlListener"
-            id="org.kalypso.model.wspm.schema.gml.DictI18nGmlListener"
-            name="Dict 18n listener">
-         <qname
-               localPart="Dictionary"
-               namespace="http://www.opengis.net/gml">
-         </qname>
-      </listener>
-   </extension>
 
 </plugin>

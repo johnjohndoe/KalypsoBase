@@ -86,11 +86,11 @@ public class PropertiesUtilities
 
   /**
    * Tries to load a (international) properties file from a given location.
-   *
+   * 
    * @deprecated Use ResourceBundleUtils#loadResourceBundle() instead
    */
   // TODO: Gernot, use ResourceBundle#getBundle(String baseName, Locale locale, ClassLoader loader) with a specific
-// class loader instead, in order
+  // class loader instead, in order
   // to completely simulate the java-ResourceBundle behaviour (i.e. fallback to more generel property)
   @Deprecated
   public static void loadI18nProperties( final Properties properties, final URL baseUrl, final String path )
@@ -167,7 +167,7 @@ public class PropertiesUtilities
 
   /**
    * Loads the contents from the given {@link URL} into a {@link Properties} object.
-   *
+   * 
    * @see Properties#load(InputStream)
    */
   public static void load( final URL location, final Properties properties ) throws IOException
