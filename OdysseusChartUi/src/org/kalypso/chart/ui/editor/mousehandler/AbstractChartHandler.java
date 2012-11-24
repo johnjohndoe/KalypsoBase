@@ -29,8 +29,6 @@ public abstract class AbstractChartHandler implements IChartHandler
 {
   private final IChartComposite m_chart;
 
-  private int m_cursor = -1;
-
   private EditInfo m_tooltip;
 
   private final ChartTooltipPainter m_tooltipPainter = new ChartTooltipPainter();
@@ -70,7 +68,7 @@ public abstract class AbstractChartHandler implements IChartHandler
         if( monitor.isCanceled() )
           return Status.CANCEL_STATUS;
 
-        final Composite composite = (Composite) getChart();
+        final Composite composite = (Composite)getChart();
         if( !composite.isDisposed() )
           composite.redraw();
 
@@ -114,13 +112,6 @@ public abstract class AbstractChartHandler implements IChartHandler
   @Override
   public void mouseMove( final MouseEvent e )
   {
-    if( getChart() instanceof Canvas )
-    {
-      final Canvas plot = (Canvas) getChart();
-      final Cursor swtCursor = m_cursor == -1 ? null : plot.getDisplay().getSystemCursor( m_cursor );
-      if( plot.getCursor() != plot.getDisplay().getSystemCursor( m_cursor ) )
-        plot.setCursor( swtCursor );
-    }
   }
 
   @Override
@@ -130,10 +121,14 @@ public abstract class AbstractChartHandler implements IChartHandler
 
   protected void setCursor( final int cursor )
   {
-    if( cursor == m_cursor )
-      return;
+    if( getChart() instanceof Canvas )
+    {
+      final Canvas plot = (Canvas)getChart();
+      final Cursor swtCursor = cursor == -1 ? null : plot.getDisplay().getSystemCursor( cursor );
 
-    m_cursor = cursor;
+      if( plot.getCursor() != swtCursor )
+        plot.setCursor( swtCursor );
+    }
   }
 
   /**
@@ -142,7 +137,7 @@ public abstract class AbstractChartHandler implements IChartHandler
   @Override
   public void paintControl( final PaintEvent e )
   {
-     paintTooltipInfo( e.gc );
+    paintTooltipInfo( e.gc );
   }
 
   protected final void paintTooltipInfo( final GC gc )
@@ -166,7 +161,7 @@ public abstract class AbstractChartHandler implements IChartHandler
   {
     final IChartComposite chart = getChart();
     final Rectangle rect = chart.getPlotInfo().getPlotRect();
-    return rect.contains( x, rect.y +1 ) == false;
+    return rect.contains( x, rect.y + 1 ) == false;
   }
 
   protected boolean isOutOfRange( final Point screen )
@@ -174,10 +169,7 @@ public abstract class AbstractChartHandler implements IChartHandler
     final IChartComposite chart = getChart();
     final Rectangle rect = RectangleUtils.inflateRect( chart.getPlotInfo().getPlotRect(), 1 );
     return rect.contains( screen ) == false;
-    
-    
-    
-    
+
   }
 
   @Override
