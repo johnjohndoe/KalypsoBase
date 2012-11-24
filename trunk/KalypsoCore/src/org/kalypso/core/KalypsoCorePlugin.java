@@ -311,5 +311,4 @@ public class KalypsoCorePlugin extends AbstractUIPlugin
   {
     return getDefault().m_imgProvider;
   }
-
 }

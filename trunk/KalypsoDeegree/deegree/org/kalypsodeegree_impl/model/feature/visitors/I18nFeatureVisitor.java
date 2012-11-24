@@ -53,7 +53,7 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
  * This visitor is used to i10 gml-dictionaries.<br>
  * For every string-property (even lists of strings) that start with '%', the value is retrieved from the given
  * properties for the key (after the '%').
- *
+ * 
  * @author Monika Thül
  * @author Gernot Belger
  */
@@ -74,17 +74,17 @@ public class I18nFeatureVisitor implements FeatureVisitor
     {
       if( propertyType instanceof IValuePropertyType )
       {
-        final IValuePropertyType vpt = (IValuePropertyType) propertyType;
+        final IValuePropertyType vpt = (IValuePropertyType)propertyType;
         final Class< ? > valueClass = vpt.getValueClass();
         if( String.class.isAssignableFrom( valueClass ) )
         {
           final Object property = f.getProperty( propertyType );
           if( propertyType.isList() )
           {
-            final List<Object> list = (List<Object>) property;
+            final List<Object> list = (List<Object>)property;
             for( int i = 0; i < list.size(); i++ )
             {
-              final String entry = (String) list.get( i );
+              final String entry = (String)list.get( i );
               final String newValue = replace( entry );
               if( !ObjectUtils.equals( newValue, entry ) )
                 list.set( i, newValue );
@@ -92,7 +92,7 @@ public class I18nFeatureVisitor implements FeatureVisitor
           }
           else
           {
-            final String newValue = replace( (String) property );
+            final String newValue = replace( (String)property );
             if( !ObjectUtils.equals( newValue, property ) )
               f.setProperty( propertyType, newValue );
           }
@@ -121,5 +121,4 @@ public class I18nFeatureVisitor implements FeatureVisitor
 
     return entry;
   }
-
 }

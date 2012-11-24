@@ -113,7 +113,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * Helper - Klasse, um Gml zu lesen und zu schreiben.
- *
+ * 
  * @author Gernot Belger
  */
 public final class GmlSerializer
@@ -161,9 +161,8 @@ public final class GmlSerializer
 
   /**
    * REMARK: This method closes the given writer, which is VERY bad. Every caller should close the write on its own
-   *
-   * @deprecated Because this method closes it writer. Change to
-   *             {@link #serializeWorkspace(Writer, GMLWorkspace, String, false)}, rewrite your code, then we can get
+   * 
+   * @deprecated Because this method closes it writer. Change to {@link #serializeWorkspace(Writer, GMLWorkspace, String, false)}, rewrite your code, then we can get
    *             rid of this method and the flag.
    */
   @Deprecated
@@ -173,8 +172,7 @@ public final class GmlSerializer
   }
 
   /**
-   * @deprecated Do not usae writer to write xml. The caller(!) always must close the writer. Use
-   *             {@link #serializeWorkspace(OutputStreamWriter, GMLWorkspace)}
+   * @deprecated Do not usae writer to write xml. The caller(!) always must close the writer. Use {@link #serializeWorkspace(OutputStreamWriter, GMLWorkspace)}
    */
   @Deprecated
   public static void serializeWorkspace( final Writer writer, final GMLWorkspace gmlWorkspace, final String charsetEncoding, final boolean closeWriter ) throws GmlSerializeException
@@ -240,6 +238,7 @@ public final class GmlSerializer
 
   /**
    * Same as {@link #createGMLWorkspace(URL, IFeatureProviderFactory, null )
+
    */
   public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final IFeatureProviderFactory factory ) throws Exception
   {
@@ -275,7 +274,7 @@ public final class GmlSerializer
       {
         final long contentLength = UrlUtilities.getContentLength( gmlURL );
         final String tskMsg = Messages.getString( "org.kalypso.ogc.gml.serialize.GmlSerializer.3", gmlURL ); //$NON-NLS-1$
-        monitor.beginTask( tskMsg, (int) contentLength );
+        monitor.beginTask( tskMsg, (int)contentLength );
         bis = new ProgressInputStream( urlStream, contentLength, monitor );
       }
 
@@ -459,7 +458,7 @@ public final class GmlSerializer
     final IGMLSchema schema = workspace.getGMLSchema();
     if( introduceNamespaces != null && schema instanceof GMLSchema )
     {
-      final GMLSchema gmlSchema = (GMLSchema) schema;
+      final GMLSchema gmlSchema = (GMLSchema)schema;
       for( final String namespaceUri : introduceNamespaces )
       {
         try
@@ -491,7 +490,7 @@ public final class GmlSerializer
 
   /**
    * This function loads a workspace from a {@link IFile}.
-   *
+   * 
    * @param file
    *          The file of the workspace.
    * @return The workspace of the file.
@@ -503,7 +502,7 @@ public final class GmlSerializer
 
   /**
    * This function loads a workspace from a {@link IFile}.
-   *
+   * 
    * @param file
    *          The file of the workspace.
    * @return The workspace of the file.
@@ -515,7 +514,7 @@ public final class GmlSerializer
 
   /**
    * This function loads a workspace from a {@link IFile}.
-   *
+   * 
    * @param file
    *          The file of the workspace.
    * @return The workspace of the file.
@@ -532,7 +531,7 @@ public final class GmlSerializer
   /**
    * This function saves a given workspace to a file. Don't forget to set your charset to the file you are about to
    * create. It will be used by this function.
-   *
+   * 
    * @param workspace
    *          The workspace to save.
    * @param file
@@ -584,7 +583,7 @@ public final class GmlSerializer
 
   public static void serializeWorkspace( final IFile targetFile, final GMLWorkspace workspace, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString("GmlSerializer.0"), 100 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "GmlSerializer.0" ), 100 ); //$NON-NLS-1$
 
     String charset;
     if( targetFile.exists() )
@@ -605,7 +604,7 @@ public final class GmlSerializer
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus error = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), Messages.getString("GmlSerializer.1"), e ); //$NON-NLS-1$
+      final IStatus error = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), Messages.getString( "GmlSerializer.1" ), e ); //$NON-NLS-1$
       throw new CoreException( error );
     }
     finally
