@@ -123,12 +123,29 @@ public class OpenStatusLogAction extends Action implements IUpdateable
   @Override
   public void run( )
   {
+    openLogDialog( true, IStatus.INFO | IStatus.WARNING | IStatus.ERROR | IStatus.CANCEL );
+  }
+
+  /**
+   * @param statusMask
+   *          The mask that the staus needs to match. Else the dialog is not opened.
+   */
+  public void openLogDialog( final boolean showOKstatus, final int statusMask )
+  {
     try
     {
       m_loadJob.join();
 
       final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
       final IStatus statusLog = m_loadJob.getStatusLog();
+
+      if( statusLog.isOK() )
+      {
+        if( !showOKstatus )
+          return;
+      }
+      else if( !statusLog.matches( statusMask ) )
+        return;
 
       final StatusDialog statusDialog = new StatusDialog( shell, statusLog, m_dialogTitle );
       statusDialog.setShowAsTree( true );
