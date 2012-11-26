@@ -649,7 +649,9 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
       if( m_modifier[i] != null )
       {
         editors[i] = m_modifier[i].createCellEditor( table );
-        editors[i].setValidator( m_modifier[i] );
+
+        if( editors[i] != null )
+          editors[i].setValidator( m_modifier[i] );
       }
     }
     setCellEditors( editors );
