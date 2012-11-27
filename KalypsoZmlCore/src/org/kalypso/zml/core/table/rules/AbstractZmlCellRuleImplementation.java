@@ -1,5 +1,3 @@
-package org.kalypso.zml.core.table.rules;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -40,6 +38,7 @@ package org.kalypso.zml.core.table.rules;
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.zml.core.table.rules;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.java.lang.Objects;
