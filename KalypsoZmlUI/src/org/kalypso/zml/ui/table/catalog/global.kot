@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ZmlTable xmlns="schema.table.core.zml.kalypso.org">
+  <!-- Does not belong here, should be moved to prognose stuff. There already is another new gobal.kot.
+  if needed elsewhere as well, split up! 
+   -->
   <!--
     style sets
   -->
