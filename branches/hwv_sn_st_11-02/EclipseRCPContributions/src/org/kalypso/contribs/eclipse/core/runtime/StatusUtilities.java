@@ -596,4 +596,15 @@ public final class StatusUtilities
 
     return true;
   }
+
+  public static boolean isOk( final IStatus[] stati )
+  {
+    for( final IStatus status : stati )
+    {
+      if( !status.isOK() )
+        return false;
+    }
+
+    return true;
+  }
 }
