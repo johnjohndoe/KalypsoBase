@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoWPS-Adapter Plug-in
+Bundle-SymbolicName: org.kalypso.wps.adapter;singleton:=true
+Bundle-Version: 12.11.0.qualifier
+Bundle-Activator: org.kalypso.wps.adapter.Activator
+Require-Bundle: org.eclipse.core.runtime,
+ org.kalypso.ogc.core
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
