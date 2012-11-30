@@ -55,8 +55,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
@@ -105,80 +103,10 @@ public class MapPartHelper
       // virtualFrame.add( mtApp );
     }
 
-    parent.getDisplay().addFilter( SWT.Activate, new Listener()
-    {
-      @Override
-      public void handleEvent( final Event event )
-      {
-        // TODO Auto-generated method stub
-        event.doit = false;
-      }
-    } );
-
     // the order of addition of the frames is very important
     // the virtual "old" mapPanel has to be added after the
     // multitouch renderer, otherwise it will not work
     virtualFrame.add( mapPanel );
-
-    // REMARK/BUGFIX: give back focus to parent SWT-component, else the view will not be activated if a users clicks into the frame.
-    // Directly activating the view is no good and gives strange behaviour when another view is clicked.
-//    mapPanel.addFocusListener( new FocusAdapter()
-//    {
-//      @Override
-//      public void focusGained( final FocusEvent e )
-//      {
-//        if( parent.isDisposed() )
-//          return;
-//
-//        final Display display = parent.getDisplay();
-//        display.asyncExec( new Runnable()
-//        {
-//          private boolean m_ignoreNext = false;
-//
-//          @Override
-//          public void run( )
-//          {
-//            if( !m_ignoreNext )
-//            {
-//              m_ignoreNext = true;
-//
-//              parent.getParent().forceFocus();
-//
-//              mapPanel.requestFocus();
-//            }
-//            else
-//              m_ignoreNext = false;
-//          }
-//        } );
-//      }
-//    } );
-
-    // REMARK/BUGFIX: the above fix gives another problem, that mouse wheel events are not handled any more, because they
-    // only go to the currently focused window. So we need to directly transfer the focus event from the parent
-    // component to the widget manager.
-//    parent.getParent().addMouseWheelListener( new MouseWheelListener()
-//    {
-//      @Override
-//      public void mouseScrolled( final MouseEvent e )
-//      {
-//        final long time = e.time & Long.MAX_VALUE;
-//        final int modifiers = 0; // TODO: translate e.stateMask
-//        final boolean popupTrigger = false;
-//
-//        final int scrollAmount = 1;
-//        final int scrollType = MouseWheelEvent.WHEEL_UNIT_SCROLL;
-//        final int clickCount = 0;
-//
-//        // REMARK: swt always multiplied by 3? At least 1 times wheeled
-//        final int wheelRotation = -Math.min( 1, e.count / 3 );
-//
-//        final MouseWheelEvent wheelEvent = new MouseWheelEvent( mapPanel, MouseWheelEvent.MOUSE_WHEEL, time, modifiers, e.x, e.y, clickCount, popupTrigger, scrollType, scrollAmount, wheelRotation );
-//
-//        // REMARK: directly dispatch it to the widget manager; triggering it with mappanel#dispatchEvent will lead to a endless loop
-//        final WidgetManager wm = (WidgetManager)mapPanel.getWidgetManager();
-//        wm.mouseWheelMoved( wheelEvent );
-//      }
-//    } );
 
     return mapPanel;
   }
