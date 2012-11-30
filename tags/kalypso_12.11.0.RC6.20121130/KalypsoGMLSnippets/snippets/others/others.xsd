@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+	targetNamespace="org.kalypso.gml.snippets.others"
+	xmlns="org.kalypso.gml.snippets.others"
+	xmlns:gml="http://www.opengis.net/gml" elementFormDefault="qualified"
+	attributeFormDefault="unqualified"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<!-- Force gml version via kalypso specific appinfo. -->
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<!-- Import GML-Schema: schemaLocation not specified, gml-namespace is known to kalypso-catalogue -->
+	<xs:import namespace="http://www.opengis.net/gml" />
+
+	<!-- A Feature containing geometries -->
+	<xs:element name="FeatureWithOtherStuff" substitutionGroup="gml:_Feature">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="gml:AbstractFeatureType">
+					<xs:sequence>
+					
+						QN_DIRECTION_PROPERTY
+						
+						RangeSetType
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
