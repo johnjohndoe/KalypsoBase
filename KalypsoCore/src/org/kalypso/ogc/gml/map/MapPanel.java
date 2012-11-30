@@ -279,7 +279,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   // REMARK: most probably we should always return the complete selection; filtering by themes does not make so much
 // sense
   // However, we use this flag for the moment to keep this backwards compatible and avoid side effekt.
-  // TODO: try this out when we are fare from deploying
+  // TODO: try this out when we are far from deploying
   @Override
   public void setUseFullSelection( final boolean useFullSelection )
   {
@@ -610,10 +610,6 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   {
     synchronized( this )
     {
-      // FIXME...
-//      if( m_boundingBox == null )
-//        setBoundingBox( m_wishBBox, false, false );
-
       /* Cancel old job if still running. */
       if( m_bufferPaintJob != null )
       {
@@ -796,7 +792,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
     g.drawString( message, (width - stringWidth) / 2, height / 2 );
   }
-  
+
   /**
    * Removes this listener from the mapPanel.
    */
@@ -1173,7 +1169,6 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
    */
   private void paintWidget( final Graphics g )
   {
-    // TODO: either reset the GC completely or do not set anything at all
     g.setColor( Color.RED );
     m_widgetManager.paintWidget( g );
   }
