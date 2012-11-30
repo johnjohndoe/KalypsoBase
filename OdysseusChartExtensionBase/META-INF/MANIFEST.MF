@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: OdysseusChartExtensionBase Plug-in
+Bundle-SymbolicName: de.openali.odysseus.chart.ext.base;singleton:=true
+Bundle-Version: 12.11.0.qualifier
+Require-Bundle: org.kalypso.contribs.java,
+ de.openali.odysseus.chart.factory;visibility:=reexport,
+ org.kalypso.core,
+ com.infomatiq.jsi;bundle-version="1.0.0"
+Bundle-Activator: de.openali.odysseus.chart.ext.base.Activator
+Bundle-ActivationPolicy: lazy
+Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: de.openali.odysseus.chart.ext.base.axis,
+ de.openali.odysseus.chart.ext.base.axis.provider,
+ de.openali.odysseus.chart.ext.base.axisrenderer,
+ de.openali.odysseus.chart.ext.base.axisrenderer.provider,
+ de.openali.odysseus.chart.ext.base.data,
+ de.openali.odysseus.chart.ext.base.deprecated,
+ de.openali.odysseus.chart.ext.base.layer,
+ de.openali.odysseus.chart.ext.base.layer.provider
+Bundle-ClassPath: .
