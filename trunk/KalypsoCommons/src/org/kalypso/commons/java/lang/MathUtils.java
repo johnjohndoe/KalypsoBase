@@ -39,7 +39,7 @@ public class MathUtils
    */
   public static double interpolate( final long x1, final long x2, final double y1, final double y2, final long x )
   {
-    return y1 + (y2 - y1) * ((double) (x - x1) / (double) (x2 - x1));
+    return y1 + (y2 - y1) * ((double)(x - x1) / (double)(x2 - x1));
   }
 
   public static enum RoundMethod
@@ -183,5 +183,45 @@ public class MathUtils
       return v1;
 
     return Math.max( v1, v2 );
+  }
+
+  /**
+   * Converts a double to a float and makes sure, that the resulting float is smaller than the given double.<br/>
+   */
+  public static float floorFloat( final double dbl )
+  {
+    float flt = (float)dbl;
+
+    if( flt < dbl )
+      return flt;
+
+    flt = Math.nextAfter( flt, Float.NEGATIVE_INFINITY );
+
+    if( flt > dbl )
+    {
+      System.out.println( "should never happen!" );
+    }
+
+    return flt;
+  }
+
+  /**
+   * Converts a double to a float and makes sure, that the resulting float is bigger than the given double.<br/>
+   */
+  public static float ceilFloat( final double dbl )
+  {
+    float flt = (float)dbl;
+
+    if( flt > dbl )
+      return flt;
+
+    flt = Math.nextUp( flt );
+
+    if( flt < dbl )
+    {
+      System.out.println( "should never happen!" );
+    }
+
+    return flt;
   }
 }

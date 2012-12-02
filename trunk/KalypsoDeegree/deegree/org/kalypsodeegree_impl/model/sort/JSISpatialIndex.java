@@ -48,6 +48,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.kalypso.commons.java.lang.MathUtils;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 
 import com.infomatiq.jsi.Rectangle;
@@ -58,7 +59,7 @@ import com.vividsolutions.jts.index.ItemVisitor;
 
 /**
  * {@link SpatialIndexExt} implementation based on the JSI library.
- *
+ * 
  * @author Gernot Belger
  */
 public class JSISpatialIndex implements SpatialIndexExt
@@ -91,10 +92,10 @@ public class JSISpatialIndex implements SpatialIndexExt
     if( itemEnv == null )
       return null;
 
-    final float x1 = (float) itemEnv.getMinX();
-    final float y1 = (float) itemEnv.getMinY();
-    final float x2 = (float) itemEnv.getMaxX();
-    final float y2 = (float) itemEnv.getMaxY();
+    final float x1 = MathUtils.floorFloat( itemEnv.getMinX() );
+    final float y1 = MathUtils.floorFloat( itemEnv.getMinY() );
+    final float x2 = MathUtils.ceilFloat( itemEnv.getMaxX() );
+    final float y2 = MathUtils.ceilFloat( itemEnv.getMaxY() );
     return new Rectangle( x1, y1, x2, y2 );
   }
 
@@ -151,12 +152,12 @@ public class JSISpatialIndex implements SpatialIndexExt
 
     if( bounds != null )
     {
-    final int index = findItem( bounds, item );
-    if( index == -1 )
-      return false;
+      final int index = findItem( bounds, item );
+      if( index == -1 )
+        return false;
 
-    m_items.remove( bounds );
-    return m_index.delete( bounds, index );
+      m_items.remove( bounds );
+      return m_index.delete( bounds, index );
     }
 
     /* Without bounds, we can only remove from our list here */

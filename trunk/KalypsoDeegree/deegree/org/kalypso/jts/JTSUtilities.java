@@ -53,6 +53,7 @@ import java.util.TreeSet;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.Assert;
+import org.kalypso.commons.java.lang.MathUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
@@ -60,6 +61,7 @@ import org.kalypso.commons.math.geom.PolyLine;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
+import com.infomatiq.jsi.Rectangle;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateList;
 import com.vividsolutions.jts.geom.CoordinateSequence;
@@ -1564,5 +1566,26 @@ public final class JTSUtilities
       }
     } );
     return (T)result;
+  }
+
+  public static com.infomatiq.jsi.Rectangle toRectangle( final Envelope envelope )
+  {
+    final float x1 = MathUtils.floorFloat( envelope.getMinX() );
+    final float y1 = MathUtils.floorFloat( envelope.getMinY() );
+
+    final float x2 = MathUtils.ceilFloat( envelope.getMaxX() );
+    final float y2 = MathUtils.ceilFloat( envelope.getMaxY() );
+
+    return new Rectangle( x1, y1, x2, y2 );
+  }
+
+  public static Rectangle toRectangle( final double x, final double y )
+  {
+    final float x1 = MathUtils.floorFloat( x );
+    final float y1 = MathUtils.floorFloat( y );
+    final float x2 = MathUtils.ceilFloat( x );
+    final float y2 = MathUtils.ceilFloat( y );
+
+    return new Rectangle( x1, y1, x2, y2 );
   }
 }

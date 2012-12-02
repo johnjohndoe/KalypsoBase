@@ -44,6 +44,7 @@ import java.util.List;
 import org.apache.commons.lang3.Range;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.jts.JTSUtilities;
 import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.model.elevation.ElevationException;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -65,7 +66,7 @@ public class GM_TriangulatedSurface_Impl extends GM_PolyhedralSurface_Impl<GM_Tr
 {
   private GM_Triangle m_lastHit = null;
 
-  private boolean m_hasStatistics = false;
+  private final boolean m_hasStatistics = false;
 
   private Range<BigDecimal> m_minMax;
 
@@ -138,7 +139,7 @@ public class GM_TriangulatedSurface_Impl extends GM_PolyhedralSurface_Impl<GM_Tr
         return lastHit;
     }
 
-    final Rectangle searchEnv = new Rectangle( (float)position.getX(), (float)position.getY(), (float)position.getX(), (float)position.getY() );
+    final Rectangle searchEnv = JTSUtilities.toRectangle( position.getX(), position.getY() );
 
     final GM_Triangle[] result = new GM_Triangle[] { null };
 
