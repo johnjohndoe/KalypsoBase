@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.jts.JTSUtilities;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -352,7 +353,7 @@ public class SplitSort extends AbstractFeatureList
   @Override
   public List< ? > query( final GM_Position pos, final List result )
   {
-    final Rectangle envelope = new Rectangle( (float)pos.getX() - 1.0f, (float)pos.getY() - 1.0f, (float)pos.getX() + 1.0f, (float)pos.getY() + 1.0f );
+    final Rectangle envelope = JTSUtilities.toRectangle( pos.getX(), pos.getY() );
     return query( envelope, result, false );
   }
 
@@ -367,7 +368,7 @@ public class SplitSort extends AbstractFeatureList
   @SuppressWarnings( { "unchecked" } )
   public <T extends Feature> List<T> queryResolved( final GM_Position pos, final List<T> result )
   {
-    final Rectangle envelope = new Rectangle( (float)pos.getX() - 1.0f, (float)pos.getY() - 1.0f, (float)pos.getX() + 1.0f, (float)pos.getY() + 1.0f );
+    final Rectangle envelope = JTSUtilities.toRectangle( pos.getX(), pos.getY() );
     return (List<T>)query( envelope, result, true );
   }
 

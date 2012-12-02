@@ -100,7 +100,7 @@ public class HoverIndex
 
     final Envelope envelope = bounds.getEnvelopeInternal();
 
-    final com.infomatiq.jsi.Rectangle jsiRect = new com.infomatiq.jsi.Rectangle( (float)envelope.getMinX(), (float)envelope.getMinY(), (float)envelope.getMaxX(), (float)envelope.getMaxY() );
+    final com.infomatiq.jsi.Rectangle jsiRect = JTSUtilities.toRectangle( envelope );
     m_index.add( jsiRect, id );
   }
 

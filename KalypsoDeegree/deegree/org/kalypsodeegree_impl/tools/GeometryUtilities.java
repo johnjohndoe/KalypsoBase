@@ -47,6 +47,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.j3d.geom.TriangulationUtils;
+import org.kalypso.commons.java.lang.MathUtils;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -1394,10 +1395,13 @@ public final class GeometryUtilities
     if( envelope == null )
       return null;
 
-    final float x1 = (float)envelope.getMinX();
-    final float y1 = (float)envelope.getMinY();
-    final float x2 = (float)envelope.getMaxX();
-    final float y2 = (float)envelope.getMaxY();
+    // FIXME/HOTFIX: rounding double to float looses decimal places, so we get problems when comparing envelopes later
+    // We now always create a slightly bigger envelope that is guarantueed to contain the original envelope
+
+    final float x1 = MathUtils.floorFloat( envelope.getMinX() );
+    final float y1 = MathUtils.floorFloat( envelope.getMinY() );
+    final float x2 = MathUtils.ceilFloat( envelope.getMaxX() );
+    final float y2 = MathUtils.ceilFloat( envelope.getMaxY() );
 
     return new Rectangle( x1, y1, x2, y2 );
   }
