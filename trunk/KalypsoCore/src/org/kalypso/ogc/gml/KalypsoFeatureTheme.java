@@ -330,6 +330,15 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     fireRepaintRequested( invalidBox );
   }
 
+  /**
+   * Only for internal use!<br/>
+   * Returns the current full extent, but does not recalculate it, if it is currentyl not known.
+   */
+  GM_Envelope getFullExtentInternal( )
+  {
+    return m_fullExtent;
+  }
+
   @Override
   public GM_Envelope getFullExtent( )
   {

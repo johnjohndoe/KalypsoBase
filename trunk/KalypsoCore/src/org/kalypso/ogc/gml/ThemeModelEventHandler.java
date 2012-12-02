@@ -79,7 +79,7 @@ class ThemeModelEventHandler
     if( m_event instanceof IGMLWorkspaceModellEvent )
     {
       /* my workspace ? */
-      final GMLWorkspace changedWorkspace = ((IGMLWorkspaceModellEvent) m_event).getGMLWorkspace();
+      final GMLWorkspace changedWorkspace = ((IGMLWorkspaceModellEvent)m_event).getGMLWorkspace();
       final CommandableWorkspace themeWorkspace = m_theme.getWorkspace();
 
       if( themeWorkspace != null && changedWorkspace != themeWorkspace && changedWorkspace != themeWorkspace.getWorkspace() )
@@ -90,12 +90,12 @@ class ThemeModelEventHandler
 
       if( m_event instanceof FeaturesChangedModellEvent )
       {
-        final FeaturesChangedModellEvent featuresChangedModellEvent = (FeaturesChangedModellEvent) m_event;
+        final FeaturesChangedModellEvent featuresChangedModellEvent = (FeaturesChangedModellEvent)m_event;
         return handleFeaturesChanged( featuresChangedModellEvent );
       }
       else if( m_event instanceof FeatureStructureChangeModellEvent )
       {
-        final FeatureStructureChangeModellEvent fscme = (FeatureStructureChangeModellEvent) m_event;
+        final FeatureStructureChangeModellEvent fscme = (FeatureStructureChangeModellEvent)m_event;
         return handleStructureChanged( fscme );
       }
     }
@@ -195,7 +195,9 @@ class ThemeModelEventHandler
 
   private boolean isInsideFullExtent( final GM_Envelope envelope )
   {
-    final GM_Envelope fullExtent = m_theme.getFullExtent();
+    // REMARK: use internal full extent ot avoid recalculation of extent here, because that may cause a major performance leak.
+    // If the extent is currently not known, returning false is not bad, because the extent needs to be recalculate anyways.
+    final GM_Envelope fullExtent = m_theme.getFullExtentInternal();
     if( fullExtent == null )
       return false;
 
