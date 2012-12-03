@@ -51,6 +51,7 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IContentProvider;
@@ -113,6 +114,7 @@ public class PasteFromClipboardHandler extends AbstractHandler
       MessageDialog.openError( shell, Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.0" ), Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return null;
     }
+
     final IContentProvider contentProvider = tupleResultViewer.getContentProvider();
     TupleResultContentProvider resultContentProvider = null;
     if( contentProvider instanceof TupleResultContentProvider )
@@ -123,8 +125,10 @@ public class PasteFromClipboardHandler extends AbstractHandler
       if( wrappedProvider instanceof TupleResultContentProvider )
         resultContentProvider = (TupleResultContentProvider)wrappedProvider;
     }
+
     if( resultContentProvider == null )
       return null;
+
     final IComponentUiHandlerProvider factory = resultContentProvider.getFactory();
     if( !(factory instanceof TupleResultFeatureControlHandlerProvider) )
       return null;
@@ -150,16 +154,22 @@ public class PasteFromClipboardHandler extends AbstractHandler
     final IStatusCollector stati = new StatusCollector( KalypsoGisPlugin.getId() );
 
     final StringTokenizer st1 = new StringTokenizer( trstring, "\n" ); //$NON-NLS-1$
-    int ordinalNumber = 0;
+
+    int ordinalNumber = 1;
+
     while( st1.hasMoreTokens() )
     {
       final String line = st1.nextToken();
       if( line.startsWith( LastLineLabelProvider.DUMMY_ELEMENT_TEXT ) )
         break;
 
-      ++ordinalNumber;
-
-      addRecord( tupleResult, records, components, typeHandlers, ordinalNumber, line, contentProvider, stati );
+      final IRecord record = addRecord( tupleResult, components, typeHandlers, ordinalNumber, line, contentProvider, stati );
+      if( record != null )
+      {
+        // Add record to observation afterwards
+        records.add( record );
+        ordinalNumber++;
+      }
     }
 
     // TODO: move error handling out of this method
@@ -178,8 +188,47 @@ public class PasteFromClipboardHandler extends AbstractHandler
     return records.toArray( new IRecord[records.size()] );
   }
 
-  private void addRecord( final TupleResult tupleResult, final Collection<IRecord> records, final IComponent[] components, final XsdBaseTypeHandler< ? >[] typeHandlers, final int ordinalNumber, final String line, final TupleResultContentProvider contentProvider, final IStatusCollector stati )
+  private IRecord addRecord( final TupleResult tupleResult, final IComponent[] components, final XsdBaseTypeHandler< ? >[] typeHandlers, final int ordinalNumber, final String line, final TupleResultContentProvider contentProvider, final IStatusCollector stati )
   {
+    /* parse values */
+    final String[] tokens = StringUtils.split( line, '\t' );
+    final Object[] values = new Object[tokens.length];
+    final IStatus[] parseLog = new IStatus[tokens.length];
+
+    int parseErrors = 0;
+
+    for( int i = 0; i < tokens.length; i++ )
+    {
+      final String token = tokens[i];
+      try
+      {
+        final IComponentUiHandler compHandler = contentProvider.getHandler( "" + i ); //$NON-NLS-1$
+        if( compHandler != null )
+          values[i] = compHandler.parseValue( token );
+      }
+      catch( final Exception e )
+      {
+        final String msg = Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.8", ordinalNumber, e.getLocalizedMessage() ); //$NON-NLS-1$
+        parseLog[i] = new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, msg, e );
+
+        parseErrors++;
+      }
+    }
+
+    /* ignore lines that cannot be parsed (e.g. header lines) */
+    if( parseErrors == tokens.length )
+    {
+      stati.add( IStatus.INFO, "Line %d: skipped", null, ordinalNumber );
+      return null;
+    }
+
+    /* add remaining errors to log */
+    for( final IStatus element : parseLog )
+    {
+      if( element != null )
+        stati.add( element );
+    }
+
     final IRecord record = tupleResult.createRecord();
 
     // Prepare for parse exception: fill row with default values
@@ -194,24 +243,15 @@ public class PasteFromClipboardHandler extends AbstractHandler
         record.setValue( i, component.getDefaultValue() );
     }
 
-    final String[] tokens = StringUtils.split( line, '\t' );
-    for( int j = 0; j < tokens.length; j++ )
+    /* apply values */
+    for( int i = 0; i < values.length; i++ )
     {
-      final String token = tokens[j];
-      try
-      {
-        final IComponentUiHandler compHandler = contentProvider.getHandler( "" + j ); //$NON-NLS-1$
-        if( compHandler != null )
-          compHandler.setValue( record, compHandler.parseValue( token ) );
-      }
-      catch( final Exception e )
-      {
-        final String msg = Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.8", ordinalNumber, e.getLocalizedMessage() ); //$NON-NLS-1$
-        stati.add( IStatus.ERROR, msg, e );
-      }
+      final Object value = values[i];
+      final IComponentUiHandler compHandler = contentProvider.getHandler( "" + i ); //$NON-NLS-1$
+      if( compHandler != null )
+        compHandler.setValue( record, value );
     }
 
-    // Add record to observation afterwards
-    records.add( record );
+    return record;
   }
 }
