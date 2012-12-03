@@ -88,6 +88,8 @@ public final class RepositoryVisitors
       final IRepositoryItem[] children = item.getChildren();
       for( final IRepositoryItem child : children )
       {
+        // FIXME: this is NOT! the visitor pattern! -> the complete recursion must be made here!
+        // we cannot rely upon the fact that the cildren do the recursion!
         visitor.visit( child );
       }
     }
