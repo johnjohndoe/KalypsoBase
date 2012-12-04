@@ -191,9 +191,6 @@ public class ProxyUtilities
   {
     /* Create the new http client. */
     final HttpClient client = new HttpClient();
-
-    /* Client should always authenticate before making a connection. */
-    client.getParams().setAuthenticationPreemptive( true );
     client.getParams().setSoTimeout( timeout );
 
     /* If a retry count is given, set the number of retries. */
@@ -220,6 +217,10 @@ public class ProxyUtilities
       /* Set them, if the credentials are complete. */
       if( user != null && password != null )
       {
+        /* Client should always authenticate before making a connection. */
+        client.getParams().setAuthenticationPreemptive( true );
+
+        /* Set the credentials. */
         final Credentials credentials = new UsernamePasswordCredentials( user, password );
         client.getState().setProxyCredentials( AuthScope.ANY, credentials );
       }
