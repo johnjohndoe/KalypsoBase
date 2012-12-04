@@ -89,7 +89,8 @@ public class ZmlModelRowAccesor implements IColumnAccessor<IZmlModelRow>
       return;
 
     final IZmlEditingStrategy strategy = m_model.getEditingStrategy( column );
-    strategy.setValue( valueCell, newValue.toString() );
+    final Object targetValue = strategy.parseValue( valueCell, newValue.toString() );
+    strategy.setValue( valueCell, targetValue );
   }
 
   @Override

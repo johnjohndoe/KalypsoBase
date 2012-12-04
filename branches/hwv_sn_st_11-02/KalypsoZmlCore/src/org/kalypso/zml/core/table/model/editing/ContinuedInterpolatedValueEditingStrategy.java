@@ -70,20 +70,17 @@ import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
  */
 public class ContinuedInterpolatedValueEditingStrategy extends AbstractEditingStrategy
 {
-
   public ContinuedInterpolatedValueEditingStrategy( final ZmlModelViewport facade )
   {
     super( facade );
   }
 
   @Override
-  public void setValue( final IZmlModelValueCell cell, final String value )
+  public void setValue( final IZmlModelValueCell cell, final Object targetValue )
   {
     try
     {
       /** update current cell */
-      final Number targetValue = (Number) getTargetValue( cell, value );
-
       final IZmlModelColumn column = cell.getColumn();
       final TupleModelTransaction transaction = new TupleModelTransaction( column.getTupleModel(), column.getMetadata() );
 
@@ -122,5 +119,4 @@ public class ContinuedInterpolatedValueEditingStrategy extends AbstractEditingSt
   {
     return false;
   }
-
 }

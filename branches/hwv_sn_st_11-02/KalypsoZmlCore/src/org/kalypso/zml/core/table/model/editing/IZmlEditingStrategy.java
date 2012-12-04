@@ -47,7 +47,9 @@ import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
  */
 public interface IZmlEditingStrategy
 {
-  void setValue( IZmlModelValueCell cell, String value );
+  Object parseValue( final IZmlModelValueCell cell, String value );
+
+  void setValue( IZmlModelValueCell cell, Object value );
 
   boolean isAggregated( );
 }

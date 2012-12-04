@@ -54,7 +54,6 @@ import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
  */
 public class InstantaneousValueLabelingStrategy extends AbstractValueLabelingStrategy
 {
-
   public InstantaneousValueLabelingStrategy( )
   {
   }

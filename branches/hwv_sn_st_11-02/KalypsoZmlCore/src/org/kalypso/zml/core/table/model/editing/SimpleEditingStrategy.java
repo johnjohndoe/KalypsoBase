@@ -61,11 +61,10 @@ public class SimpleEditingStrategy extends AbstractEditingStrategy
   }
 
   @Override
-  public void setValue( final IZmlModelValueCell cell, final String value )
+  public void setValue( final IZmlModelValueCell cell, final Object targetValue )
   {
     try
     {
-      final Object targetValue = getTargetValue( cell, value );
       cell.doUpdate( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
     }
     catch( final SensorException e )

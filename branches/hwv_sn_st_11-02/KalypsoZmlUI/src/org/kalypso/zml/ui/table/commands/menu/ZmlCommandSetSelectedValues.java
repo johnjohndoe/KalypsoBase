@@ -95,7 +95,11 @@ public class ZmlCommandSetSelectedValues extends AbstractHandler
         for( final IZmlModelCell cell : cells )
         {
           if( cell instanceof IZmlModelValueCell )
-            strategy.setValue( (IZmlModelValueCell) cell, targetValue );
+          {
+            final IZmlModelValueCell valueCell = (IZmlModelValueCell) cell;
+            final Object targetData = strategy.parseValue( valueCell, targetValue );
+            strategy.setValue( valueCell, targetData );
+          }
         }
       }
       else
