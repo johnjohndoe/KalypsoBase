@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,18 +38,19 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model.editing;
+package org.kalypso.zml.ui.table.commands.menu;
 
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 
 /**
- * @author Dirk Kuch
+ * @author Gernot Belger
  */
-public interface IZmlEditingStrategy
+interface IZmlPasteData
 {
-  Object parseValue( final IZmlModelValueCell cell, String value );
+  int findDataIndex( IZmlModelColumn column, int startInputColumn );
 
-  void setValue( IZmlModelValueCell cell, Object value );
+  int getRowCount( );
 
-  boolean isAggregated( );
+  Object getData( IZmlModelValueCell cell, int columnIndex, int rowIndex );
 }

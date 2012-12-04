@@ -41,33 +41,36 @@
 package org.kalypso.zml.ui.table.commands.menu;
 
 import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.eclipse.ui.handlers.HandlerUtil;
+import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.core.status.StatusDialog;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.editing.IZmlEditingStrategy;
+import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
+import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 
-import au.com.bytecode.opencsv.CSVReader;
-
 /**
+ * Current restrictions: - only the column of the focus cell is handled at all.
+ * 
  * @author Dirk Kuch
  */
 public class ZmlCommandPasteValue extends AbstractHandler
@@ -75,108 +78,138 @@ public class ZmlCommandPasteValue extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
+    final Shell shell = HandlerUtil.getActiveShellChecked( event );
+    final String commandName = HandlerUtils.getCommandName( event );
+
+    /* check prerequisites */
+    final IZmlTable table = ZmlHandlerUtil.getTable( event );
+    final ZmlModelViewport viewport = table.getModelViewport();
+    final IZmlTableSelection selection = table.getSelection();
+
+    final IZmlModelValueCell cell = findStartCell( viewport, selection );
+    if( cell == null )
+    {
+      // TODO: message
+      return null;
+    }
+
+
+    final Clipboard clipboard = new Clipboard( PlatformUI.getWorkbench().getDisplay() );
+
     try
     {
-      final IZmlTable table = ZmlHandlerUtil.getTable( event );
-      final IZmlTableSelection selection = table.getSelection();
-      final IZmlModelValueCell cell = selection.getFocusCell();
-      if( cell == null )
-        return Status.CANCEL_STATUS;
-
-      final IZmlModelColumn column = cell.getColumn();
-
-      final ZmlModelViewport viewport = table.getModelViewport();
-      final IZmlEditingStrategy strategy = viewport.getEditingStrategy( column );
-
-      IZmlModelValueCell ptr = cell;
-
-      final String[] data = getData( column );
-      for( final String value : data )
+      final IZmlPasteData pasteData = findPasteData( viewport, clipboard );
+      if( pasteData == null )
       {
-        if( Objects.isNull( value ) )
-          break;
-        else if( StringUtils.isBlank( value ) )
-          break;
-
-        strategy.setValue( ptr, value );
-        ptr = viewport.findNextCell( ptr );
+        final IStatus status = new Status( IStatus.INFO, KalypsoZmlUI.PLUGIN_ID, "Die Zwischenablage enthält keine tabellarischen Daten." );
+        StatusDialog.open( shell, status, commandName );
       }
 
-      return Status.OK_STATUS;
+      final IStatus pasteStatus = doPaste( viewport, cell, pasteData );
+      if( !pasteStatus.isOK() )
+      {
+        KalypsoZmlUI.getDefault().getLog().log( pasteStatus );
+        StatusDialog.open( shell, pasteStatus, commandName );
+      }
+
+      return null;
     }
     catch( final Exception ex )
     {
-      throw new ExecutionException( "Einfügen des Wertes aus der Zwischenablage fehlgeschlagen.", ex );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, "Einfügen des Wertes aus der Zwischenablage fehlgeschlagen.", ex );
+      KalypsoZmlUI.getDefault().getLog().log( status );
+      StatusDialog.open( shell, status, commandName );
+      return null;
     }
-
+    finally
+    {
+      clipboard.dispose();
+    }
   }
 
-  private String[] getData( final IZmlModelColumn column ) throws IOException, ExecutionException
+  protected IZmlModelValueCell findStartCell( final ZmlModelViewport viewport, final IZmlTableSelection selection )
   {
-    final String type = column.getDataColumn().getValueAxis();
+    int minColumnIndex = Integer.MAX_VALUE;
+    int minRowIndex = Integer.MAX_VALUE;
 
-    final Clipboard clipboard = new Clipboard( PlatformUI.getWorkbench().getDisplay() );
-    final TextTransfer transfer = TextTransfer.getInstance();
-    final String data = (String) clipboard.getContents( transfer );
+    final IZmlModelColumn[] selectedColumns = selection.getSelectedColumns();
+    final IZmlModelRow[] selectedRows = selection.getSelectedRows();
 
-    final List<String> strings = new ArrayList<String>();
+    final IZmlModelColumn[] allColumns = viewport.getColumns();
+    final IZmlModelRow[] allRows = viewport.getRows();
 
-    final CSVReader reader = new CSVReader( new StringReader( data ), '\t' );
-    final List<String[]> rows = reader.readAll();
-    if( rows.isEmpty() )
-      return new String[] {};
-
-    int index = getIndex( rows.get( 0 ), type );
-    if( index == -1 )
+    /* find minimal column index */
+    for( final IZmlModelColumn column : selectedColumns )
     {
-      rows.remove( 0 );// header row
-      if( !rows.isEmpty() )
-        index = getIndex( rows.get( 0 ), type );
+      final int columnIndex = ArrayUtils.indexOf( allColumns, column );
+      if( columnIndex != -1 )
+        minColumnIndex = Math.min( minColumnIndex, columnIndex );
     }
 
-    if( index == -1 )
-      throw new ExecutionException( "Eine Verarbeitung der Daten war nicht möglich! Ungültiges Datenformat" );
-
-    for( final String[] row : rows )
+    /* find minimal row index */
+    for( final IZmlModelRow row : selectedRows )
     {
-      strings.add( row[index] );
+      final int rowIndex = ArrayUtils.indexOf( allRows, row );
+      if( rowIndex != -1 )
+        minRowIndex = Math.min( minRowIndex, rowIndex );
     }
 
-    return strings.toArray( new String[] {} );
+    if( minColumnIndex == Integer.MAX_VALUE || minRowIndex == Integer.MAX_VALUE )
+      return null;
+
+    return viewport.getCell( minRowIndex, minColumnIndex );
   }
 
-  private int getIndex( final String[] row, final String type )
+  private IStatus doPaste( final ZmlModelViewport viewport, final IZmlModelValueCell cell, final IZmlPasteData pasteData ) throws ExecutionException
   {
+    final IStatusCollector log = new StatusCollector( KalypsoZmlUI.PLUGIN_ID );
 
-    for( int index = 0; index < ArrayUtils.getLength( row ); index++ )
+    final IZmlModelColumn column = cell.getColumn();
+
+    final int startInputColumn = 0;
+    final int columnIndex = pasteData.findDataIndex( column, startInputColumn );
+    if( columnIndex == -1 )
+      throw new ExecutionException( "Keine passende Wertspalte gefunden" );
+
+    IZmlModelValueCell ptr = cell;
+
+    final int rowCount = pasteData.getRowCount();
+    for( int rowIndex = 0; rowIndex < rowCount; rowIndex++ )
     {
+      if( ptr == null )
+      {
+        log.add( IStatus.WARNING, "Daten aus Zwischenablage sind länger als die Ziel-Zeitreihe" );
+        break;
+      }
+
       try
       {
-        final String cell = row[index];
-
-        if( StringUtils.equalsIgnoreCase( ITimeseriesConstants.TYPE_POLDER_CONTROL, type ) )
-        {
-          if( StringUtils.equalsIgnoreCase( "true", cell ) ) //$NON-NLS-1$
-            return index;
-          else if( StringUtils.equalsIgnoreCase( "false", cell ) ) //$NON-NLS-1$
-            return index;
-        }
-        else
-        {
-          final double value = NumberUtils.parseDouble( cell );
-          if( Double.isNaN( value ) )
-            continue;
-
-          return index;
-        }
-
+        final Object value = pasteData.getData( ptr, columnIndex, rowIndex );
+        ptr.doUpdate( value, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
       }
-      catch( final Throwable t )
+      catch( final Exception e )
       {
-        // nothing to do
+        log.add( IStatus.ERROR, "Zeile %d: Lesefehler", e, rowIndex );
       }
+
+      // REMARK: skip cell with bad values, they keep their original data
+      ptr = viewport.findNextCell( ptr );
     }
 
-    return -1;
+    return log.asMultiStatus( "Fehler beim Einfügen aus der Zwischenablage" );
+  }
+
+  private IZmlPasteData findPasteData( final ZmlModelViewport viewport, final Clipboard clipboard ) throws IOException
+  {
+    final String stringData = (String) clipboard.getContents( TextTransfer.getInstance() );
+    final Object[][] tableData = (Object[][]) clipboard.getContents( ZmlTableTransfer.getInstance() );
+
+    if( !ArrayUtils.isEmpty( tableData ) )
+      return new ZmlPasteDataInternal( tableData );
+
+    if( stringData != null )
+      return new ZmlPasteDataFromString( viewport, stringData );
+
+    return null;
   }
 }

@@ -62,7 +62,6 @@ import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
  */
 public class ZmlTableSelectionLayer extends SelectionLayer implements IZmlTableSelection
 {
-
   private final ZmlModelViewport m_model;
 
   public ZmlTableSelectionLayer( final ZmlModelViewport model, final IUniqueIndexLayer layer )

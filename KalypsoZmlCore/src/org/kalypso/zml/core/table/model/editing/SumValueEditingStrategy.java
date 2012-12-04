@@ -65,17 +65,17 @@ public class SumValueEditingStrategy extends AbstractEditingStrategy
   }
 
   @Override
-  public void setValue( final IZmlModelValueCell cell, final String value )
+  public void setValue( final IZmlModelValueCell cell, final Object targetValue )
   {
     try
     {
-      final Number targetValue = (Number) getTargetValue( cell, value );
+      final Number targetNumber = (Number) targetValue;
 
       final IZmlModelValueCell previousCell = getViewport().findPreviousCell( cell );
 
       if( getViewport().getResolution() == 0 )
       {
-        updateOriginValue( cell, targetValue );
+        updateOriginValue( cell, targetNumber );
       }
       else if( previousCell == null )
       {
@@ -84,11 +84,11 @@ public class SumValueEditingStrategy extends AbstractEditingStrategy
         final IZmlModelRow baseRow = model.getRowAt( 0 );
         final IZmlModelValueCell previousReference = baseRow.get( cell.getColumn() );
 
-        updateAggregatedValue( previousReference, cell, targetValue );
+        updateAggregatedValue( previousReference, cell, targetNumber );
       }
       else
       {
-        updateAggregatedValue( getStartReference( previousCell ), cell, targetValue );
+        updateAggregatedValue( getStartReference( previousCell ), cell, targetNumber );
       }
     }
     catch( final SensorException e )

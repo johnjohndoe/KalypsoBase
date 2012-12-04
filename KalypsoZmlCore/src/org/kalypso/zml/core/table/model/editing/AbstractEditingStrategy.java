@@ -63,7 +63,8 @@ public abstract class AbstractEditingStrategy implements IZmlEditingStrategy
     return m_viewport;
   }
 
-  protected Object getTargetValue( final IZmlModelValueCell cell, final String value )
+  @Override
+  public Object parseValue( final IZmlModelValueCell cell, final String value )
   {
     final IAxis axis = cell.getColumn().getValueAxis();
     final Class< ? > clazz = axis.getDataClass();

@@ -96,7 +96,8 @@ public class ZmlCommandSetValuesAbove extends AbstractHandler
         IZmlModelValueCell ptr = model.findPreviousCell( active );
         while( ptr != null )
         {
-          strategy.setValue( ptr, targetValue );
+          final Object targetData = strategy.parseValue( ptr, targetValue );
+          strategy.setValue( ptr, targetData );
 
           ptr = model.findPreviousCell( ptr );
         }

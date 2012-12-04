@@ -59,7 +59,6 @@ import org.kalypso.zml.core.table.rules.AppliedRule;
  */
 public interface IZmlModelColumn
 {
-
   void accept( IZmlModelColumnVisitor visitor ) throws SensorException;
 
   void accept( IZmlModelColumnVisitor visitor, DateRange daterange ) throws SensorException;

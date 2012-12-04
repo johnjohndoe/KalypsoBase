@@ -170,6 +170,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
 
       m_columns.put( index, column );
     }
+
     fireModelChanged( new ZmlModelColumnChangeType( STRUCTURE_CHANGE ) );
   }
 
@@ -292,7 +293,6 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     m_fireModelChangedJob.setRule( MUTEX_FIRE_MODEL_CHANGED );
 
     m_fireModelChangedJob.schedule( 150 );
-
   }
 
   @Override
@@ -418,5 +418,4 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
   {
     return m_columnTypeMap.get( id );
   }
-
 }

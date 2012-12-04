@@ -40,18 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.menu;
 
-import java.awt.Toolkit;
-import java.awt.datatransfer.StringSelection;
+import java.util.ArrayList;
+import java.util.Collection;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.java.lang.Arrays;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.ui.PlatformUI;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.labeling.ZmlModelCellLabelProvider;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.nat.base.ZmlModelRowHeaderDisplayConverter;
@@ -70,51 +76,11 @@ public class ZmlCommandCopyValue extends AbstractHandler
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
       final IZmlTableSelection selection = table.getSelection();
 
-      final StringBuffer buffer = new StringBuffer();
-
+      final ZmlModelViewport viewport = table.getModelViewport();
       final IZmlModelColumn[] columns = selection.getSelectedColumns();
       final IZmlModelRow[] rows = selection.getSelectedRows();
 
-      /** table header */
-      buffer.append( "Datum" );
-      buffer.append( "\t" ); //$NON-NLS-1$
-
-      for( final IZmlModelColumn column : columns )
-      {
-        buffer.append( column.getLabel() );
-        if( !Arrays.isLastItem( columns, column ) )
-          buffer.append( "\t" ); //$NON-NLS-1$
-        else
-          buffer.append( "\n" );//$NON-NLS-1$
-      }
-
-      /** table body */
-      for( final IZmlModelRow row : rows )
-      {
-        final String date = ZmlModelRowHeaderDisplayConverter.toLabel( row.getIndexCell() );
-        buffer.append( date );
-        buffer.append( "\t" ); //$NON-NLS-1$
-
-        for( final IZmlModelColumn column : columns )
-        {
-          final IZmlModelValueCell cell = row.get( column );
-          if( cell == null )
-            buffer.append( " " );
-          else
-          {
-            final ZmlModelCellLabelProvider provider = new ZmlModelCellLabelProvider( column );
-            buffer.append( provider.getText( table.getModelViewport(), cell ) );
-          }
-
-          if( !Arrays.isLastItem( columns, column ) )
-            buffer.append( "\t" );
-          else
-            buffer.append( "\n" );
-        }
-      }
-
-      final StringSelection clipboardSelection = new StringSelection( buffer.toString() );
-      Toolkit.getDefaultToolkit().getSystemClipboard().setContents( clipboardSelection, clipboardSelection );
+      fillClipboard( viewport, columns, rows );
 
       return Status.OK_STATUS;
     }
@@ -126,4 +92,69 @@ public class ZmlCommandCopyValue extends AbstractHandler
     }
   }
 
+  private void fillClipboard( final ZmlModelViewport viewport, final IZmlModelColumn[] columns, final IZmlModelRow[] rows ) throws SensorException
+  {
+    final StringBuilder buffer = new StringBuilder();
+    final Collection<Object[]> dataBuffer = new ArrayList<Object[]>();
+
+    /** table header */
+    final Collection<String> headerBuffer = new ArrayList<String>();
+    // FIXME: why hard coded?
+    headerBuffer.add( "Datum" );
+
+    for( final IZmlModelColumn column : columns )
+      headerBuffer.add( column.getLabel() );
+
+    buffer.append( StringUtils.join( headerBuffer, '\t' ) );
+    buffer.append( '\n' );
+
+    /** table body */
+    for( final IZmlModelRow row : rows )
+    {
+      final Collection<String> rowStrings = new ArrayList<String>();
+      final Collection<Object> rowData = new ArrayList<Object>();
+
+      final String date = ZmlModelRowHeaderDisplayConverter.toLabel( row.getIndexCell() );
+      rowStrings.add( date );
+
+      for( final IZmlModelColumn column : columns )
+      {
+        final IZmlModelValueCell cell = row.get( column );
+        if( cell == null )
+          // FIXME: why not the empy string instead?
+          rowStrings.add( " " );
+        else
+        {
+          final ZmlModelCellLabelProvider provider = new ZmlModelCellLabelProvider( column );
+
+          final String cellText = provider.getText( viewport, cell );
+          final Object cellValue = cell.getValue();
+
+          rowStrings.add( cellText );
+          rowData.add( cellValue );
+        }
+      }
+
+      buffer.append( StringUtils.join( rowStrings, '\t' ) );
+      buffer.append( '\n' );
+
+      dataBuffer.add( rowData.toArray( new Object[rowData.size()] ) );
+    }
+
+    final String stringRepresantation = StringUtils.chomp( buffer.toString() );
+    final Object[][] tableData = dataBuffer.toArray( new Object[dataBuffer.size()][] );
+
+    /* put into clipboard */
+    final Clipboard clipboard = new Clipboard( PlatformUI.getWorkbench().getDisplay() );
+    try
+    {
+      final Object[] clipboardData = new Object[] { stringRepresantation, tableData };
+      final Transfer[] dataTypes = new Transfer[] { TextTransfer.getInstance(), ZmlTableTransfer.getInstance() };
+      clipboard.setContents( clipboardData, dataTypes );
+    }
+    finally
+    {
+      clipboard.dispose();
+    }
+  }
 }

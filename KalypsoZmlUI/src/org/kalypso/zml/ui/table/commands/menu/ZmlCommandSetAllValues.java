@@ -93,7 +93,8 @@ public class ZmlCommandSetAllValues extends AbstractHandler
         final IZmlModelValueCell[] visibleCells = model.getCells( column );
         for( final IZmlModelValueCell cell : visibleCells )
         {
-          strategy.setValue( cell, targetValue );
+          final Object targetData = strategy.parseValue( cell, targetValue );
+          strategy.setValue( cell, targetData );
         }
       }
       else
