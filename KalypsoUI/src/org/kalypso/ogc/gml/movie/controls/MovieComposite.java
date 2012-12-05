@@ -438,17 +438,18 @@ public class MovieComposite extends Composite
     if( m_progressBar == null || m_progressBar.isDisposed() )
       return;
 
-    /* Get the current step. */
-    final int currentStep = m_player.getCurrentStep();
-
     /* Get the current frame. */
     final IMovieFrame currentFrame = m_player.getCurrentFrame();
     if( currentFrame == null )
       return;
 
+    /* Get the current step. */
+    final int currentStep = m_player.getCurrentStep();
+    final int endStep = m_player.getEndStep();
+
     /* Set the current step. */
     m_progressBar.setSelection( currentStep );
-    m_progressLabel.setText( currentFrame.getLabel() );
+    m_progressLabel.setText( String.format( "%d/%d: %s", currentStep, endStep, currentFrame.getLabel() ) );
   }
 
   /**
