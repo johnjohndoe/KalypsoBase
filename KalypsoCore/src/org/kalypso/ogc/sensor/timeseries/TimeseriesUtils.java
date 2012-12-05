@@ -41,6 +41,7 @@
 package org.kalypso.ogc.sensor.timeseries;
 
 import java.awt.Color;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -63,11 +64,14 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.utils.ConfigUtils;
 import org.kalypso.contribs.java.awt.ColorUtilities;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.PropertiesUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -113,7 +117,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
   @Deprecated
   private static final DateFormat FORECAST_DF = DateFormat.getDateTimeInstance( DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.GERMANY );
 
-  private static final String PROP_TIMESERIES_CONFIG = "kalypso.timeseries.properties"; //$NON-NLS-1$
+  private static final String FILENAME_TIMESERIES_INI = "timeseries.ini"; //$NON-NLS-1$
 
   private static URL CONFIG_BASE_URL = TimeseriesUtils.class.getResource( "resource/" ); //$NON-NLS-1$
 
@@ -131,22 +135,6 @@ public final class TimeseriesUtils implements ITimeseriesConstants
   }
 
   /**
-   * Allows to overwrite the location of the config.properties file.<br>
-   * If international alternatives are present these will be used (i.e. config_de.properties instead of
-   * config.properties).
-   * 
-   * @param configUrl
-   *          Base location of the config file(s) (i.e. getClass().getResource("resources")).
-   * @param basename
-   *          base name of the config file (i.e. "config")
-   */
-  public static void setConfigUrl( final URL configUrl, final String basename )
-  {
-    CONFIG_BASE_URL = configUrl;
-    BASENAME = basename;
-  }
-
-  /**
    * Finds out which metadata of the given observation begin with the given prefix.
    * <p>
    * This is for instance useful for the Alarmstufen
@@ -155,7 +143,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
    * @param mdPrefix
    * @return list of metadata keys or empty array if nothing found
    */
-  public static String[] findOutMDBeginningWith( final IObservation obs, final String mdPrefix )
+  private static String[] findOutMDBeginningWith( final IObservation obs, final String mdPrefix )
   {
     if( obs == null )
       return ArrayUtils.EMPTY_STRING_ARRAY;
@@ -215,19 +203,14 @@ public final class TimeseriesUtils implements ITimeseriesConstants
       CONFIG = new Properties( defaultConfig );
 
       // The config file in the sources is used as defaults
+      // FIXME: check, why ?
       PropertiesUtilities.loadI18nProperties( defaultConfig, CONFIG_BASE_URL, BASENAME );
 
-      // TODO: also load configured properties via i18n mechanism
       InputStream configIs = null;
       try
       {
         // If we have a configured config file, use it as standard
-        final URL configUrl = Platform.isRunning() ? Platform.getConfigurationLocation().getURL() : null;
-        final String timeseriesConfigLocation = System.getProperty( PROP_TIMESERIES_CONFIG );
-        final URL timeseriesConfigUrl = timeseriesConfigLocation == null ? null : new URL( configUrl, timeseriesConfigLocation );
-
-        // TODO: load time series ini from local config: ni order to support debugging correctly, sue this pattern:
-        // final URL proxyConfigLocation = HwvProductSachsenAnhalt.findConfigLocation( CONFIG_PROXY_PATH );
+        final URL timeseriesConfigUrl = ConfigUtils.findCentralConfigLocation( FILENAME_TIMESERIES_INI );
 
         try
         {
@@ -249,6 +232,13 @@ public final class TimeseriesUtils implements ITimeseriesConstants
           CONFIG.load( configIs );
           configIs.close();
         }
+      }
+      catch( final FileNotFoundException e )
+      {
+        final String message = String.format( "%s file not configured. Using default configuration.", FILENAME_TIMESERIES_INI ); //$NON-NLS-1$
+
+        final IStatus status = new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), message );
+        KalypsoCorePlugin.getDefault().getLog().log( status );
       }
       catch( final IOException e )
       {
@@ -387,22 +377,6 @@ public final class TimeseriesUtils implements ITimeseriesConstants
 
     // no color found? so return random one
     return ColorUtilities.random();
-  }
-
-  /**
-   * <p>
-   * Transforms physical units to TYPE-Constant used in Axis (best guess)
-   * </p>
-   * <p>
-   * Uses UNIT_TO_TYPE_ Keys in config.properties
-   * </p>
-   * 
-   * @param unit
-   * @return type
-   */
-  public static String getTypeForUnit( final String unit )
-  {
-    return getProperties().getProperty( "UNIT_TO_TYPE_" + unit, "" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -608,10 +582,27 @@ public final class TimeseriesUtils implements ITimeseriesConstants
    */
   public static String getCoordinateSystemNameForGkr( final String gkr )
   {
-    final String crsName = getProperties().getProperty( "GK_" + gkr.substring( 0, 1 ), null ); //$NON-NLS-1$
-    if( crsName == null )
-      KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-    return crsName;
+    final String gkNum = gkr.substring( 0, 1 );
+    if( StringUtils.isBlank( gkNum ) )
+      return KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+
+    final int gk = NumberUtils.parseQuietInt( gkNum, -1 );
+
+    switch( gk )
+    {
+      case 2:
+        return "EPSG:31466"; //$NON-NLS-1$
+      case 3:
+        return "EPSG:31467"; //$NON-NLS-1$
+
+      case 4:
+        return "EPSG:31468"; //$NON-NLS-1$
+
+      case 5:
+        return "EPSG:31469"; //$NON-NLS-1$
+    }
+
+    return KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
   }
 
   /**
@@ -653,10 +644,5 @@ public final class TimeseriesUtils implements ITimeseriesConstants
       return null;
 
     return args.getDateRange();
-  }
-
-  public static String getFormat( final String type )
-  {
-    return getProperties().getProperty( String.format( "FORMAT_%s", type ) );//$NON-NLS-1$
   }
 }
