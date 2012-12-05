@@ -61,6 +61,7 @@ import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 import net.opengeospatial.wps.SupportedComplexDataType;
 
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -72,6 +73,7 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.service.ogc.exception.OWSException;
+import org.kalypso.service.wps.Activator;
 import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
 import org.kalypso.service.wps.utils.MarshallUtilities;
@@ -130,6 +132,7 @@ public class DescribeProcessOperation implements IOperation
     }
     catch( final Exception e )
     {
+      Activator.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
       throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e, "" ); //$NON-NLS-1$
     }
   }
@@ -207,7 +210,7 @@ public class DescribeProcessOperation implements IOperation
 
     /* Get the specification for that simulation. */
     final URL spezifikation = simulation.getSpezifikation();
-    Modelspec modelData = KalypsoSimulationCoreJaxb.readModelspec( spezifikation );
+    final Modelspec modelData = KalypsoSimulationCoreJaxb.readModelspec( spezifikation );
 
     /* Build all content for the process description. */
     final String identifier = modelData.getTypeID();
