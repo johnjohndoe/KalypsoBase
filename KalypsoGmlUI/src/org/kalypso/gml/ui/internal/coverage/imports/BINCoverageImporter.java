@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.java.io.FilePattern;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
+import org.kalypso.gml.ui.coverage.imports.AbstractGridCoverageImporter;
 import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.grid.GridFileVerifier;
 import org.kalypso.grid.GridMetaReaderBinWorldFile;
@@ -58,7 +59,7 @@ import org.kalypso.grid.IGridMetaReader;
 
 /**
  * Imports a Kalypso grid bin file as coverage.
- *
+ * 
  * @author Gernot Belger
  */
 public class BINCoverageImporter extends AbstractGridCoverageImporter
@@ -67,7 +68,7 @@ public class BINCoverageImporter extends AbstractGridCoverageImporter
   public FilePattern getFilePattern( )
   {
     final String pattern = "*.bin"; //$NON-NLS-1$
-    final String filterName = Messages.getString("BINCoverageImporter.0"); //$NON-NLS-1$
+    final String filterName = Messages.getString( "BINCoverageImporter.0" ); //$NON-NLS-1$
 
     return new FilePattern( pattern, filterName );
   }

@@ -61,6 +61,8 @@ import org.kalypso.contribs.java.io.FilePattern;
 import org.kalypso.gml.processes.tin.MultiSurfaceCoverage;
 import org.kalypso.gml.processes.tin.TriangulatedSurfaceFeature;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
+import org.kalypso.gml.ui.coverage.imports.AbstractGridCoverageImporter;
+import org.kalypso.gml.ui.coverage.imports.ICoverageImporter;
 import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
@@ -179,6 +181,12 @@ public abstract class AbstractTriangulatedSurfaceCoverageImporter implements ICo
       dataContainer.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
       monitor.done();
     }
+  }
+
+  @Override
+  public String getTargetExtension( )
+  {
+    return "gmlz"; //$NON-NLS-1$
   }
 
   private String buildRelativePath( final IContainer dataContainer, final URL context, final File targetFile ) throws URIException, MalformedURLException

@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.java.io.FilePattern;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
+import org.kalypso.gml.ui.coverage.imports.AbstractGridCoverageImporter;
 import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.grid.ConvertAscii2Binary;
 import org.kalypso.grid.GridMetaReaderAscii;
@@ -57,7 +58,7 @@ import org.kalypso.grid.IGridMetaReader;
 
 /**
  * Imports an ESCRI ASCII Grid as coverage.
- *
+ * 
  * @author Gernot Belger
  */
 public class ASCCoverageImporter extends AbstractGridCoverageImporter
@@ -66,7 +67,7 @@ public class ASCCoverageImporter extends AbstractGridCoverageImporter
   public FilePattern getFilePattern( )
   {
     final String pattern = "*.asc;*.dat;*.asg"; //$NON-NLS-1$
-    final String filterName = Messages.getString("ASCCoverageImporter.0"); //$NON-NLS-1$
+    final String filterName = Messages.getString( "ASCCoverageImporter.0" ); //$NON-NLS-1$
 
     return new FilePattern( pattern, filterName );
   }

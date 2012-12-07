@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.ui.internal.coverage.imports;
+package org.kalypso.gml.ui.coverage.imports;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -51,6 +51,12 @@ import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateOpen;
 import org.kalypso.contribs.java.io.FileExtensions;
 import org.kalypso.contribs.java.io.FilePattern;
 import org.kalypso.gml.ui.i18n.Messages;
+import org.kalypso.gml.ui.internal.coverage.imports.ASCCoverageImporter;
+import org.kalypso.gml.ui.internal.coverage.imports.BINCoverageImporter;
+import org.kalypso.gml.ui.internal.coverage.imports.GmlCoverageImporter;
+import org.kalypso.gml.ui.internal.coverage.imports.HmoCoverageImporter;
+import org.kalypso.gml.ui.internal.coverage.imports.ShapeCoverageImporter;
+import org.kalypso.gml.ui.internal.coverage.imports.ZweiDMCoverageImporter;
 
 /**
  * Helper that knows about all supported coverage formats.
