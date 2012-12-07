@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.ui.internal.coverage.imports;
+package org.kalypso.gml.ui.coverage.imports;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -72,7 +72,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 /**
  * @author Gernot Belger
  */
-abstract class AbstractGridCoverageImporter implements ICoverageImporter
+public abstract class AbstractGridCoverageImporter implements ICoverageImporter
 {
   /**
    * Default implementation that returns the source file itself. Most import only import exactly one file.
@@ -83,7 +83,7 @@ abstract class AbstractGridCoverageImporter implements ICoverageImporter
     return new File[] { sourceFile };
   }
 
-  static File createTargetFile( final File sourceFile, final File targetDir, final String suffix ) throws CoreException
+  public static File createTargetFile( final File sourceFile, final File targetDir, final String suffix ) throws CoreException
   {
     final String basename = FilenameUtils.getBaseName( sourceFile.getName() );
 
@@ -134,6 +134,12 @@ abstract class AbstractGridCoverageImporter implements ICoverageImporter
     }
   }
 
+  @Override
+  public String getTargetExtension( )
+  {
+    return "bin"; //$NON-NLS-1$
+  }
+
   /**
    * Adds one coverage to a CoverageCollection
    */
@@ -180,7 +186,7 @@ abstract class AbstractGridCoverageImporter implements ICoverageImporter
    */
   protected abstract String doImportData( final File sourceFile, final File targetDir, final String sourceSRS, final IProgressMonitor monitor ) throws CoreException;
 
-  static String createRelativeGridPath( final URL context, final IFile gridFile ) throws MalformedURLException, URIException
+  public static String createRelativeGridPath( final URL context, final IFile gridFile ) throws MalformedURLException, URIException
   {
     final IFile contextFile = ResourceUtilities.findFileFromURL( context );
 

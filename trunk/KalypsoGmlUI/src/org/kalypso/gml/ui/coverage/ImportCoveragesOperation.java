@@ -54,9 +54,9 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
+import org.kalypso.gml.ui.coverage.imports.CoverageFormats;
+import org.kalypso.gml.ui.coverage.imports.ICoverageImporter;
 import org.kalypso.gml.ui.i18n.Messages;
-import org.kalypso.gml.ui.internal.coverage.imports.CoverageFormats;
-import org.kalypso.gml.ui.internal.coverage.imports.ICoverageImporter;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 

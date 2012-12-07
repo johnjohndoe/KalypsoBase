@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.ui.internal.coverage.imports;
+package org.kalypso.gml.ui.coverage.imports;
 
 import java.io.File;
 
@@ -61,4 +61,6 @@ public interface ICoverageImporter
   ICoverage importCoverage( ICoverageCollection coverageContainer, File dataFile, String crs, IContainer dataContainer, IProgressMonitor monitor ) throws CoreException;
 
   File[] getSourceFiles( File sourceFile );
+
+  String getTargetExtension( );
 }
