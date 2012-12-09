@@ -123,10 +123,32 @@ public final class SWT_AWT_Utilities
     return result[0];
   }
 
+  /**
+   * Calls {@link Dialog#open()} on the currently active shell.<br>
+   * This code can be called even outside a SWT thread.
+   * 
+   * @return The result of the call to {@link Dialog#open()}
+   */
+  public static int openSwtWindowAsync( final Window window )
+  {
+    final Shell shell = findActiveShell();
+    // Force it into swt
+    final int[] result = new int[1];
+    shell.getDisplay().asyncExec( new Runnable()
+    {
+      @Override
+      public void run( )
+      {
+        result[0] = window.open();
+      }
+    } );
+    return result[0];
+  }
+
   public static Shell findActiveShell( )
   {
-    final IHandlerService service = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
-    return (Shell) service.getCurrentState().getVariable( ISources.ACTIVE_SHELL_NAME );
+    final IHandlerService service = (IHandlerService)PlatformUI.getWorkbench().getService( IHandlerService.class );
+    return (Shell)service.getCurrentState().getVariable( ISources.ACTIVE_SHELL_NAME );
   }
 
   /**
