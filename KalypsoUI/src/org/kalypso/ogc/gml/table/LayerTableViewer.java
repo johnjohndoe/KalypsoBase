@@ -272,6 +272,13 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
   }
 
   @Override
+  protected void hookEditingSupport( final Control control )
+  {
+    // BUGFIX/Intended behavior, see #958 : let the table cursor handle all editing stuff.
+    // super.hookEditingSupport( control );
+  }
+
+  @Override
   protected void handleDispose( final DisposeEvent event )
   {
     final ILayerTableInput input = getInput();
