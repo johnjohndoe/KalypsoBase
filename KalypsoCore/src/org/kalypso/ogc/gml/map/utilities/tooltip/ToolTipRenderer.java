@@ -61,19 +61,26 @@ import org.kalypso.contribs.eclipse.swt.ColorUtilities;
  */
 public class ToolTipRenderer
 {
-  public static final Color DEFAULT_BORDER_COLOR = Color.DARK_GRAY;
+  private static final Color DEFAULT_BORDER_COLOR = Color.DARK_GRAY;
 
+  /**
+   * @deprecate Use {@link #createWarningTooltip()} instead.
+   */
   public static final Color DEFAULT_TEXT_COLOR = Color.BLACK;
 
-  public static final Color DEFAULT_TEXT_COLOR_WARNING = Color.BLACK;
+  private static final Color DEFAULT_TEXT_COLOR_WARNING = Color.BLACK;
 
-  public static final Color DEFAULT_TEXT_COLOR_ERROR = Color.WHITE;
+  private static final Color DEFAULT_TEXT_COLOR_ERROR = Color.WHITE;
 
+  /**
+   * @deprecate Use {@link #createWarningTooltip()} instead.
+   */
+  @Deprecated
   public static final Color DEFAULT_BACKGROUND_COLOR = new Color( 1f, 1f, 0.6f, 0.90f );
 
-  public static final Color DEFAULT_BACKGROUND_COLOR_WARNING = new Color( 1f, 1f, 0.6f, 0.90f );
+  private static final Color DEFAULT_BACKGROUND_COLOR_WARNING = new Color( 1f, 1f, 0.6f, 0.90f );
 
-  public static final Color DEFAULT_BACKGROUND_COLOR_ERROR = Color.RED;
+  private static final Color DEFAULT_BACKGROUND_COLOR_ERROR = Color.RED;
 
   public static final ToolTipRenderer createStandardTooltip( )
   {
@@ -119,12 +126,16 @@ public class ToolTipRenderer
 
   private Color m_textColor;
 
+  /**
+   * @deprecated Use one of the static create methods instead.
+   */
+  @Deprecated
   public ToolTipRenderer( )
   {
     this( DEFAULT_INSETS, DEFAULT_OFFSET, DEFAULT_BACKGROUND_COLOR, DEFAULT_BORDER_COLOR, DEFAULT_TEXT_COLOR );
   }
 
-  public ToolTipRenderer( final Insets insets, final Point offset, final Color backgroundColor, final Color borderColor, final Color textColor )
+  private ToolTipRenderer( final Insets insets, final Point offset, final Color backgroundColor, final Color borderColor, final Color textColor )
   {
     m_insets = insets;
     m_offset = offset;
@@ -163,8 +174,8 @@ public class ToolTipRenderer
 
     final Rectangle2D maxRect = calculateBoxWidth( g );
 
-    final int textHeight = (int) maxRect.getHeight(); // height of one line
-    final int textboxWidth = (int) maxRect.getWidth(); // width of textbox
+    final int textHeight = (int)maxRect.getHeight(); // height of one line
+    final int textboxWidth = (int)maxRect.getWidth(); // width of textbox
     final int textboxHeight = textHeight * m_rows.length; // height of textbox
 
     final int insetsHeigth = m_insets.bottom + m_insets.top;
@@ -179,10 +190,10 @@ public class ToolTipRenderer
     {
       /* Adjust basePoint in order to show the whole tooltip */
       if( basePoint.x + outlineWidth > screenRect.getMaxX() )
-        basePoint.x = (int) screenRect.getMaxX() - outlineWidth - 1;
+        basePoint.x = (int)screenRect.getMaxX() - outlineWidth - 1;
 
       if( basePoint.y + outlineHeight > screenRect.getMaxY() )
-        basePoint.y = (int) screenRect.getMaxY() - outlineHeight;
+        basePoint.y = (int)screenRect.getMaxY() - outlineHeight;
 
       if( basePoint.x < screenRect.x )
         basePoint.x = screenRect.x;
@@ -192,7 +203,7 @@ public class ToolTipRenderer
     }
 
     /* draw outer rectangle */
-    ((Graphics2D) g).setStroke( new BasicStroke( 1.0f ) );
+    ((Graphics2D)g).setStroke( new BasicStroke( 1.0f ) );
     g.setColor( m_backgroundColor );
     g.fillRect( basePoint.x, basePoint.y, outlineWidth, outlineHeight );
 
