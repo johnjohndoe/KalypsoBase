@@ -46,6 +46,7 @@ import java.awt.event.MouseWheelEvent;
 
 /**
  * @author Dirk Kuch
+ * @deprecated Use AbstractWidget instead.
  */
 @Deprecated
 public abstract class DeprecatedMouseWidget extends AbstractWidget implements IDeprecatedMouseWidget
