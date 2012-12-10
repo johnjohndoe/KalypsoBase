@@ -159,7 +159,7 @@ public class ExcelTableCursor extends TableCursor
         }
       }
 
-      advanceCursor( (Control) e.getSource(), dx, dy );
+      advanceCursor( (Control)e.getSource(), dx, dy );
 
       /*
        * Special case: checkbox: always toggle? TODO: shouldn't handle this the CheckboxCellEditor??
@@ -167,7 +167,7 @@ public class ExcelTableCursor extends TableCursor
       if( (e.keyCode != SWT.CR || e.keyCode == SWT.KEYPAD_CR) && e.getSource() instanceof CheckboxCellEditor )
       {
         // toggle checkbox
-        final CheckboxCellEditor ce = (CheckboxCellEditor) e.getSource();
+        final CheckboxCellEditor ce = (CheckboxCellEditor)e.getSource();
         if( Boolean.TRUE.equals( ce.getValue() ) )
           ce.setValue( Boolean.FALSE );
         else
@@ -394,7 +394,9 @@ public class ExcelTableCursor extends TableCursor
     if( selectedRow != row )
     {
       if( selectedRow == null )
-        setVisible( false );
+      {
+        // setVisible( false );
+      }
       else
       {
         final int column = getColumn();
@@ -417,7 +419,7 @@ public class ExcelTableCursor extends TableCursor
 
     if( m_selectionFollowsCursor )
     {
-      final Table table = (Table) getParent();
+      final Table table = (Table)getParent();
 
       final TableItem[] currentSelection = table.getSelection();
       if( currentSelection.length == 1 && currentSelection[0] == row )
@@ -493,13 +495,13 @@ public class ExcelTableCursor extends TableCursor
 
     if( keyEvent != null && control != null && !control.isDisposed() && control instanceof Button )
     {
-      final Button button = (Button) control;
+      final Button button = (Button)control;
       button.setSelection( !button.getSelection() );
     }
     //
     if( control instanceof Text )
     {
-      final Text text = (Text) control;
+      final Text text = (Text)control;
       if( keyEvent != null && keyEvent.keyCode != SWT.F2 )
         text.insert( "" + keyEvent.character );
     }
@@ -534,7 +536,7 @@ public class ExcelTableCursor extends TableCursor
     if( columnProperties == null || columnProperties.length == 0 )
       return false;
 
-    final String property = (String) columnProperties[column];
+    final String property = (String)columnProperties[column];
     final ICellModifier modifier = m_viewer.getCellModifier();
     if( modifier == null )
       return false;
@@ -661,7 +663,7 @@ public class ExcelTableCursor extends TableCursor
     // BUGFIX: if the table receives focus, we force ourselfs to be visible
     // Before, the cursor was not visible and selection did not change cursor position
     // FIXME: does not work: table selection does not work any more with this fix
-// setVisible( true );
+    // setVisible( true );
 
     if( isVisible() )
       setFocus();
