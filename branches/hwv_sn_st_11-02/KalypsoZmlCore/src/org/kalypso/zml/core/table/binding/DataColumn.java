@@ -1,5 +1,3 @@
-package org.kalypso.zml.core.table.binding;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -40,6 +38,7 @@ package org.kalypso.zml.core.table.binding;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.zml.core.table.binding;
 
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
@@ -63,9 +62,8 @@ public class DataColumn extends BaseColumn
   public String getValueAxis( )
   {
     final DataColumnType dataType = getType();
-    final String axis = dataType.getValueAxis();
 
-    return axis;
+    return dataType.getValueAxis();
   }
 
   public String getIndexAxis( )

@@ -86,8 +86,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnObservati
 
   private String m_label;
 
-  private String m_labelTokenizer;
-
   private final Set<IZmlModelColumnListener> m_listeners = new LinkedHashSet<IZmlModelColumnListener>();
 
   private final IZmlModel m_model;
@@ -295,12 +293,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnObservati
   }
 
   @Override
-  public String getLabelTokenizer( )
-  {
-    return m_labelTokenizer;
-  }
-
-  @Override
   public MetadataList getMetadata( )
   {
     if( Objects.isNull( m_handler ) )
@@ -417,12 +409,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnObservati
   public void setLabel( final String label )
   {
     m_label = label;
-  }
-
-  @Override
-  public void setLableTokenizer( final String titleTokenizer )
-  {
-    m_labelTokenizer = titleTokenizer;
   }
 
   @Override

@@ -51,6 +51,7 @@ import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.provider.PooledObsProvider;
@@ -169,13 +170,15 @@ public class ZmlDataSourceElement implements IZmlTableElement, IZmlSourceElement
   }
 
   @Override
-  public String getLabel( )
+  public String getLabel( final IAxis axis )
   {
     if( Strings.isNotEmpty( m_label ) )
       return m_label;
 
     final IObservation observation = getObsProvider().getObservation();
     final MetadataList metadata = observation.getMetadataList();
+
+    // FIXME: why a totally different token replace than in ObservationTokenHelper.replaceTokens ???
 
     final String[] properties = findProperties( m_labeling );
     m_label = m_labeling;

@@ -89,9 +89,6 @@ public interface IZmlModelColumn
 
   String getLabel( );
 
-  // FIXME never called
-  String getLabelTokenizer( );
-
   MetadataList getMetadata( );
 
   IZmlModel getModel( );
@@ -113,8 +110,6 @@ public interface IZmlModelColumn
   void setDataHandler( IZmlModelColumnDataHandler dataHandler );
 
   void setLabel( String label );
-
-  void setLableTokenizer( String titleTokenizer );
 
   int size( ) throws SensorException;
 }

@@ -56,16 +56,14 @@ public final class ZmlSourceElements
 
   }
 
-  public static String getType( final TSLinkWithName link )
-  {
-    return getType( link.getIdentifier() );
-  }
-
+  // FIXME: bad convention, we actually know the axis by configuration
+  @Deprecated
   public static String getType( final MultipleTsLink link )
   {
     return getType( link.getIdentifier() );
   }
 
+  // FIXME: bad convention, we actually know the axis by configuration
   private static String getType( final String identifier )
   {
     /** special handling for boolean polders */

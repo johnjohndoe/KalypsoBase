@@ -57,5 +57,4 @@ public class IndexedTsLink extends TSLinkWithName
   {
     return m_index;
   }
-
 }

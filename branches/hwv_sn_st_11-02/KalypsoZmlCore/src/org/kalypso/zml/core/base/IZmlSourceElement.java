@@ -41,6 +41,7 @@
 package org.kalypso.zml.core.base;
 
 import org.kalypso.core.util.pool.IPoolableObjectType;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 
 /**
@@ -56,7 +57,7 @@ public interface IZmlSourceElement
 
   boolean isDirty( );
 
-  String getLabel( );
+  String getLabel( IAxis axis );
 
   String getIdentifier( );
 }

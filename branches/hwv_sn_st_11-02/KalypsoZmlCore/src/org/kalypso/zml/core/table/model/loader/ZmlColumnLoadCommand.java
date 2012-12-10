@@ -177,13 +177,6 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
   private void doUpdateColumn( final IZmlModelColumn column, final DataColumn type, final IAxis[] axes )
   {
     final IAxis axis = AxisUtils.findAxis( axes, type.getValueAxis() );
-    if( Objects.isNotNull( axis ) )
-    {
-
-// final String label = m_source.getTitle( axis ); //FIXME
-      column.setLabel( m_source.getLabel() );
-    }
-
-    column.setLableTokenizer( m_source.getLabel() );
+    column.setLabel( m_source.getLabel( axis ) );
   }
 }
