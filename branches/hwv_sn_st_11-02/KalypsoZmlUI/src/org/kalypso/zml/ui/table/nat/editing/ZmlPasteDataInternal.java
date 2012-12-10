@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.commands.menu;
+package org.kalypso.zml.ui.table.nat.editing;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;

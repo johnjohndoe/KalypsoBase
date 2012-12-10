@@ -84,5 +84,4 @@ public abstract class AbstractZmlCell implements IZmlModelCell
   {
     return m_tupleModelIndex;
   }
-
 }
