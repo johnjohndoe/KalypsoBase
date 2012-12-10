@@ -38,19 +38,41 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.commands.menu;
+package org.kalypso.zml.ui.table.nat.editing;
 
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import net.sourceforge.nattable.NatTable;
+import net.sourceforge.nattable.ui.action.IKeyAction;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.core.status.StatusDialog;
+import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.table.IZmlTable;
 
 /**
  * @author Gernot Belger
  */
-interface IZmlPasteData
+class ZmlTableCopyAction implements IKeyAction
 {
-  int findDataIndex( IZmlModelColumn column, int startInputColumn );
+  private final IZmlTable m_table;
 
-  int getRowCount( );
+  public ZmlTableCopyAction( final IZmlTable table )
+  {
+    m_table = table;
+  }
 
-  Object getData( IZmlModelValueCell cell, int columnIndex, int rowIndex );
+  @Override
+  public void run( final NatTable natTable, final KeyEvent event )
+  {
+    final Shell shell = natTable.getShell();
+
+    final ZmlTableCopyWorker worker = new ZmlTableCopyWorker( m_table );
+    final IStatus result = worker.execute();
+    if( !result.isOK() )
+    {
+      KalypsoZmlUI.getDefault().getLog().log( result );
+      StatusDialog.open( shell, result, "Kopieren" );
+    }
+  }
 }

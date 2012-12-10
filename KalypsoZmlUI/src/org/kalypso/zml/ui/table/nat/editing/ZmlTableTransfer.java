@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.commands.menu;
+package org.kalypso.zml.ui.table.nat.editing;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

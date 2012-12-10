@@ -338,7 +338,6 @@ public class ZmlModelValueCell extends AbstractZmlCell implements IZmlModelValue
     }
 
     return new ZmlCellRule[] {};
-
   }
 
   private ZmlCellRule[] findSimpleActiveRules( )
@@ -359,4 +358,9 @@ public class ZmlModelValueCell extends AbstractZmlCell implements IZmlModelValue
     return rules.toArray( new ZmlCellRule[] {} );
   }
 
+  @Override
+  public String toString( )
+  {
+    return super.toString();
+  }
 }

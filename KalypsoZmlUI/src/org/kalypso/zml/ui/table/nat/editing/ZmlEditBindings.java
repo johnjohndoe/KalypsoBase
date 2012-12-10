@@ -58,6 +58,7 @@ import net.sourceforge.nattable.ui.matcher.MouseEventMatcher;
 
 import org.eclipse.swt.SWT;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.nat.painter.ZmlModelCellPainter;
 
 /**
@@ -65,16 +66,18 @@ import org.kalypso.zml.ui.table.nat.painter.ZmlModelCellPainter;
  */
 public class ZmlEditBindings extends AbstractUiBindingConfiguration implements IConfiguration
 {
-  private final ZmlModelViewport m_viewport;
+  private final IZmlTable m_table;
 
-  public ZmlEditBindings( final ZmlModelViewport viewport )
+  public ZmlEditBindings( final IZmlTable table )
   {
-    m_viewport = viewport;
+    m_table = table;
   }
 
   @Override
   public void configureUiBindings( final UiBindingRegistry registry )
   {
+    final ZmlModelViewport viewport = m_table.getModelViewport();
+
     registry.registerKeyBinding( new KeyEventMatcher( SWT.NONE, SWT.F2 ), new KeyEditAction() );
     registry.registerKeyBinding( new LetterOrDigitKeyEventMatcher(), new KeyEditAction() );
 
@@ -90,7 +93,16 @@ public class ZmlEditBindings extends AbstractUiBindingConfiguration implements I
     registry.registerDoubleClickBinding( new BodyCellEditorMouseEventMatcher( ZmlTableCellEditorFacade.class ), new MouseEditAction() );
     registry.registerFirstMouseDragMode( new BodyCellEditorMouseEventMatcher( ZmlTableCellEditorFacade.class ), new CellEditDragMode() );
 
-    registry.registerFirstSingleClickBinding( new ZmlCellPainterMouseEventMatcher( GridRegion.BODY, MouseEventMatcher.LEFT_BUTTON, ZmlModelCellPainter.class, m_viewport ), new MouseEditAction() );
+    registry.registerFirstSingleClickBinding( new ZmlCellPainterMouseEventMatcher( GridRegion.BODY, MouseEventMatcher.LEFT_BUTTON, ZmlModelCellPainter.class, viewport ), new MouseEditAction() );
     registry.registerFirstMouseDragMode( new CellPainterMouseEventMatcher( GridRegion.BODY, MouseEventMatcher.LEFT_BUTTON, ZmlModelCellPainter.class ), new CellEditDragMode() );
+
+    /* copy/paste */
+    final KeyEventMatcher copyKey = new KeyEventMatcher( SWT.CONTROL, 'c' );
+    registry.unregisterKeyBinding( copyKey );
+    registry.registerKeyBinding( copyKey, new ZmlTableCopyAction( m_table ) );
+
+    final KeyEventMatcher pasteKey = new KeyEventMatcher( SWT.CONTROL, 'v' );
+    registry.unregisterKeyBinding( pasteKey );
+    registry.registerKeyBinding( pasteKey, new ZmlTablePasteAction( m_table ) );
   }
 }

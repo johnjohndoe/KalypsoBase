@@ -170,7 +170,7 @@ public class ZmlTable extends Composite implements IZmlTable
       @Override
       protected void addEditingUIConfig( )
       {
-        addConfiguration( new ZmlEditBindings( m_viewport ) );
+        addConfiguration( new ZmlEditBindings( ZmlTable.this ) );
       }
     } );
 
@@ -289,5 +289,4 @@ public class ZmlTable extends Composite implements IZmlTable
   {
     return m_bodyLayer.getSelection();
   }
-
 }
