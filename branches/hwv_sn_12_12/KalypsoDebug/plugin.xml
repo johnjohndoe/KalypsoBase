@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+     <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="Kalypso Debug"
+            id="org.kalypso.view.debug"/>
+      <view
+            allowMultiple="false"
+            class="org.kalypso.debug.view.PoolView"
+            category="org.kalypso.view.debug"
+            name="Resource Pool"
+            id="org.kalypso.debug.view.pool"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            description="Kommandos für die Behandlung von GML"
+            id="org.kalypso.debug.gml"
+            label="Kalypso GML Actions"
+            visible="false">
+         <menu
+               id="org.kalypso.gmlmenu"
+               label="GML"
+               path="additions">
+            <groupMarker name="cache"/>
+         </menu>
+         <menu
+               id="org.kalypso.debug.gmlactions.cachemenu"
+               label="Cache"
+               path="org.kalypso.gmlmenu/cache">
+            <groupMarker name="start"/>
+         </menu>
+         <action
+               class="org.kalypso.debug.gml.cache.ClearMemCacheActionDelegate"
+               id="org.kalypso.gml.cache.clearMemAction"
+               label="Schema-Cache löschen"
+               menubarPath="org.kalypso.gmlmenu/org.kalypso.debug.gmlactions.cachemenu/start"
+               style="push"
+               tooltip="Löscht alle Schemata aus dem Cache im Speicher"/>
+         <action
+               class="org.kalypso.debug.gml.typehandler.ReloadTypeRegistryActionDelegate"
+               id="org.kalypso.debug.gml.typehandler.ReloadTypeRegistryAction"
+               label="Type-Registry erneut laden"
+               menubarPath="org.kalypso.gmlmenu/org.kalypso.debug.gmlactions.cachemenu/start"
+               style="push"
+               tooltip="Clears the type handler registry and reloads the defined types"/>
+      </actionSet>
+      <actionSet
+            id="KalypsoDebug.config"
+            label="Kalypso Perspective Config "
+            visible="true">
+         <menu
+               id="KalypsoDebug.configmenu"
+               label="Perspective Config">
+            <groupMarker name="KalypsoDebug.configGroupMarker"/>
+         </menu>
+      </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editorActions">
+      <editorContribution
+            id="org.kalypso.ui.editor.gistreeeditor.GisTreeDebugActionDelegate"
+            targetID="org.kalypso.ui.editor.GmlEditor">
+         <action
+               class="org.kalypso.debug.editor.gistree.ShowSchemaEditorActionDelegate"
+               disabledIcon="icons/dlcl16/show_schema.gif"
+               icon="icons/elcl16/show_schema.gif"
+               id="org.kalypso.ui.editor.gistreeeditor.ShowSchemaAction"
+               label="Schema anzeigen"
+               menubarPath="additions/edit"
+               style="push"
+               toolbarPath="edit"
+               tooltip="Zeigt das Schema des geladenen GML im GML Schema Editor an."/>
+      </editorContribution>
+   </extension>
+</plugin>
