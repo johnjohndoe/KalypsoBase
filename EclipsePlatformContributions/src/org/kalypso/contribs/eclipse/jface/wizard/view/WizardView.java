@@ -52,21 +52,16 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.IPageChangeProvider;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.IPageChangingListener;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.dialogs.PageChangingEvent;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -112,9 +107,7 @@ import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.contribs.eclipse.i18n.Messages;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.contribs.eclipse.jface.wizard.IResetableWizard;
+import org.kalypso.contribs.eclipse.jface.wizard.view.IWizardAction.POSITION;
 import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
 import org.kalypso.contribs.java.lang.CatchRunnable;
 import org.kalypso.contribs.java.lang.DisposeHelper;
@@ -132,17 +125,12 @@ import org.kalypso.contribs.java.lang.DisposeHelper;
  */
 public class WizardView extends ViewPart implements IWizardContainer2, IWizardChangeProvider, IPageChangeProvider
 {
+  private static final String ACTION_METHOD = "action_"; //$NON-NLS-1$
+
   public static final String VIEW_ID = WizardView.class.getName();
-
-  public static final int SAVE_ID = IDialogConstants.CLIENT_ID + 1;
-
-  public static final int RESET_ID = IDialogConstants.CLIENT_ID + 2;
 
   final PartAdapter2 m_partListener = new PartAdapter2()
   {
-    /**
-     * @see org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2#partActivated(org.eclipse.ui.IWorkbenchPartReference)
-     */
     @Override
     public void partActivated( final IWorkbenchPartReference partRef )
     {
@@ -204,6 +192,8 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   private NavigationPanel m_browserPanel;
 
+  private IWizardAction[] m_additionalButtons;
+
   /** If set to true, the background color of error messages is the same as normal messages. */
   public void setErrorBackgroundBehaviour( final boolean useNormalBackground )
   {
@@ -242,6 +232,8 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   /** Sets an new wizard and immediately displays its first page */
   private void setWizard( final IWizard wizard, final int reason )
   {
+    final IWizard oldWizard = m_wizard;
+
     // clean wizard
     if( m_wizard != null )
     {
@@ -301,7 +293,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
       m_mainSash.setWeights( new int[] { initialBrowserSize, 100 - initialBrowserSize } );
     }
 
-    fireWizardChanged( wizard, reason );
+    fireWizardChanged( oldWizard, wizard, reason );
 
     if( m_wizard != null )
       showStartingPage();
@@ -462,11 +454,8 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   protected void createButtonsForButtonBar( final Composite parent )
   {
-    // Reset button; will be invisible if current page is not resetable (see IResetableWizard).
-    createButton( parent, RESET_ID, Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.view.WizardView1" ), "doReset", false ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    if( m_wizard instanceof IWizard2 && ((IWizard2) m_wizard).hasSaveButton() )
-      createButton( parent, SAVE_ID, Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.view.WizardView2" ), "doSave", false ); //$NON-NLS-1$ //$NON-NLS-2$
+    /* create additional buttons from provided actions */
+    createAdditionalButtons( parent, IWizardAction.POSITION.left );
 
     if( m_wizard.isHelpAvailable() )
       createButton( parent, IDialogConstants.HELP_ID, IDialogConstants.HELP_LABEL, "doHelp", false ); //$NON-NLS-1$
@@ -478,6 +467,33 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
     if( !(m_wizard instanceof IWizard2) || ((IWizard2) m_wizard).hasCancelButton() )
       createButton( parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, "doCancel", false ); //$NON-NLS-1$
+
+    createAdditionalButtons( parent, IWizardAction.POSITION.right );
+  }
+
+  private void createAdditionalButtons( final Composite parent, final POSITION position )
+  {
+    if( m_wizard instanceof IWizardWithButtons )
+    {
+      m_additionalButtons = ((IWizardWithButtons) m_wizard).getButtonActions();
+
+      for( int i = 0; i < m_additionalButtons.length; i++ )
+      {
+        final IWizardAction action = m_additionalButtons[i];
+
+        if( action.getPosition() == position )
+        {
+          final int id = IDialogConstants.CLIENT_ID + i;
+          final String defaultLabel = action.getText() == null ? "" : action.getText(); //$NON-NLS-1$
+          final String handlerMethod = ACTION_METHOD + i;//$NON-NLS-1$
+
+          final Button button = createButton( parent, id, defaultLabel, handlerMethod, false ); //$NON-NLS-1$ //$NON-NLS-2$
+          final String toolTipText = action.getToolTipText();
+          if( toolTipText != null && !toolTipText.isEmpty() )
+            button.setToolTipText( toolTipText );
+        }
+      }
+    }
   }
 
   /**
@@ -568,6 +584,13 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   {
     try
     {
+      if( handlerMethod.startsWith( ACTION_METHOD ) )
+      {
+        final int actionID = Integer.parseInt( handlerMethod.substring( ACTION_METHOD.length() ) );
+        m_additionalButtons[actionID].run();
+        return;
+      }
+
       final Method method = getClass().getMethod( handlerMethod, (Class< ? >[]) null );
       method.invoke( this, (Object[]) null );
     }
@@ -707,7 +730,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
       return false;
 
     if( !m_isMovingToPreviousPage )
-    // remember my previous page.
+      // remember my previous page.
     {
       if( m_backJumpsToLastVisited )
         page.setPreviousPage( m_currentPage );
@@ -735,43 +758,50 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     return runnable.getThrown() == null;
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.IWizardContainer#updateButtons()
-   */
   @Override
   public void updateButtons( )
   {
     if( m_wizard == null || m_currentPage == null )
       return;
 
+    Composite buttonComposite = null;
+
     boolean canFlipToNextPage = false;
     final boolean canFinish = m_wizard.canFinish();
 
-    final boolean canReset = m_wizard instanceof IResetableWizard ? ((IResetableWizard) m_wizard).canReset() : false;
-    final boolean showReset = m_wizard instanceof IResetableWizard ? ((IResetableWizard) m_wizard).showResetButton() : false;
+    /* additional action buttons */
+    for( int i = 0; i < m_additionalButtons.length; i++ )
+    {
+      final IWizardAction action = m_additionalButtons[i];
+      final Button actionButton = getButton( IDialogConstants.CLIENT_ID + i );
+
+      final boolean isVisible = action.isVisible();
+
+      actionButton.setVisible( isVisible );
+      actionButton.setEnabled( action.isEnabled() );
+
+      if( action.isExcludeIfInvisible() )
+      {
+        final GridData data = (GridData) actionButton.getLayoutData();
+        data.exclude = !isVisible;
+        buttonComposite = actionButton.getParent();
+      }
+    }
 
     final Button backButton = getButton( IDialogConstants.BACK_ID );
-    final Button nextButton = getButton( IDialogConstants.NEXT_ID );
-    final Button finishButton = getButton( IDialogConstants.FINISH_ID );
-    final Button resetButton = getButton( RESET_ID );
-
     if( backButton != null )
       backButton.setEnabled( m_currentPage.getPreviousPage() != null );
 
+    final Button nextButton = getButton( IDialogConstants.NEXT_ID );
     if( nextButton != null )
     {
       canFlipToNextPage = m_currentPage.canFlipToNextPage();
       nextButton.setEnabled( canFlipToNextPage );
     }
 
+    final Button finishButton = getButton( IDialogConstants.FINISH_ID );
     if( finishButton != null )
       finishButton.setEnabled( canFinish );
-
-    if( resetButton != null )
-    {
-      resetButton.setVisible( showReset );
-      resetButton.setEnabled( canReset );
-    }
 
     // finish is default unless it is disabled and next is enabled
     // if( canFlipToNextPage && !canFinish )
@@ -783,6 +813,9 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
       else
         getShell().setDefaultButton( finishButton );
     }
+
+    if( buttonComposite != null )
+      buttonComposite.getParent().layout( true, true );
   }
 
   /**
@@ -902,7 +935,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     m_listeners.remove( l );
   }
 
-  protected final void fireWizardChanged( final IWizard newwizard, final int reason )
+  protected final void fireWizardChanged( final IWizard oldWizard, final IWizard newWizard, final int reason )
   {
     final IWizardContainerListener[] listeners = m_listeners.toArray( new IWizardContainerListener[m_listeners.size()] );
     for( final IWizardContainerListener listener : listeners )
@@ -912,7 +945,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
         @Override
         public void run( ) throws Exception
         {
-          listener.onWizardChanged( newwizard, reason );
+          listener.onWizardChanged( oldWizard, newWizard, reason );
         }
       } );
     }
@@ -962,19 +995,24 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   public boolean doFinish( )
   {
+    return doFinish( IWizardContainerListener.REASON_FINISHED );
+  }
+
+  public boolean doFinish( final int reason )
+  {
     final IWizard wizard = getWizard();
 
     if( wizard == null )
     {
       // even if wizard is null, fire event, so listeners will know that the finish button was pressed (and can close
       // this view)
-      fireWizardChanged( null, IWizardContainerListener.REASON_FINISHED );
+      fireWizardChanged( null, null, reason );
       return true;
     }
 
     if( wizard.performFinish() )
     {
-      setWizard( null, IWizardContainerListener.REASON_FINISHED );
+      setWizard( null, reason );
       return true;
     }
 
@@ -1026,49 +1064,6 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
     // the help button never changes the page, so always return false
     return false;
-  }
-
-  public boolean doReset( )
-  {
-    Assert.isTrue( m_wizard instanceof IResetableWizard );
-
-    final IResetableWizard resetableWizard = (IResetableWizard) m_wizard;
-
-    if( !resetableWizard.canReset() )
-      updateButtons();
-    else
-      resetableWizard.performReset();
-
-    return true;
-  }
-
-  public boolean doSave( )
-  {
-    final IWizard wizard = getWizard();
-
-    if( wizard instanceof IWizard2 )
-    {
-      final IWizard2 wizard2 = (IWizard2) wizard;
-
-      if( wizard2.doAskForSave() )
-      {
-        if( !MessageDialog.openQuestion( getShell(), Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.view.WizardView4" ), Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.view.WizardView5" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
-          return false;
-      }
-
-      final ICoreRunnableWithProgress saveOperation = new ICoreRunnableWithProgress()
-      {
-        @Override
-        public IStatus execute( final IProgressMonitor monitor ) throws CoreException
-        {
-          return wizard2.saveAllPages( monitor );
-        }
-      };
-      final IStatus status = RunnableContextHelper.execute( this, true, false, saveOperation );
-      ErrorDialog.openError( getShell(), Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.view.WizardView6" ), Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.view.WizardView7" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
-
-    return true;
   }
 
   // /////////////////////

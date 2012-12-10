@@ -84,12 +84,7 @@ public interface IWizard2 extends IWizard
   IStatus saveAllPages( IProgressMonitor monitor ) throws CoreException;
 
   /**
-   * @return Return <code>true</code>, if a 'save' button should be visible for this wizard.
-   */
-  boolean hasSaveButton( );
-
-  /**
-   * @return If the user should be aksed before any save.
+   * @return If the user should be asked before any save.
    */
   boolean doAskForSave( );
 
@@ -98,5 +93,4 @@ public interface IWizard2 extends IWizard
    * buttons in the normal wizard container implementations).
    */
   boolean useDefaultButton( );
-
 }
