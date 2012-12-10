@@ -49,11 +49,13 @@ import org.eclipse.jface.wizard.IWizard;
  */
 public interface IWizardContainerListener
 {
-  public static int REASON_NONE = 0;
+  int REASON_NONE = 0;
 
-  public static int REASON_FINISHED = 1;
+  int REASON_FINISHED = 1;
 
-  public static int REASON_CANCELED = 2;
+  int REASON_CANCELED = 2;
+
+  int REASON_RESTART = 3;
 
   /**
    * Called after the wizard was changed. Is also called when the wizard was finished or canceled.
@@ -63,5 +65,5 @@ public interface IWizardContainerListener
    * @param reason
    *          If the wizard was cancelled or finished, the reason is set to one of those flags.
    */
-  public void onWizardChanged( final IWizard newwizard, final int reason );
+  void onWizardChanged( IWizard oldWizard, IWizard newWizard, int reason );
 }
