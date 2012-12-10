@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="org.kalypso.NOT_SET" xmlns="org.kalypso.NO_SET" xmlns:gml="http://www.opengis.net/gml" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<!-- Force gml version via kalypso specific appinfo. -->
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<!-- Import GML-Schema: schemaLocation not specified, gml-namespace is known to kalypso-catalog -->
+	<xs:import namespace="http://www.opengis.net/gml"/>
+</xs:schema>
