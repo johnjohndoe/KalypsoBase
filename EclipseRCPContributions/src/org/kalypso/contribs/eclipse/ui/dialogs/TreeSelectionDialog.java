@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -52,9 +51,9 @@ public class TreeSelectionDialog extends SelectionDialog
   static String DESELECT_ALL_TITLE = WorkbenchMessages.SelectionDialog_deselectLabel;
 
   // sizing constants
-  private static final int SIZING_SELECTION_WIDGET_HEIGHT = 250;
+  private final static int SIZING_SELECTION_WIDGET_HEIGHT = 250;
 
-  private static final int SIZING_SELECTION_WIDGET_WIDTH = 300;
+  private final static int SIZING_SELECTION_WIDGET_WIDTH = 300;
 
   // the root element to populate the viewer with
   private final Object m_inputElement;
@@ -71,15 +70,16 @@ public class TreeSelectionDialog extends SelectionDialog
    * Creates a tree selection dialog.
    *
    * @param parentShell
-   *          the parent shell
+   *            the parent shell
    * @param input
-   *          the root element to populate this dialog with
+   *            the root element to populate this dialog with
    * @param contentProvider
-   *          the content provider for navigating the model
+   *            the content provider for navigating the model
    * @param labelProvider
-   *          the label provider for displaying model elements
+   *            the label provider for displaying model elements
    * @param message
-   *          the message to be displayed at the top of this dialog, or <code>null</code> to display a default message
+   *            the message to be displayed at the top of this dialog, or <code>null</code> to display a default
+   *            message
    */
   public TreeSelectionDialog( final Shell parentShell, final Object input, final ITreeContentProvider contentProvider, final ILabelProvider labelProvider, final String message )
   {
@@ -104,16 +104,16 @@ public class TreeSelectionDialog extends SelectionDialog
    * Add the selection and deselection buttons to the dialog.
    *
    * @param composite
-   *          org.eclipse.swt.widgets.Composite
+   *            org.eclipse.swt.widgets.Composite
    */
   private void addSelectionButtons( final Composite composite )
   {
     final Composite buttonComposite = new Composite( composite, SWT.NONE );
-
-    final GridLayout layout = GridLayoutFactory.fillDefaults().create();
+    final GridLayout layout = new GridLayout();
+    layout.numColumns = 0;
+    layout.marginWidth = 0;
     layout.horizontalSpacing = convertHorizontalDLUsToPixels( IDialogConstants.HORIZONTAL_SPACING );
     buttonComposite.setLayout( layout );
-
     buttonComposite.setLayoutData( new GridData( SWT.END, SWT.TOP, true, false ) );
 
     final Button selectButton = createButton( buttonComposite, IDialogConstants.SELECT_ALL_ID, SELECT_ALL_TITLE, false );

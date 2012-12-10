@@ -62,7 +62,7 @@ public class ExceptionHelper
   {
     int statusCode = 0;
 
-    final List<IStatus> myStates = new ArrayList<>();
+    final List<IStatus> myStates = new ArrayList<IStatus>();
 
     /* first determine the most serious type of state and create a new MultiStatus with this type */
     for( final IStatus status : states )

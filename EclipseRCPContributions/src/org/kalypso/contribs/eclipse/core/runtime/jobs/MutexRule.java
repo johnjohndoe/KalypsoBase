@@ -17,19 +17,14 @@ public class MutexRule implements ISchedulingRule
    */
   private final String m_name;
 
-  /**
-   * The constructor.
-   */
   public MutexRule( )
   {
-    m_name = null;
+    this( null );
   }
 
   /**
-   * The constructor.
-   * 
    * @param name
-   *          This name is only used in the to string function, if given. If it is null or empty, the normal toString()
+   *          This name is only used in the toString method, if given. If it is null or empty, the normal toString()
    *          will be done.
    */
   public MutexRule( final String name )
@@ -37,27 +32,18 @@ public class MutexRule implements ISchedulingRule
     m_name = name;
   }
 
-  /**
-   * @see org.eclipse.core.runtime.jobs.ISchedulingRule#contains(org.eclipse.core.runtime.jobs.ISchedulingRule)
-   */
   @Override
   public boolean contains( final ISchedulingRule rule )
   {
     return rule == this;
   }
 
-  /**
-   * @see org.eclipse.core.runtime.jobs.ISchedulingRule#isConflicting(org.eclipse.core.runtime.jobs.ISchedulingRule)
-   */
   @Override
   public boolean isConflicting( final ISchedulingRule rule )
   {
     return rule == this;
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {

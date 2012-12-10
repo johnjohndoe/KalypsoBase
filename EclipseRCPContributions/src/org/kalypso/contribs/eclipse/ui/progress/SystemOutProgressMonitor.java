@@ -52,7 +52,7 @@ public class SystemOutProgressMonitor implements IProgressMonitor
   /**
    * This is the delegate monitor.
    */
-  private final IProgressMonitor m_monitor;
+  private IProgressMonitor m_monitor;
 
   /**
    * The total work.
@@ -85,7 +85,7 @@ public class SystemOutProgressMonitor implements IProgressMonitor
    * @param monitor
    *          A progress monitor.
    */
-  public SystemOutProgressMonitor( final IProgressMonitor monitor )
+  public SystemOutProgressMonitor( IProgressMonitor monitor )
   {
     m_monitor = monitor;
     m_totalWork = 0;
@@ -99,7 +99,7 @@ public class SystemOutProgressMonitor implements IProgressMonitor
    * @see org.eclipse.core.runtime.IProgressMonitor#beginTask(java.lang.String, int)
    */
   @Override
-  public void beginTask( final String name, final int totalWork )
+  public void beginTask( String name, int totalWork )
   {
     /* Memorize the total work. */
     m_totalWork = totalWork;
@@ -137,7 +137,7 @@ public class SystemOutProgressMonitor implements IProgressMonitor
    * @see org.eclipse.core.runtime.IProgressMonitor#internalWorked(double)
    */
   @Override
-  public void internalWorked( final double work )
+  public void internalWorked( double work )
   {
     m_monitor.internalWorked( work );
   }
@@ -155,10 +155,10 @@ public class SystemOutProgressMonitor implements IProgressMonitor
    * @see org.eclipse.core.runtime.IProgressMonitor#setCanceled(boolean)
    */
   @Override
-  public void setCanceled( final boolean value )
+  public void setCanceled( boolean value )
   {
     /* Time. */
-    final long checkpoint = System.currentTimeMillis();
+    long checkpoint = System.currentTimeMillis();
 
     /* Log the message to System.out. */
     System.out.println( "Should be canceled ..." );
@@ -175,10 +175,10 @@ public class SystemOutProgressMonitor implements IProgressMonitor
    * @see org.eclipse.core.runtime.IProgressMonitor#setTaskName(java.lang.String)
    */
   @Override
-  public void setTaskName( final String name )
+  public void setTaskName( String name )
   {
     /* Time. */
-    final long checkpoint = System.currentTimeMillis();
+    long checkpoint = System.currentTimeMillis();
 
     /* Log the message to System.out. */
     System.out.println( String.format( "Task name: %s", name ) );
@@ -195,10 +195,10 @@ public class SystemOutProgressMonitor implements IProgressMonitor
    * @see org.eclipse.core.runtime.IProgressMonitor#subTask(java.lang.String)
    */
   @Override
-  public void subTask( final String name )
+  public void subTask( String name )
   {
     /* Time. */
-    final long checkpoint = System.currentTimeMillis();
+    long checkpoint = System.currentTimeMillis();
 
     /* Log the message to System.out. */
     System.out.println( String.format( "Sub task: %s", name ) );
@@ -215,10 +215,10 @@ public class SystemOutProgressMonitor implements IProgressMonitor
    * @see org.eclipse.core.runtime.IProgressMonitor#worked(int)
    */
   @Override
-  public void worked( final int work )
+  public void worked( int work )
   {
     /* Time. */
-    final long checkpoint = System.currentTimeMillis();
+    long checkpoint = System.currentTimeMillis();
 
     /* Increase the work done. */
     m_worked = m_worked + work;

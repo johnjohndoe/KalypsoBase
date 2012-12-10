@@ -45,13 +45,12 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
+import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin;
 import org.kalypso.contribs.eclipse.jface.operation.CoreRunnableWrapper;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 
@@ -62,8 +61,6 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
  */
 public final class ProgressUtilities
 {
-  public static final IStatus STATUS_OPERATION_CANCELLED = new Status( IStatus.CANCEL, EclipseRCPContributionsPlugin.ID, "Operation cancelled by user" );
-
   private ProgressUtilities( )
   {
     // helper class, do not instantiate
@@ -126,7 +123,9 @@ public final class ProgressUtilities
     }
     catch( final InterruptedException e )
     {
-      return STATUS_OPERATION_CANCELLED;
+      final IStatus status = StatusUtilities.statusFromThrowable( e, errorMessage );
+      EclipseRCPContributionsPlugin.getDefault().getLog().log( status );
+      return status;
     }
   }
 
@@ -134,48 +133,19 @@ public final class ProgressUtilities
    * Calls {@link IProgressMonitor#worked(int)} on the given monitor.
    * <p>
    * In addition, it checks if the monitor is canceled and throws an CoreException with CANCEL_STATUS if this is the
-   * case.
+   * cae.
+   * </p>
    * 
    * @see IProgressMonitor#worked(int)
    */
-  public static void worked( final IProgressMonitor monitor, final int work )
+  public static void worked( final IProgressMonitor monitor, final int work ) throws CoreException
   {
     if( monitor == null )
       return;
 
     monitor.worked( work );
     if( monitor.isCanceled() )
-      throw new OperationCanceledException();
-  }
-
-  /**
-   * Progress the given monitor, but only for every n-th step (for performance reasons, stepping too often is too
-   * costly).<br/>
-   * 
-   * @param monitor
-   *          The monitor to progress
-   * @param counter
-   *          The current step count. Used as first argument to the format string.
-   * @param maxCounter
-   *          The size the counter will eventually reach. Used as second argument to the format string.
-   * @param stepSize
-   *          The step the monitor will progress, if <code>counter % stepSize == 0</code>.
-   * @param subTaskFormat
-   *          Message set as sub task to the monitor. Must contain two '%d' placeholders (for counter and maxCounter).
-   *          May be <code>null</code>.
-   */
-  public static void workedModulo( final IProgressMonitor monitor, final int counter, final int maxCounter, final int stepSize, final String subTaskFormat )
-  {
-    if( counter % stepSize == 0 )
-    {
-      if( subTaskFormat != null )
-      {
-        final String msg = String.format( subTaskFormat, counter + 1, maxCounter );
-        monitor.subTask( msg );
-      }
-
-      worked( monitor, stepSize );
-    }
+      throw new CoreException( Status.CANCEL_STATUS );
   }
 
   /**
@@ -196,5 +166,4 @@ public final class ProgressUtilities
     if( monitor.isCanceled() )
       throw new CoreException( Status.CANCEL_STATUS );
   }
-
 }

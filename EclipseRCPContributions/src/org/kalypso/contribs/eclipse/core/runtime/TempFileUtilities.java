@@ -42,20 +42,47 @@ v.doemming@tuhh.de
 package org.kalypso.contribs.eclipse.core.runtime;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Plugin;
 
 /**
  * Utilities for temp files stored within work directories of plugins
- * 
+ *
  * @author schlienger
  */
 public class TempFileUtilities
 {
-  private TempFileUtilities( )
+  private TempFileUtilities()
   {
     // not intended to be instanciated
+  }
+
+  /**
+   * Create a temp file in the subDirName of the plugin's state location (where files can be created, deleted, etc.).
+   * Uses File.createTempFile() so as written in the File javadoc, you should call .deleteOnExit() on the returned file
+   * instance to make it a real 'temp' file.
+   * 
+   * @deprecated Do not use this. Temp file will be saved in plugin state location, this is rubbish.
+   */
+  @Deprecated
+  public static File createTempFile( final Plugin plugin, final String subDirName, String prefix, final String suffix ) throws IOException
+  {
+    if( prefix.length() < 3 )
+      prefix += "___";
+    
+    final IPath path = plugin.getStateLocation();
+    final File dir = new File( path.toFile(), subDirName );
+    if( !dir.exists() )
+      dir.mkdir();
+
+    // TODO as org.kalypso.commons.java.io.FileUtilities.validateName() should be moved to JavaApiContribs and could be
+    // used here
+    final String cleanPrefix = prefix.replaceAll( "[\\\\/:\\*\\?\"<>|]", "_" );
+
+    final File file = File.createTempFile( cleanPrefix, suffix, dir );
+    return file;
   }
 
   /**
@@ -69,7 +96,7 @@ public class TempFileUtilities
     if( dir.exists() )
       cleanDirectory( dir );
   }
-
+  
   private static void cleanDirectory( final File dir )
   {
     final File[] files = dir.listFiles();
@@ -80,7 +107,7 @@ public class TempFileUtilities
       else
         file.delete();
     }
-
+    
     dir.delete();
   }
 

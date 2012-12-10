@@ -7,7 +7,7 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.java.lang.NumberUtils;
 
 /**
- * On each modification, checks if widget contains an Integer-Text.
+ * On each modification, checks if widget contains an Integer-Text, if not, setForeground Color *
  * 
  * @author Holger Albert
  */
@@ -16,12 +16,12 @@ public class IntegerModifyListener implements ModifyListener
   /**
    * The good color.
    */
-  private final Color m_goodColor;
+  private Color m_goodColor;
 
   /**
    * The bad color.
    */
-  private final Color m_badColor;
+  private Color m_badColor;
 
   /**
    * The constructor.
@@ -31,7 +31,7 @@ public class IntegerModifyListener implements ModifyListener
    * @param badColor
    *          The bad color.
    */
-  public IntegerModifyListener( final Color goodColor, final Color badColor )
+  public IntegerModifyListener( Color goodColor, Color badColor )
   {
     m_goodColor = goodColor;
     m_badColor = badColor;
@@ -41,12 +41,12 @@ public class IntegerModifyListener implements ModifyListener
    * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
    */
   @Override
-  public void modifyText( final ModifyEvent e )
+  public void modifyText( ModifyEvent e )
   {
     if( e.widget instanceof Text )
     {
-      final Text text = (Text) e.widget;
-      final String number = text.getText();
+      Text text = (Text) e.widget;
+      String number = text.getText();
 
       if( NumberUtils.isInteger( number ) )
         text.setForeground( m_goodColor );

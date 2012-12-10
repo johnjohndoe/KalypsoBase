@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.dialog;
 
@@ -164,29 +164,5 @@ public final class DialogSettingsUtils
     }
 
     return defaultValue;
-  }
-
-  /**
-   * Gets a string value of a setting's property, but returns a default value if this property is not set.
-   */
-  public static String getString( final IDialogSettings settings, final String key, final String defaultValue )
-  {
-    if( settings == null )
-      return defaultValue;
-
-    final String value = settings.get( key );
-    if( value == null )
-      return defaultValue;
-
-    return value;
-  }
-
-  /**
-   * Returns <code>true</code>, if the given settings has a value for the given key.
-   */
-  public static boolean hasSetting( final IDialogSettings settings, final String key )
-  {
-    final String value = settings.get( key );
-    return value != null;
   }
 }

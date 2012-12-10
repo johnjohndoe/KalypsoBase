@@ -67,7 +67,7 @@ import org.eclipse.ui.internal.WorkbenchMessages;
 
 /**
  * This page lists a list of objects from which the user can choose from.
- *
+ * 
  * @author Gernot Belger, Holger Albert
  */
 @SuppressWarnings("restriction")
@@ -161,7 +161,7 @@ public class ArrayChooserPage extends WizardPage
 
   /**
    * The constructor.
-   *
+   * 
    * @param chooseables
    *          Used as input for {@link ArrayContentProvider}
    * @param selected
@@ -220,7 +220,7 @@ public class ArrayChooserPage extends WizardPage
 
   /**
    * This function sets a LabelProvider, that will be used generate the list names of the objects.
-   *
+   * 
    * @param labelProvider
    *          The new LabelProvider.
    */
@@ -231,7 +231,7 @@ public class ArrayChooserPage extends WizardPage
 
   /**
    * This function returns the current LabelProvider, that will be used to generate the list names of the objects.
-   *
+   * 
    * @return The current LabelProvider.
    */
   public IBaseLabelProvider getLabelProvider( )
@@ -297,7 +297,7 @@ public class ArrayChooserPage extends WizardPage
 
   /**
    * This function returns a list of selected objects from the chooseable list.
-   *
+   * 
    * @return All selected objects.
    */
   public Object[] getChoosen( )
@@ -311,7 +311,7 @@ public class ArrayChooserPage extends WizardPage
   /**
    * This function creates one type of button from two available types. Each type of button will change the check-state
    * of all chooseables.
-   *
+   * 
    * @param parent
    *          The parent composite.
    * @param viewer
@@ -355,7 +355,7 @@ public class ArrayChooserPage extends WizardPage
   /**
    * This function sets the list of chooseables. If one is already set via the constructor, it will be replaced by this
    * list.
-   *
+   * 
    * @param input
    *          The new list of chooseables.
    */
@@ -373,7 +373,7 @@ public class ArrayChooserPage extends WizardPage
 
   /**
    * This function will check, if all requirements of this page are met.
-   *
+   * 
    * @param firstTime
    *          This parameter should be true, if the page calls the function the first time. If true, the finish-state
    *          will be checked, but no error-message will be displayed.
@@ -425,7 +425,7 @@ public class ArrayChooserPage extends WizardPage
     if( section == null )
       return;
 
-    final ArrayList<Object> checked = new ArrayList<>();
+    final ArrayList<Object> checked = new ArrayList<Object>();
     final Object[] elements = ((IStructuredContentProvider) m_viewer.getContentProvider()).getElements( m_viewer.getInput() );
 
     /* Check all elements of the viewer. */

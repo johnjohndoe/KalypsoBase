@@ -52,12 +52,9 @@ import org.eclipse.swt.widgets.TableColumn;
 
 /**
  * DefaultTableViewer handles common functionality that you wish you had when working with a TableViewer.
- *
+ * 
  * @author Marc Schlienger
- * @deprecated Not maintained any more. Directly use {@link TableViewer} and use {@link ColumnViewerUtil} to easily
- *             create table columns instead.
  */
-@Deprecated
 public class DefaultTableViewer extends TableViewer
 {
   public static final String COLUMN_PROP_NAME = "columnName";
@@ -92,13 +89,15 @@ public class DefaultTableViewer extends TableViewer
     super( table );
   }
 
+  /**
+   * @see org.eclipse.jface.viewers.AbstractTableViewer#hookControl(org.eclipse.swt.widgets.Control)
+   */
   @Override
   protected void hookControl( final Control control )
   {
     super.hookControl( control );
 
     // After resize, adjust the columns according to the percent settings.
-    // TODO: ugly, this is not what the users wants...
     control.addControlListener( new ControlAdapter()
     {
       @Override
@@ -213,6 +212,7 @@ public class DefaultTableViewer extends TableViewer
       element.dispose();
 
     setColumnProperties( new String[] {} );
+
   }
 
   public String getProperty( final int columnIndex )

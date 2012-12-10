@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.utils;
 
@@ -53,7 +53,7 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * This class provides functions for handling views.
- *
+ * 
  * @author Holger Albert
  */
 public class ViewUtilities
@@ -76,41 +76,41 @@ public class ViewUtilities
    * <li>There are no views open.</li>
    * <li>No views matching the given criteria is open.</li>
    * </ul>
-   *
+   * 
    * @param primaryId
    *          The primary id.
    * @param secondaryId
    *          The secondary id. May be null.
    * @return The views in the active workbench window or a empty list.
    */
-  public static IViewPart[] findViewsInActiveWindow( final String primaryId, final String secondaryId )
+  public static IViewPart[] findViewsInActiveWindow( String primaryId, String secondaryId )
   {
     /* Get the active workbench. */
-    final IWorkbench workbench = PlatformUI.getWorkbench();
+    IWorkbench workbench = PlatformUI.getWorkbench();
     if( workbench == null )
       return new IViewPart[] {};
 
     /* Get the active workbench window. */
-    final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+    IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
     if( window == null )
       return new IViewPart[] {};
 
     /* Get all pages. */
-    final IWorkbenchPage[] pages = window.getPages();
+    IWorkbenchPage[] pages = window.getPages();
     if( pages == null || pages.length == 0 )
       return new IViewPart[] {};
 
     /* Collect the views. */
-    final List<IViewPart> views = new ArrayList<>();
+    List<IViewPart> views = new ArrayList<IViewPart>();
 
     /* Loop the pages. */
-    for( final IWorkbenchPage page : pages )
+    for( IWorkbenchPage page : pages )
     {
       /* Get all view references. */
-      final IViewReference[] references = page.getViewReferences();
+      IViewReference[] references = page.getViewReferences();
 
       /* Loop the view references. */
-      for( final IViewReference reference : references )
+      for( IViewReference reference : references )
       {
         /* Does the primary id match? */
         if( reference.getId().equals( primaryId ) )
@@ -130,22 +130,22 @@ public class ViewUtilities
 
   /**
    * This function will hide the view(s) with the given id(s).
-   *
+   * 
    * @param primaryId
    *          The primary id.
    * @param secondaryId
    *          The secondary id. If omitted, every view with the given primary id will be hidden. May be null.
    */
-  public static void hideView( final String primaryId, final String secondaryId )
+  public static void hideView( String primaryId, String secondaryId )
   {
-    final IViewPart[] views = findViewsInActiveWindow( primaryId, secondaryId );
+    IViewPart[] views = findViewsInActiveWindow( primaryId, secondaryId );
     if( views == null || views.length == 0 )
       return;
 
-    for( final IViewPart view : views )
+    for( IViewPart view : views )
     {
-      final IWorkbenchPartSite site = view.getSite();
-      final IWorkbenchPage page = site.getPage();
+      IWorkbenchPartSite site = view.getSite();
+      IWorkbenchPage page = site.getPage();
       page.hideView( view );
     }
   }

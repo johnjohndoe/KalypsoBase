@@ -12,13 +12,20 @@
  */
 package org.kalypso.contribs.eclipse.swt.udig;
 
+import java.awt.Component;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.Transparency;
 import java.awt.geom.PathIterator;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
 import java.awt.image.DataBufferByte;
+import java.awt.image.DirectColorModel;
+import java.awt.image.IndexColorModel;
 import java.awt.image.Raster;
 import java.awt.image.RenderedImage;
+import java.awt.image.WritableRaster;
 
 import javax.swing.Icon;
 
@@ -33,6 +40,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.Path;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -43,6 +51,171 @@ import org.eclipse.swt.widgets.Display;
  */
 public final class AWTSWTImageUtils
 {
+
+  /**
+   * Convert an SWT Image to a BufferedImage - this one rips the ImageData out of the live Image; and then copies it
+   * into a BufferedImage.
+   */
+  public static BufferedImage convertToAWT( final Image image )
+  {
+    final ImageData data = image.getImageData();
+    return convertToAWT( data );
+  }
+
+  /**
+   * Converts an SWT ImageData to a BufferedImage - It isn't incredibly optimized so be careful :)
+   * <p>
+   * We should be able to use use JAI to produce a RenderedImage around the provided ImageData. It wound be a buffered
+   * image but it will be something that can efficiently be drawn when printing.
+   * </p>
+   * 
+   * @return a Buffered Image
+   */
+  public static BufferedImage convertToAWT( final ImageData data )
+  {
+    ColorModel colorModel = null;
+    final PaletteData palette = data.palette;
+    if( palette.isDirect )
+    {
+      // no alpha data?
+      if( data.alphaData == null )
+      {
+        colorModel = new DirectColorModel( 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000 );
+        final BufferedImage bufferedImage = new BufferedImage( colorModel, colorModel.createCompatibleWritableRaster( data.width, data.height ), false, null );
+        final WritableRaster raster = bufferedImage.getRaster();
+        final int[] pixelArray = new int[4];
+        for( int y = 0; y < data.height; y++ )
+        {
+          for( int x = 0; x < data.width; x++ )
+          {
+            final int pixel = data.getPixel( x, y );
+            final RGB rgb = palette.getRGB( pixel );
+            pixelArray[0] = rgb.red;
+            pixelArray[1] = rgb.green;
+            pixelArray[2] = rgb.blue;
+            if( pixel == data.transparentPixel )
+            {
+              pixelArray[3] = 0; // transparent
+            }
+            else
+            {
+              pixelArray[3] = 255; // opaque
+            }
+            raster.setPixels( x, y, 1, 1, pixelArray );
+          }
+        }
+        final int w = bufferedImage.getWidth();
+        final int h = bufferedImage.getHeight();
+        final Raster ras = bufferedImage.getData();
+        for( int i = 0; i < w; i++ )
+        {
+          for( int j = 0; j < h; j++ )
+          {
+            final double[] pixel = ras.getPixel( i, j, new double[4] );
+          }
+        }
+
+        return bufferedImage;
+      }
+
+      // image has alpha data, preserve it
+      else
+      {
+        colorModel = new DirectColorModel( 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000 );
+        final BufferedImage bufferedImage = new BufferedImage( colorModel, colorModel.createCompatibleWritableRaster( data.width, data.height ), false, null );
+        final WritableRaster raster = bufferedImage.getRaster();
+        final int[] pixelArray = new int[4];
+        for( int y = 0; y < data.height; y++ )
+        {
+          for( int x = 0; x < data.width; x++ )
+          {
+            final int pixel = data.getPixel( x, y );
+            final RGB rgb = palette.getRGB( pixel );
+            pixelArray[0] = rgb.red;
+            pixelArray[1] = rgb.green;
+            pixelArray[2] = rgb.blue;
+            pixelArray[3] = data.getAlpha( x, y );
+            raster.setPixels( x, y, 1, 1, pixelArray );
+          }
+        }
+        return bufferedImage;
+      }
+
+      // la paleta swt no es directa ¿?¿?¿?
+
+      // ColorSpace colorSpace = ColorSpace.getInstance(ColorSpace.CS_sRGB);
+      // colorModel = new DirectColorModel(colorSpace, data.depth, palette.redMask,
+      // palette.greenMask, palette.blueMask, 0, false, DataBuffer.TYPE_INT);
+      // // colorModel = new DirectColorModel(data.depth, palette.redMask,
+      // // palette.greenMask, palette.blueMask);
+      // BufferedImage bufferedImage = new BufferedImage(colorModel,
+      // colorModel.createCompatibleWritableRaster(data.width,
+      // data.height), false, null);
+      // WritableRaster raster = bufferedImage.getRaster();
+      // int[] pixelArray = new int[3];
+      // for (int y = 0; y < data.height; y++) {
+      // for (int x = 0; x < data.width; x++) {
+      // int pixel = data.getPixel(x, y);
+      // RGB rgb = palette.getRGB(pixel);
+      // pixelArray[0] = rgb.red;
+      // pixelArray[1] = rgb.green;
+      // pixelArray[2] = rgb.blue;
+      // raster.setPixels(x, y, 1, 1, pixelArray);
+      // }
+      // }
+      // return bufferedImage;
+    }
+    else
+    {
+      final RGB[] rgbs = palette.getRGBs();
+      final byte[] red = new byte[rgbs.length];
+      final byte[] green = new byte[rgbs.length];
+      final byte[] blue = new byte[rgbs.length];
+      for( int i = 0; i < rgbs.length; i++ )
+      {
+        final RGB rgb = rgbs[i];
+        red[i] = (byte) rgb.red;
+        green[i] = (byte) rgb.green;
+        blue[i] = (byte) rgb.blue;
+      }
+      if( data.transparentPixel != -1 )
+      {
+        colorModel = new IndexColorModel( data.depth, rgbs.length, red, green, blue, data.transparentPixel );
+      }
+      else
+      {
+        colorModel = new IndexColorModel( data.depth, rgbs.length, red, green, blue );
+      }
+      final BufferedImage bufferedImage = new BufferedImage( colorModel, colorModel.createCompatibleWritableRaster( data.width, data.height ), false, null );
+      final WritableRaster raster = bufferedImage.getRaster();
+      final int[] pixelArray = new int[1];
+      for( int y = 0; y < data.height; y++ )
+      {
+        for( int x = 0; x < data.width; x++ )
+        {
+          final int pixel = data.getPixel( x, y );
+          pixelArray[0] = pixel;
+          raster.setPixel( x, y, pixelArray );
+        }
+      }
+      return bufferedImage;
+    }
+  }
+
+  /**
+   * Converts the shape to a path object. Remember to dispose of the path object when done.
+   * 
+   * @param shape
+   * @return the shape converted to a {@link Path} object.
+   */
+  public static Path convertToPath( final Shape shape, final Device device )
+  {
+    AWTSWTImageUtils.checkAccess();
+    final PathIterator p = shape.getPathIterator( SWTGraphics.AFFINE_TRANSFORM );
+
+    return AWTSWTImageUtils.createPath( p, device );
+  }
+
   public static Path createPath( final PathIterator p, final Device device )
   {
     if( p.isDone() )
@@ -125,6 +298,7 @@ public final class AWTSWTImageUtils
     // swtdata.transparentPixel = -1;
     swtdata.alpha = -1;
     swtdata.alphaData = new byte[swtdata.data.length];
+    final int j = 2;
     for( int i = 0; i < swtdata.alphaData.length; i++ )
     {
       swtdata.alphaData[i] = (byte) 255;
@@ -411,6 +585,36 @@ public final class AWTSWTImageUtils
       s = s | SWT.BOLD;
     }
     return s;
+  }
+
+  public static Icon imageDescriptor2awtIcon( final ImageDescriptor imageDescriptor )
+  {
+    final Icon awtIcon = new Icon()
+    {
+
+      ImageData imageData = imageDescriptor.getImageData();
+
+      @Override
+      public int getIconHeight( )
+      {
+        return imageData.width;
+      }
+
+      @Override
+      public int getIconWidth( )
+      {
+        return imageData.height;
+      }
+
+      @Override
+      public void paintIcon( final Component comp, final Graphics g, final int x, final int y )
+      {
+        final BufferedImage image = convertToAWT( imageData );
+        g.drawImage( image, x, y, null );
+      }
+
+    };
+    return awtIcon;
   }
 
   /**

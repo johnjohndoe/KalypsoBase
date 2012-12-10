@@ -63,7 +63,7 @@ public class EditorFirstAdapterFinder<C> implements IAdapterFinder<C>
    */
   public static <D> EditorFirstAdapterFinder<D> instance( )
   {
-    return new EditorFirstAdapterFinder<>();
+    return new EditorFirstAdapterFinder<D>();
   }
 
   /**
