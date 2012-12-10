@@ -85,5 +85,4 @@ public class MultipleTsLinkBuilder
 
     return map.values().toArray( new MultipleTsLink[] {} );
   }
-
 }

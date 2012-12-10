@@ -146,14 +146,10 @@ public class MultipleTsLink
     if( StringUtils.isEmpty( identifier ) )
       return false;
 
-    final String type = getType();
+    // FIXME bad: should get the value axis type from its configuration!
+    final String type = ZmlSourceElements.getType( this );
 
     return ArrayUtils.contains( currentIgnoreTypes, type );
-  }
-
-  public String getType( )
-  {
-    return ZmlSourceElements.getType( this );
   }
 
   @Override

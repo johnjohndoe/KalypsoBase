@@ -60,7 +60,6 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.provider.PooledObsProvider;
-import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 
 /**
@@ -263,7 +262,7 @@ public class TSLinkWithName implements IZmlSourceElement
   }
 
   @Override
-  public String getLabel( )
+  public String getLabel( final IAxis axis )
   {
     final String tokenizedName = getName();
     final PooledObsProvider provider = getObsProvider();
@@ -273,8 +272,6 @@ public class TSLinkWithName implements IZmlSourceElement
     final IObservation observation = provider.getObservation();
     if( Objects.isNull( observation ) )
       return tokenizedName;
-
-    final IAxis axis = AxisUtils.findAxis( observation.getAxes(), ZmlSourceElements.getType( this ) );
 
     return ObservationTokenHelper.replaceTokens( tokenizedName, observation, axis );
   }
