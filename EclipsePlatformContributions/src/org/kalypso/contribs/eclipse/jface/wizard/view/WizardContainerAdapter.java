@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.wizard.view;
 
@@ -52,11 +52,9 @@ public class WizardContainerAdapter implements IWizardContainerListener
 {
   /**
    * Empty implementation
-   * 
-   * @see org.kalypso.contribs.eclipse.jface.wizard.view.IWizardContainerListener#onWizardChanged(org.eclipse.jface.wizard.IWizard,
-   *      int)
    */
   @Override
-  public void onWizardChanged( final IWizard newwizard, final int reason )
-  {}
+  public void onWizardChanged( final IWizard oldWizard, final IWizard newWizard, final int reason )
+  {
+  }
 }
