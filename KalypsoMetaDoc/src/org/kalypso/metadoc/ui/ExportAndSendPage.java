@@ -140,7 +140,12 @@ public class ExportAndSendPage extends WizardPage
       public void checkStateChanged( final CheckStateChangedEvent event )
       {
         /* Set the check state. */
-        setCheckState( new ExportableTreeItem[] { (ExportableTreeItem) event.getElement() }, true, event.getChecked() );
+        final ExportableTreeItem element = (ExportableTreeItem) event.getElement();
+
+        if( event.getChecked() )
+          setCheckStateParent( element, true );
+
+        setCheckStateChildren( new ExportableTreeItem[] { element }, true, event.getChecked() );
 
         /* Update the checked elements. */
         updateCheckedElements();
@@ -157,7 +162,12 @@ public class ExportAndSendPage extends WizardPage
       public void checkStateChanged( final CheckStateChangedEvent event )
       {
         /* Set the check state. */
-        setCheckState( new ExportableTreeItem[] { (ExportableTreeItem) event.getElement() }, false, event.getChecked() );
+        final ExportableTreeItem element = (ExportableTreeItem) event.getElement();
+
+        if( event.getChecked() )
+          setCheckStateParent( element, false );
+
+        setCheckStateChildren( new ExportableTreeItem[] { element }, false, event.getChecked() );
 
         /* Update the checked elements. */
         updateCheckedElements();
@@ -275,7 +285,11 @@ public class ExportAndSendPage extends WizardPage
     final ITreeContentProvider contentProvider = (ITreeContentProvider) viewer.getContentProvider();
     final Object[] elements = contentProvider.getElements( viewer.getInput() );
 
-    setCheckState( elements, export, true );
+    if( elements == null || elements.length == 0 )
+      return;
+
+    setCheckStateParent( elements[0], export );
+    setCheckStateChildren( elements, export, true );
   }
 
   protected void handleDeselectAll( final CheckboxTreeViewer viewer, final boolean export )
@@ -283,10 +297,42 @@ public class ExportAndSendPage extends WizardPage
     final ITreeContentProvider contentProvider = (ITreeContentProvider) viewer.getContentProvider();
     final Object[] elements = contentProvider.getElements( viewer.getInput() );
 
-    setCheckState( elements, export, false );
+    if( elements == null || elements.length == 0 )
+      return;
+
+    setCheckStateChildren( elements, export, false );
   }
 
-  protected void setCheckState( final Object[] elements, final boolean export, final boolean checked )
+  /**
+   * This function checks the check state of the parents of an item to <code>true</code>.
+   * 
+   * @param element
+   *          The element, whose parents should be checked.
+   * @param export
+   *          True, if the check state should be set for the export tree. False, if the check state should be set for
+   *          the send tree.
+   */
+  protected void setCheckStateParent( final Object element, final boolean export )
+  {
+    /* Cast. */
+    final ExportableTreeItem item = (ExportableTreeItem) element;
+
+    /* Get the parent. If there is none, we are at the root item. */
+    final ExportableTreeItem parent = item.getParent();
+    if( parent == null )
+      return;
+
+    /* Set the checked state. */
+    if( export )
+      setCheckState( parent, true );
+    else
+      setCheckStateSend( parent, true );
+
+    /* Check the parent of the parent. */
+    setCheckStateParent( parent, export );
+  }
+
+  protected void setCheckStateChildren( final Object[] elements, final boolean export, final boolean checked )
   {
     for( final Object object : elements )
     {
@@ -298,7 +344,7 @@ public class ExportAndSendPage extends WizardPage
         setCheckStateSend( item, checked );
 
       final ExportableTreeItem[] children = item.getChildren();
-      setCheckState( children, export, checked );
+      setCheckStateChildren( children, export, checked );
     }
   }
 
