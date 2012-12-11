@@ -508,16 +508,6 @@
      </filter>
  </extension>
 
- <extension
-         point="org.eclipse.ui.importWizards">
-      <wizard
-            category="org.kalypso.ui.importwizards.kalypso"
-            class="org.kalypso.zml.ui.imports.ImportObservationWizard"
-            icon="icons/imports/importWizard.gif"
-            id="KalypsoNA_UI.wizard1"
-            name="%KalypsoNA_UI.wizard1.name"/>
-   </extension>
-
   <extension
        point="org.eclipse.ui.menus">
     <menuContribution
