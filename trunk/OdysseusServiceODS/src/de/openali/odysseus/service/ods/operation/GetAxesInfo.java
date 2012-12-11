@@ -15,7 +15,7 @@ import de.openali.odysseus.chart.framework.exception.MalformedValueException;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
-import de.openali.odysseus.chart.framework.model.mapper.registry.impl.MapperRegistry;
+import de.openali.odysseus.chart.framework.model.mapper.registry.impl.AxisRegistry;
 import de.openali.odysseus.chartconfig.x020.AxisNumberRangeType;
 import de.openali.odysseus.chartconfig.x020.AxisStringRangeType;
 import de.openali.odysseus.chartconfig.x020.AxisType;
@@ -47,7 +47,7 @@ public class GetAxesInfo extends AbstractODSOperation
 
   private Map<String, AxisType> m_axes4Chart;
 
-  private MapperRegistry m_mapperRegistry;
+  private AxisRegistry m_mapperRegistry;
 
   @Override
   public void execute( ) throws OWSException
@@ -103,7 +103,7 @@ public class GetAxesInfo extends AbstractODSOperation
       }
     }
 
-    m_mapperRegistry = new MapperRegistry();
+    m_mapperRegistry = new AxisRegistry();
 
     for( final String axisId : m_axes4Chart.keySet() )
       toAxisInfo( ait, m_axes4Chart.get( axisId ) );
@@ -137,7 +137,7 @@ public class GetAxesInfo extends AbstractODSOperation
 
       provider.init( null, atInfo.getId(), null, null, pos, null );
       axis = provider.getAxis();
-      m_mapperRegistry.addMapper( axis );
+      m_mapperRegistry.addAxis( axis );
     }
     catch( final Exception ex )
     {
@@ -174,7 +174,7 @@ public class GetAxesInfo extends AbstractODSOperation
 
   private void setDataRange( final AxisType atConf, final AxisOfferingType atInfo, final Class< ? > type, final IAxis< ? > axis )
   {
-   // final IDataOperator< ? > dataOperator = axis.getDataOperator( type );
+    // final IDataOperator< ? > dataOperator = axis.getDataOperator( type );
 
     final IDataRange<Double> dataRange = axis.getNumericRange();
     if( dataRange == null || dataRange.getMin() == null || dataRange.getMax() == null )
@@ -207,7 +207,7 @@ public class GetAxesInfo extends AbstractODSOperation
     range.setMaxValue( max.doubleValue() );
   }
 
-  private <T> void setStringDataRangeFromConf( final AxisType atConf, final AxisOfferingType atInfo, final IAxis<T> axis)
+  private <T> void setStringDataRangeFromConf( final AxisType atConf, final AxisOfferingType atInfo, final IAxis<T> axis )
   {
     final AxisStringRangeType stringRange = atConf.getStringRange();
     final StringRange range = atInfo.addNewStringRange();
@@ -239,18 +239,18 @@ public class GetAxesInfo extends AbstractODSOperation
     numberRange.setMaxValue( max.doubleValue() );
   }
 
-  private <T> void  setStringDataRange( final AxisOfferingType atInfo, final IDataRange<Double> dataRange, final IAxis<T> axis)
+  private <T> void setStringDataRange( final AxisOfferingType atInfo, final IDataRange<Double> dataRange, final IAxis<T> axis )
   {
     final StringRange stringRange = atInfo.addNewStringRange();
 
     final Double min = dataRange.getMin();
-   final T minLogical = axis.numericToLogical( min );
-    final String minString = axis.logicalToXMLString( minLogical);
+    final T minLogical = axis.numericToLogical( min );
+    final String minString = axis.logicalToXMLString( minLogical );
     stringRange.setMinValue( minString );
 
     final Double max = dataRange.getMax();
     final T maxLogical = axis.numericToLogical( max );
-    final String maxString = axis.logicalToXMLString( maxLogical);
+    final String maxString = axis.logicalToXMLString( maxLogical );
     stringRange.setMaxValue( maxString );
   }
 }

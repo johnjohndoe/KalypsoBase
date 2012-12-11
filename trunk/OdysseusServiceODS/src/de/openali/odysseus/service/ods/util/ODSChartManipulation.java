@@ -15,7 +15,7 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
+import de.openali.odysseus.chart.framework.model.mapper.registry.IAxisRegistry;
 
 /**
  * Helper class for chart stuff concerning request parameters.
@@ -76,12 +76,12 @@ public class ODSChartManipulation
 
   }
 
-  public static void setAxesRanges( final IMapperRegistry ar, final OGCRequest request ) throws OWSException
+  public static void setAxesRanges( final IAxisRegistry ar, final OGCRequest request ) throws OWSException
   {
     setAxesRanges( ar, request.getParameterValue( "AXES" ), request.getParameterValue( "AXES_MIN" ), request.getParameterValue( "AXES_MAX" ) );
   }
 
-  private static void setAxesRanges( final IMapperRegistry mr, final String axesString, final String minsString, final String maxsString ) throws OWSException
+  private static void setAxesRanges( final IAxisRegistry mr, final String axesString, final String minsString, final String maxsString ) throws OWSException
   {
     /* Falls der AXES-Parameter nicht angegeben ist, dann wird einfach abgebrochen. */
     if( axesString == null )
