@@ -289,7 +289,7 @@ public class CapabilitiesLoader
     }
 
     final AxesOfferingType xmlAxes = xmlChart.addNewAxes();
-    for( final IAxis< ? > axis : model.getMapperRegistry().getAxes() )
+    for( final IAxis< ? > axis : model.getAxisRegistry().getAxes() )
     {
       final AxisOfferingType xmlAxis = xmlAxes.addNewAxis();
       xmlAxis.setId( axis.getIdentifier() );
