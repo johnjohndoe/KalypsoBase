@@ -27,7 +27,7 @@ public class ODSChartManipulation
   public static void manipulateChart( final IChartModel model, final OGCRequest request ) throws OWSException
   {
     setLayerVisibility( model.getLayerManager(), request );
-    setAxesRanges( model.getMapperRegistry(), request );
+    setAxesRanges( model.getAxisRegistry(), request );
   }
 
   /**
