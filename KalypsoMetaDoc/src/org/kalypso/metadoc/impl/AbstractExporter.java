@@ -142,7 +142,7 @@ public abstract class AbstractExporter implements IExporter
   @Override
   public ExportableTreeItem createTreeItem( final ExportableTreeItem parent ) throws CoreException
   {
-    final ExportableTreeItem item = new ExportableTreeItem( getName(), getImageDescriptor(), parent, null, true, false );
+    final ExportableTreeItem item = new ExportableTreeItem( getName(), getImageDescriptor(), parent, null, false, false );
     item.setChildren( createTreeItems( item ) );
     return item;
   }
