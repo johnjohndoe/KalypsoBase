@@ -255,6 +255,6 @@ public final class ComponentUtilities
     if( scale == -1 )
       return "%f"; //$NON-NLS-1$
 
-    return String.format( "%%.%df", scale );
+    return String.format( "%%.%df", scale ); //$NON-NLS-1$
   }
 }

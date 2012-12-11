@@ -42,7 +42,9 @@ package org.kalypso.ogc.sensor.adapter;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.LineNumberReader;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -96,7 +98,7 @@ public class NativeObservationDWD5minAdapter extends AbstractObservationImporter
   private static final int SEARCH_VALUES = 1;
 
   @Override
-  protected List<NativeObservationDataSet> parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws Exception
+  protected List<NativeObservationDataSet> parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws IOException
   {
     final List<NativeObservationDataSet> datasets = new ArrayList<>();
 
@@ -132,8 +134,18 @@ public class NativeObservationDWD5minAdapter extends AbstractObservationImporter
               if( dateMatcher.matches() )
               {
                 // System.out.println( "Startdatum Header:" + startDateString );
-                final Date parseDate = sdf.parse( startDateString );
-                startDate = parseDate.getTime();
+                try
+                {
+                  final Date parseDate = sdf.parse( startDateString );
+                  startDate = parseDate.getTime();
+                }
+                catch( final ParseException e )
+                {
+                  e.printStackTrace();
+
+                  stati.add( IStatus.WARNING, String.format( Messages.getString( "NativeObservationDWD5minAdapter_0" ), reader.getLineNumber(), startDateString, DATE_PATTERN.toString() ), e ); //$NON-NLS-1$
+                  tickErrorCount();
+                }
               }
               else
               {

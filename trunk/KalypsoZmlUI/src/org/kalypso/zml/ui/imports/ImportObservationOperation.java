@@ -44,13 +44,12 @@ import java.io.File;
 import java.net.URL;
 import java.util.TimeZone;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.IAxis;
@@ -70,18 +69,15 @@ public class ImportObservationOperation implements ICoreRunnableWithProgress
 {
   private final ImportObservationData m_data;
 
-  private final Shell m_shell;
-
   private final IAxis[] m_axesSrc;
 
   private final IAxis[] m_axesNew;
 
   private final ObservationImportSelection m_selection;
 
-  public ImportObservationOperation( final ImportObservationData data, final Shell shell, final IAxis[] axesSrc, final IAxis[] axesNew, final ObservationImportSelection selection )
+  public ImportObservationOperation( final ImportObservationData data, final IAxis[] axesSrc, final IAxis[] axesNew, final ObservationImportSelection selection )
   {
     m_data = data;
-    m_shell = shell;
     m_axesSrc = axesSrc;
     m_axesNew = axesNew;
     m_selection = selection;
@@ -90,13 +86,19 @@ public class ImportObservationOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    final IObservation srcObservation = createSourceObservation();
-    final TargetObservation targetObservation = createTargetObservation();
-    final IObservation newObservation = createNewObservation( srcObservation, targetObservation );
+    final Pair<IStatus, IObservation> importResult = createSourceObservation();
+    final IStatus importStatus = importResult.getLeft();
+    final IObservation srcObservation = importResult.getRight();
 
-    writeResult( newObservation );
+    if( srcObservation != null )
+    {
+      final TargetObservation targetObservation = createTargetObservation();
+      final IObservation newObservation = createNewObservation( srcObservation, targetObservation );
 
-    return Status.OK_STATUS;
+      writeResult( newObservation );
+    }
+
+    return importStatus;
   }
 
   private void writeResult( final IObservation newObservation ) throws CoreException
@@ -109,7 +111,7 @@ public class ImportObservationOperation implements ICoreRunnableWithProgress
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, Messages.getString("ImportObservationOperation.0"), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, Messages.getString( "ImportObservationOperation.0" ), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }
@@ -136,12 +138,12 @@ public class ImportObservationOperation implements ICoreRunnableWithProgress
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, Messages.getString("ImportObservationOperation.1"), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, Messages.getString( "ImportObservationOperation.1" ), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }
 
-  private IObservation createSourceObservation( ) throws CoreException
+  private Pair<IStatus, IObservation> createSourceObservation( ) throws CoreException
   {
     try
     {
@@ -149,25 +151,27 @@ public class ImportObservationOperation implements ICoreRunnableWithProgress
       final TimeZone timezone = m_data.getTimezoneParsed();
       final INativeObservationAdapter nativaAdapter = m_data.getAdapter();
 
-      /* IStatus status = */nativaAdapter.doImport( fileSource, timezone, false );
+      final IStatus status = nativaAdapter.doImport( fileSource, timezone, false );
 
       final IObservation srcObservation = nativaAdapter.getObservation();
-      if( srcObservation != null )
-        return srcObservation;
+//      if( srcObservation != null )
+//        return srcObservation;
+//
+//      final String title = Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.2" ); //$NON-NLS-1$
+//      final String message = Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.3" ); //$NON-NLS-1$
+//
+//      if( !MessageDialog.openQuestion( m_shell, title, message ) )
+//        return null;
+//
+//      /* status = */nativaAdapter.doImport( fileSource, timezone, true );
+//      return nativaAdapter.getObservation();
 
-      final String title = Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.2" ); //$NON-NLS-1$
-      final String message = Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.3" ); //$NON-NLS-1$
-
-      if( !MessageDialog.openQuestion( m_shell, title, message ) )
-        return null;
-
-      /* status = */nativaAdapter.doImport( fileSource, timezone, true );
-      return nativaAdapter.getObservation();
+      return Pair.of( status, srcObservation );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      final String message = String.format( Messages.getString("ImportObservationOperation.2") ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "ImportObservationOperation.2" ) ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, message, e );
       throw new CoreException( status );
     }
@@ -191,7 +195,7 @@ public class ImportObservationOperation implements ICoreRunnableWithProgress
     catch( final SensorException e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, Messages.getString("ImportObservationOperation.3"), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, Messages.getString( "ImportObservationOperation.3" ), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }
