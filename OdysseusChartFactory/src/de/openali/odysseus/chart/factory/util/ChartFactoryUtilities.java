@@ -12,7 +12,7 @@ import org.eclipse.swt.graphics.RGB;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
+import de.openali.odysseus.chart.framework.model.mapper.registry.IAxisRegistry;
 import de.openali.odysseus.chartconfig.x020.AxisType;
 import de.openali.odysseus.chartconfig.x020.ChartType;
 
@@ -98,7 +98,7 @@ public final class ChartFactoryUtilities
    */
   public static void doAutoscale( final IChartModel chartModel, final ChartType chart )
   {
-    final IMapperRegistry mapperRegistry = chartModel.getMapperRegistry();
+    final IAxisRegistry mapperRegistry = chartModel.getMapperRegistry();
     final AxisType[] axes = chart.getMappers().getAxisArray();
     final IAxis[] autoscaledAxes = AxisUtils.findAutoscaleAxes( axes, mapperRegistry );
     chartModel.autoscale( autoscaledAxes );

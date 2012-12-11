@@ -59,12 +59,10 @@ import org.w3c.dom.NodeList;
 
 import de.openali.odysseus.chart.factory.OdysseusChartFactory;
 import de.openali.odysseus.chart.factory.config.resolver.ChartTypeResolver;
-import de.openali.odysseus.chart.factory.provider.IMapperProvider;
 import de.openali.odysseus.chart.factory.util.AxisUtils;
 import de.openali.odysseus.chart.factory.util.DerivedLayerTypeHelper;
 import de.openali.odysseus.chart.factory.util.IReferenceResolver;
 import de.openali.odysseus.chart.factory.util.LayerTypeHelper;
-import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -73,10 +71,9 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProviderSource;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.impl.CoordinateMapper;
-import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chartconfig.x020.AxisType;
 import de.openali.odysseus.chartconfig.x020.ChartType;
 import de.openali.odysseus.chartconfig.x020.DerivedLayerDocument;
 import de.openali.odysseus.chartconfig.x020.DerivedLayerType;
@@ -86,7 +83,6 @@ import de.openali.odysseus.chartconfig.x020.LayerRefernceType;
 import de.openali.odysseus.chartconfig.x020.LayerType;
 import de.openali.odysseus.chartconfig.x020.LayerType.MapperRefs;
 import de.openali.odysseus.chartconfig.x020.LayersType;
-import de.openali.odysseus.chartconfig.x020.MapperType;
 import de.openali.odysseus.chartconfig.x020.ParametersType;
 import de.openali.odysseus.chartconfig.x020.ReferencableType;
 import de.openali.odysseus.chartconfig.x020.ReferencingType;
@@ -194,7 +190,7 @@ public class ChartLayerFactory extends AbstractChartFactory
     if( base == null )
       throw new IllegalStateException( String.format( "Chart LayerTypeReference not found: %s", reference.getUrl() ) ); //$NON-NLS-1$
 
-    final LayerType type = (LayerType) base.copy();
+    final LayerType type = (LayerType)base.copy();
     LayerTypeHelper.appendParameters( type, reference.getParameters() );
     LayerTypeHelper.appendParameters( type, cascading );
 
@@ -241,10 +237,11 @@ public class ChartLayerFactory extends AbstractChartFactory
     final ReferencingType domainAxisRef = getDomainAxisReference( layerType, baseTypes );
     final ReferencingType targetAxisRef = getTargetAxisReference( layerType, baseTypes );
 
-    final IAxis domainAxis = buildMapper( domainAxisRef );
-    final IAxis targetAxis = buildMapper( targetAxisRef );
+    final IAxis<?> domainAxis = buildMapper( domainAxisRef );
+    final IAxis<?> targetAxis = buildMapper( targetAxisRef );
 
-    buildRoleReferences( layerType );
+    // TODO:unused
+    // buildRoleReferences( layerType );
     LayerTypeHelper.appendParameters( layerType, cascading );
 
     final IParameterContainer parameters = createParameterContainer( layerType.getId(), provider.getId(), layerType.getProvider() );
@@ -315,7 +312,7 @@ public class ChartLayerFactory extends AbstractChartFactory
     if( Objects.isNotNull( domainAxis, targetAxis ) )
     {
       // FIXME> layer is corrupt... do not use_
-      layer.setCoordinateMapper( new CoordinateMapper( domainAxis, targetAxis ) );
+      layer.setCoordinateMapper( new CoordinateMapper<>( domainAxis, targetAxis ) );
     }
 
     layer.setData( CONFIGURATION_TYPE_KEY, layerType );
@@ -336,27 +333,27 @@ public class ChartLayerFactory extends AbstractChartFactory
     return layer;
   }
 
-  private void buildRoleReferences( final LayerType layerType )
-  {
-    final MapperRefs references = layerType.getMapperRefs();
-    if( references == null )
-      return;
-
-    final RoleReferencingType[] roleReferences = references.getMapperRefArray();
-    if( ArrayUtils.isEmpty( roleReferences ) )
-      return;
-
-    for( final RoleReferencingType reference : roleReferences )
-    {
-      final MapperType mapperType = findMapperType( reference );
-      if( mapperType != null )
-        // nur dann hinzufügen, wenn nicht schon vorhanden
-        if( getModel().getMapperRegistry().getMapper( mapperType.getId() ) == null )
-        {
-          addMapper( mapperType );
-        }
-    }
-  }
+//  private void buildRoleReferences( final LayerType layerType )
+//  {
+//    final MapperRefs references = layerType.getMapperRefs();
+//    if( references == null )
+//      return;
+//
+//    final RoleReferencingType[] roleReferences = references.getMapperRefArray();
+//    if( ArrayUtils.isEmpty( roleReferences ) )
+//      return;
+//
+//    for( final RoleReferencingType reference : roleReferences )
+//    {
+//      final MapperType mapperType = findMapperType( reference );
+//      if( mapperType != null )
+//        // nur dann hinzufügen, wenn nicht schon vorhanden
+//        if( getModel().getMapperRegistry().getMapper( mapperType.getId() ) == null )
+//        {
+//          addMapper( mapperType );
+//        }
+//    }
+//  }
 
   private ReferencingType getTargetAxisReference( final LayerType layerType, final ReferencableType... baseTypes )
   {
@@ -386,7 +383,7 @@ public class ChartLayerFactory extends AbstractChartFactory
     {
       if( baseType instanceof LayerType )
       {
-        final LayerType base = (LayerType) baseType;
+        final LayerType base = (LayerType)baseType;
         final MapperRefs layerTypeReference = base.getMapperRefs();
         if( layerTypeReference != null )
           return layerTypeReference;
@@ -420,53 +417,53 @@ public class ChartLayerFactory extends AbstractChartFactory
     layer.setHideIfNoData( layerType.getHideIfNoData() );
   }
 
-  private IAxis buildMapper( final ReferencingType reference )
+  private IAxis< ? > buildMapper( final ReferencingType reference )
   {
     if( reference == null )
       return null;
 
-    final MapperType axisType = findMapperType( reference );
-    m_mapperFactory.addMapper( axisType );
+    final AxisType axisType = findMapperType( reference );
+    m_mapperFactory.addAxis( axisType );
 
     return getModel().getMapperRegistry().getAxis( AxisUtils.getIdentifier( reference ) );
   }
 
-  private void addMapper( final MapperType mapperType )
-  {
-    if( mapperType != null )
-    {
-      final String mpId = mapperType.getProvider().getEpid();
-      if( mpId != null && mpId.length() > 0 )
-      {
-        try
-        {
-          final IMapperRegistry mr = getModel().getMapperRegistry();
-          final IMapperProvider mp = getLoader().getExtension( IMapperProvider.class, mpId );
-          final String mid = mapperType.getId();
-          final IParameterContainer pc = createParameterContainer( mid, mapperType.getProvider() );
-          mp.init( getModel(), mid, pc, getContext() );
-          final IMapper mapper = mp.getMapper();
-          // save provider so it can be used for saving to chartfile
-          mapper.setData( ChartFactory.AXIS_PROVIDER_KEY, mp );
-          // save configuration type so it can be used for saving to chartfile
-          mapper.setData( CONFIGURATION_TYPE_KEY, mapperType );
-          mr.addMapper( mapper );
-        }
-        catch( final ConfigurationException e )
-        {
-          e.printStackTrace();
-        }
-      }
-      else
-      {
-        Logger.logError( Logger.TOPIC_LOG_CONFIG, "AxisProvider " + mpId + " not known" ); //$NON-NLS-1$ //$NON-NLS-2$
-      }
-    }
-    else
-    {
-      Logger.logError( Logger.TOPIC_LOG_GENERAL, "AxisFactory: given axis is NULL." ); //$NON-NLS-1$
-    }
-  }
+//  private void addMapper( final MapperType mapperType )
+//  {
+//    if( mapperType != null )
+//    {
+//      final String mpId = mapperType.getProvider().getEpid();
+//      if( mpId != null && mpId.length() > 0 )
+//      {
+//        try
+//        {
+//          final IAxisRegistry mr = getModel().getMapperRegistry();
+//          final IMapperProvider mp = getLoader().getExtension( IMapperProvider.class, mpId );
+//          final String mid = mapperType.getId();
+//          final IParameterContainer pc = createParameterContainer( mid, mapperType.getProvider() );
+//          mp.init( getModel(), mid, pc, getContext() );
+//          final IMapper mapper = mp.getMapper();
+//          // save provider so it can be used for saving to chartfile
+//          mapper.setData( ChartFactory.AXIS_PROVIDER_KEY, mp );
+//          // save configuration type so it can be used for saving to chartfile
+//          mapper.setData( CONFIGURATION_TYPE_KEY, mapperType );
+//          mr.addMapper( mapper );
+//        }
+//        catch( final ConfigurationException e )
+//        {
+//          e.printStackTrace();
+//        }
+//      }
+//      else
+//      {
+//        Logger.logError( Logger.TOPIC_LOG_CONFIG, "AxisProvider " + mpId + " not known" ); //$NON-NLS-1$ //$NON-NLS-2$
+//      }
+//    }
+//    else
+//    {
+//      Logger.logError( Logger.TOPIC_LOG_GENERAL, "AxisFactory: given axis is NULL." ); //$NON-NLS-1$
+//    }
+//  }
 
   public static Map<String, String> createMapperMap( final LayerType layerType )
   {

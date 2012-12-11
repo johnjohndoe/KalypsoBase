@@ -144,7 +144,7 @@ public class PolynomeChartLayer extends AbstractLineLayer
   }
 
   @Override
-  public IDataRange<Double> getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange<Double> domainIntervall )
   {
     return m_data.getTargetRange();
   }

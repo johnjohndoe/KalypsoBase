@@ -23,7 +23,7 @@ import de.openali.odysseus.chart.framework.OdysseusChartFramework;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
-import de.openali.odysseus.chart.framework.model.event.IMapperRegistryEventListener;
+import de.openali.odysseus.chart.framework.model.event.IAxisRegistryEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.ChartModelEventHandler;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -47,7 +47,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
 
   private final ILayerManagerEventListener m_layerEventListener = new ChartImageLayerManagerEventListener( this );
 
-  private final IMapperRegistryEventListener m_mapperListener = new ChartImageMapperRegistryEventListener( this );
+  private final IAxisRegistryEventListener m_mapperListener = new ChartImageMapperRegistryEventListener( this );
 
   private IChartModel m_model;
 

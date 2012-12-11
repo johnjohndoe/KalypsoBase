@@ -2,13 +2,18 @@ package de.openali.odysseus.chart.ext.base.axis;
 
 import java.awt.Insets;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import de.openali.odysseus.chart.framework.exception.MalformedValueException;
 import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRangeRestriction;
+import de.openali.odysseus.chart.framework.model.event.IAxisEventListener;
 import de.openali.odysseus.chart.framework.model.impl.AxisVisitorBehavior;
 import de.openali.odysseus.chart.framework.model.impl.IAxisVisitorBehavior;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -24,8 +29,17 @@ import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
  * @author burtscher Abstract implementation of IAxis - implements some methods which are equal for all concrete
  *         IAxis-classes
  */
-public abstract class AbstractAxis<T> extends AbstractMapper implements IAxis<T>
+public abstract class AbstractAxis<T> implements IAxis<T>
 {
+  private final Set<IAxisEventListener> m_listeners = new LinkedHashSet<>();
+
+  private final String m_identifier;
+
+  /**
+   * Hashmap to store arbitrary key value pairs
+   */
+  private final Map<String, Object> m_data = new HashMap<>();
+
   private final IDataOperator<T> m_dataOperator;
 
   private DIRECTION m_dir = DIRECTION.POSITIVE;
@@ -57,7 +71,7 @@ public abstract class AbstractAxis<T> extends AbstractMapper implements IAxis<T>
 
   public AbstractAxis( final String id, final POSITION pos, final IAxisRenderer renderer, final IDataOperator<T> dataOperator )
   {
-    super( id );
+    m_identifier = id;
     m_pos = pos;
     setRenderer( renderer );
     m_dataOperator = dataOperator;
@@ -70,15 +84,36 @@ public abstract class AbstractAxis<T> extends AbstractMapper implements IAxis<T>
   }
 
   @Override
+  public void addListener( final IAxisEventListener listener )
+  {
+    m_listeners.add( listener );
+  }
+
+  @Override
   public void clearLabels( )
   {
     m_axisLabels.clear();
+  }
+
+  private void fireMapperChanged( final IAxis mapper )
+  {
+    final IAxisEventListener[] listeners = m_listeners.toArray( new IAxisEventListener[] {} );
+    for( final IAxisEventListener listener : listeners )
+    {
+      listener.onAxisChanged( mapper );
+    }
   }
 
   @Override
   public IAxisVisitorBehavior getAxisVisitorBehavior( )
   {
     return new AxisVisitorBehavior( m_allowZoom, true, true );
+  }
+
+  @Override
+  public Object getData( final String id )
+  {
+    return m_data.get( id );
   }
 
   @Deprecated
@@ -91,6 +126,12 @@ public abstract class AbstractAxis<T> extends AbstractMapper implements IAxis<T>
   public DIRECTION getDirection( )
   {
     return m_dir;
+  }
+
+  @Override
+  public String getIdentifier( )
+  {
+    return m_identifier;
   }
 
   @Deprecated
@@ -165,6 +206,13 @@ public abstract class AbstractAxis<T> extends AbstractMapper implements IAxis<T>
     return false;
   }
 
+//
+//  @Override
+//  public IDataRange<Double> getSelection( )
+//  {
+//    return m_activeRange;
+//  }
+
   public boolean isAllowZoom( )
   {
     return m_allowZoom;
@@ -176,13 +224,6 @@ public abstract class AbstractAxis<T> extends AbstractMapper implements IAxis<T>
       return getDirection() == DIRECTION.NEGATIVE;
     return getDirection() == DIRECTION.POSITIVE;
   }
-
-//
-//  @Override
-//  public IDataRange<Double> getSelection( )
-//  {
-//    return m_activeRange;
-//  }
 
   @Override
   public boolean isVisible( )
@@ -246,6 +287,12 @@ public abstract class AbstractAxis<T> extends AbstractMapper implements IAxis<T>
   }
 
   @Override
+  public void removeListener( final IAxisEventListener listener )
+  {
+    m_listeners.remove( listener );
+  }
+
+  @Override
   public T screenToLogical( final int value )
   {
     return numericToLogical( screenToNumeric( value ) );
@@ -270,6 +317,12 @@ public abstract class AbstractAxis<T> extends AbstractMapper implements IAxis<T>
   public void setAllowZoom( final boolean allowZoom )
   {
     m_allowZoom = allowZoom;
+  }
+
+  @Override
+  public void setData( final String id, final Object data )
+  {
+    m_data.put( id, data );
   }
 
   @Override

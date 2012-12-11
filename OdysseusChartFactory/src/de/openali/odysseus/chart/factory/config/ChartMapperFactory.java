@@ -64,7 +64,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.impl.AxisAdjustment;
-import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
+import de.openali.odysseus.chart.framework.model.mapper.registry.IAxisRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
@@ -82,13 +82,13 @@ import de.openali.odysseus.chartconfig.x020.AxisType.PreferredAdjustment;
 import de.openali.odysseus.chartconfig.x020.ChartType;
 import de.openali.odysseus.chartconfig.x020.ChartType.Mappers;
 import de.openali.odysseus.chartconfig.x020.DirectionType.Enum;
-import de.openali.odysseus.chartconfig.x020.MapperType;
 import de.openali.odysseus.chartconfig.x020.PositionType;
 import de.openali.odysseus.chartconfig.x020.ReferencableType;
 import de.openali.odysseus.chartconfig.x020.ReferencingType;
 import de.openali.odysseus.chartconfig.x020.ScreenAxisType;
 import de.openali.odysseus.chartconfig.x020.TextStyleType;
 import de.openali.odysseus.chartconfig.x020.TitleType;
+//import de.openali.odysseus.chartconfig.x020.MapperType;
 
 /**
  * @author Dirk Kuch
@@ -126,7 +126,7 @@ public class ChartMapperFactory extends AbstractChartFactory
    */
   public IAxis addAxis( final AxisType axisType, final ReferencableType... baseTypes )
   {
-    final IMapperRegistry mapperRegistry = getModel().getMapperRegistry();
+    final IAxisRegistry mapperRegistry = getModel().getMapperRegistry();
     if( axisType != null )
     {
       // wenn die Achse schon da ist, dann muss man sie nicht mehr
@@ -185,7 +185,7 @@ public class ChartMapperFactory extends AbstractChartFactory
             axis.setRangeRestriction( getRangeRestriction( axisType ) );
             axis.setVisible( axisType.getVisible() );
 
-            mapperRegistry.addMapper( axis );
+            mapperRegistry.addAxis( axis );
 
             final ReferencingType rendererRef = axisType.getRendererRef();
             final AxisRendererType rendererType = (AxisRendererType)getResolver().resolveReference( AxisUtils.getIdentifier( rendererRef ) );
@@ -244,7 +244,7 @@ public class ChartMapperFactory extends AbstractChartFactory
     if( screenAxisType == null )
       return null;
 
-    final IMapperRegistry mapperRegistry = getModel().getMapperRegistry();
+    final IAxisRegistry mapperRegistry = getModel().getMapperRegistry();
 
     /* screen axis already exists? */
     if( mapperRegistry.getAxis( screenAxisType.getId() ) != null )
@@ -269,7 +269,7 @@ public class ChartMapperFactory extends AbstractChartFactory
     /* DIRECTION */
     screenAxis.setDirection( getAxisDirection( screenAxisType.getDirection() ) );
 
-    mapperRegistry.addMapper( screenAxis );
+    mapperRegistry.addAxis( screenAxis );
 
     return screenAxis;
   }
@@ -407,11 +407,11 @@ public class ChartMapperFactory extends AbstractChartFactory
     return cal;
   }
 
-  public void addMapper( final MapperType type, final ReferencableType... baseTypes )
-  {
-    if( type instanceof AxisType )
-      addAxis( (AxisType)type, baseTypes );
-    else if( type instanceof ScreenAxisType )
-      addScreenAxis( (ScreenAxisType)type );
-  }
+//  public void addMapper( final MapperType type, final ReferencableType... baseTypes )
+//  {
+//    if( type instanceof AxisType )
+//      addAxis( (AxisType)type, baseTypes );
+//    else if( type instanceof ScreenAxisType )
+//      addScreenAxis( (ScreenAxisType)type );
+//  }
 }

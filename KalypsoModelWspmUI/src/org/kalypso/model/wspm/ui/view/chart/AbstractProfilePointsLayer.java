@@ -308,7 +308,7 @@ public abstract class AbstractProfilePointsLayer extends AbstractProfilLayer
 
   @SuppressWarnings( { "rawtypes", "unchecked" } )
   @Override
-  public IDataRange<Double> getTargetRange( final IDataRange domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange<Double> domainIntervall )
   {
     final int targetPropertyIndex = getTargetPropertyIndex();
     if( getCoordinateMapper() == null || targetPropertyIndex == -1 )
