@@ -10,7 +10,7 @@ public interface IChartModel extends ILayerContainer
   /**
    * When called, all given axes set their DataRange so all their layers data can be shown
    */
-  void autoscale( IAxis... axes );
+  void autoscale( IAxis<?>... axes );
 
   void clear( );
 
@@ -18,7 +18,7 @@ public interface IChartModel extends ILayerContainer
 
   IChartBehaviour getBehaviour( );
 
-  IAxisRegistry getMapperRegistry( );
+  IAxisRegistry getAxisRegistry( );
 
   IBasicChartSettings getSettings( );
 

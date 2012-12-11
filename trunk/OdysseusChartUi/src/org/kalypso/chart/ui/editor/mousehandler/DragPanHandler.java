@@ -108,7 +108,7 @@ public class DragPanHandler extends AbstractChartDragHandler
     if( start != null )
     {
       final IChartModel model = getChart().getChartModel();
-      final IAxisRegistry registry = model.getMapperRegistry();
+      final IAxisRegistry registry = model.getAxisRegistry();
 
       final Point position = editInfo.getPosition();
 

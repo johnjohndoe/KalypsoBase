@@ -218,7 +218,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
       return;
 
     m_model.getLayerManager().addListener( m_layerEventListener );
-    m_model.getMapperRegistry().addListener( m_mapperListener );
+    m_model.getAxisRegistry().addListener( m_mapperListener );
   }
 
   public void setChartModel( final IChartModel model )
@@ -278,7 +278,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
       return;
 
     m_model.getLayerManager().removeListener( m_layerEventListener );
-    m_model.getMapperRegistry().removeListener( m_mapperListener );
+    m_model.getAxisRegistry().removeListener( m_mapperListener );
   }
 
   @Override

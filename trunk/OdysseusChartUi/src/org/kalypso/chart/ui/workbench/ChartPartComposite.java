@@ -119,7 +119,7 @@ public class ChartPartComposite implements IChartPart
         setDirty( true );
       }
     };
-    m_chartModel.getMapperRegistry().addListener( mapperRegistryListener );
+    m_chartModel.getAxisRegistry().addListener( mapperRegistryListener );
 
     final AbstractLayerManagerEventListener layerManagerListener = new AbstractLayerManagerEventListener()
     {

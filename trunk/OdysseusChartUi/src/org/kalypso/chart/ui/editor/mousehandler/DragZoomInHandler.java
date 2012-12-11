@@ -81,7 +81,7 @@ public class DragZoomInHandler extends AbstractChartDragHandler
         final ZoomInVisitor visitor = new ZoomInVisitor( editInfo.getPosition(), end );
 
         final IChartModel model = getChart().getChartModel();
-        model.getMapperRegistry().accept( visitor );
+        model.getAxisRegistry().accept( visitor );
       }
       // else do nothing -> clickEvent
     }

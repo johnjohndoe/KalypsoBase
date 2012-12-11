@@ -99,7 +99,7 @@ public class ProfilChartModel extends ChartModel
     if( m_profileSelection != null && m_layerProvider != null )
     {
       m_profileSelection.addProfilListener( m_profileListener );
-      m_layerProvider.registerAxis( getMapperRegistry() );
+      m_layerProvider.registerAxis( getAxisRegistry() );
       updateLayers();
     }
 

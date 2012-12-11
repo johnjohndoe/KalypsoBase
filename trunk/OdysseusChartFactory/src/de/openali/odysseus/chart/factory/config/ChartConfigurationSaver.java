@@ -101,11 +101,11 @@ public final class ChartConfigurationSaver
     layers.setLayerArray( extractLayers( model.getLayerManager() ).values().toArray( new LayerType[] {} ) );
 
     final Mappers mappers = chartType.addNewMappers();
-    mappers.setAxisArray( extractAxes( model.getMapperRegistry() ).values().toArray( new AxisType[] {} ) );
+    mappers.setAxisArray( extractAxes( model.getAxisRegistry() ).values().toArray( new AxisType[] {} ) );
   //  mappers.setMapperArray( extractMappers( model.getMapperRegistry() ).values().toArray( new MapperType[] {} ) );
 
     final Renderers renderers = chartType.addNewRenderers();
-    renderers.setAxisRendererArray( extractAxisRenderers( model.getMapperRegistry() ).values().toArray( new AxisRendererType[] {} ) );
+    renderers.setAxisRendererArray( extractAxisRenderers( model.getAxisRegistry() ).values().toArray( new AxisRendererType[] {} ) );
     return ccd;
   }
 
