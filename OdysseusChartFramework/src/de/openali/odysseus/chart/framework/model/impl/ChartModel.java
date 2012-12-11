@@ -53,7 +53,7 @@ public class ChartModel implements IChartModel
   {
     final AutoScaleVisitor visitor = new AutoScaleVisitor( this );
     // axes==null means all Axes
-    for( final IAxis axis : Arrays.isEmpty( axes ) ? getMapperRegistry().getAxes() : axes )
+    for( final IAxis axis : Arrays.isEmpty( axes ) ? getAxisRegistry().getAxes() : axes )
     {
       visitor.visit( axis );
     }
@@ -66,7 +66,7 @@ public class ChartModel implements IChartModel
     // FIXME: also the behaviour should be cleard, is this safe here?
 
     getLayerManager().clear();
-    getMapperRegistry().clear();
+    getAxisRegistry().clear();
   }
 
   @Override
@@ -98,7 +98,7 @@ public class ChartModel implements IChartModel
   }
 
   @Override
-  public IAxisRegistry getMapperRegistry( )
+  public IAxisRegistry getAxisRegistry( )
   {
     return m_mapperRegistry;
   }

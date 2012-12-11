@@ -425,7 +425,7 @@ public class ChartLayerFactory extends AbstractChartFactory
     final AxisType axisType = findMapperType( reference );
     m_mapperFactory.addAxis( axisType );
 
-    return getModel().getMapperRegistry().getAxis( AxisUtils.getIdentifier( reference ) );
+    return getModel().getAxisRegistry().getAxis( AxisUtils.getIdentifier( reference ) );
   }
 
 //  private void addMapper( final MapperType mapperType )

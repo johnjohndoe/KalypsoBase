@@ -185,7 +185,7 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
     final SetActivePointVisitor visitor = new SetActivePointVisitor( start, 10 );
 
     final IChartModel model = getChart().getChartModel();
-    model.getMapperRegistry().accept( visitor );
+    model.getAxisRegistry().accept( visitor );
   }
 
   private void doMouseUpPan( final Point start, final Point end )
@@ -194,7 +194,7 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
     final PanToVisitor visitor = new PanToVisitor( end, start );
 
     final IChartModel model = getChart().getChartModel();
-    model.getMapperRegistry().accept( visitor );
+    model.getAxisRegistry().accept( visitor );
   }
 
   private void doMouseUpZoom( final Point start, final Point end )
@@ -209,7 +209,7 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
       final ZoomInVisitor visitor = new ZoomInVisitor( start, end );
 
       final IChartModel model = getChart().getChartModel();
-      model.getMapperRegistry().accept( visitor );
+      model.getAxisRegistry().accept( visitor );
     }
   }
 
@@ -227,7 +227,7 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
       final int y2 = y1 + plotRect.height;
       final ZoomInVisitor visitor = new ZoomInVisitor( new Point( start.x, y1 ), new Point( end.x, y2 ) );
       final IChartModel model = getChart().getChartModel();
-      model.getMapperRegistry().accept( visitor );
+      model.getAxisRegistry().accept( visitor );
     }
   }
 

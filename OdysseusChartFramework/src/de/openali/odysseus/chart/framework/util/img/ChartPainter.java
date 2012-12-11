@@ -143,7 +143,7 @@ public class ChartPainter
 
   private final int getAxisWidth( final POSITION position )
   {
-    final IAxis< ? >[] axes = m_model.getMapperRegistry().getAxesAt( position );
+    final IAxis< ? >[] axes = m_model.getAxisRegistry().getAxesAt( position );
     int totalWidth = 0;
     for( final IAxis< ? > axis : axes )
     {
@@ -163,7 +163,7 @@ public class ChartPainter
 
   private void paintAxes( final POSITION position, final GC gc, final int anchorX, final int anchorY, final int startOffset, final int screenWidth, final int rotation, final boolean invertVertical )
   {
-    final IAxis< ? >[] axes = m_model.getMapperRegistry().getAxesAt( position );
+    final IAxis< ? >[] axes = m_model.getAxisRegistry().getAxesAt( position );
 
     final Transform oldTransform = new Transform( gc.getDevice() );
     final Transform newTransform = new Transform( gc.getDevice() );
@@ -343,7 +343,7 @@ public class ChartPainter
     final int axisWidth = size.width;// - plotInsets.left - plotInsets.right;
     final int axisHeight = size.height;// - plotInsets.top - plotInsets.bottom;
 
-    for( final IAxis axis : m_model.getMapperRegistry().getAxes() )
+    for( final IAxis axis : m_model.getAxisRegistry().getAxes() )
     {
       final ORIENTATION orientation = axis.getPosition().getOrientation();
       switch( orientation )

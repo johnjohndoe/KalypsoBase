@@ -126,7 +126,7 @@ public class ChartMapperFactory extends AbstractChartFactory
    */
   public IAxis addAxis( final AxisType axisType, final ReferencableType... baseTypes )
   {
-    final IAxisRegistry mapperRegistry = getModel().getMapperRegistry();
+    final IAxisRegistry mapperRegistry = getModel().getAxisRegistry();
     if( axisType != null )
     {
       // wenn die Achse schon da ist, dann muss man sie nicht mehr
@@ -244,7 +244,7 @@ public class ChartMapperFactory extends AbstractChartFactory
     if( screenAxisType == null )
       return null;
 
-    final IAxisRegistry mapperRegistry = getModel().getMapperRegistry();
+    final IAxisRegistry mapperRegistry = getModel().getAxisRegistry();
 
     /* screen axis already exists? */
     if( mapperRegistry.getAxis( screenAxisType.getId() ) != null )

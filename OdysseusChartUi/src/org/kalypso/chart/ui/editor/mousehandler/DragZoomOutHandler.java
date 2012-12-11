@@ -68,7 +68,7 @@ public class DragZoomOutHandler extends AbstractChartDragHandler
     {
       final ZoomOutVisitor visitor = new ZoomOutVisitor( editInfo.getPosition(), end );
       final IChartModel model = getChart().getChartModel();
-      model.getMapperRegistry().accept( visitor );
+      model.getAxisRegistry().accept( visitor );
     }
     finally
     {

@@ -161,7 +161,7 @@ public class ChartBehaviour implements IChartBehaviour
 
     m_hideUnusedAxes = hide;
 
-    m_model.getMapperRegistry().accept( new IAxisVisitor()
+    m_model.getAxisRegistry().accept( new IAxisVisitor()
     {
       @Override
       public void visit( final IAxis axis )

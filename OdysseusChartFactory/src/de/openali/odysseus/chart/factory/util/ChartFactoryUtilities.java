@@ -98,7 +98,7 @@ public final class ChartFactoryUtilities
    */
   public static void doAutoscale( final IChartModel chartModel, final ChartType chart )
   {
-    final IAxisRegistry mapperRegistry = chartModel.getMapperRegistry();
+    final IAxisRegistry mapperRegistry = chartModel.getAxisRegistry();
     final AxisType[] axes = chart.getMappers().getAxisArray();
     final IAxis[] autoscaledAxes = AxisUtils.findAutoscaleAxes( axes, mapperRegistry );
     chartModel.autoscale( autoscaledAxes );

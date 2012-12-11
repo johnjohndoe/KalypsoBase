@@ -84,7 +84,7 @@ public abstract class AbstractChartSelectionListener implements IChartSelectionC
 
   protected Date[] convert( final IChartComposite chart, final Point... positions )
   {
-    final IAxis axis = chart.getChartModel().getMapperRegistry().getAxis( ITimeseriesConstants.TYPE_DATE ); //$NON-NLS-1$
+    final IAxis axis = chart.getChartModel().getAxisRegistry().getAxis( ITimeseriesConstants.TYPE_DATE ); //$NON-NLS-1$
 
     final Set<Date> dates = new TreeSet<>();
     for( final Point position : positions )

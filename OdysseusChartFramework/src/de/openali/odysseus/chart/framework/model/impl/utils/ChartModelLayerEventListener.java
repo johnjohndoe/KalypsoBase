@@ -99,7 +99,7 @@ public class ChartModelLayerEventListener extends AbstractLayerManagerEventListe
   private void doHideUnusedAxes( )
   {
     final IChartBehaviour behaviour = m_model.getBehaviour();
-    final IAxis[] axes = m_model.getMapperRegistry().getAxes();
+    final IAxis[] axes = m_model.getAxisRegistry().getAxes();
 
     behaviour.hideUnusedAxis( axes );
   }
