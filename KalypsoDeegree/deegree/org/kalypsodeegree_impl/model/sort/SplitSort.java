@@ -49,6 +49,7 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.feature.FeatureLinkUtils;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 import com.infomatiq.jsi.Rectangle;
@@ -229,13 +230,25 @@ public class SplitSort extends AbstractFeatureList
       if( c.contains( object ) )
         removedItemIndices.add( index );
     }
+
+    removeAll( removedItemIndices.toNativeArray() );
+
+    return !removedItemIndices.isEmpty();
+  }
+
+  @Override
+  public void removeAll( final int[] allIndices )
+  {
+    /* clone in order not to change the input array */
+    final TIntArrayList removedItemIndices = new TIntArrayList( allIndices );
+
     // sort indices in ascending order
     removedItemIndices.sort();
 
     // build array of all shifts
     final int removeCount = removedItemIndices.size();
     if( removeCount == 0 )
-      return false;
+      return;
 
     // remove all items from index and workspace
     removedItemIndices.forEach( new TIntProcedure()
@@ -263,6 +276,7 @@ public class SplitSort extends AbstractFeatureList
       {
         if( removedItemIndices.contains( i ) )
           continue;
+
         oldIndices.add( i );
         newIndices.add( j++ ); // the new indices will be in consecutive order
       }
@@ -294,8 +308,6 @@ public class SplitSort extends AbstractFeatureList
 
     if( m_index != null )
       m_index.assertSize();
-
-    return !removedItemIndices.isEmpty();
   }
 
   @Override
@@ -335,6 +347,53 @@ public class SplitSort extends AbstractFeatureList
   public synchronized int lastIndexOf( final Object object )
   {
     return m_items.lastIndexOf( object );
+  }
+
+  /**
+   * Overwritten in order to use index to improve performance.
+   */
+  @Override
+  public synchronized int indexOfLink( final Feature targetFeature )
+  {
+    if( m_items.size() >= SplitSortindex.INITIAL_CAPACITY )
+      createIndex();
+
+    if( m_index == null || targetFeature == null )
+      return super.indexOfLink( targetFeature );
+
+    /* string reference? */
+    final int indexOfId = indexOf( targetFeature.getId() );
+    if( indexOfId != -1 )
+      return indexOfId;
+
+    /* search by location */
+    final GM_Envelope envelope = getEnvelope( targetFeature );
+    if( envelope == null )
+      return super.indexOfLink( targetFeature );
+
+    final Rectangle searchRect = GeometryUtilities.toRectangle( envelope );
+
+    final int[] resultIndex = new int[] { -1 };
+    final TIntProcedure searcher = new TIntProcedure()
+    {
+      @Override
+      public boolean execute( final int index )
+      {
+        final Object element = get( index );
+
+        if( FeatureLinkUtils.isSameOrLinkTo( targetFeature, element ) )
+        {
+          resultIndex[0] = index;
+          return false;
+        }
+
+        return true;
+      }
+    };
+
+    query( searchRect, searcher );
+
+    return resultIndex[0];
   }
 
   /**
@@ -381,10 +440,8 @@ public class SplitSort extends AbstractFeatureList
   }
 
   @SuppressWarnings( { "unchecked", "rawtypes" } )
-  private synchronized List< ? > query( final Rectangle envelope, final List receiver, final boolean resolve )
+  private List< ? > query( final Rectangle envelope, final List receiver, final boolean resolve )
   {
-    createIndex();
-
     final List<Object> result = receiver == null ? new ArrayList<>() : receiver;
 
     final TIntProcedure ip = new TIntProcedure()
@@ -397,10 +454,17 @@ public class SplitSort extends AbstractFeatureList
       }
     };
 
-    final Rectangle searchRect = envelope == null ? m_index.getBounds() : envelope;
-    m_index.intersects( searchRect, ip );
+    query( envelope, ip );
 
     return result;
+  }
+
+  private synchronized void query( final Rectangle envelope, final TIntProcedure ip )
+  {
+    createIndex();
+
+    final Rectangle searchRect = envelope == null ? m_index.getBounds() : envelope;
+    m_index.intersects( searchRect, ip );
   }
 
   @Override
