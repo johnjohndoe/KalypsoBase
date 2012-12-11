@@ -389,6 +389,7 @@ public final class GisTemplateHelper
     final GM_Envelope env = GeometryFactory.createGM_Envelope( extent.getLeft(), extent.getBottom(), extent.getRight(), extent.getTop(), extent.getSrs() );
     final String orgSRSName = extent.getSrs();
     if( orgSRSName != null )
+    {
       try
       {
         final String targetSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
@@ -404,6 +405,8 @@ public final class GisTemplateHelper
         // we just print the error, but asume that we can return an envelope that is not converted
         e.printStackTrace();
       }
+    }
+
     return env;
   }
 
