@@ -41,7 +41,7 @@
 package de.openali.odysseus.chart.framework.view.impl;
 
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractMapperRegistryEventListener;
-import de.openali.odysseus.chart.framework.model.mapper.IMapper;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 
 /**
  * @author kimwerner
@@ -56,19 +56,19 @@ public class ChartImageMapperRegistryEventListener extends AbstractMapperRegistr
   }
 
   @Override
-  public void onMapperAdded( final IMapper mapper )
+  public void onAxisAdded( final IAxis axis )
   {
     m_chartImageComposite.invalidate();
   }
 
   @Override
-  public void onMapperChanged( final IMapper mapper )
+  public void onAxisChanged( final IAxis< ? > axis )
   {
     m_chartImageComposite.invalidate();
   }
 
   @Override
-  public void onMapperRemoved( final IMapper mapper )
+  public void onAxisRemoved( final IAxis< ? > axis )
   {
     m_chartImageComposite.invalidate();
   }

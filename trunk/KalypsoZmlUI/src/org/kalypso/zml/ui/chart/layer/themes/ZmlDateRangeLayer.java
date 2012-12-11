@@ -131,7 +131,7 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
   }
 
   @Override
-  public IDataRange<Double> getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange<Double> domainIntervall )
   {
     return null;
   }

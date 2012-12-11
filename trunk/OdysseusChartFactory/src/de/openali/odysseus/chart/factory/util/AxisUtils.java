@@ -49,7 +49,7 @@ import jregex.RETokenizer;
 import org.apache.commons.lang3.StringUtils;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
+import de.openali.odysseus.chart.framework.model.mapper.registry.IAxisRegistry;
 import de.openali.odysseus.chartconfig.x020.AxisDateRangeType;
 import de.openali.odysseus.chartconfig.x020.AxisDurationRangeType;
 import de.openali.odysseus.chartconfig.x020.AxisNumberRangeType;
@@ -71,6 +71,10 @@ public final class AxisUtils
    */
   public static String getIdentifier( final ReferencingType type )
   {
+    if(type==null)
+    {
+      return null;
+    }
     final String ref = type.getRef();
     if( StringUtils.isNotEmpty( ref ) )
       return ref;
@@ -84,7 +88,7 @@ public final class AxisUtils
   /**
    * Searches all axes that are configured for autoscaling.
    */
-  public static IAxis[] findAutoscaleAxes( final AxisType[] axes, final IMapperRegistry mapperRegistry )
+  public static IAxis[] findAutoscaleAxes( final AxisType[] axes, final IAxisRegistry mapperRegistry )
   {
     final List<IAxis> autoscaledAxes = new ArrayList<>();
 

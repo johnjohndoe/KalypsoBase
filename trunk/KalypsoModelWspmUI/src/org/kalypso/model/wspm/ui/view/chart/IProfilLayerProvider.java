@@ -45,7 +45,7 @@ import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
+import de.openali.odysseus.chart.framework.model.mapper.registry.IAxisRegistry;
 
 /**
  * A layer provider provides layers for the view, depending on the specific profile type.
@@ -71,5 +71,5 @@ public interface IProfilLayerProvider
 
   IComponentUiHandlerProvider getComponentUiHandlerProvider( final IProfile profile );
 
-  IAxis[] registerAxis( IMapperRegistry mapperRegistry );
+  IAxis[] registerAxis( IAxisRegistry mapperRegistry );
 }

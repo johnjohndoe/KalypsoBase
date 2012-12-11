@@ -75,7 +75,7 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
   }
 
   @Override
-  public IDataRange<Double> getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange<Double> domainIntervall )
   {
     // don't calculate
     return null;

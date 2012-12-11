@@ -58,7 +58,7 @@ public class ZmlThemeBackGroundRaster extends AbstractChartLayer
   }
 
   @Override
-  public IDataRange<Double> getTargetRange( IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( IDataRange<Double> domainIntervall )
   {
     // TODO Auto-generated method stub
     return null;
@@ -83,7 +83,7 @@ public class ZmlThemeBackGroundRaster extends AbstractChartLayer
 // @Override
 // public void paint( final GC gc, final IProgressMonitor monitor )
 // {
-// final IMapperRegistry registry = m_model.getMapperRegistry();
+// final IAxisRegistry registry = m_model.getMapperRegistry();
 // final IAxis[] axes = registry.getAxes();
 // final IAxis targetAxis = findTargetAxis( axes );
 //

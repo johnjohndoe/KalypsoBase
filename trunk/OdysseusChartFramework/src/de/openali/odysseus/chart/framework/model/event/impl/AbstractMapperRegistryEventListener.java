@@ -40,29 +40,29 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.model.event.impl;
 
-import de.openali.odysseus.chart.framework.model.event.IMapperRegistryEventListener;
-import de.openali.odysseus.chart.framework.model.mapper.IMapper;
+import de.openali.odysseus.chart.framework.model.event.IAxisRegistryEventListener;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 
 /**
  * @author burtscher1
  */
-public abstract class AbstractMapperRegistryEventListener implements IMapperRegistryEventListener
+public abstract class AbstractMapperRegistryEventListener implements IAxisRegistryEventListener
 {
 
   @Override
-  public void onMapperAdded( final IMapper mapper )
+  public void onAxisAdded( final IAxis axis )
   {
     // not implemented - override in subclass if needed
   }
 
   @Override
-  public void onMapperRemoved( final IMapper mapper )
+  public void onAxisRemoved( final IAxis< ? > axis )
   {
     // not implemented - override in subclass if needed
   }
 
   @Override
-  public void onMapperChanged( final IMapper mapper )
+  public void onAxisChanged( final IAxis< ? > axis )
   {
     // not implemented - override in subclass if needed
   }

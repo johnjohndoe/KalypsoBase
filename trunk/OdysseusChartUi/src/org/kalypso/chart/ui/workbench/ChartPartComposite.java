@@ -82,7 +82,7 @@ import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManager
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractMapperRegistryEventListener;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.mapper.IMapper;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
@@ -114,7 +114,7 @@ public class ChartPartComposite implements IChartPart
     final AbstractMapperRegistryEventListener mapperRegistryListener = new AbstractMapperRegistryEventListener()
     {
       @Override
-      public void onMapperChanged( final IMapper mapper )
+      public void onAxisChanged( final IAxis< ? > axis )
       {
         setDirty( true );
       }

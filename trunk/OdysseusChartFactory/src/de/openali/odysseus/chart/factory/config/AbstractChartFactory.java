@@ -53,7 +53,7 @@ import de.openali.odysseus.chart.factory.config.resolver.ChartTypeResolver;
 import de.openali.odysseus.chart.factory.util.IReferenceResolver;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
-import de.openali.odysseus.chartconfig.x020.MapperType;
+import de.openali.odysseus.chartconfig.x020.AxisType;
 import de.openali.odysseus.chartconfig.x020.ParametersType;
 import de.openali.odysseus.chartconfig.x020.ProviderType;
 import de.openali.odysseus.chartconfig.x020.ReferencingType;
@@ -115,11 +115,11 @@ public abstract class AbstractChartFactory
     return new XmlbeansParameterContainer( ownerIdentifier, providerIdentifier, parameters );
   }
 
-  public MapperType findMapperType( final ReferencingType reference )
+  public AxisType findMapperType( final ReferencingType reference )
   {
     final String ref = reference.getRef();
     if( StringUtils.isNotEmpty( ref ) )
-      return (MapperType) getResolver().resolveReference( ref );
+      return (AxisType) getResolver().resolveReference( ref );
 
     final String url = reference.getUrl();
     if( StringUtils.isNotEmpty( url ) )

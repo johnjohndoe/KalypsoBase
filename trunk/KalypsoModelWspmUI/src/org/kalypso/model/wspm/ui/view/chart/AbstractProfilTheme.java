@@ -107,7 +107,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer
    * The caller of getDomainRange is responsible for recursion.
    */
   @Override
-  public IDataRange<Double> getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange<Double> domainIntervall )
   {
     return null;
   }

@@ -49,8 +49,7 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.IMapper;
-import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
+import de.openali.odysseus.chart.framework.model.mapper.registry.IAxisRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 import de.openali.odysseus.chartconfig.x020.AxisDateRangeType;
@@ -65,8 +64,8 @@ import de.openali.odysseus.chartconfig.x020.ChartType.Mappers;
 import de.openali.odysseus.chartconfig.x020.ChartType.Renderers;
 import de.openali.odysseus.chartconfig.x020.LayerType;
 import de.openali.odysseus.chartconfig.x020.LayersType;
-import de.openali.odysseus.chartconfig.x020.MapperType;
 import de.openali.odysseus.chartconfig.x020.TitleType;
+//import de.openali.odysseus.chartconfig.x020.MapperType;
 
 /**
  * saves a chart to an XML document
@@ -103,7 +102,7 @@ public final class ChartConfigurationSaver
 
     final Mappers mappers = chartType.addNewMappers();
     mappers.setAxisArray( extractAxes( model.getMapperRegistry() ).values().toArray( new AxisType[] {} ) );
-    mappers.setMapperArray( extractMappers( model.getMapperRegistry() ).values().toArray( new MapperType[] {} ) );
+  //  mappers.setMapperArray( extractMappers( model.getMapperRegistry() ).values().toArray( new MapperType[] {} ) );
 
     final Renderers renderers = chartType.addNewRenderers();
     renderers.setAxisRendererArray( extractAxisRenderers( model.getMapperRegistry() ).values().toArray( new AxisRendererType[] {} ) );
@@ -113,7 +112,7 @@ public final class ChartConfigurationSaver
   /**
    * saves axes with current range
    */
-  private static Map<String, AxisType> extractAxes( final IMapperRegistry registry )
+  private static Map<String, AxisType> extractAxes( final IAxisRegistry registry )
   {
     final Map<String, AxisType> axisTypes = new HashMap<>();
     final IAxis[] axes = registry.getAxes();
@@ -164,7 +163,7 @@ public final class ChartConfigurationSaver
   /**
    * saves renderers without applying any changes
    */
-  private static Map<String, AxisRendererType> extractAxisRenderers( final IMapperRegistry registry )
+  private static Map<String, AxisRendererType> extractAxisRenderers( final IAxisRegistry registry )
   {
     final Map<String, AxisRendererType> axisRendererTypes = new HashMap<>();
     final IAxis[] axes = registry.getAxes();
@@ -187,21 +186,21 @@ public final class ChartConfigurationSaver
   /**
    * saves mappers without applying any changes
    */
-  private static Map<String, MapperType> extractMappers( final IMapperRegistry registry )
-  {
-    final Map<String, MapperType> mapperTypes = new HashMap<>();
-    final IMapper[] mappers = registry.getMappers();
-    for( final IMapper mapper : mappers )
-    {
-      final MapperType mt = (MapperType)mapper.getData( AbstractChartFactory.CONFIGURATION_TYPE_KEY );
-      if( mt != null )
-      {
-        // everything stays as it was
-        mapperTypes.put( mapper.getIdentifier(), mt );
-      }
-    }
-    return mapperTypes;
-  }
+//  private static Map<String, MapperType> extractMappers( final IAxisRegistry registry )
+//  {
+//    final Map<String, MapperType> mapperTypes = new HashMap<>();
+//    final IMapper[] mappers = registry.getMappers();
+//    for( final IMapper mapper : mappers )
+//    {
+//      final MapperType mt = (MapperType)mapper.getData( AbstractChartFactory.CONFIGURATION_TYPE_KEY );
+//      if( mt != null )
+//      {
+//        // everything stays as it was
+//        mapperTypes.put( mapper.getIdentifier(), mt );
+//      }
+//    }
+//    return mapperTypes;
+//  }
 
   /**
    * saves layers according to current order and sets current visibilty

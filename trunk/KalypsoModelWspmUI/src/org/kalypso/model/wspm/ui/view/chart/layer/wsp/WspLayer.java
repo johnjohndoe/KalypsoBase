@@ -193,7 +193,7 @@ public class WspLayer extends AbstractProfilTheme
   }
 
   @Override
-  public IDataRange<Double> getTargetRange( final IDataRange domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange<Double> domainIntervall )
   {
     final WaterlevelRenderData[] renderData = getRenderData();
     if( renderData.length == 0 )

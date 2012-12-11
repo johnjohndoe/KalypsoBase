@@ -47,7 +47,7 @@ public class DomainIntervalBarLayer extends AbstractBarLayer
   }
 
   @Override
-  public IDataRange<Double> getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange<Double> domainIntervall )
   {
     return getNumericRange( getTargetAxis(), getDataContainer().getTargetRange() );
   }

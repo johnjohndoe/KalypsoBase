@@ -19,7 +19,7 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor2;
 import de.openali.odysseus.chart.framework.model.layer.manager.LayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
+import de.openali.odysseus.chart.framework.model.mapper.registry.IAxisRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.registry.impl.MapperRegistry;
 
 public class ChartModel implements IChartModel
@@ -30,7 +30,7 @@ public class ChartModel implements IChartModel
 
   private final ILayerManager m_layerManager = new LayerManager( this );
 
-  private final IMapperRegistry m_mapperRegistry = new MapperRegistry();
+  private final IAxisRegistry m_mapperRegistry = new MapperRegistry();
 
   private IBasicChartSettings m_settings = new BasicChartSettings();
 
@@ -98,7 +98,7 @@ public class ChartModel implements IChartModel
   }
 
   @Override
-  public IMapperRegistry getMapperRegistry( )
+  public IAxisRegistry getMapperRegistry( )
   {
     return m_mapperRegistry;
   }

@@ -10,7 +10,6 @@ import org.eclipse.core.runtime.Platform;
 
 import de.openali.odysseus.chart.factory.provider.IAxisProvider;
 import de.openali.odysseus.chart.factory.provider.IAxisRendererProvider;
-import de.openali.odysseus.chart.factory.provider.IMapperProvider;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 
@@ -83,18 +82,18 @@ public final class ChartExtensionLoader implements IExtensionLoader
     return (IAxisProvider) element.createExecutableExtension( "class" ); //$NON-NLS-1$
   }
 
-  public static IMapperProvider createMapperProvider( final String id ) throws CoreException
-  {
-    final Map<String, IConfigurationElement> elts = getMapperProviders();
-
-    final IConfigurationElement element = elts.get( id );
-    if( element == null )
-    {
-      return null;
-    }
-
-    return (IMapperProvider) element.createExecutableExtension( "class" ); //$NON-NLS-1$
-  }
+//  public static IMapperProvider createMapperProvider( final String id ) throws CoreException
+//  {
+//    final Map<String, IConfigurationElement> elts = getMapperProviders();
+//
+//    final IConfigurationElement element = elts.get( id );
+//    if( element == null )
+//    {
+//      return null;
+//    }
+//
+//    return (IMapperProvider) element.createExecutableExtension( "class" ); //$NON-NLS-1$
+//  }
 
   public static IAxisRendererProvider createAxisRendererProvider( final String id ) throws CoreException
   {
@@ -234,10 +233,10 @@ public final class ChartExtensionLoader implements IExtensionLoader
       {
         return (T) createLayerProvider( id );
       }
-      if( IMapperProvider.class.isAssignableFrom( extensionClass ) )
-      {
-        return (T) createMapperProvider( id );
-      }
+//      if( IMapperProvider.class.isAssignableFrom( extensionClass ) )
+//      {
+//        return (T) createMapperProvider( id );
+//      }
     }
     catch( final CoreException e )
     {

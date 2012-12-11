@@ -40,12 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.model.event;
 
-import de.openali.odysseus.chart.framework.model.mapper.IMapper;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 
 /**
  * @author burtscher1
  */
-public interface IMapperEventListener
+public interface IAxisEventListener
 {
-  void onMapperChanged( IMapper mapper );
+  void onAxisChanged( IAxis<?> axis );
 }

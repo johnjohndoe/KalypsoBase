@@ -19,7 +19,9 @@
   <element name="ChildLayer" type="ods:ChildLayerType" />
   <element name="Axis" type="ods:AxisType" />
   <element name="ScreenAxis" type="ods:ScreenAxisType" />
+  <!--
   <element name="Mapper" type="ods:MapperType" />
+  -->
   <element name="AxisRenderer" type="ods:AxisRendererType" />
 
 
@@ -66,7 +68,7 @@
             <complexType>
               <sequence>
                 <choice maxOccurs="unbounded">
-                  <element ref="ods:Mapper" />
+                 <!--  <element ref="ods:Mapper" /> -->
                   <element ref="ods:Axis" />
                   <element ref="ods:ScreenAxis" />
                 </choice>
@@ -193,6 +195,7 @@
     </attribute>
   </complexType>
 
+<!-- 
   <complexType name="MapperRefType">
     <complexContent>
       <extension base="ods:ReferencingType">
@@ -201,15 +204,16 @@
     </complexContent>
   </complexType>
 
+
   <complexType name="MapperType">
     <complexContent>
       <extension base="ods:AbstractConfigurationType" />
     </complexContent>
   </complexType>
-
+ -->
   <complexType name="AxisType">
     <complexContent>
-      <extension base="ods:MapperType">
+      <extension base="ods:AbstractConfigurationType">
         <sequence>
           <element name="Label" type="string" minOccurs="0">
             <annotation>
@@ -286,11 +290,11 @@
     	<documentation>deprecated, use normal Axis instead and a ScreenAxisProvider</documentation>
     </annotation>
     <complexContent>
-      <extension base="ods:MapperType">
-        <sequence>
+      <extension base="ods:AxisType">
+        <!--sequence>
           <element name="Direction" type="ods:DirectionType" minOccurs="0" default="POSITIVE" />
           <element name="Position" type="ods:PositionType" minOccurs="1" />
-        </sequence>
+        </sequence-->
       </extension>
     </complexContent>
   </complexType>

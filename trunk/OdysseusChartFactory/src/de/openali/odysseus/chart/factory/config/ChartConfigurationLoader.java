@@ -41,15 +41,14 @@ import de.openali.odysseus.chartconfig.x020.LayerType;
 import de.openali.odysseus.chartconfig.x020.LayersType;
 import de.openali.odysseus.chartconfig.x020.LineStyleDocument;
 import de.openali.odysseus.chartconfig.x020.LineStyleType;
-import de.openali.odysseus.chartconfig.x020.MapperDocument;
-import de.openali.odysseus.chartconfig.x020.MapperType;
 import de.openali.odysseus.chartconfig.x020.PointStyleDocument;
 import de.openali.odysseus.chartconfig.x020.PointStyleType;
-import de.openali.odysseus.chartconfig.x020.RoleReferencingType;
 import de.openali.odysseus.chartconfig.x020.ScreenAxisDocument;
 import de.openali.odysseus.chartconfig.x020.StylesDocument.Styles;
 import de.openali.odysseus.chartconfig.x020.TextStyleDocument;
 import de.openali.odysseus.chartconfig.x020.TextStyleType;
+//import de.openali.odysseus.chartconfig.x020.MapperDocument;
+//import de.openali.odysseus.chartconfig.x020.MapperType;
 
 /**
  * @author alibu
@@ -211,17 +210,17 @@ public class ChartConfigurationLoader implements IReferenceResolver
     return styleMap;
   }
 
-  public Map<String, MapperType> getMappers( final LayerType layer )
-  {
-    final TreeMap<String, MapperType> map = new TreeMap<>();
-    final RoleReferencingType[] mra = layer.getMapperRefs().getMapperRefArray();
-    for( final RoleReferencingType refType : mra )
-    {
-      map.put( refType.getRole(), (MapperType) resolveReference( AxisUtils.getIdentifier( refType ) ) );
-    }
-
-    return map;
-  }
+//  public Map<String, MapperType> getMappers( final LayerType layer )
+//  {
+//    final TreeMap<String, MapperType> map = new TreeMap<>();
+//    final RoleReferencingType[] mra = layer.getMapperRefs().getMapperRefArray();
+//    for( final RoleReferencingType refType : mra )
+//    {
+//      map.put( refType.getRole(), (MapperType) resolveReference( AxisUtils.getIdentifier( refType ) ) );
+//    }
+//
+//    return map;
+//  }
 
   public AxisRendererType getAxisRenderer( final AxisType axis )
   {
@@ -344,12 +343,12 @@ public class ChartConfigurationLoader implements IReferenceResolver
 
       return doc.getScreenAxis();
     }
-    else if( "Mapper".equals( nodeName ) ) //$NON-NLS-1$
-    {
-      final MapperDocument doc = MapperDocument.Factory.parse( node );
-
-      return doc.getMapper();
-    }
+//    else if( "Mapper".equals( nodeName ) ) //$NON-NLS-1$
+//    {
+//      final MapperDocument doc = MapperDocument.Factory.parse( node );
+//
+//      return doc.getMapper();
+//    }
     else if( "LineStyle".equals( nodeName ) ) //$NON-NLS-1$
     {
       final LineStyleDocument doc = LineStyleDocument.Factory.parse( node );

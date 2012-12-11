@@ -32,7 +32,9 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
    */
   String getDescription( );
 
-  // FIXME: please, please, comment: what kind should the layer return here, logical or numeric???
+  /**
+   * @return the Numeric(Double)Range depends on Layers DomainData
+   */
   IDataRange<Double> getDomainRange( );
 
   IChartLayerFilter[] getFilters( );
@@ -44,8 +46,9 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
   /**
    * @param domainIntervall
    *          shrinks the TargetRange, pass null to retrieve full dataRange
+   * @return the Numeric(Double)Range depends on Layers TargetData
    */
-  IDataRange<Double> getTargetRange( IDataRange< ? > domainIntervall );
+  IDataRange<Double> getTargetRange( IDataRange<Double> domainIntervall );
 
   /**
    * @return the layers title

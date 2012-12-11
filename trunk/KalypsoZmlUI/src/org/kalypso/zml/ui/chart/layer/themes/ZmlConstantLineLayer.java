@@ -168,7 +168,7 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
 
   @SuppressWarnings( { "unchecked", "rawtypes" } )
   @Override
-  public IDataRange<Double> getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange<Double> domainIntervall )
   {
     if( !m_calculateRange || ArrayUtils.isEmpty( m_descriptors ) )
     {

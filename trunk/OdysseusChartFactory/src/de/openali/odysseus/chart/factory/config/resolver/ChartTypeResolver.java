@@ -81,7 +81,6 @@ import de.openali.odysseus.chartconfig.x020.LayerRefernceType;
 import de.openali.odysseus.chartconfig.x020.LayerType;
 import de.openali.odysseus.chartconfig.x020.LayerType.MapperRefs;
 import de.openali.odysseus.chartconfig.x020.LayersType;
-import de.openali.odysseus.chartconfig.x020.MapperType;
 import de.openali.odysseus.chartconfig.x020.ScreenAxisType;
 import de.openali.odysseus.chartconfig.x020.StylesDocument.Styles;
 
@@ -148,14 +147,14 @@ public final class ChartTypeResolver implements IReferenceResolver
     }
   }
 
-  public MapperType findMapperType( final String reference, final URL context ) throws CoreException
+  public AxisType findMapperType( final String reference, final URL context ) throws CoreException
   {
     try
     {
       final String plainUrl = getUrl( reference, context );
       final String identifier = getAnchor( reference );
 
-      MapperType type;
+      AxisType type;
       if( plainUrl.startsWith( "urn:" ) ) //$NON-NLS-1$
         type = findUrnMapperType( context, plainUrl, identifier );
       else
@@ -308,14 +307,14 @@ public final class ChartTypeResolver implements IReferenceResolver
     return StringUtils.chomp( tokenizer.nextToken() );
   }
 
-  private MapperType findUrnMapperType( final URL context, final String urn, final String identifier ) throws XmlException, IOException
+  private AxisType findUrnMapperType( final URL context, final String urn, final String identifier ) throws XmlException, IOException
   {
     final String uri = KalypsoCorePlugin.getDefault().getCatalogManager().resolve( urn, urn );
 
     return findUrlMapperType( context, uri, identifier );
   }
 
-  private MapperType findUrlMapperType( final URL context, final String uri, final String identifier ) throws XmlException, IOException
+  private AxisType findUrlMapperType( final URL context, final String uri, final String identifier ) throws XmlException, IOException
   {
     final ChartConfigurationLoader loader = getLoader( context, uri );
     final ChartType[] charts = loader.getCharts();
@@ -337,7 +336,7 @@ public final class ChartTypeResolver implements IReferenceResolver
       for( final ScreenAxisType screenAxis : screenAxes )
       {
         if( screenAxis.getId().equals( identifier ) )
-          return screenAxis;
+          return (AxisType)screenAxis;
       }
     }
 

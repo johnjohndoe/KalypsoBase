@@ -63,39 +63,9 @@ public class CoordinateMapper<T_Domain, T_Target> implements ICoordinateMapper<T
   }
 
   @Override
-  public Point numericToScreen( final Double domVal, final Double targetVal )
-  {
-    final int domScreen = m_domainAxis.numericToScreen( domVal );
-    final int valScreen = m_targetAxis.numericToScreen( targetVal );
-    return new Point( domScreen, valScreen );
-  }
-
-  @Override
   public IAxis<T_Domain> getDomainAxis( )
   {
     return m_domainAxis;
-  }
-
-  @Override
-  public IAxis<T_Target> getTargetAxis( )
-  {
-    return m_targetAxis;
-  }
-
-  @Override
-  public Point logicalToScreen( final T_Domain domainValue, final T_Target targetValue )
-  {
-    return numericToScreen( m_domainAxis.logicalToNumeric( domainValue ), m_targetAxis.logicalToNumeric( targetValue ) );
-  }
-
-  @Override
-  public IPair<Double, Double> screenToNumeric( final Point screenValue )
-  {
-    if( screenValue == null )
-      return null;
-    final Double domainNum = getDomainAxis().screenToNumeric( screenValue.x );
-    final Double targetNum = getTargetAxis().screenToNumeric( screenValue.y );
-    return new Pair<>( domainNum, targetNum );
   }
 
   @Override
@@ -108,14 +78,52 @@ public class CoordinateMapper<T_Domain, T_Target> implements ICoordinateMapper<T
   }
 
   @Override
-  public IPair<T_Domain, T_Target> screenToLogical( Point screenValue )
+  public IAxis<T_Target> getTargetAxis( )
   {
-    return new Pair<>( getDomainAxis().screenToLogical( screenValue.x ), getTargetAxis().screenToLogical( screenValue.y ) );
+    return m_targetAxis;
   }
 
   @Override
   public IPair<Double, Double> logicalToNumeric( T_Domain domainValue, T_Target targetValue )
   {
     return new Pair<>( m_domainAxis.logicalToNumeric( domainValue ), m_targetAxis.logicalToNumeric( targetValue ) );
+  }
+
+  @Override
+  public Point logicalToScreen( final T_Domain domainValue, final T_Target targetValue )
+  {
+    return numericToScreen( m_domainAxis.logicalToNumeric( domainValue ), m_targetAxis.logicalToNumeric( targetValue ) );
+  }
+
+  @Override
+  public IPair<T_Domain, T_Target> numericToLogical( Double domainValue, Double targetValue )
+  {
+    final T_Domain domainVal = getDomainAxis().numericToLogical( domainValue );
+    final T_Target targetVal = getTargetAxis().numericToLogical( targetValue );
+    return new Pair<>( domainVal, targetVal );
+  }
+
+  @Override
+  public Point numericToScreen( final Double domVal, final Double targetVal )
+  {
+    final int domScreen = m_domainAxis.numericToScreen( domVal );
+    final int valScreen = m_targetAxis.numericToScreen( targetVal );
+    return new Point( domScreen, valScreen );
+  }
+
+  @Override
+  public IPair<T_Domain, T_Target> screenToLogical( Point screenValue )
+  {
+    return new Pair<>( getDomainAxis().screenToLogical( screenValue.x ), getTargetAxis().screenToLogical( screenValue.y ) );
+  }
+
+  @Override
+  public IPair<Double, Double> screenToNumeric( final Point screenValue )
+  {
+    if( screenValue == null )
+      return null;
+    final Double domainNum = getDomainAxis().screenToNumeric( screenValue.x );
+    final Double targetNum = getTargetAxis().screenToNumeric( screenValue.y );
+    return new Pair<>( domainNum, targetNum );
   }
 }

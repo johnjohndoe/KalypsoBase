@@ -1,27 +1,27 @@
 package de.openali.odysseus.chart.framework.model.mapper;
 
 import de.openali.odysseus.chart.framework.model.event.IEventProvider;
-import de.openali.odysseus.chart.framework.model.event.IMapperEventListener;
+import de.openali.odysseus.chart.framework.model.event.IAxisEventListener;
 
 /**
  * @author burtscher
  */
-public interface IMapper extends IEventProvider<IMapperEventListener>
+public interface IMapperDeprecated extends IEventProvider<IAxisEventListener>
 {
   /**
    * @return the unique identifier
    */
-  String getIdentifier( );
+ // String getIdentifier( );
 
   
   /**
    * method to store arbitrary data objects;
    */
-  @Deprecated
-  void setData( String identifier, Object data );
+ // @Deprecated
+//  void setData( String identifier, Object data );
 
-  @Deprecated
-  Object getData( String identifier );
+//  @Deprecated
+//  Object getData( String identifier );
 
   /**
    * returns a data converter which may be used to convert data to numbers which can directly be used by the mapper (and

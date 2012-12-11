@@ -47,7 +47,7 @@ import org.eclipse.swt.graphics.Point;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.impl.visitors.PanToVisitor;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
-import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
+import de.openali.odysseus.chart.framework.model.mapper.registry.IAxisRegistry;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
@@ -108,7 +108,7 @@ public class DragPanHandler extends AbstractChartDragHandler
     if( start != null )
     {
       final IChartModel model = getChart().getChartModel();
-      final IMapperRegistry registry = model.getMapperRegistry();
+      final IAxisRegistry registry = model.getMapperRegistry();
 
       final Point position = editInfo.getPosition();
 
