@@ -19,7 +19,7 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.IAxisVisitor;
 /**
  * @author burtscher
  */
-public class MapperRegistry implements IAxisRegistry
+public class AxisRegistry implements IAxisRegistry
 {
   protected final AxisRegistryEventHandler m_handler = new AxisRegistryEventHandler();
 
