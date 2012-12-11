@@ -47,7 +47,7 @@ public class WidgetLayer implements IMapLayer
   @Override
   public String getLabel( )
   {
-    return "Widgets";
+    return "Widgets"; //$NON-NLS-1$
   }
 
   @Override

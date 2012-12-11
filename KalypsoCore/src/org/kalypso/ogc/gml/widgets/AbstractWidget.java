@@ -87,8 +87,8 @@ public abstract class AbstractWidget implements IWidget
     final Command command = cs.getCommand( commandId );
     if( !command.isDefined() )
     {
-      m_name = "undefined";
-      m_toolTip = "undefined";
+      m_name = "undefined"; //$NON-NLS-1$
+      m_toolTip = "undefined"; //$NON-NLS-1$
     }
     else
     {

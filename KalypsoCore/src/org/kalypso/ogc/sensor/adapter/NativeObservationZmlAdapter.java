@@ -109,7 +109,7 @@ public class NativeObservationZmlAdapter extends AbstractObservationImporter
   }
 
   @Override
-  protected List<NativeObservationDataSet> parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws Exception
+  protected List<NativeObservationDataSet> parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati )
   {
     throw new UnsupportedOperationException();
   }

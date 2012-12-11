@@ -41,11 +41,13 @@
 package org.kalypso.ogc.sensor.adapter;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IStatus;
@@ -143,11 +145,9 @@ public abstract class AbstractObservationImporter implements INativeObservationA
   }
 
   /**
-   * Implemented for backwards compatibility, falls back to
-   * {@link #importTimeseries(File, TimeZone, m_axisTypeValue, boolean)}.
+   * Implemented for backwards compatibility, falls back to {@link #importTimeseries(File, TimeZone, m_axisTypeValue, boolean)}.
    * 
-   * @see org.kalypso.ogc.sensor.adapter.INativeObservationAdapter#createObservationFromSource(java.io.File,
-   *      java.util.TimeZone, boolean)
+   * @see org.kalypso.ogc.sensor.adapter.INativeObservationAdapter#createObservationFromSource(java.io.File, java.util.TimeZone, boolean)
    */
   @Deprecated
   @Override
@@ -175,13 +175,21 @@ public abstract class AbstractObservationImporter implements INativeObservationA
 
       return stati.asMultiStatus( Messages.getString( "AbstractObservationImporter_1" ) ); //$NON-NLS-1$
     }
+    catch( final CoreException e )
+    {
+      return e.getStatus();
+    }
+    catch( final IOException e )
+    {
+      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), Messages.getString("AbstractObservationImporter.0"), e ); //$NON-NLS-1$
+    }
     catch( final Exception ex )
     {
-      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), ex.getMessage() );
+      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), ex.getMessage(), ex );
     }
   }
 
-  protected abstract List<NativeObservationDataSet> parse( File source, TimeZone timeZone, boolean continueWithErrors, IStatusCollector stati ) throws Exception;
+  protected abstract List<NativeObservationDataSet> parse( File source, TimeZone timeZone, boolean continueWithErrors, IStatusCollector stati ) throws CoreException, IOException;
 
   @Override
   public final String getAxisTypeValue( )

@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.adapter;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.LineNumberReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -84,7 +85,7 @@ public class NativeObservationDWDmdAdapter extends AbstractObservationImporter
   private static final int SEARCH_VALUES = 1;
 
   @Override
-  protected List<NativeObservationDataSet> parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws Exception
+  protected List<NativeObservationDataSet> parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws IOException
   {
     final List<NativeObservationDataSet> datasets = new ArrayList<>();
 
