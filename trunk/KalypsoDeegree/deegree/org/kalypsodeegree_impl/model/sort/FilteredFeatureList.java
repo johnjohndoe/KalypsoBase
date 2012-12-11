@@ -212,6 +212,12 @@ public class FilteredFeatureList implements FeatureList
   }
 
   @Override
+  public void removeAll( final int[] indices )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
   public boolean addAll( final int index, final Collection c )
   {
     throw new UnsupportedOperationException();
@@ -402,6 +408,13 @@ public class FilteredFeatureList implements FeatureList
   }
 
   // TODO (for all addLink, insertLink implementations): should we only allow elements that may go into this list?
+
+  @Override
+  public int indexOfLink( final Feature targetFeature )
+  {
+    throw new UnsupportedOperationException();
+  }
+
   @Override
   public <T extends Feature> IXLinkedFeature addLink( final T toAdd ) throws IllegalArgumentException
   {
@@ -457,10 +470,17 @@ public class FilteredFeatureList implements FeatureList
   }
 
   @Override
-  public boolean containsOrLinksTo( final Feature targetFeature )
+  public int removeLinks( final Feature[] targetFeatures )
+  {
+    return m_original.removeLinks( targetFeatures );
+  }
+
+  @Override
+  public boolean containsLinkTo( final Feature targetFeature )
   {
     for( final Feature property : toFeatures() )
     {
+      // FIXME: cannot work!
       if( property.equals( targetFeature ) )
         return true;
     }

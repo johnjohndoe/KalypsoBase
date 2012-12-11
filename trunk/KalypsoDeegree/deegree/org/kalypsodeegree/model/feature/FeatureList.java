@@ -76,6 +76,12 @@ public interface FeatureList extends List, JMSpatialIndex, IFeatureRelation
   Feature getOwner( );
 
   /**
+   * Returns the index of the first occurrence of a link to the specified element
+   * in this list, or -1 if this list does not contains a link to this element.
+   */
+  int indexOfLink( final Feature targetFeature );
+
+  /**
    * Same as {@link #insertRef(size(), Feature)}
    */
   <T extends Feature> IXLinkedFeature addLink( T toAdd ) throws IllegalArgumentException, IllegalStateException;
@@ -141,6 +147,12 @@ public interface FeatureList extends List, JMSpatialIndex, IFeatureRelation
   IXLinkedFeature insertLink( int index, String href, IFeatureType featureType ) throws IllegalArgumentException, IllegalStateException;
 
   /**
+   * Removes all elements with the given indices.<br/>
+   * For some implementations this is considerably faster than iteration over {@link #remove(int)}.
+   */
+  void removeAll( int[] indices );
+
+  /**
    * Removes a link from this list that links to the given feature.<br/>
    * If more than one element links to the given feature, only the first will be removed.
    * 
@@ -150,7 +162,17 @@ public interface FeatureList extends List, JMSpatialIndex, IFeatureRelation
    */
   boolean removeLink( Feature targetFeature );
 
-  boolean containsOrLinksTo( Feature targetFeature );
+  /**
+   * Removes links from this list that links to the given feature.<br/>
+   * If more than one element links to the given feature, only the first will be removed.
+   * 
+   * @return The number of elements that actually have been removed.
+   * @throws IllegalArgumentException
+   *           If the given feature is an {@link IXLinkedFeature}.
+   */
+  public int removeLinks( final Feature[] targetFeatures );
+
+  boolean containsLinkTo( Feature targetFeature );
 
   Feature getResolved( int index );
 

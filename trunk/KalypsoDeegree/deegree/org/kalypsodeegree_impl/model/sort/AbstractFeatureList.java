@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.sort;
 
+import gnu.trove.TIntArrayList;
+
 import java.awt.Graphics;
 import java.lang.reflect.Array;
 import java.util.Collection;
@@ -251,6 +253,24 @@ public abstract class AbstractFeatureList implements FeatureList
   }
 
   @Override
+  public synchronized int indexOfLink( final Feature targetFeature )
+  {
+    if( targetFeature instanceof IXLinkedFeature )
+      throw new IllegalArgumentException( "targetFeature may only be an inline feature" ); //$NON-NLS-1$
+
+    final int size = size();
+    for( int i = 0; i < size; i++ )
+    {
+      final Object element = get( i );
+
+      if( FeatureLinkUtils.isSameOrLinkTo( targetFeature, element ) )
+        return i;
+    }
+
+    return -1;
+  }
+  
+  @Override
   public IXLinkedFeature insertLink( final int index, final String href ) throws IllegalArgumentException, IllegalStateException
   {
     return insertLink( index, href, getPropertyType().getTargetFeatureType() );
@@ -309,6 +329,38 @@ public abstract class AbstractFeatureList implements FeatureList
   }
 
   @Override
+  public synchronized int removeLinks( final Feature[] targetFeatures )
+  {
+    final TIntArrayList indicesToRemove = new TIntArrayList( targetFeatures.length );
+
+    /* find indices of all elements that should be removed */
+    for( final Feature targetFeature : targetFeatures )
+    {
+      if( targetFeature instanceof IXLinkedFeature )
+        throw new IllegalArgumentException( "targetFeature may only be an inline feature" ); //$NON-NLS-1$
+
+      final int index = indexOfLink( targetFeature );
+      if( index != -1 )
+        indicesToRemove.add( index );
+    }
+
+    final int[] allIndices = indicesToRemove.toNativeArray();
+    removeAll( allIndices );
+
+    return allIndices.length;
+  }
+
+  /**
+   * Default implementation that simply iterates through all elements and call {@link #remove(int)}.
+   */
+  @Override
+  public void removeAll( final int[] allIndices )
+  {
+    for( final int i : allIndices )
+      remove( i );
+  }
+
+  @Override
   public synchronized boolean removeLink( final Feature targetFeature )
   {
     if( targetFeature instanceof IXLinkedFeature )
@@ -330,14 +382,9 @@ public abstract class AbstractFeatureList implements FeatureList
   }
 
   @Override
-  public boolean containsOrLinksTo( final Feature targetFeature )
+  public boolean containsLinkTo( final Feature targetFeature )
   {
-    if( targetFeature instanceof IXLinkedFeature )
-      throw new IllegalArgumentException( "targetFeature may only be an inline feature" ); //$NON-NLS-1$
-
-    // / FIXME: very slow, we should first try to find the element via the spatial index
-    final Object member = FeatureLinkUtils.findMember( this, targetFeature );
-    return member != null;
+    return indexOfLink( targetFeature ) != -1;
   }
 
   @Override
