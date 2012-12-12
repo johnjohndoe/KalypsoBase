@@ -683,7 +683,13 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     if( height == 0 || width == 0 )
       return;
 
-    m_imageBuffer = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
+    // only recreate buffered image if size has changed
+    if( m_imageBuffer == null || m_imageBuffer.getWidth() != width || m_imageBuffer.getHeight() != height )
+      m_imageBuffer = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
+    else
+      // this seems to be enough for clearing the image here
+      m_imageBuffer.flush();
+
     Graphics2D bufferGraphics = null;
     try
     {
@@ -1043,7 +1049,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   /**
    * Create the list of layers in the order it should be rendered.
    */
-  protected IMapLayer[] getLayersForRendering( )
+  private IMapLayer[] getLayersForRendering( )
   {
     final List<IMapLayer> result = new ArrayList<>( 20 );
     final List<IKalypsoFeatureTheme> visibleFestureThemes = new ArrayList<>( 10 );
