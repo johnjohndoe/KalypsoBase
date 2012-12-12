@@ -170,13 +170,6 @@ public class DataSourceHandler
     return false;
   }
 
-// public String getDataSourceRepository( final int pos )
-// {
-// final String header = MetadataHelper.getCountedHeaderItem( IDataSourceItem.MD_DATA_SOURCE_ITEM_REPOSITORY, pos );
-//
-// return m_metadata.getProperty( header );
-// }
-
   public synchronized void removeAllDataSources( )
   {
     final String[] keys = m_metadata.keySet().toArray( new String[] {} );
