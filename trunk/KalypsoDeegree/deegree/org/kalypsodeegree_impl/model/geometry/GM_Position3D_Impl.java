@@ -56,7 +56,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  * @author Andreas Poth
  *         <p>
  */
-class GM_Position3D_Impl implements GM_Position, Serializable
+final class GM_Position3D_Impl implements GM_Position, Serializable
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -3780255674921824356L;

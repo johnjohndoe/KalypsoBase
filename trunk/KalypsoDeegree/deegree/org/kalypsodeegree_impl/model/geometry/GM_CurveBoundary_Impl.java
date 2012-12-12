@@ -54,7 +54,7 @@ import org.kalypsodeegree.model.geometry.GM_Polygon;
  * @version 10.6.2001
  * @author Andreas Poth
  */
-class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_CurveBoundary
+final class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_CurveBoundary
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 4226497939552424434L;

@@ -55,7 +55,7 @@ import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
  * @version 11.6.2001
  * @author Andreas Poth href="mailto:poth@lat-lon.de"
  */
-class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_SurfaceBoundary
+final class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_SurfaceBoundary
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 1399131144729310956L;

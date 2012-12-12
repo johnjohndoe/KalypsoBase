@@ -49,7 +49,6 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.io.sax.parser.EnvelopeContentHandler;
 import org.kalypsodeegree_impl.io.sax.parser.IEnvelopeHandler;
 import org.kalypsodeegree_impl.io.sax.parser.NullContentHandler;
-import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
@@ -78,7 +77,7 @@ public class EnvelopeContentHandlerTest extends AssertGeometry
     /* Test data */
     final GM_Position lower = GeometryFactory.createGM_Position( 1.0, 2.0 );
     final GM_Position upper = GeometryFactory.createGM_Position( 3.0, 4.0 );
-    final GM_Envelope expected = new GM_Envelope_Impl( lower, upper, "EPSG:31467" );
+    final GM_Envelope expected = GeometryFactory.createGM_Envelope( lower, upper, "EPSG:31467" );
 
     assertEnvelope( expected, actual );
   }

@@ -52,7 +52,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.gml.processes.KalypsoGmlProcessesPlugin;
 import org.kalypso.gml.processes.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
-import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 import com.bce.gis.io.hmo.HMOReader;
 import com.bce.gis.io.hmo.HMOReader.ITriangleReceiver;
@@ -82,7 +82,7 @@ public class HmoTriangulatedSurfaceConverter extends AbstractTriangulatedSurface
       /* Monitor */
       monitor.beginTask( Messages.getString( "HmoTriangulatedSurfaceConverter_0" ), 100 ); //$NON-NLS-1$
 
-      final GM_TriangulatedSurface gmSurface = new GM_TriangulatedSurface_Impl( m_sourceSrs );
+      final GM_TriangulatedSurface gmSurface = GeometryFactory.createGM_TriangulatedSurface( m_sourceSrs );
 
       // FIXME: why so complicated?
       final URL hmoLocation = new URL( sourceLocation.getProtocol() + ":" + sourceLocation.getPath() ); //$NON-NLS-1$

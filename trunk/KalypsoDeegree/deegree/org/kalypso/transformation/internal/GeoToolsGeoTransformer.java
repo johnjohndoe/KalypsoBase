@@ -128,7 +128,8 @@ public class GeoToolsGeoTransformer implements IGeoTransformer
   }
 
   @Override
-  public GM_Object transform( final GM_Object geometry ) throws GeoTransformerException
+  @SuppressWarnings( "unchecked" )
+  public <T extends GM_Object> T transform( final T geometry ) throws GeoTransformerException
   {
     if( geometry == null )
       return null;
@@ -138,9 +139,9 @@ public class GeoToolsGeoTransformer implements IGeoTransformer
       return geometry;
 
     if( geometry instanceof GM_Point )
-      return transform( (GM_Point)geometry, sourceCRS, m_targetCRS );
+      return (T)transform( (GM_Point)geometry, sourceCRS, m_targetCRS );
 
-    return geometry.transform( m_targetCRS );
+    return (T)geometry.transform( m_targetCRS );
   }
 
   @Override
@@ -160,7 +161,7 @@ public class GeoToolsGeoTransformer implements IGeoTransformer
   }
 
   @Override
-  public GM_AbstractSurfacePatch transform( final GM_AbstractSurfacePatch surfacePatch ) throws GeoTransformerException
+  public <T extends GM_AbstractSurfacePatch> T transform( final T surfacePatch ) throws GeoTransformerException
   {
     if( surfacePatch == null )
       return null;
@@ -169,7 +170,7 @@ public class GeoToolsGeoTransformer implements IGeoTransformer
     if( sourceCRS == null || sourceCRS.equalsIgnoreCase( m_targetCRS ) )
       return surfacePatch;
 
-    return (GM_AbstractSurfacePatch)surfacePatch.transform( m_targetCRS );
+    return (T)surfacePatch.transform( m_targetCRS );
   }
 
   /**

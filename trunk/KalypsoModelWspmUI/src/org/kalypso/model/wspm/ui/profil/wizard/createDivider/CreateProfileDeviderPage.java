@@ -86,7 +86,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
-import org.kalypsodeegree_impl.model.geometry.GM_Polygon_Impl;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.tools.GMLConstants;
 
 /**
@@ -124,7 +124,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
     validGeomProperties.add( GMLConstants.QN_MULTI_LINE_STRING );
     validGeomProperties.add( GM_Curve.CURVE_ELEMENT );
     validGeomProperties.add( GM_MultiCurve.MULTI_CURVE_ELEMENT );
-    validGeomProperties.add( GM_Polygon_Impl.POLYGON_ELEMENT );
+    validGeomProperties.add( GM_Polygon.POLYGON_ELEMENT );
     validGeomProperties.add( GMLConstants.QN_MULTI_POLYGON );
 
     final IPropertyTypeFilter geoFilter = new IPropertyTypeFilter()
@@ -135,7 +135,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
         if( !(pt instanceof IValuePropertyType) )
           return false;
 
-        final IValuePropertyType pt2 = (IValuePropertyType) pt;
+        final IValuePropertyType pt2 = (IValuePropertyType)pt;
         if( !pt2.isGeometry() )
           return false;
 
@@ -229,7 +229,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
       @Override
       public String getText( final Object element )
       {
-        final IComponent comp = (IComponent) element;
+        final IComponent comp = (IComponent)element;
         return comp.getName();
       }
     } );
@@ -253,9 +253,9 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+        final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
         final Object firstElement = selection.getFirstElement();
-        handleDeviderChanged( (IComponent) firstElement );
+        handleDeviderChanged( (IComponent)firstElement );
       }
     } );
 
@@ -302,7 +302,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
 
   private IKalypsoFeatureTheme getTheme( )
   {
-    return (IKalypsoFeatureTheme) m_themeGroup.getTheme();
+    return (IKalypsoFeatureTheme)m_themeGroup.getTheme();
   }
 
   public FeatureList getFeatures( )
@@ -351,7 +351,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
   {
     if( theme instanceof IKalypsoFeatureTheme && theme != m_profileTheme )
     {
-      final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) theme;
+      final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme)theme;
       final IFeatureType featureType = featureTheme.getFeatureType();
       if( featureType != null )
       {

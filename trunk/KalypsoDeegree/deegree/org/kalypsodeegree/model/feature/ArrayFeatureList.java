@@ -48,7 +48,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.sort.AbstractFeatureList;
 import org.kalypsodeegree_impl.model.sort.IEnvelopeProvider;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -227,7 +227,7 @@ public class ArrayFeatureList extends AbstractFeatureList
   @Override
   public List query( final GM_Position pos, final List receiver )
   {
-    final GM_Envelope envelope = new GM_Envelope_Impl( pos.getX() - 1.0, pos.getY() - 1.0, pos.getX() + 1.0, pos.getY() + 1.0, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+    final GM_Envelope envelope = GeometryFactory.createGM_Envelope( pos.getX() - 1.0, pos.getY() - 1.0, pos.getX() + 1.0, pos.getY() + 1.0, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
     return queryInternal( envelope, receiver, false );
   }
 
@@ -248,7 +248,7 @@ public class ArrayFeatureList extends AbstractFeatureList
   @Override
   public <T extends Feature> List<T> queryResolved( final GM_Position pos, final List<T> receiver )
   {
-    final GM_Envelope envelope = new GM_Envelope_Impl( pos.getX() - 1.0, pos.getY() - 1.0, pos.getX() + 1.0, pos.getY() + 1.0, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+    final GM_Envelope envelope = GeometryFactory.createGM_Envelope( pos.getX() - 1.0, pos.getY() - 1.0, pos.getX() + 1.0, pos.getY() + 1.0, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
     return (List<T>)queryInternal( envelope, receiver, true );
   }
 

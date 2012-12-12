@@ -58,7 +58,7 @@ import com.vividsolutions.jts.geom.Triangle;
  *
  * @author Gernot Belger
  */
-class GM_Triangle_Impl implements GM_Triangle
+final class GM_Triangle_Impl implements GM_Triangle
 {
   private final GM_Position m_p1;
 

@@ -79,7 +79,7 @@ import com.infomatiq.jsi.rtree.RTree;
 /**
  * @author skurzbach
  */
-public class GM_PolyhedralSurface_Impl<T extends GM_PolygonPatch> extends GM_AbstractSurface_Impl<T> implements GM_PolyhedralSurface<T>
+class GM_PolyhedralSurface_Impl<T extends GM_PolygonPatch> extends GM_AbstractSurface_Impl<T> implements GM_PolyhedralSurface<T>
 {
   private final SpatialIndex m_index = new RTree();
 

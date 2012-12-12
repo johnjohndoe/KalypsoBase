@@ -40,10 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree_impl.model.geometry.GM_Polygon_Impl;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -56,7 +55,7 @@ public class PolygonMarshaller extends GeometryMarshaller<GM_Polygon>
 {
   public PolygonMarshaller( final XMLReader reader )
   {
-    super( reader, GM_Polygon_Impl.POLYGON_ELEMENT.getLocalPart() );
+    super( reader, GM_Polygon.POLYGON_ELEMENT.getLocalPart() );
   }
 
   @Override

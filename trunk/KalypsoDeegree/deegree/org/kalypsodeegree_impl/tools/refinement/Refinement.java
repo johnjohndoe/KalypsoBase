@@ -20,7 +20,7 @@ public class Refinement
 
   private static final double MAX_DISTANCE = .000001;
 
-  public GM_Object[] doRefine( final GM_MultiSurface[] inputSurfaces, final GM_Object inputGeom ) throws GM_Exception
+  public GM_Polygon[] doRefine( final GM_MultiSurface[] inputSurfaces, final GM_Object inputGeom ) throws GM_Exception
   {
     if( inputGeom instanceof GM_Curve )
     {
@@ -32,20 +32,20 @@ public class Refinement
     }
     else
     {
-      return new GM_Object[0];
+      return new GM_Polygon[0];
     }
   }
 
-  private GM_Object[] doRefineSurface( final GM_MultiSurface[] inputSurfaces, final GM_Polygon inputSurface ) throws GM_Exception
+  private GM_Polygon[] doRefineSurface( final GM_MultiSurface[] inputSurfaces, final GM_Polygon inputSurface ) throws GM_Exception
   {
     final GM_Position[] exteriorRing = inputSurface.getSurfacePatch().getExteriorRing();
     final GM_Curve curve = GeometryFactory.createGM_Curve( exteriorRing, inputSurface.getCoordinateSystem() );
     return doRefine( inputSurfaces, curve );
   }
 
-  private GM_Object[] doRefineCurve( final GM_MultiSurface[] inputSurfaces, final GM_Curve inputCurve ) throws GM_Exception
+  private GM_Polygon[] doRefineCurve( final GM_MultiSurface[] inputSurfaces, final GM_Curve inputCurve ) throws GM_Exception
   {
-    final List<GM_Object> list = new ArrayList<>();
+    final List<GM_Polygon> list = new ArrayList<>();
 
     if( inputCurve.getStartPoint().equals( inputCurve.getEndPoint() ) )
     {
@@ -70,7 +70,7 @@ public class Refinement
       }
       else if( remainingSurface instanceof GM_Polygon )
       {
-        list.add( remainingSurface );
+        list.add( (GM_Polygon)remainingSurface );
       }
     }
 
@@ -129,7 +129,7 @@ public class Refinement
             else
             {
               list.clear();
-              return list.toArray( new GM_Object[list.size()] );
+              return list.toArray( new GM_Polygon[list.size()] );
             }
           }
 
@@ -195,7 +195,7 @@ public class Refinement
         }
       }
     }
-    return list.toArray( new GM_Object[list.size()] );
+    return list.toArray( new GM_Polygon[list.size()] );
   }
 
 }
