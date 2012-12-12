@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor;
 
-import java.awt.Component;
 import java.awt.event.FocusAdapter;
 import java.net.URL;
 
@@ -76,6 +75,7 @@ import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.map.BaseMapSchedulingRule;
 import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.MapPanelSourceProvider;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
@@ -185,9 +185,21 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     final MapPanelSourceProvider sourceProvider = new MapPanelSourceProvider( site, m_mapPanel );
     setSourceProvider( sourceProvider );
 
-    if( m_mapPanel instanceof Component )
+    // REMARK: important: the map panel (awt) never gets the focus now. This fixes the following strange behavior,
+    // - click into map
+    // - click into other view -> view gets activated
+    // - again click into map and than into other view -> view does not get activated, only the clicked control gets the focus.
+
+    // Actually playing with focus and view activation did not solve this problem.
+
+    // SOLUTION: is now: we keep the focus in our swt control and translate all swt key/mousewheel event manually to awt events
+    // This will lead probably to some effects with the key events (so far testing did not show any strange behavior).
+    // so TODO: the map-widgets should directly work with swt events instead; next step would be to incorporate the translation code
+    // into the widget manager itself for backwards compatibility (i.e. introduce a new widget interface and make the old one deprecated).
+    if( m_mapPanel instanceof MapPanel )
     {
-      ((Component)m_mapPanel).addFocusListener( new FocusAdapter()
+      final MapPanel mapPanelComponent = (MapPanel)m_mapPanel;
+      mapPanelComponent.addFocusListener( new FocusAdapter()
       {
         @Override
         public void focusGained( final java.awt.event.FocusEvent e )
@@ -195,6 +207,9 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
           handleFocuesGained();
         }
       } );
+
+      m_control.addMouseWheelListener( new MapSwtWheelAdapter( mapPanelComponent ) );
+      m_control.addKeyListener( new MapSwtKeyAdapter( mapPanelComponent ) );
     }
 
     // HACK: at the moment views never have a menu... maybe we could get the information,
@@ -213,6 +228,8 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     final IWorkbenchPartSite site = getSite();
     final IWorkbenchPage activePage = site.getWorkbenchWindow().getActivePage();
 
+    final MapForm control = m_control;
+
     final Display display = site.getShell().getDisplay();
     display.asyncExec( new Runnable()
     {
@@ -220,7 +237,8 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
       public void run( )
       {
         activePage.activate( AbstractMapPart.this );
-        // m_control.setFocus();
+        if( !control.isDisposed() )
+          control.forceFocus();
       }
     } );
   }
@@ -228,8 +246,7 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
   @Override
   public void setFocus( )
   {
-    if( m_mapPanel instanceof Component )
-      ((Component)m_mapPanel).requestFocus();
+    m_control.setFocus();
   }
 
   public IViewSite getViewSite( )

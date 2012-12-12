@@ -18,6 +18,7 @@
  */
 package org.kalypso.ui.editor.mapeditor;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -38,7 +39,7 @@ class MapSwtKeyAdapter implements KeyListener
   @Override
   public void keyPressed( final KeyEvent e )
   {
-    final java.awt.event.KeyEvent awtEvent = translateEvent( e, java.awt.event.KeyEvent.KEY_RELEASED );
+    final java.awt.event.KeyEvent awtEvent = translateEvent( e, java.awt.event.KeyEvent.KEY_PRESSED );
 
     // REMARK: directly dispatch it to the widget manager; triggering it with mappanel#dispatchEvent will lead to a endless loop
     final WidgetManager wm = (WidgetManager)m_map.getWidgetManager();
@@ -52,17 +53,82 @@ class MapSwtKeyAdapter implements KeyListener
     final WidgetManager wm = (WidgetManager)m_map.getWidgetManager();
 
     wm.keyTyped( translateEvent( e, java.awt.event.KeyEvent.KEY_TYPED ) );
-    wm.keyPressed( translateEvent( e, java.awt.event.KeyEvent.KEY_PRESSED ) );
+    wm.keyReleased( translateEvent( e, java.awt.event.KeyEvent.KEY_PRESSED ) );
   }
 
   private java.awt.event.KeyEvent translateEvent( final KeyEvent e, final int id )
   {
     final long when = e.time & 0xFFFFFFFFL;
-    final int modifiers = e.stateMask;
 
     final int keyCode = id == java.awt.event.KeyEvent.KEY_TYPED ? java.awt.event.KeyEvent.VK_UNDEFINED : e.keyCode;
-    final char keyChar = e.character;
+    final int translatedKeyCode = translateKeyCode( keyCode );
+    final char keyChar = translateCharacter( e.character, translatedKeyCode );
 
-    return new java.awt.event.KeyEvent( m_map, id, when, modifiers, keyCode, keyChar );
+    final int modifiers = translateStateMask( e.stateMask );
+
+    return new java.awt.event.KeyEvent( m_map, id, when, modifiers, translatedKeyCode, keyChar );
+  }
+
+  private int translateKeyCode( final int keyCode )
+  {
+//    if( id == java.awt.event.KeyEvent.KEY_TYPED )
+//      return keyCode;
+
+    // REMARK: SWT handles the state maks differently than awt,
+    // as the modifier keys are represented in the code instead of the mask when key is pressed
+    if( keyCode == SWT.ALT )
+      return java.awt.event.KeyEvent.VK_ALT;
+
+    if( keyCode == SWT.SHIFT )
+      return java.awt.event.KeyEvent.VK_SHIFT;
+
+    if( keyCode == SWT.CTRL )
+      return java.awt.event.KeyEvent.VK_CONTROL;
+
+    if( keyCode == SWT.COMMAND )
+      return java.awt.event.KeyEvent.VK_META;
+
+    // REMARK: also some code are just different...
+    if( keyCode == SWT.CR )
+      return java.awt.event.KeyEvent.VK_ENTER;
+
+    if( keyCode == SWT.INSERT )
+      return java.awt.event.KeyEvent.VK_INSERT;
+
+    if( keyCode >= 'a' && keyCode <= 'z' )
+      return keyCode - ('a' - 'A');
+
+    return keyCode;
+  }
+
+  private char translateCharacter( final char character, final int keyCode )
+  {
+    // REMARK: in swt, enter is represented as '\r' whereas in awt we get '\n'
+    if( character == SWT.CR )
+      return java.awt.event.KeyEvent.VK_ENTER;
+
+    if( keyCode == SWT.INSERT )
+      return java.awt.event.KeyEvent.VK_INSERT;
+
+    return character;
+  }
+
+  private int translateStateMask( final int stateMask )
+  {
+    int modifiers = 0;
+
+    if( (stateMask & SWT.ALT) != 0 )
+      modifiers |= java.awt.event.KeyEvent.ALT_DOWN_MASK;
+
+    if( (stateMask & SWT.SHIFT) != 0 )
+      modifiers |= java.awt.event.KeyEvent.SHIFT_DOWN_MASK;
+
+    if( (stateMask & SWT.CTRL) != 0 )
+      modifiers |= java.awt.event.KeyEvent.CTRL_DOWN_MASK;
+
+    if( (stateMask & SWT.COMMAND) != 0 )
+      modifiers |= java.awt.event.KeyEvent.META_DOWN_MASK;
+
+    return modifiers;
   }
 }
