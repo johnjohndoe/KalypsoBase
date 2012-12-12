@@ -93,29 +93,30 @@ public class MetadataWQTable
   }
 
   /**
-   * update settings from base
+   * Read WQ table from source and writes it into target. Same for WQ boundaries.<br/>
+   * Does nothing if no wq table is present in source. update settings from base
    */
-  public static boolean updateWqTable( final MetadataList base, final MetadataList overwrite )
+  public static boolean updateWqTable( final MetadataList target, final MetadataList source )
   {
-    final String table = overwrite.getProperty( ITimeseriesConstants.MD_WQ_TABLE );
+    final String table = source.getProperty( ITimeseriesConstants.MD_WQ_TABLE );
     if( Strings.isEmpty( table ) )
       return false;
 
-    MetadataHelper.setWqTable( base, table );
+    MetadataHelper.setWqTable( target, table );
 
-    final MetadataWQTable overwrited = new MetadataWQTable( overwrite );
+    final MetadataWQTable overwrited = new MetadataWQTable( source );
 
     final Double w1 = overwrited.getMinW();
-    updateWqBoundary( base, IMetadataConstants.WQ_BOUNDARY_W_MIN, w1 );
+    updateWqBoundary( target, IMetadataConstants.WQ_BOUNDARY_W_MIN, w1 );
 
     final Double w2 = overwrited.getMaxW();
-    updateWqBoundary( base, IMetadataConstants.WQ_BOUNDARY_W_MAX, w2 );
+    updateWqBoundary( target, IMetadataConstants.WQ_BOUNDARY_W_MAX, w2 );
 
     final Double q1 = overwrited.getMinQ();
-    updateWqBoundary( base, IMetadataConstants.WQ_BOUNDARY_Q_MIN, q1 );
+    updateWqBoundary( target, IMetadataConstants.WQ_BOUNDARY_Q_MIN, q1 );
 
     final Double q2 = overwrited.getMaxQ();
-    updateWqBoundary( base, IMetadataConstants.WQ_BOUNDARY_Q_MAX, q2 );
+    updateWqBoundary( target, IMetadataConstants.WQ_BOUNDARY_Q_MAX, q2 );
 
     return true;
   }
