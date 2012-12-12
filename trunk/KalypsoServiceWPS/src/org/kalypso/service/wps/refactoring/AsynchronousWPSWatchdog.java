@@ -45,7 +45,9 @@ import net.opengeospatial.wps.StatusType;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.service.ogc.Activator;
 import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
 
@@ -94,7 +96,7 @@ public class AsynchronousWPSWatchdog
         {
           Thread.sleep( TIMEOUT_STEP );
           // not a timeout behavior - this is the upper limit for execution time...
-// executed += 2000;
+          // executed += 2000;
         }
         catch( final InterruptedException e )
         {
@@ -103,7 +105,7 @@ public class AsynchronousWPSWatchdog
 
         final ExecuteResponseType exState = m_process.getExecuteResponse();
         if( exState == null )
-          return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.service.wps.refactoring.AsynchronousWPSWatchdog.1" ) ); //$NON-NLS-1$
+          return new Status( IStatus.ERROR, Activator.PLUGIN_ID, Messages.getString( "org.kalypso.service.wps.refactoring.AsynchronousWPSWatchdog.1" ) ); //$NON-NLS-1$
 
         final Integer percentage = m_process.getPercentCompleted();
         final String statusDescription = m_process.getStatusDescription();
