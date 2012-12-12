@@ -85,19 +85,22 @@ public class DataSourceProxyObservation implements IObservation
   public synchronized MetadataList getMetadataList( )
   {
     if( m_metadata == null )
-    {
-      final MetadataList metadata = m_observation.getMetadataList();
-
-      m_metadata = MetadataHelper.clone( metadata );
-
-      final DataSourceHandler handler = new DataSourceHandler( m_metadata );
-      if( handler.containsDataSourceReferences() )
-        handler.removeAllDataSources();
-
-      handler.addDataSource( m_itemIdentifier, m_repositoryId );
-    }
+      updateMetadata();
 
     return m_metadata;
+  }
+
+  private void updateMetadata( )
+  {
+    final MetadataList metadata = m_observation.getMetadataList();
+
+    m_metadata = MetadataHelper.clone( metadata );
+
+    final DataSourceHandler handler = new DataSourceHandler( m_metadata );
+    // if( handler.containsDataSourceReferences() )
+    handler.removeAllDataSources();
+
+    handler.addDataSource( m_itemIdentifier, m_repositoryId );
   }
 
   @Override
@@ -125,8 +128,8 @@ public class DataSourceProxyObservation implements IObservation
     final ITupleModel model = m_observation.getValues( args );
     if( !DataSourceHelper.hasDataSources( model ) )
     {
-      // to assert a valid source reference!
-      getMetadataList();
+      // force update of metdata, because getValues can change its contents, to assert a valid source reference!
+      updateMetadata();
 
       final AddDataSourceModelHandler handler = new AddDataSourceModelHandler( model );
       return handler.extend();
