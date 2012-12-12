@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.processes.constDelaunay;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -51,40 +51,26 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  */
 public class TriangleVertex
 {
-  private boolean m_borderMarker;
-
   private GM_Position m_position;
 
   private int m_dimension;
 
   private final List<Double> m_attributes;
 
-  public TriangleVertex( final GM_Position position, final boolean borderMarker, final List<Double> attributes )
+  public TriangleVertex( final GM_Position position, final List<Double> attributes )
   {
     m_position = position;
-    m_borderMarker = borderMarker;
     m_attributes = attributes;
     m_dimension = 2;
   }
 
-  public TriangleVertex( final GM_Position position, final boolean borderMarker, final double attribute )
+  public TriangleVertex( final GM_Position position, final double attribute )
   {
     m_position = position;
-    m_borderMarker = borderMarker;
-    final List<Double> attributeList = new LinkedList<>();
+    final List<Double> attributeList = new ArrayList<>( 1 );
     attributeList.add( attribute );
     m_attributes = attributeList;
     m_dimension = 2;
-  }
-
-  public boolean getBorderMarker( )
-  {
-    return m_borderMarker;
-  }
-
-  public void setBorderMarker( final boolean borderMarker )
-  {
-    m_borderMarker = borderMarker;
   }
 
   public GM_Position getPosition( )
