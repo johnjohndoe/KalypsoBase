@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.featureview.control;
 
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 
 /**
@@ -53,5 +54,11 @@ public class TupleResultTableViewer extends DefaultTableViewer
     super( parent, style );
     getTable().setHeaderVisible( true );
     getTable().setLinesVisible( true );
+  }
+
+  @Override
+  protected void hookEditingSupport( final Control control )
+  {
+    // prevent hook of editing support, we are using ExcelTableCursor that is in conflict with that concept
   }
 }
