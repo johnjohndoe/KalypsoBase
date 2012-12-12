@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.featureview.control;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Table;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 
 /**
@@ -52,8 +53,10 @@ public class TupleResultTableViewer extends DefaultTableViewer
   public TupleResultTableViewer( final Composite parent, final int style )
   {
     super( parent, style );
-    getTable().setHeaderVisible( true );
-    getTable().setLinesVisible( true );
+
+    final Table table = getTable();
+    table.setHeaderVisible( true );
+    table.setLinesVisible( true );
   }
 
   @Override
