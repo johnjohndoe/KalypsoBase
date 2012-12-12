@@ -43,6 +43,7 @@ package org.kalypso.shape.tools;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypso.shape.geometry.ISHPMultiPoint;
 import org.kalypso.shape.geometry.ISHPPoint;
@@ -61,6 +62,7 @@ import org.kalypso.shape.geometry.SHPPolygonm;
 import org.kalypso.shape.geometry.SHPPolygonz;
 import org.kalypso.shape.geometry.SHPRange;
 
+import com.vividsolutions.jts.algorithm.CGAlgorithms;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
@@ -68,7 +70,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Converts jts geometries into shape geometries.
- *
+ * 
  * @author Gernot Belger
  */
 public final class JTS2SHP
@@ -143,6 +145,9 @@ public final class JTS2SHP
     return new SHPPolyLinez( multiPoint, parts );
   }
 
+  /**
+   * Important: the outer/innter rings of the polygon must already be in the correct orientation for shape file.
+   */
   public static ISHPGeometry toPolygon( final Coordinate[][] curves )
   {
     return new SHPPolygon( JTS2SHP.toPolyline( curves ) );
@@ -157,7 +162,7 @@ public final class JTS2SHP
   {
     if( geometry instanceof Polygon )
     {
-      final Polygon polygon = (Polygon) geometry;
+      final Polygon polygon = (Polygon)geometry;
       return toPolygon( polygon );
     }
 
@@ -176,15 +181,25 @@ public final class JTS2SHP
     for( final Polygon polygon : polygons )
     {
       final LineString exteriorRing = polygon.getExteriorRing();
-      parts.add( exteriorRing.getCoordinates() );
+
+      final Coordinate[] exteriorCrds = exteriorRing.getCoordinates();
+
+      if( CGAlgorithms.isCCW( exteriorCrds ) )
+        ArrayUtils.reverse( exteriorCrds );
+
+      parts.add( exteriorCrds );
 
       final int numInteriorRing = polygon.getNumInteriorRing();
       for( int i = 0; i < numInteriorRing; i++ )
       {
         final LineString interiorRing = polygon.getInteriorRingN( i );
-        final Coordinate[] coordinates = interiorRing.getCoordinates();
-        // FIXME: handle orientation?
-        parts.add( coordinates );
+
+        final Coordinate[] interiorCrds = interiorRing.getCoordinates();
+
+        if( !CGAlgorithms.isCCW( interiorCrds ) )
+          ArrayUtils.reverse( interiorCrds );
+
+        parts.add( interiorCrds );
       }
     }
 

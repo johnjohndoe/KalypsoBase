@@ -54,12 +54,12 @@ import org.kalypso.shape.geometry.SHPPointz;
 import org.kalypso.shape.tools.JTS2SHP;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.algorithm.CGAlgorithms;
@@ -96,7 +96,7 @@ public class GM_Object2Shape
 
       case POINT:
       {
-        final GM_Point point = (GM_Point) transformedGeom.getAdapter( GM_Point.class );
+        final GM_Point point = (GM_Point)transformedGeom.getAdapter( GM_Point.class );
         if( point == null )
           return null;
         else
@@ -105,7 +105,7 @@ public class GM_Object2Shape
 
       case POLYLINE:
       {
-        final GM_Curve[] curves = (GM_Curve[]) transformedGeom.getAdapter( GM_Curve[].class );
+        final GM_Curve[] curves = (GM_Curve[])transformedGeom.getAdapter( GM_Curve[].class );
         if( ArrayUtils.isEmpty( curves ) )
           return new SHPNullShape();
 
@@ -116,7 +116,7 @@ public class GM_Object2Shape
 
       case POLYGON:
       {
-        final GM_AbstractSurfacePatch[] surfacePatches = (GM_AbstractSurfacePatch[]) transformedGeom.getAdapter( GM_AbstractSurfacePatch[].class );
+        final GM_AbstractSurfacePatch[] surfacePatches = (GM_AbstractSurfacePatch[])transformedGeom.getAdapter( GM_AbstractSurfacePatch[].class );
         if( ArrayUtils.isEmpty( surfacePatches ) )
           return new SHPNullShape();
 
@@ -129,7 +129,7 @@ public class GM_Object2Shape
 
       case POINTZ:
       {
-        final GM_Point point = (GM_Point) transformedGeom.getAdapter( GM_Point.class );
+        final GM_Point point = (GM_Point)transformedGeom.getAdapter( GM_Point.class );
         if( point == null )
           return null;
         else
@@ -138,7 +138,7 @@ public class GM_Object2Shape
 
       case POLYLINEZ:
       {
-        final GM_Curve[] curves = (GM_Curve[]) transformedGeom.getAdapter( GM_Curve[].class );
+        final GM_Curve[] curves = (GM_Curve[])transformedGeom.getAdapter( GM_Curve[].class );
         if( ArrayUtils.isEmpty( curves ) )
           return new SHPNullShape();
 
@@ -149,7 +149,7 @@ public class GM_Object2Shape
 
       case POLYGONZ:
       {
-        final GM_AbstractSurfacePatch[] surfacePatches = (GM_AbstractSurfacePatch[]) transformedGeom.getAdapter( GM_AbstractSurfacePatch[].class );
+        final GM_AbstractSurfacePatch[] surfacePatches = (GM_AbstractSurfacePatch[])transformedGeom.getAdapter( GM_AbstractSurfacePatch[].class );
         if( ArrayUtils.isEmpty( surfacePatches ) )
           return new SHPNullShape();
 
@@ -159,7 +159,6 @@ public class GM_Object2Shape
 
       case MULTIPOINT:
         // TODO
-
 
         // /**
         // * constructor: recieves an array of gm_points
@@ -250,7 +249,7 @@ public class GM_Object2Shape
 
       case POINTM:
       {
-        final GM_Point point = (GM_Point) transformedGeom.getAdapter( GM_Point.class );
+        final GM_Point point = (GM_Point)transformedGeom.getAdapter( GM_Point.class );
         if( point == null )
           return null;
         else
@@ -259,7 +258,7 @@ public class GM_Object2Shape
 
       case POLYLINEM:
       {
-        final GM_Curve[] curves = (GM_Curve[]) transformedGeom.getAdapter( GM_Curve[].class );
+        final GM_Curve[] curves = (GM_Curve[])transformedGeom.getAdapter( GM_Curve[].class );
         if( ArrayUtils.isEmpty( curves ) )
           return new SHPNullShape();
 
@@ -270,7 +269,7 @@ public class GM_Object2Shape
 
       case POLYGONM:
       {
-        final GM_AbstractSurfacePatch[] surfacePatches = (GM_AbstractSurfacePatch[]) transformedGeom.getAdapter( GM_AbstractSurfacePatch[].class );
+        final GM_AbstractSurfacePatch[] surfacePatches = (GM_AbstractSurfacePatch[])transformedGeom.getAdapter( GM_AbstractSurfacePatch[].class );
         if( ArrayUtils.isEmpty( surfacePatches ) )
           return new SHPNullShape();
 
@@ -293,7 +292,7 @@ public class GM_Object2Shape
       final Coordinate[][] lines = new Coordinate[curves.length][];
       for( int i = 0; i < lines.length; i++ )
       {
-        final LineString line = (LineString) JTSAdapter.export( curves[i] );
+        final LineString line = (LineString)JTSAdapter.export( curves[i] );
         lines[i] = line.getCoordinates();
       }
       return lines;
@@ -360,6 +359,9 @@ public class GM_Object2Shape
     final GM_AbstractSurfacePatch transformedPatch = getTransformedPatch( patch );
 
     final GM_AbstractSurfacePatch[] patches = new GM_AbstractSurfacePatch[] { transformedPatch };
+
+    // FIXME: do not orient curves for poyline?!
+
     final Coordinate[][] curves = orientCurves( patches );
     if( curves == null )
       return new SHPNullShape();
