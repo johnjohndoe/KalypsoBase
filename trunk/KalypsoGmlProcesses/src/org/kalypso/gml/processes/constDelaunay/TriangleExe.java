@@ -55,15 +55,17 @@ import java.util.StringTokenizer;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.osgi.service.datalocation.Location;
 import org.kalypso.commons.KalypsoCommonsExtensions;
 import org.kalypso.commons.process.IProcess;
 import org.kalypso.commons.process.IProcessFactory;
 import org.kalypso.contribs.java.lang.ICancelable;
 import org.kalypso.gml.processes.i18n.Messages;
+import org.kalypso.transformation.transformer.GeoTransformerException;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_LineString;
@@ -84,31 +86,18 @@ import com.vividsolutions.jts.geom.Polygon;
  * 
  * @author Gernot Belger
  */
-public class TriangleExe
+class TriangleExe
 {
-  private final String m_crs;
-
   private final String[] m_triangleArgs;
 
-  // TODO: resue calc core code
-  public static File findTriangleExe( )
+  public TriangleExe( final String[] triangleArgs )
   {
-    final Location installLocation = Platform.getInstallLocation();
-    final File installDir = FileUtils.toFile( installLocation.getURL() );
-    final File exeDir = new File( installDir, "bin" ); //$NON-NLS-1$
-    return new File( exeDir, "triangle.exe" ); //$NON-NLS-1$
-  }
-
-  public TriangleExe( final String crs, final String[] triangleArgs )
-  {
-    m_crs = crs;
     m_triangleArgs = triangleArgs;
   }
 
-  // FIXME: refaktor, this is awful!
-  public GM_Triangle[] triangulate( final GM_Polygon boundary, final GM_Curve[] breaklines )
+  public GM_Triangle[] triangulate( final GM_Polygon[] boundaries, final GM_Curve[] breaklines, final boolean exportZ )
   {
-    final File triangleExe = findTriangleExe();
+    final File triangleExe = ConstraintDelaunayHelper.findTriangleExe();
     if( triangleExe == null || !triangleExe.isFile() )
       throw new IllegalStateException( "triangle.exe not found" ); //$NON-NLS-1$
 
@@ -124,95 +113,97 @@ public class TriangleExe
 
     int i = 0;
 
-    final GM_PolygonPatch surfacePatch = boundary.getSurfacePatch();
-    final GM_Position[] exterior = surfacePatch.getExteriorRing();
-    final boolean noBorder = false;
-    final boolean border = true;
-    boolean exportZ = noBorder;
-    if( exterior.length >= 3 )
+    final String crs = boundaries[0].getCoordinateSystem();
+    final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( crs );
+    for( final GM_Polygon boundary : boundaries )
     {
-      if( exterior[0].getCoordinateDimension() == 3 )
-        exportZ = true;
 
-      // handle the polygon
-      for( ; i < exterior.length - 2; i++ )
+      final GM_PolygonPatch surfacePatch = boundary.getSurfacePatch();
       {
-        final GM_Position position = exterior[i];
-        final TriangleVertex vertex = createVertex( exportZ, border, position );
-        nodeList.add( vertex );
-        final TriangleSegment segment = new TriangleSegment( i, i + 1, true );
-        segmentList.add( segment );
-      }
-      final GM_Position position = exterior[i];
-      final TriangleVertex vertex = createVertex( exportZ, border, position );
-      nodeList.add( vertex );
-      final TriangleSegment segment = new TriangleSegment( i, 0, true );
-      segmentList.add( segment );
-    }
-
-    final GM_Position[][] interiorRings = surfacePatch.getInteriorRings();
-    if( interiorRings != null )
-    {
-      for( final GM_Position[] ring : interiorRings )
-      {
-        i++;
-        int j = i;
-        // handle the hole
-        for( ; i - j < ring.length - 2; i++ )
+        // handle the exterior
+        int k = i;
+        final GM_Position[] exterior = surfacePatch.getExteriorRing();
+        for( ; i - k < exterior.length - 2; i++ )
         {
-          final GM_Position position = ring[i - j];
-          final TriangleVertex vertex = createVertex( exportZ, border, position );
+          final GM_Position position = exterior[i - k];
+          final TriangleVertex vertex = createVertex( exportZ, position );
           nodeList.add( vertex );
-          final TriangleSegment segment = new TriangleSegment( i, i + 1, true );
+          final TriangleSegment segment = new TriangleSegment( i, i + 1, 1 );
           segmentList.add( segment );
         }
-        final GM_Position position = ring[i - j];
-        final TriangleVertex vertex = createVertex( exportZ, border, position );
+        final GM_Position position = exterior[i - k];
+        final TriangleVertex vertex = createVertex( exportZ, position );
         nodeList.add( vertex );
-        final TriangleSegment segment = new TriangleSegment( i, j, true );
+        final TriangleSegment segment = new TriangleSegment( i, k, 1 );
         segmentList.add( segment );
+        i++;
+      }
 
-        final Coordinate[] coordinates = JTSAdapter.export( ring );
-        final com.vividsolutions.jts.geom.GeometryFactory geometryFactory = new com.vividsolutions.jts.geom.GeometryFactory();
-        final Polygon jtsHolePolygon = geometryFactory.createPolygon( geometryFactory.createLinearRing( coordinates ), null );
-        final Point interiorPointJTS = jtsHolePolygon.getInteriorPoint();
-        try
+      final GM_Position[][] interiorRings = surfacePatch.getInteriorRings();
+      if( interiorRings != null )
+      {
+        for( final GM_Position[] ring : interiorRings )
         {
-          final GM_Point interiorPoint = (GM_Point)JTSAdapter.wrap( interiorPointJTS, surfacePatch.getCoordinateSystem() );
-          final TriangleHole hole = new TriangleHole( interiorPoint.getPosition() );
-          holeList.add( hole );
-        }
-        catch( final GM_Exception e )
-        {
-          e.printStackTrace();
+          // handle the hole
+          int j = i;
+          for( ; i - j < ring.length - 2; i++ )
+          {
+            final GM_Position position = ring[i - j];
+            final TriangleVertex vertex = createVertex( exportZ, position );
+            nodeList.add( vertex );
+            final TriangleSegment segment = new TriangleSegment( i, i + 1, 1 );
+            segmentList.add( segment );
+          }
+          final GM_Position position = ring[i - j];
+          final TriangleVertex vertex = createVertex( exportZ, position );
+          nodeList.add( vertex );
+          final TriangleSegment segment = new TriangleSegment( i, j, 1 );
+          segmentList.add( segment );
+
+          final Coordinate[] coordinates = JTSAdapter.export( ring );
+          final com.vividsolutions.jts.geom.GeometryFactory geometryFactory = new com.vividsolutions.jts.geom.GeometryFactory();
+          final Polygon jtsHolePolygon = geometryFactory.createPolygon( geometryFactory.createLinearRing( coordinates ), null );
+          final Point interiorPointJTS = jtsHolePolygon.getInteriorPoint();
+          try
+          {
+            final GM_Point interiorPoint = (GM_Point)JTSAdapter.wrap( interiorPointJTS, surfacePatch.getCoordinateSystem() );
+            final TriangleHole hole = new TriangleHole( interiorPoint.getPosition() );
+            holeList.add( hole );
+          }
+          catch( final GM_Exception e )
+          {
+            e.printStackTrace();
+          }
+          i++;
         }
       }
     }
 
-    if( breaklines != null )
+    if( !ArrayUtils.isEmpty( breaklines ) )
     {
       // handle the breaklines
-      for( final GM_Curve curve : breaklines )
+      for( final GM_Curve rawCurve : breaklines )
       {
-        i++;
         try
         {
+          final GM_Curve curve = geoTransformer.transform( rawCurve );
           final GM_LineString lineString = curve.getAsLineString();
           final GM_Position[] positions = lineString.getPositions();
           for( int j = 0; j < positions.length - 1; j++ )
           {
             final GM_Position position = positions[j];
-            final TriangleVertex vertex = createVertex( exportZ, noBorder, position );
+            final TriangleVertex vertex = createVertex( exportZ, position );
             nodeList.add( vertex );
-            final TriangleSegment segment = new TriangleSegment( i, i + 1, noBorder );
+            final TriangleSegment segment = new TriangleSegment( i, i + 1, 0 );
             segmentList.add( segment );
             i++;
           }
           final GM_Position position = positions[positions.length - 1];
-          final TriangleVertex vertex = createVertex( exportZ, noBorder, position );
+          final TriangleVertex vertex = createVertex( exportZ, position );
           nodeList.add( vertex );
+          i++;
         }
-        catch( final GM_Exception e )
+        catch( final GM_Exception | GeoTransformerException e )
         {
           e.printStackTrace();
         }
@@ -240,7 +231,6 @@ public class TriangleExe
       final File polyfile = new File( tempDir, polyFileName );
 
       // prepare the polygon for output
-//      trianglePolyFileData.setBorderMarker( true );
       final IStatus writeStatus = trianglePolyFileData.writePolyFile( polyfile );
 
       if( writeStatus != Status.OK_STATUS )
@@ -279,7 +269,7 @@ public class TriangleExe
 
       final GM_Position[] points = parseTriangleNodeOutput( nodeReader );
 
-      final List<GM_Triangle> triangles = parseTriangleElementOutput( eleReader, m_crs, points );
+      final List<GM_Triangle> triangles = parseTriangleElementOutput( eleReader, crs, points );
       return triangles.toArray( new GM_Triangle[triangles.size()] );
     }
     catch( final Exception e )
@@ -305,16 +295,16 @@ public class TriangleExe
     }
   }
 
-  private TriangleVertex createVertex( final boolean exportZ, final boolean border, final GM_Position position )
+  private TriangleVertex createVertex( final boolean exportZ, final GM_Position position )
   {
     if( exportZ )
     {
-      return new TriangleVertex( position, border, position.getZ() );
+      return new TriangleVertex( position, position.getZ() );
     }
     else
     {
       final List<Double> emptyList = Collections.emptyList();
-      return new TriangleVertex( position, border, emptyList );
+      return new TriangleVertex( position, emptyList );
     }
   }
 
@@ -350,7 +340,7 @@ public class TriangleExe
     return points;
   }
 
-  public static List<GM_Triangle> parseTriangleElementOutput( final BufferedReader eleReader, final String crs, final GM_Position[] points ) throws IOException, GM_Exception
+  public static List<GM_Triangle> parseTriangleElementOutput( final BufferedReader eleReader, final String crs, final GM_Position[] points ) throws IOException
   {
     final List<GM_Triangle> surfaces = new ArrayList<>();
 

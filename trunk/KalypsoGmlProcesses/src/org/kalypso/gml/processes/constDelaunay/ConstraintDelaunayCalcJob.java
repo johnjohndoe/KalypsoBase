@@ -10,7 +10,12 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -32,7 +37,9 @@ import org.kalypso.simulation.core.util.BufferedAndOtherOutputStream;
 import org.kalypso.simulation.core.util.LogHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -115,7 +122,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
       /* Write .poly file for triangle.exe */
       final File polyfile = new File( tmpdir, "input.poly" ); //$NON-NLS-1$
       strmPolyInput = new BufferedOutputStream( new FileOutputStream( polyfile ) );
-      final String crs = ConstraintDelaunayHelper.writePolyFileForLinestrings( strmPolyInput, (List< ? >)calcObject, log.getOutputStream() );
+      final String crs = ConstraintDelaunayCalcJob.writePolyFileForLinestrings( strmPolyInput, (List< ? >)calcObject, log.getOutputStream() );
       strmPolyInput.close();
 
       // prepare kernel logs (log and err)
@@ -204,7 +211,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
     }
   }
 
-  private GMLWorkspace readElements( final BufferedReader nodeReader, final BufferedReader eleReader, final String crs ) throws IOException, GM_Exception, GMLSchemaException
+  private GMLWorkspace readElements( final BufferedReader nodeReader, final BufferedReader eleReader, final String crs ) throws IOException, GMLSchemaException
   {
     final GM_Position[] points = TriangleExe.parseTriangleNodeOutput( nodeReader );
 
@@ -223,6 +230,152 @@ public class ConstraintDelaunayCalcJob implements ISimulation
     }
 
     return workspace;
+  }
+
+  /**
+   * writes out a triangle-polyfile with linestrings for the console program Triangle.exe
+   */
+  private static String writePolyFileForLinestrings( final OutputStream polyStream, final List< ? > list, final PrintStream simLog )
+  {
+    final List<GM_LineString> breaklines = new ArrayList<>( list.size() );
+    int totalPointCount = 0;
+    int totalSegmentCount = 0;
+
+    String crs = null;
+
+    for( final Object geoObject : list )
+    {
+      if( geoObject instanceof GM_Curve )
+      {
+        try
+        {
+          final GM_Curve curve = (GM_Curve)geoObject;
+
+          if( crs == null )
+            crs = curve.getCoordinateSystem();
+
+          final GM_LineString lineString;
+          lineString = curve.getAsLineString();
+          breaklines.add( lineString );
+          totalPointCount += lineString.getNumberOfPoints();
+          totalSegmentCount += lineString.getNumberOfPoints() - 1;
+        }
+        catch( final GM_Exception e )
+        {
+          e.printStackTrace();
+          simLog.println( Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.1" ) + geoObject + " - " + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+      }
+      else if( geoObject instanceof Feature )
+      {
+        try
+        {
+          final Feature feature = (Feature)geoObject;
+          final GM_Curve curve = (GM_Curve)feature.getDefaultGeometryPropertyValue();
+
+          if( crs == null )
+            crs = curve.getCoordinateSystem();
+
+          final GM_LineString lineString;
+          lineString = curve.getAsLineString();
+          breaklines.add( lineString );
+          totalPointCount += lineString.getNumberOfPoints();
+          totalSegmentCount += lineString.getNumberOfPoints() - 1;
+        }
+        catch( final GM_Exception e )
+        {
+          e.printStackTrace();
+          simLog.println( Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.1" ) + geoObject + " - " + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
+      }
+      else
+      {
+        simLog.println( Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.3" ) + geoObject ); //$NON-NLS-1$
+      }
+    }
+
+    final PrintWriter writer = new PrintWriter( new OutputStreamWriter( polyStream ) );
+
+    /* node file */
+
+    /* write header */
+    // First line: <# of vertices> <dimension (must be 2)> <# of attributes> <# of boundary markers (0 or 1)>
+    writer.print( totalPointCount );
+    writer.println( " 2 1 0" ); // Dimension 2, Value-Dimension 1, Border Markers 0 //$NON-NLS-1$
+
+    // Remaining lines: <vertex #> <x> <y> [attributes] [boundary marker]
+    int pointIndex = 1;
+    writeNodes( breaklines, writer, pointIndex );
+
+    // First line: <# of vertices> <dimension (must be 2)> <# of attributes> <# of boundary markers (0 or 1)>
+    writer.print( totalSegmentCount );
+    writer.println( " 0" ); // Border Markers 0 //$NON-NLS-1$
+
+    // Following lines: <vertex #> <x> <y> [attributes] [boundary marker]
+    final int segmentIndex = 1;
+    // we reuse pointindex and iterate through the segments in the same way as before
+    pointIndex = 1;
+    writeElements( breaklines, writer, pointIndex, segmentIndex );
+
+    // One line: <# of segments> <# of boundary markers (0 or 1)>
+    // Following lines: <segment #> <endpoint> <endpoint> [boundary marker]
+    writer.println( "0" ); //$NON-NLS-1$
+    writer.println( "" ); //$NON-NLS-1$
+
+    // One line: <# of holes>
+    // Following lines: <hole #> <x> <y>
+
+    // Optional line: <# of regional attributes and/or area constraints>
+    // Optional following lines: <region #> <x> <y> <attribute> <maximum area>
+
+    writer.flush();
+
+    return crs;
+  }
+
+  /**
+   * writes the elements of the given {@link GM_LineString} to the given {@link PrintWriter}
+   */
+  private static void writeElements( final List<GM_LineString> lines, final PrintWriter writer, int pointIndex, int segmentIndex )
+  {
+    for( final GM_LineString line : lines )
+    {
+      for( int i = 0; i < line.getNumberOfPoints() - 1; i++ )
+      {
+        writer.print( segmentIndex++ );
+        writer.print( ' ' );
+        writer.print( pointIndex++ );
+        writer.print( ' ' );
+        writer.print( pointIndex );
+        writer.println();
+      }
+
+      // increase pointIndex one more, because we have one segment less than points per line string
+      pointIndex++;
+    }
+  }
+
+  /**
+   * writes the points of the given {@link GM_LineString} to the given {@link PrintWriter}
+   */
+  private static void writeNodes( final List<GM_LineString> lines, final PrintWriter writer, int pointIndex )
+  {
+    for( final GM_LineString line : lines )
+    {
+      for( int i = 0; i < line.getNumberOfPoints(); i++ )
+      {
+        final GM_Position pos = line.getPositionAt( i );
+        writer.print( pointIndex++ );
+        writer.print( ' ' );
+        writer.print( pos.getX() );
+        writer.print( ' ' );
+        writer.print( pos.getY() );
+        writer.print( ' ' );
+        writer.print( pos.getZ() );
+        writer.println();
+      }
+    }
   }
 
 }

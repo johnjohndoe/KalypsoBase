@@ -141,11 +141,9 @@ public class TrianglePolyFileData
   public String getSegmentHeader( )
   {
     // we take the data from the first element
-    // One line: # of segments, # of boundary markers (0 or 1)
+    // One line: # of segments, # of boundary markers (1)
     // Following lines: segment #,endpoint1, endpoint2, [boundary marker]
-
-    final TriangleSegment triangleSegment = m_segmentList.get( 0 );
-    return m_segmentList.size() + " " + triangleSegment.getboundaryId(); //$NON-NLS-1$
+    return m_segmentList.size() + " 1"; //$NON-NLS-1$
   }
 
   public String getHoleHeader( )

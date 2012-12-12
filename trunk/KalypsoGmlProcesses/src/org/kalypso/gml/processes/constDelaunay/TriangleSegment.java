@@ -57,9 +57,9 @@ public class TriangleSegment
 
   private final int m_endId;
 
-  private final boolean m_boundaryMarker;
+  private final int m_boundaryMarker;
 
-  public TriangleSegment( final int startId, final int endId, final boolean boundaryMarker )
+  public TriangleSegment( final int startId, final int endId, final int boundaryMarker )
   {
     m_startId = startId;
     m_endId = endId;
@@ -77,20 +77,13 @@ public class TriangleSegment
     return m_endId;
   }
 
-  public boolean getBoundaryMarker( )
+  public int getBoundaryMarker( )
   {
     return m_boundaryMarker;
   }
 
   public String getLine( )
   {
-    return m_startId + " " + m_endId + " " + getboundaryId(); //$NON-NLS-1$ //$NON-NLS-2$
-  }
-
-  public int getboundaryId( )
-  {
-    if( m_boundaryMarker == true )
-      return 1;
-    return 0;
+    return m_startId + " " + m_endId + " " + getBoundaryMarker(); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

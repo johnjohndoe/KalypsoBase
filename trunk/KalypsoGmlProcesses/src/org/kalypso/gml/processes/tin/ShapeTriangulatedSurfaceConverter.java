@@ -42,6 +42,8 @@ package org.kalypso.gml.processes.tin;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -53,13 +55,16 @@ import org.kalypso.gml.processes.KalypsoGmlProcessesPlugin;
 import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
 import org.kalypso.gml.processes.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypso.shape.ShapeType;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.gml.binding.shape.AbstractShape;
 import org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author Holger Albert
@@ -83,7 +88,7 @@ public class ShapeTriangulatedSurfaceConverter extends AbstractTriangulatedSurfa
     try
     {
       /* Monitor. */
-      monitor.beginTask( Messages.getString("ShapeTriangulatedSurfaceConverter_0"), 100 ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "ShapeTriangulatedSurfaceConverter_0" ), 100 ); //$NON-NLS-1$
 
       /* Open shape. */
       final URL shapeURL = new URL( sourceLocation.getProtocol() + ":" + sourceLocation.getPath() ); //$NON-NLS-1$
@@ -92,31 +97,36 @@ public class ShapeTriangulatedSurfaceConverter extends AbstractTriangulatedSurfa
       final String absolutePath = file.getAbsolutePath();
       final String shapeBase = FileUtilities.nameWithoutExtension( absolutePath );
 
-      // TODO: Check shape type (at first only triangle polygons are supported).
-      final GM_TriangulatedSurface gmSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( m_sourceSrs );
-
       final ShapeCollection shapeCollection = ShapeSerializer.deserialize( shapeBase, m_sourceSrs );
-      final IFeatureBindingCollection<AbstractShape> shapes = shapeCollection.getShapes();
-      final GM_Object geom = shapes.get( 0 ).getGeometry();
-      if( geom instanceof GM_MultiSurface )
+      final ShapeType shapeType = shapeCollection.getShapeType();
+      switch( shapeType )
       {
-        /* Convert the gm_surfaces.exterior rings into gm.triangle. */
-        for( final AbstractShape shape : shapes )
-        {
-          final GM_Object geometry = shape.getGeometry();
-          if( geometry instanceof GM_MultiSurface )
-          {
-            final GM_MultiSurface polygonSurface = (GM_MultiSurface)geometry;
-            final GM_Triangle[] triangles = ConstraintDelaunayHelper.convertToTriangles( polygonSurface, m_sourceSrs );
+        case POLYGON:
+        case POLYGONZ:
+        case POLYGONM:
+          break;
+        default:
+          return null;
+      }
+      final IFeatureBindingCollection<AbstractShape> shapes = shapeCollection.getShapes();
+      if( shapes.isEmpty() )
+        return GeometryFactory.createGM_TriangulatedSurface( m_sourceSrs );
 
-            /* Add the triangles into the gm_triangle_surfaces. */
-            for( final GM_Triangle element : triangles )
-            {
-              GM_Triangle triangle;
-              triangle = element;
-              gmSurface.add( triangle );
-              monitor.subTask( String.format( Messages.getString("ShapeTriangulatedSurfaceConverter_1"), gmSurface.size() ) ); //$NON-NLS-1$
-            }
+      /* Convert the gm_surfaces.exterior rings into gm.triangle. */
+      final GM_TriangulatedSurface gmSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( m_sourceSrs );
+      for( final AbstractShape shape : shapes )
+      {
+        final GM_Object geometry = shape.getGeometry();
+        if( geometry instanceof GM_MultiSurface )
+        {
+          final GM_MultiSurface polygonSurface = (GM_MultiSurface)geometry;
+          final List<GM_Triangle> triangles = ShapeTriangulatedSurfaceConverter.convertToTriangles( polygonSurface );
+
+          /* Add the triangles into the gm_triangle_surfaces. */
+          for( final GM_Triangle triangle : triangles )
+          {
+            gmSurface.add( triangle );
+            monitor.subTask( String.format( Messages.getString( "ShapeTriangulatedSurfaceConverter_1" ), gmSurface.size() ) ); //$NON-NLS-1$
           }
         }
       }
@@ -135,5 +145,23 @@ public class ShapeTriangulatedSurfaceConverter extends AbstractTriangulatedSurfa
       /* Monitor. */
       monitor.done();
     }
+  }
+
+  private static List<GM_Triangle> convertToTriangles( final GM_MultiSurface polygonSurface )
+  {
+    final List<GM_Triangle> triangleList = new ArrayList<>( polygonSurface.getSize() );
+
+    final GM_Object[] objects = polygonSurface.getAll();
+    for( final GM_Object object : objects )
+    {
+      if( object instanceof GM_Polygon )
+      {
+        final GM_Polygon surface = (GM_Polygon)object;
+        final GM_Triangle[] triangles = ConstraintDelaunayHelper.triangulateSimple( surface );
+        for( final GM_Triangle triangle : triangles )
+          triangleList.add( triangle );
+      }
+    }
+    return triangleList;
   }
 }
