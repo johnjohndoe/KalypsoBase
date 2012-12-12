@@ -57,7 +57,7 @@ import com.vividsolutions.jts.geom.TopologyException;
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
  */
-public abstract class GM_AbstractGML_Impl extends PlatformObject implements GM_Object, Serializable
+abstract class GM_AbstractGML_Impl extends PlatformObject implements GM_Object, Serializable
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 130728662284673112L;

@@ -75,7 +75,6 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
-import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -1248,7 +1247,7 @@ public final class GeometryUtilities
       maxY = Math.max( maxY, poses[i].getY() );
     }
 
-    return new GM_Envelope_Impl( minX, minY, maxX, maxY, crs );
+    return GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY, crs );
   }
 
   /**
@@ -1411,7 +1410,7 @@ public final class GeometryUtilities
     if( bounds == null )
       return null;
 
-    return new GM_Envelope_Impl( bounds.minX, bounds.minY, bounds.maxX, bounds.maxY, crs );
+    return GeometryFactory.createGM_Envelope( bounds.minX, bounds.minY, bounds.maxX, bounds.maxY, crs );
   }
 
   /**

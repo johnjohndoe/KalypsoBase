@@ -44,22 +44,21 @@ import java.util.concurrent.ExecutionException;
 
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
 /**
- * A cache for results of the method
- * {@link IKalypsoFeatureTheme#getFeatureListVisible(org.kalypsodeegree.model.geometry.GM_Envelope)}.
- *
+ * A cache for results of the method {@link IKalypsoFeatureTheme#getFeatureListVisible(org.kalypsodeegree.model.geometry.GM_Envelope)}.
+ * 
  * @author Gernot Belger
  */
 class VisibleFeaturesCache
 {
   /** Marker for full extent (map does not support <code>null</code> keys). */
-  static final GM_Envelope FULL_EXTENT = new GM_Envelope_Impl();
+  static final GM_Envelope FULL_EXTENT = GeometryFactory.createGM_Envelope( 0, 0, 0, 0, null );
 
   private final LoadingCache<GM_Envelope, FeatureList> m_cache;
 

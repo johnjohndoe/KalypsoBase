@@ -50,7 +50,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * @author "Gernot Belger"
  *
  */
-public class GM_MultiGeometry_Impl extends GM_Aggregate_Impl implements GM_MultiGeometry
+final class GM_MultiGeometry_Impl extends GM_Aggregate_Impl implements GM_MultiGeometry
 {
   public GM_MultiGeometry_Impl( final String srs )
   {

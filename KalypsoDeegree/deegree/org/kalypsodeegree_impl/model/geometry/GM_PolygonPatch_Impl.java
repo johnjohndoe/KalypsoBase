@@ -54,7 +54,7 @@ import org.kalypsodeegree.model.geometry.GM_Ring;
  * @version 11.6.2001
  * @author Andreas Poth
  */
-class GM_PolygonPatch_Impl extends GM_AbstractSurfacePatch_Impl implements GM_PolygonPatch
+final class GM_PolygonPatch_Impl extends GM_AbstractSurfacePatch_Impl implements GM_PolygonPatch
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -1293845886457211088L;

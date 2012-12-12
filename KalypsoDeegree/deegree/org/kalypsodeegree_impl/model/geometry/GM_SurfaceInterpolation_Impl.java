@@ -47,7 +47,7 @@ import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
  * @version 11.6.2001
  * @author Andreas Poth
  */
-public class GM_SurfaceInterpolation_Impl implements GM_SurfaceInterpolation, Serializable
+final class GM_SurfaceInterpolation_Impl implements GM_SurfaceInterpolation, Serializable
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -3728721225837686088L;

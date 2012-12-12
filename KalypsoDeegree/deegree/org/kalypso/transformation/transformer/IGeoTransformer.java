@@ -78,7 +78,7 @@ public interface IGeoTransformer
    *          The geometry.
    * @return The transformed geometry.
    */
-  GM_Object transform( GM_Object geometry ) throws GeoTransformerException;
+  <T extends GM_Object> T transform( T geometry ) throws GeoTransformerException;
 
   /**
    * This function transforms the envelope into the target coordinate system.
@@ -96,5 +96,5 @@ public interface IGeoTransformer
    *          The surface patch.
    * @return The transformed surface patch.
    */
-  GM_AbstractSurfacePatch transform( GM_AbstractSurfacePatch surfacePatch ) throws GeoTransformerException;
+  <T extends GM_AbstractSurfacePatch> T transform( T surfacePatch ) throws GeoTransformerException;
 }

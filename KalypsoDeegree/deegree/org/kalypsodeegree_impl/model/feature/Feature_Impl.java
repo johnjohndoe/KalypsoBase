@@ -59,7 +59,7 @@ import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
-import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Implementation of ogc feature
@@ -68,7 +68,7 @@ import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
  */
 public class Feature_Impl extends PlatformObject implements Feature
 {
-  private static final GM_Envelope INVALID_ENV = new GM_Envelope_Impl();
+  private static final GM_Envelope INVALID_ENV = GeometryFactory.createGM_Envelope( 0, 0, 0, 0, null );
 
   /**
    * all property-values are stored here in sequential order (as defined in application-schema) properties with

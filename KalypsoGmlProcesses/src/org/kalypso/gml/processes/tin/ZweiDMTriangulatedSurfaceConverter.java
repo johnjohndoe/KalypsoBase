@@ -52,7 +52,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.gml.processes.KalypsoGmlProcessesPlugin;
 import org.kalypso.gml.processes.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
-import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.bce.gis.io.zweidm.IPolygonWithName;
@@ -85,7 +85,7 @@ public class ZweiDMTriangulatedSurfaceConverter extends AbstractTriangulatedSurf
     try
     {
       /* Monitor. */
-      monitor.beginTask( Messages.getString("ZweiDMTriangulatedSurfaceConverter_0"), 100 ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "ZweiDMTriangulatedSurfaceConverter_0" ), 100 ); //$NON-NLS-1$
 
       /* Coordinate system of the 2DM file. */
       final int sourceSrid = JTSAdapter.toSrid( m_sourceSrs );
@@ -95,10 +95,10 @@ public class ZweiDMTriangulatedSurfaceConverter extends AbstractTriangulatedSurf
       parser.parse( sourceLocation, new SubProgressMonitor( monitor, 50 ) );
 
       /* Monitor. */
-      monitor.subTask( Messages.getString("ZweiDMTriangulatedSurfaceConverter_1") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "ZweiDMTriangulatedSurfaceConverter_1" ) ); //$NON-NLS-1$
 
       /* Create the triangulated surface. */
-      final GM_TriangulatedSurface gmSurface = new GM_TriangulatedSurface_Impl( m_sourceSrs );
+      final GM_TriangulatedSurface gmSurface = GeometryFactory.createGM_TriangulatedSurface( m_sourceSrs );
 
       /* Add the triangles. */
       final ISmsModel model = parser.getModel();
@@ -125,7 +125,7 @@ public class ZweiDMTriangulatedSurfaceConverter extends AbstractTriangulatedSurf
           continue;
         }
 
-        throw new IllegalStateException( String.format( Messages.getString("ZweiDMTriangulatedSurfaceConverter_2"), coordinates.length ) ); //$NON-NLS-1$
+        throw new IllegalStateException( String.format( Messages.getString( "ZweiDMTriangulatedSurfaceConverter_2" ), coordinates.length ) ); //$NON-NLS-1$
       }
 
       /* Monitor. */

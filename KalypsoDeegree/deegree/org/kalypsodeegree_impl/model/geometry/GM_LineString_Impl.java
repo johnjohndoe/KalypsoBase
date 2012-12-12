@@ -52,7 +52,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  * @version 10.6.2001
  * @author Andreas Poth
  */
-class GM_LineString_Impl extends GM_CurveSegment_Impl implements GM_LineString
+final class GM_LineString_Impl extends GM_CurveSegment_Impl implements GM_LineString
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 8093549521711824076L;

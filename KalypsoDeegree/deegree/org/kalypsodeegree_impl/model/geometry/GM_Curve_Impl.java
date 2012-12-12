@@ -59,7 +59,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * @version 14.10.2001
  * @author Andreas Poth
  */
-class GM_Curve_Impl extends GM_AbstractCurve_Impl implements GM_Curve
+final class GM_Curve_Impl extends GM_AbstractCurve_Impl implements GM_Curve
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 4060425075179654976L;

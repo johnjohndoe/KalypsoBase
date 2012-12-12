@@ -51,7 +51,6 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.io.sax.marshaller.PolygonMarshaller;
 import org.kalypsodeegree_impl.io.sax.parser.PolygonContentHandler;
-import org.kalypsodeegree_impl.model.geometry.GM_Polygon_Impl;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -94,7 +93,7 @@ public class PolygonHandler implements IMarshallingTypeHandler2
   @Override
   public QName getTypeName( )
   {
-    return GM_Polygon_Impl.POLYGON_ELEMENT;
+    return GM_Polygon.POLYGON_ELEMENT;
   }
 
   @Override

@@ -61,7 +61,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.gml.binding.shape.AbstractShape;
 import org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author Gernot Belger
@@ -152,7 +152,7 @@ public class SpatialIndexTest extends TestCase
       final double maxX = bMinX + Math.random() * xRange;
       final double maxY = bMinY + Math.random() * yRange;
 
-      final GM_Envelope_Impl env = new GM_Envelope_Impl( minX, minY, maxX, maxY, boundingBox.getCoordinateSystem() );
+      final GM_Envelope env = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY, boundingBox.getCoordinateSystem() );
       final List< ? > result = sort.query( env, null );
       maxSize = Math.max( result.size(), maxSize );
     }

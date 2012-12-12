@@ -55,7 +55,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  * @author Markus Bedel href="mailto:bedel@giub.uni-bonn.de"
  * @version $Id$
  */
-public class GM_Envelope_Impl implements GM_Envelope, Serializable
+final class GM_Envelope_Impl implements GM_Envelope, Serializable
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 1081219767894344990L;

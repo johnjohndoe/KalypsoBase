@@ -97,5 +97,5 @@ public interface GM_AbstractSurfacePatch extends GM_GenericSurface
    *          The target coordinate system.
    * @return The transformed surface patch.
    */
-  GM_GenericSurface transform( final String targetCRS ) throws GeoTransformerException;
+  GM_AbstractSurfacePatch transform( final String targetCRS ) throws GeoTransformerException;
 }

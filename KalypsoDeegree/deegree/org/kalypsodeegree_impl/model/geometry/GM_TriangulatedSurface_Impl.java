@@ -62,7 +62,7 @@ import com.infomatiq.jsi.Rectangle;
 /**
  * @author Gernot Belger
  */
-public class GM_TriangulatedSurface_Impl extends GM_PolyhedralSurface_Impl<GM_Triangle> implements GM_TriangulatedSurface
+final class GM_TriangulatedSurface_Impl extends GM_PolyhedralSurface_Impl<GM_Triangle> implements GM_TriangulatedSurface
 {
   private GM_Triangle m_lastHit = null;
 

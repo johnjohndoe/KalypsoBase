@@ -78,7 +78,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * @version 05.04.2002
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  */
-public class GM_Polygon_Impl extends GM_AbstractSurface_Impl<GM_PolygonPatch> implements GM_Polygon
+final class GM_Polygon_Impl extends GM_AbstractSurface_Impl<GM_PolygonPatch> implements GM_Polygon
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -2148069106391096842L;

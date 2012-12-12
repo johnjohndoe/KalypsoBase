@@ -52,7 +52,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 /**
  * @author Stefan Kurzbach
  */
-class GM_Rectangle_Impl implements GM_Rectangle
+final class GM_Rectangle_Impl implements GM_Rectangle
 {
   private final GM_Position m_p1;
 

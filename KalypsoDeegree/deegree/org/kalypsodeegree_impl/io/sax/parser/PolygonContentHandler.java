@@ -47,12 +47,11 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.io.sax.parser.geometrySpec.PolygonSpecification;
-import org.kalypsodeegree_impl.model.geometry.GM_Polygon_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -61,7 +60,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * A content handler which parses a gml:Polygon element.<br>
- *
+ * 
  * @author Gernot Belger
  */
 public class PolygonContentHandler extends GMLElementContentHandler implements IRingHandler
@@ -95,7 +94,7 @@ public class PolygonContentHandler extends GMLElementContentHandler implements I
 
   private PolygonContentHandler( final XMLReader xmlReader, final ISurfaceHandler<GM_PolygonPatch> surfaceHandler, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler, final String defaultSrs )
   {
-    super( xmlReader, NS.GML3, GM_Polygon_Impl.POLYGON_ELEMENT.getLocalPart(), defaultSrs, parentContentHandler );
+    super( xmlReader, NS.GML3, GM_Polygon.POLYGON_ELEMENT.getLocalPart(), defaultSrs, parentContentHandler );
 
     m_resultEater = resultEater;
     m_surfaceHandler = surfaceHandler;

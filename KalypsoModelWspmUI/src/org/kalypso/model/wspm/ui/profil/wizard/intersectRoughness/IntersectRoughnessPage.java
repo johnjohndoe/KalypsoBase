@@ -79,7 +79,7 @@ import org.kalypso.ui.addlayer.ThemeAndPropertyChooserGroup;
 import org.kalypso.ui.addlayer.ThemeAndPropertyChooserGroup.PropertyDescriptor;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
-import org.kalypsodeegree_impl.model.geometry.GM_Polygon_Impl;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.tools.GMLConstants;
 
 /**
@@ -114,8 +114,8 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
       {
         if( pt instanceof IValuePropertyType )
         {
-          final QName valueQName = ((IValuePropertyType) pt).getValueQName();
-          if( valueQName.equals( GM_Polygon_Impl.POLYGON_ELEMENT ) || valueQName.equals( GMLConstants.QN_MULTI_POLYGON ) || valueQName.equals( GM_MultiSurface.MULTI_SURFACE_ELEMENT ) )
+          final QName valueQName = ((IValuePropertyType)pt).getValueQName();
+          if( valueQName.equals( GM_Polygon.POLYGON_ELEMENT ) || valueQName.equals( GMLConstants.QN_MULTI_POLYGON ) || valueQName.equals( GM_MultiSurface.MULTI_SURFACE_ELEMENT ) )
             return true;
         }
 
@@ -128,7 +128,7 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
       @Override
       public boolean accept( final IPropertyType pt )
       {
-        return pt instanceof IValuePropertyType && !((IValuePropertyType) pt).isGeometry();
+        return pt instanceof IValuePropertyType && !((IValuePropertyType)pt).isGeometry();
       }
     };
 
@@ -194,7 +194,7 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
 
   private IKalypsoFeatureTheme getPolygoneTheme( )
   {
-    return (IKalypsoFeatureTheme) m_themeGroup.getTheme();
+    return (IKalypsoFeatureTheme)m_themeGroup.getTheme();
   }
 
   public FeatureList getPolygoneFeatures( )
@@ -270,7 +270,7 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
   {
     if( theme instanceof IKalypsoFeatureTheme )
     {
-      final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) theme;
+      final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme)theme;
       final IFeatureType featureType = featureTheme.getFeatureType();
       if( featureType != null )
       {

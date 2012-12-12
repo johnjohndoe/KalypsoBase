@@ -49,11 +49,9 @@ import org.junit.Test;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.io.sax.marshaller.EnvelopeMarshaller;
-import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-
 
 /**
  * @author Gernot Belger
@@ -71,7 +69,7 @@ public class MarshallEnvelopeTest
     /* Test data */
     final GM_Position lower = GeometryFactory.createGM_Position( 1.0, 2.0 );
     final GM_Position upper = GeometryFactory.createGM_Position( 3.0, 4.0 );
-    final GM_Envelope expected = new GM_Envelope_Impl( lower, upper, "EPSG:31467" );
+    final GM_Envelope expected = GeometryFactory.createGM_Envelope( lower, upper, "EPSG:31467" );
 
     final EnvelopeMarshaller marshaller = new EnvelopeMarshaller( reader );
     SaxParserTestUtils.marshallDocument( reader, marshaller, expected );
