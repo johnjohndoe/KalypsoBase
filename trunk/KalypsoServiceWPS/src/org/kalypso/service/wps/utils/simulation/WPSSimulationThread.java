@@ -167,7 +167,7 @@ public class WPSSimulationThread extends Thread
     for( final Entry<String, Object> entry : inputDescriptions.entrySet() )
     {
       final String id = entry.getKey();
-      final InputDescriptionType inputDescription = (InputDescriptionType) entry.getValue();
+      final InputDescriptionType inputDescription = (InputDescriptionType)entry.getValue();
       if( inputDescription.getMinimumOccurs().intValue() == 1 && inputList.get( id ) == null )
       {
         throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationThread.0", id ) ); //$NON-NLS-1$
@@ -236,6 +236,7 @@ public class WPSSimulationThread extends Thread
     }
     catch( final Throwable t )
     {
+      t.printStackTrace();
       LOGGER.warning( "Simulation aborted with exception: " + jobID ); //$NON-NLS-1$
       m_jobInfo.setFinishText( "Simulation aborted with exception." ); //$NON-NLS-1$
       m_jobInfo.setFinishStatus( IStatus.ERROR );
