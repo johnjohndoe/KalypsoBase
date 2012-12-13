@@ -126,11 +126,12 @@ public class DataSourceProxyObservation implements IObservation
   public ITupleModel getValues( final IRequest args ) throws SensorException
   {
     final ITupleModel model = m_observation.getValues( args );
+
+    // force update of metdata, because getValues can change its contents, to assert a valid source reference!
+    updateMetadata();
+
     if( !DataSourceHelper.hasDataSources( model ) )
     {
-      // force update of metdata, because getValues can change its contents, to assert a valid source reference!
-      updateMetadata();
-
       final AddDataSourceModelHandler handler = new AddDataSourceModelHandler( model );
       return handler.extend();
     }
