@@ -60,6 +60,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.i18n.I10nString;
+import org.kalypso.commons.pair.IKeyValue;
+import org.kalypso.commons.pair.KeyValueFactory;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.awt.HighlightGraphics;
 import org.kalypso.core.KalypsoCoreDebug;
@@ -392,11 +394,11 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   @Override
   public GM_Envelope getFullExtent( )
   {
-    final FeatureList visibleFeatures = getFeatureListVisible( null );
+    final IKeyValue<FeatureList, GM_Envelope> visibleFeatures = m_visibleFeaturesCache.getVisibleFeatures( null );
     if( visibleFeatures == null )
       return null;
 
-    return visibleFeatures.getBoundingBox();
+    return visibleFeatures.getValue();
   }
 
   @Override
@@ -408,7 +410,11 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   @Override
   public FeatureList getFeatureListVisible( final GM_Envelope searchEnvelope )
   {
-    return m_visibleFeaturesCache.getVisibleFeatures( searchEnvelope );
+    final IKeyValue<FeatureList, GM_Envelope> visibleFeatures = m_visibleFeaturesCache.getVisibleFeatures( searchEnvelope );
+    if( visibleFeatures == null )
+      return null;
+
+    return visibleFeatures.getKey();
   }
 
   @Override
@@ -518,7 +524,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     return infoId;
   }
 
-  FeatureList calculateFeatureListVisible( final GM_Envelope searchEnvelope )
+  IKeyValue<FeatureList, GM_Envelope> calculateFeatureListVisible( final GM_Envelope searchEnvelope )
   {
     if( m_featureList == null )
       return null;
@@ -546,6 +552,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     final FeatureList resultList = FeatureFactory.createFeatureList( parentFeature, parentFTP );
     final Collection<Feature> visibleFeatures = paintDelegate.getVisibleFeatures();
     resultList.addAll( visibleFeatures );
-    return resultList;
+
+    final GM_Envelope resultExtent = paintDelegate.getResultExtent();
+
+    return KeyValueFactory.createPairEqualsBoth( resultList, resultExtent );
   }
 }
