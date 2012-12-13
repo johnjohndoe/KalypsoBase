@@ -27,6 +27,8 @@ final class VisibleFeaturesPaintable implements IStylePaintable
 
   private final GM_Envelope m_env;
 
+  private GM_Envelope m_resultExtent = null;
+
   VisibleFeaturesPaintable( final GM_Envelope env )
   {
     m_env = env;
@@ -54,6 +56,11 @@ final class VisibleFeaturesPaintable implements IStylePaintable
         if( envelope != null && m_env.intersects( envelope ) )
         {
           m_features.add( feature );
+
+          if( m_resultExtent == null )
+            m_resultExtent = envelope;
+          else
+            m_resultExtent = m_resultExtent.getMerged( envelope );
         }
       }
     }
@@ -94,5 +101,10 @@ final class VisibleFeaturesPaintable implements IStylePaintable
   @Override
   public void paintLabels( final ILabelPlacementStrategy strategy )
   {
+  }
+
+  public GM_Envelope getResultExtent( )
+  {
+    return m_resultExtent;
   }
 }

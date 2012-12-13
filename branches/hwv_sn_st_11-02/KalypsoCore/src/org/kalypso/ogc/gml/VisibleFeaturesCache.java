@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml;
 
 import java.util.concurrent.ConcurrentMap;
 
+import org.kalypso.commons.pair.IKeyValue;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
@@ -57,17 +58,17 @@ import com.google.common.collect.MapMaker;
  */
 class VisibleFeaturesCache
 {
-  /** Marker for full extnet (map does not support <code>null</code> keys). */
+  /** Marker for full extent (map does not support <code>null</code> keys). */
   static final GM_Envelope FULL_EXTENT = new GM_Envelope_Impl();
 
-  private final ConcurrentMap<GM_Envelope, FeatureList> m_cache;
+  private final ConcurrentMap<GM_Envelope, IKeyValue<FeatureList, GM_Envelope>> m_cache;
 
   VisibleFeaturesCache( final KalypsoFeatureTheme theme )
   {
-    final Function<GM_Envelope, FeatureList> getVisibleFeatures = new Function<GM_Envelope, FeatureList>()
+    final Function<GM_Envelope, IKeyValue<FeatureList, GM_Envelope>> getVisibleFeatures = new Function<GM_Envelope, IKeyValue<FeatureList, GM_Envelope>>()
     {
       @Override
-      public FeatureList apply( final GM_Envelope input )
+      public IKeyValue<FeatureList, GM_Envelope> apply( final GM_Envelope input )
       {
         if( input == FULL_EXTENT )
           return theme.calculateFeatureListVisible( null );
@@ -84,7 +85,7 @@ class VisibleFeaturesCache
     m_cache.clear();
   }
 
-  public FeatureList getVisibleFeatures( final GM_Envelope searchEnvelope )
+  public IKeyValue<FeatureList, GM_Envelope> getVisibleFeatures( final GM_Envelope searchEnvelope )
   {
     if( searchEnvelope == null )
       return m_cache.get( FULL_EXTENT );
