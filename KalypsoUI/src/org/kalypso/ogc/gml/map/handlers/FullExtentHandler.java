@@ -52,15 +52,13 @@ import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author Stefan Kurzbach
  */
 public class FullExtentHandler extends AbstractHandler
 {
-  /**
-   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -82,7 +80,10 @@ public class FullExtentHandler extends AbstractHandler
     }
 
     final GM_Envelope fullExtent = modell.getFullExtentBoundingBox();
-    final ChangeExtentCommand command = new ChangeExtentCommand( mapPanel, fullExtent );
+
+    final GM_Envelope scaleEnvelope = GeometryUtilities.scaleEnvelope( fullExtent, 1.05 );
+
+    final ChangeExtentCommand command = new ChangeExtentCommand( mapPanel, scaleEnvelope );
 
     MapHandlerUtils.postMapCommandChecked( mapPanel, command, null );
 
