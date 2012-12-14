@@ -979,11 +979,13 @@ public class FileUtilities
   public static void cleanDirectory( final File dir, final IFileFilter filter )
   {
     final File[] files = dir.listFiles();
+    if( files == null )
+      return;
+
     for( final File file : files )
     {
       if( filter.select( file ) )
         FileUtilities.deleteQuietly( file );
     }
   }
-
 }
