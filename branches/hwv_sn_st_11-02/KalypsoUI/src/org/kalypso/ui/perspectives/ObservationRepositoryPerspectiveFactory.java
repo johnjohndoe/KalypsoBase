@@ -56,7 +56,7 @@ public class ObservationRepositoryPerspectiveFactory implements IPerspectiveFact
   /**
    * The perspective id.
    */
-  public static String ID = "org.kalypso.ui.perspectives.ObservationRepositoryPerspectiveFactory";
+  public static final String ID = "org.kalypso.ui.perspectives.ObservationRepositoryPerspectiveFactory";
 
   /**
    * @see IPerspectiveFactory#createInitialLayout(IPageLayout)
@@ -97,12 +97,8 @@ public class ObservationRepositoryPerspectiveFactory implements IPerspectiveFact
     tableViewLayout.setMoveable( true );
 
     /* Add to "Open perspective"... */
-    layout.addPerspectiveShortcut( "org.kalypso.hwv.product.sachsen.ui.views.admin.LhwzAdminPerspective" );
-    layout.addPerspectiveShortcut( "org.kalypso.simulation.ui.startscreen.PrognosePerspective" );
     layout.addPerspectiveShortcut( ObservationRepositoryPerspectiveFactory.ID );
     layout.addPerspectiveShortcut( ModelerPerspectiveFactory.ID );
-    layout.addPerspectiveShortcut( "org.kalypso.hwv.product.sachsen.ui.views.LhwzStartPagePerspective" );
-    layout.addPerspectiveShortcut( "org.kalypso.dwd.visualization.perspectives.DwdVisualizePerspective" );
   }
 
   /**
