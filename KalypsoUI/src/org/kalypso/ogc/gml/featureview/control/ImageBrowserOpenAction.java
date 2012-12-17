@@ -40,11 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
+import java.io.File;
 import java.net.URL;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PartInitException;
@@ -98,7 +103,26 @@ public class ImageBrowserOpenAction extends Action implements IUpdateable
   public void update( )
   {
     final URL location = m_featureControl.getLocation();
-    setEnabled( location != null );
+
+    // TODO: does not work properly, probably because FeatureView stuf reenabled the element.
+    final boolean enabled = isEnabled( location );
+
+    setEnabled( enabled );
+  }
+
+  private boolean isEnabled( final URL location )
+  {
+    if( location == null )
+      return false;
+
+    if( StringUtils.isBlank( location.toExternalForm() ) )
+      return false;
+
+    final File file = FileUtils.toFile( location );
+    if( file != null && !file.isFile() )
+      return false;
+
+    return true;
   }
 
   @Override
@@ -109,7 +133,17 @@ public class ImageBrowserOpenAction extends Action implements IUpdateable
     try
     {
       final URL location = m_featureControl.getLocation();
-      m_externalBrowser.openURL( location );
+      if( location == null )
+      {
+        MessageDialog.openWarning( shell, getText(), Messages.getString("ImageBrowserOpenAction.0") ); //$NON-NLS-1$
+        return;
+      }
+
+      final File localFile = FileUtils.toFile( location );
+      if( localFile != null )
+        Program.launch( localFile.getAbsolutePath() );
+      else
+        m_externalBrowser.openURL( location );
     }
     catch( final PartInitException e )
     {
