@@ -60,30 +60,31 @@ import org.kalypso.ui.internal.i18n.Messages;
  */
 public class ComponentUiHandlerFactory
 {
-
   public static IComponentUiHandler getHandler( final int index, final IComponent component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
   {
     final QName valueTypeName = component.getValueTypeName();
+
+    final String columnTooltip = columnLabel;
 
     final IRestriction[] restrictions = component.getRestrictions();
     if( ComponentUtilities.restrictionContainsEnumeration( restrictions ) )
     {
       final Map<Object, IAnnotation> items = RestrictionUtilities.getEnumerationItems( restrictions );
-      return new ComponentUiEnumerationHandler( index, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, items );
+      return new ComponentUiEnumerationHandler( index, editable, resizeable, moveable, columnLabel, columnTooltip, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, items );
     }
 
     if( XmlTypes.XS_DATETIME.equals( valueTypeName ) )
-      return new ComponentUiDateHandler( index, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
+      return new ComponentUiDateHandler( index, editable, resizeable, moveable, columnLabel, columnTooltip, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
     else if( XmlTypes.XS_DOUBLE.equals( valueTypeName ) )
-      return new ComponentUiDoubleHandler( index, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
+      return new ComponentUiDoubleHandler( index, editable, resizeable, moveable, columnLabel, columnTooltip, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
     else if( XmlTypes.XS_DECIMAL.equals( valueTypeName ) )
-      return new ComponentUiDecimalHandler( index, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
+      return new ComponentUiDecimalHandler( index, editable, resizeable, moveable, columnLabel, columnTooltip, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
     else if( XmlTypes.XS_INTEGER.equals( valueTypeName ) )
-      return new ComponentUiIntegerHandler( index, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
+      return new ComponentUiIntegerHandler( index, editable, resizeable, moveable, columnLabel, columnTooltip, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
     else if( XmlTypes.XS_STRING.equals( valueTypeName ) )
-      return new ComponentUiStringHandler( index, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
+      return new ComponentUiStringHandler( index, editable, resizeable, moveable, columnLabel, columnTooltip, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
     else if( XmlTypes.XS_BOOLEAN.equals( valueTypeName ) )
-      return new ComponentUiBooleanHandler( index, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
+      return new ComponentUiBooleanHandler( index, editable, resizeable, moveable, columnLabel, columnTooltip, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
 
     throw new UnsupportedOperationException( Messages.getString( "org.kalypso.ogc.gml.om.table.handlers.ComponentUiHandlerFactory.6" ) + valueTypeName ); //$NON-NLS-1$
   }

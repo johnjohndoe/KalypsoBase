@@ -78,6 +78,12 @@ public class ComponentUiFirstColumnHandler implements IComponentUiHandler
   }
 
   @Override
+  public String getColumnTooltip( )
+  {
+    return getColumnLabel();
+  }
+
+  @Override
   public int getColumnStyle( )
   {
     return SWT.CENTER;

@@ -109,6 +109,8 @@ public interface IComponentUiHandler
 
   String getColumnLabel( );
 
+  String getColumnTooltip( );
+
   /** Converts a (user entered) text into an object handled by this handler. */
   Object parseValue( final String text );
 }

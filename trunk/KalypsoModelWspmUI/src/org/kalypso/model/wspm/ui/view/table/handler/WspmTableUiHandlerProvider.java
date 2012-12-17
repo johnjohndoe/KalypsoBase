@@ -49,6 +49,7 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.SWT;
 import org.kalypso.commons.xml.XmlTypes;
@@ -127,36 +128,38 @@ public class WspmTableUiHandlerProvider implements IComponentUiHandlerProvider
   private IComponentUiHandler createHandler( final int index, final IComponent component, final int spacing )
   {
     final String label = component.getName();
+    final String tooltip = label;
+
     final QName valueTypeName = component.getValueTypeName();
 
     final IRestriction[] restrictions = component.getRestrictions();
     if( ComponentUtilities.restrictionContainsEnumeration( restrictions ) )
     {
       final Map<Object, IAnnotation> items = RestrictionUtilities.getEnumerationItems( restrictions );
-      return new ComponentUiEnumerationHandler( index, true, true, true, label, SWT.LEFT, DEFAULT_SPACING, spacing, "%s", "<not set>", items ); //$NON-NLS-1$ //$NON-NLS-2$
+      return new ComponentUiEnumerationHandler( index, true, true, true, label, tooltip, SWT.LEFT, DEFAULT_SPACING, spacing, "%s", "<not set>", items ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /* Some special cases */
     final String id = component.getId();
 
     if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( id ) )
-      return new RoughnessClassUiHandler( index, true, true, true, label, DEFAULT_SPACING, spacing, m_profile );
+      return new RoughnessClassUiHandler( index, true, true, true, label, tooltip, DEFAULT_SPACING, spacing, m_profile );
 
     if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS.equals( id ) )
-      return new VegetationClassUiHandler( index, true, true, true, label, DEFAULT_SPACING, spacing, m_profile );
+      return new VegetationClassUiHandler( index, true, true, true, label, tooltip, DEFAULT_SPACING, spacing, m_profile );
 
     if( IWspmPointProperties.POINT_PROPERTY_CODE.equals( id ) )
-      return new CodeClassificationClassUiHandler( index, true, true, true, label, DEFAULT_SPACING, spacing, m_profile );
+      return new CodeClassificationClassUiHandler( index, true, true, true, label, tooltip, DEFAULT_SPACING, spacing, m_profile );
 
     /* The rest by it's data type */
     if( XmlTypes.XS_DATETIME.equals( valueTypeName ) )
-      return new ComponentUiDateHandler( index, true, true, true, label, SWT.NONE, DEFAULT_SPACING, spacing, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      return new ComponentUiDateHandler( index, true, true, true, label, tooltip, SWT.NONE, DEFAULT_SPACING, spacing, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     if( XmlTypes.XS_STRING.equals( valueTypeName ) )
-      return new ComponentUiStringHandler( index, true, true, true, label, SWT.NONE, DEFAULT_SPACING, spacing, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      return new ComponentUiStringHandler( index, true, true, true, label, tooltip, SWT.NONE, DEFAULT_SPACING, spacing, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     if( XmlTypes.XS_INTEGER.equals( valueTypeName ) )
-      return new ComponentUiIntegerHandler( index, true, true, true, label, SWT.NONE, DEFAULT_SPACING, spacing, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      return new ComponentUiIntegerHandler( index, true, true, true, label, tooltip, SWT.NONE, DEFAULT_SPACING, spacing, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     if( XmlTypes.XS_DOUBLE.equals( valueTypeName ) || XmlTypes.XS_DECIMAL.equals( valueTypeName ) )
     {
@@ -164,14 +167,14 @@ public class WspmTableUiHandlerProvider implements IComponentUiHandlerProvider
       final int precision = precisionForComponent( component );
       final String format = String.format( "%%.%df", precision ); //$NON-NLS-1$
 
-      return new ComponentUiDoubleHandler( index, true, true, true, label, SWT.RIGHT, DEFAULT_SPACING, spacing, format, "", format ); //$NON-NLS-1$
+      return new ComponentUiDoubleHandler( index, true, true, true, label, tooltip, SWT.RIGHT, DEFAULT_SPACING, spacing, format, "", format ); //$NON-NLS-1$
     }
 
     if( XmlTypes.XS_BOOLEAN.equals( valueTypeName ) )
-      return new ComponentUiBooleanHandler( index, true, true, true, label, SWT.CENTER, DEFAULT_SPACING, spacing, "%b", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      return new ComponentUiBooleanHandler( index, true, true, true, label, tooltip, SWT.CENTER, DEFAULT_SPACING, spacing, "%b", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     if( XmlTypes.XS_STRING.equals( valueTypeName ) )
-      return new ComponentUiStringHandler( index, true, true, true, label, SWT.CENTER, DEFAULT_SPACING, spacing, "%b", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      return new ComponentUiStringHandler( index, true, true, true, label, tooltip, SWT.CENTER, DEFAULT_SPACING, spacing, "%b", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     throw new UnsupportedOperationException();
   }

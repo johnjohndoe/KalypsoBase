@@ -65,7 +65,7 @@ import org.kalypso.ogc.gml.om.table.handlers.AbstractComponentUiHandler;
 
 /**
  * Handles profile point property "code" classifications
- *
+ * 
  * @author Dirk Kuch
  * @author Holger Albert
  */
@@ -75,9 +75,9 @@ public class CodeClassificationClassUiHandler extends AbstractComponentUiHandler
 
   private final IDialogSettings m_dialogSettings;
 
-  public CodeClassificationClassUiHandler( final int component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnWidth, final int columnWidthPercent, final IProfile profile )
+  public CodeClassificationClassUiHandler( final int component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final String columnTooltip, final int columnWidth, final int columnWidthPercent, final IProfile profile )
   {
-    super( component, editable, resizeable, moveable, columnLabel, SWT.NONE, columnWidth, columnWidthPercent, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    super( component, editable, resizeable, moveable, columnLabel, columnTooltip, SWT.NONE, columnWidth, columnWidthPercent, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     m_profile = profile;
     m_dialogSettings = DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getCanonicalName() );
@@ -110,7 +110,7 @@ public class CodeClassificationClassUiHandler extends AbstractComponentUiHandler
       }
     } );
 
-    final CCombo control = (CCombo) cellEditor.getControl();
+    final CCombo control = (CCombo)cellEditor.getControl();
     control.setVisibleItemCount( 20 );
 
     return cellEditor;
@@ -142,7 +142,7 @@ public class CodeClassificationClassUiHandler extends AbstractComponentUiHandler
       return null; //$NON-NLS-1$
 
     final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
-    return classification.findCodeClass( (String) value );
+    return classification.findCodeClass( (String)value );
   }
 
   @Override
@@ -150,7 +150,7 @@ public class CodeClassificationClassUiHandler extends AbstractComponentUiHandler
   {
     if( value instanceof IClassificationClass )
     {
-      final IClassificationClass clazz = (IClassificationClass) value;
+      final IClassificationClass clazz = (IClassificationClass)value;
       setValue( record, clazz.getName() );
     }
   }
@@ -213,7 +213,7 @@ public class CodeClassificationClassUiHandler extends AbstractComponentUiHandler
     if( !(value instanceof ICodeClass) )
       return;
 
-    final ICodeClass codeClass = (ICodeClass) value;
+    final ICodeClass codeClass = (ICodeClass)value;
     final String name = codeClass.getName();
     FavoritesUtilities.updateDialogSettings( m_dialogSettings, name );
   }

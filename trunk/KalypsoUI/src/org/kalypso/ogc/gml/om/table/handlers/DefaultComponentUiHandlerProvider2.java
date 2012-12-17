@@ -92,35 +92,38 @@ public class DefaultComponentUiHandlerProvider2 implements IComponentUiHandlerPr
     final boolean moveable = true;
     final String columnLabel = ComponentUtilities.getComponentLabel( component );
 
+    final String description = component.getDescription();
+    final String columnTooltip = StringUtils.isBlank( description ) ? columnLabel : description;
+
     final IRestriction[] restrictions = component.getRestrictions();
     if( ComponentUtilities.restrictionContainsEnumeration( restrictions ) )
     {
       final Map<Object, IAnnotation> items = RestrictionUtilities.getEnumerationItems( restrictions );
-      return new ComponentUiEnumerationHandler( index, editable, resizeable, moveable, columnLabel, SWT.NONE, columnWidth, -1, StringUtils.EMPTY, StringUtils.EMPTY, items );
+      return new ComponentUiEnumerationHandler( index, editable, resizeable, moveable, columnLabel, columnTooltip, SWT.NONE, columnWidth, -1, StringUtils.EMPTY, StringUtils.EMPTY, items );
     }
 
     final QName valueTypeName = component.getValueTypeName();
 
     if( valueTypeName.equals( XmlTypes.XS_DATETIME ) )
-      return new ComponentUiDateHandler( index, editable, resizeable, moveable, columnLabel, SWT.NONE, columnWidth, -1, "%1$tm %1$te,%1$tY", StringUtils.EMPTY, null ); //$NON-NLS-1$ 
+      return new ComponentUiDateHandler( index, editable, resizeable, moveable, columnLabel, columnTooltip, SWT.NONE, columnWidth, -1, "%1$tm %1$te,%1$tY", StringUtils.EMPTY, null ); //$NON-NLS-1$ 
 
     if( valueTypeName.equals( XmlTypes.XS_DOUBLE ) )
     {
       final String format = ComponentUtilities.getDecimalFormat( component );
-      return new ComponentUiDoubleHandler( index, editable, resizeable, moveable, columnLabel, SWT.RIGHT, columnWidth, -1, format, StringUtils.EMPTY, null );
+      return new ComponentUiDoubleHandler( index, editable, resizeable, moveable, columnLabel, columnTooltip, SWT.RIGHT, columnWidth, -1, format, StringUtils.EMPTY, null );
     }
 
     if( valueTypeName.equals( XmlTypes.XS_DECIMAL ) )
     {
       final String format = ComponentUtilities.getDecimalFormat( component );
-      return new ComponentUiDecimalHandler( index, editable, resizeable, moveable, columnLabel, SWT.RIGHT, columnWidth, -1, format, StringUtils.EMPTY, null );
+      return new ComponentUiDecimalHandler( index, editable, resizeable, moveable, columnLabel, columnTooltip, SWT.RIGHT, columnWidth, -1, format, StringUtils.EMPTY, null );
     }
 
     if( valueTypeName.equals( XmlTypes.XS_INTEGER ) )
-      return new ComponentUiIntegerHandler( index, editable, resizeable, moveable, columnLabel, SWT.RIGHT, columnWidth, -1, "%d", StringUtils.EMPTY, null ); //$NON-NLS-1$ 
+      return new ComponentUiIntegerHandler( index, editable, resizeable, moveable, columnLabel, columnTooltip, SWT.RIGHT, columnWidth, -1, "%d", StringUtils.EMPTY, null ); //$NON-NLS-1$ 
 
     if( valueTypeName.equals( XmlTypes.XS_STRING ) )
-      return new ComponentUiStringHandler( index, editable, resizeable, moveable, columnLabel, SWT.LEFT, columnWidth, -1, "%s", StringUtils.EMPTY, null ); //$NON-NLS-1$
+      return new ComponentUiStringHandler( index, editable, resizeable, moveable, columnLabel, columnTooltip, SWT.LEFT, columnWidth, -1, "%s", StringUtils.EMPTY, null ); //$NON-NLS-1$
 
     return null;
   }

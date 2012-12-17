@@ -260,7 +260,7 @@ public class TupleResultContentProvider2 implements IStructuredContentProvider
     final boolean moveable = handler.isMoveable();
 
     final String label = handler.getColumnLabel();
-    final String tooltip = label;
+    final String tooltip = handler.getColumnTooltip();
 
     /* create column */
     final ViewerColumn column = ColumnViewerUtil.createViewerColumn( m_viewer, columnStyle );
