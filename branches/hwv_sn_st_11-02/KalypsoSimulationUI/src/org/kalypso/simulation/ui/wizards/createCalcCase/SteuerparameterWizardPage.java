@@ -212,6 +212,18 @@ public class SteuerparameterWizardPage extends WizardPage
     m_workspaceListener.workspaceChanged( null, workspace );
   }
 
+  public Feature getSteuerparameter( )
+  {
+    if( m_provider == null )
+      return null;
+
+    final CommandableWorkspace workspace = m_provider.getWorkspace();
+    if( workspace == null )
+      return null;
+
+    return workspace.getRootFeature();
+  }
+
   protected void handleWorkspaceChanged( final CommandableWorkspace newWorkspace )
   {
     final Composite panel = m_panel;
