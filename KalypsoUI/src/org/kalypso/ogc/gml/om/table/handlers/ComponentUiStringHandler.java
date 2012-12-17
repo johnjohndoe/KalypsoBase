@@ -55,23 +55,17 @@ import org.kalypso.observation.result.IRecord;
  */
 public class ComponentUiStringHandler extends AbstractComponentUiHandler
 {
-  public ComponentUiStringHandler( final int component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
+  public ComponentUiStringHandler( final int component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final String columnTooltip, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
   {
-    super( component, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
+    super( component, editable, resizeable, moveable, columnLabel, columnTooltip, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#createCellEditor(org.eclipse.swt.widgets.Table)
-   */
   @Override
   public CellEditor createCellEditor( final Table table )
   {
     return new TextCellEditor( table, SWT.NONE );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#formatValue(java.lang.Object)
-   */
   @Override
   public Object doGetValue( final IRecord record )
   {
@@ -82,9 +76,6 @@ public class ComponentUiStringHandler extends AbstractComponentUiHandler
     return getStringRepresentation( record );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord, java.lang.Object)
-   */
   @Override
   public void doSetValue( final IRecord record, final Object value )
   {
@@ -94,18 +85,12 @@ public class ComponentUiStringHandler extends AbstractComponentUiHandler
       setValue( record, value );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#parseValue(java.lang.String)
-   */
   @Override
   public Object parseValue( final String text )
   {
     return text;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord, java.lang.Object)
-   */
   @Override
   public void setValue( final IRecord record, final Object value )
   {

@@ -69,11 +69,11 @@ import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 /**
  * TODO: show marker text as tooltip<br>
  * TODO: open dialog that shows all markers if user clicks on marker (use cell-editor)
- *
+ * 
  * @author Gernot Belger
  * @author Kim Werner
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings( "restriction" )
 public class ComponentUiProblemHandler implements IComponentUiHandler
 {
   private static final String IMAGE_ERROR = "profilLabelProvider.img.error"; //$NON-NLS-1$
@@ -121,6 +121,12 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
   public String getColumnLabel( )
   {
     return "-"; //$NON-NLS-1$
+  }
+
+  @Override
+  public String getColumnTooltip( )
+  {
+    return getColumnLabel();
   }
 
   @Override

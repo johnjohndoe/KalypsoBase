@@ -63,16 +63,13 @@ public class ComponentUiEnumerationHandler extends AbstractComponentUiHandler
 {
   protected final Map<Object, IAnnotation> m_items;
 
-  public ComponentUiEnumerationHandler( final int component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final Map<Object, IAnnotation> items )
+  public ComponentUiEnumerationHandler( final int component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final String columnTooltip, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final Map<Object, IAnnotation> items )
   {
-    super( component, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, null );
+    super( component, editable, resizeable, moveable, columnLabel, columnTooltip, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, null );
 
     m_items = items;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#createCellEditor(org.eclipse.swt.widgets.Table)
-   */
   @Override
   public CellEditor createCellEditor( final Table table )
   {
@@ -98,18 +95,12 @@ public class ComponentUiEnumerationHandler extends AbstractComponentUiHandler
     return new ComboBoxViewerCellEditor( new ArrayContentProvider(), labelProvider, set, table, SWT.READ_ONLY | SWT.DROP_DOWN );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#formatValue(java.lang.Object)
-   */
   @Override
   public Object doGetValue( final IRecord record )
   {
     return record.getValue( getComponent() );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord, java.lang.Object)
-   */
   @Override
   public void doSetValue( final IRecord record, final Object value )
   {
@@ -119,9 +110,6 @@ public class ComponentUiEnumerationHandler extends AbstractComponentUiHandler
       setValue( record, value );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getStringRepresentation(org.kalypso.observation.result.IRecord)
-   */
   @Override
   public String getStringRepresentation( final IRecord record )
   {
@@ -135,9 +123,6 @@ public class ComponentUiEnumerationHandler extends AbstractComponentUiHandler
     return annotation.getLabel().trim();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#parseValue(java.lang.String)
-   */
   @Override
   public Object parseValue( final String text )
   {
@@ -151,9 +136,6 @@ public class ComponentUiEnumerationHandler extends AbstractComponentUiHandler
     return null;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord, java.lang.Object)
-   */
   @Override
   public void setValue( final IRecord record, final Object value )
   {
@@ -163,5 +145,4 @@ public class ComponentUiEnumerationHandler extends AbstractComponentUiHandler
     if( !ObjectUtils.equals( value, oldValue ) )
       record.setValue( getComponent(), value );
   }
-
 }
