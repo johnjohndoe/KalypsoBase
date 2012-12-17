@@ -75,12 +75,8 @@ public class ModelerPerspectiveFactory implements IPerspectiveFactory
   private void defineActions( final IPageLayout layout )
   {
     /* Add to "Open perspective"... */
-    layout.addPerspectiveShortcut( "org.kalypso.hwv.product.sachsen.ui.views.admin.LhwzAdminPerspective" );
-    layout.addPerspectiveShortcut( "org.kalypso.simulation.ui.startscreen.PrognosePerspective" );
     layout.addPerspectiveShortcut( ObservationRepositoryPerspectiveFactory.ID );
     layout.addPerspectiveShortcut( ModelerPerspectiveFactory.ID );
-    layout.addPerspectiveShortcut( "org.kalypso.hwv.product.sachsen.ui.views.LhwzStartPagePerspective" );
-    layout.addPerspectiveShortcut( "org.kalypso.dwd.visualization.perspectives.DwdVisualizePerspective" );
 
     /* Add to "Show view"... */
     layout.addShowViewShortcut( IPageLayout.ID_RES_NAV );
