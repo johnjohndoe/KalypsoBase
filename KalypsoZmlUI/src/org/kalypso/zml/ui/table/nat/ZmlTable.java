@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.nat;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import net.sourceforge.nattable.NatTable;
 import net.sourceforge.nattable.config.CellConfigAttributes;
 import net.sourceforge.nattable.config.IConfigRegistry;
@@ -77,7 +74,6 @@ import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.IZmlTableListener;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
 import org.kalypso.zml.ui.table.nat.base.ZmlModelCellDisplayConverter;
 import org.kalypso.zml.ui.table.nat.base.ZmlModelRowHeaderDisplayConverter;
@@ -102,8 +98,6 @@ import org.kalypso.zml.ui.table.nat.tooltip.ZmlTableTooltip;
  */
 public class ZmlTable extends Composite implements IZmlTable
 {
-  private final Set<IZmlTableListener> m_listeners = new HashSet<IZmlTableListener>();
-
   private UIJob m_updateJob;
 
   private static final MutexRule MUTEX_TABLE_UPDATE = new MutexRule( "Aktualisiere Tabelle" ); // $NON-NLS-1$
@@ -141,11 +135,6 @@ public class ZmlTable extends Composite implements IZmlTable
     doInit();
 
     toolkit.adapt( this );
-  }
-
-  public void addListener( final IZmlTableListener listener )
-  {
-    m_listeners.add( listener );
   }
 
   private void doInit( )
@@ -202,14 +191,13 @@ public class ZmlTable extends Composite implements IZmlTable
     m_table.addLayerListener( new UpdateChartSelectionListener( getSelection() ) );
 
     m_pager = new ZmlTablePager( m_viewport, m_table, m_bodyLayer );
-
   }
 
   @Override
   public void dispose( )
   {
     m_table.dispose();
-// m_viewport.dispose(); TODO
+    // m_viewport.dispose(); TODO
 
     super.dispose();
   }

@@ -72,6 +72,7 @@ public class ZmlTableHeaderContextMenuProvider
     if( uri != null )
     {
       // add basic menu entries which are defined in the plugin.xml
+      // FIXME: bad: arbitrary source locator...!
       ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), menuManager, uri );
     }
 
@@ -100,16 +101,11 @@ public class ZmlTableHeaderContextMenuProvider
 
     final ColumnHeader[] headers = column.getDataColumn().getHeaders();
     for( final ColumnHeader header : headers )
-    {
       addAdditionalItem( header, menuManager );
-    }
 
     final AppliedRule[] rules = ZmlModelColumns.findRules( viewport, column );
     for( final AppliedRule rule : rules )
-    {
       addAditionalItem( rule, menuManager );
-    }
-
   }
 
   private void addAdditionalItem( final ColumnHeader header, final MenuManager menuManager )
@@ -144,9 +140,7 @@ public class ZmlTableHeaderContextMenuProvider
       {
         return false;
       }
-
     } );
-
   }
 
   private void addAditionalItem( final AppliedRule rule, final MenuManager menuManager )

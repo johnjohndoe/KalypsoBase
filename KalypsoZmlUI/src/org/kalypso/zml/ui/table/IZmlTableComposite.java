@@ -57,7 +57,5 @@ public interface IZmlTableComposite
 
   void removeListener( IZmlTableCompositeListener mListener );
 
-  void fireTableSourceChanged( String type );
-
   IZmlTable getTable( );
 }

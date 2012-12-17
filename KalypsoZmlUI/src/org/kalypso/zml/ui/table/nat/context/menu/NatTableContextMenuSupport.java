@@ -66,7 +66,7 @@ public class NatTableContextMenuSupport extends MouseAdapter
 
   private final Menu m_contextMenu;
 
-  public static int SELECTED_COLUMN;
+  // public static int SELECTED_COLUMN;
 
   private final IZmlTableSelection m_selection;
 
@@ -83,45 +83,51 @@ public class NatTableContextMenuSupport extends MouseAdapter
   @Override
   public void mouseDown( final MouseEvent e )
   {
+    // Right click
     if( e.button == 3 )
     {
       m_manager.removeAll();
+      m_selection.setClickedHeaderColumn( null );
 
-      final int column = m_table.getColumnPositionByX( e.x );
-      final int row = m_table.getRowPositionByY( e.y );
-      if( column < 0 || row < 0 )
+      final int columnPosition = m_table.getColumnPositionByX( e.x );
+      final int rowPosition = m_table.getRowPositionByY( e.y );
+      if( columnPosition <= 0 || rowPosition < 0 )
         return;
 
-      if( row == 0 )
+      if( rowPosition == 0 )
       {
         /** table header selection */
-        final IZmlModelColumn colum = m_viewport.getColum( column - 1 );
-        if( Objects.isNull( colum ) )
+        final int columnIndex = m_table.getColumnIndexByPosition( columnPosition );
+        final IZmlModelColumn column = m_viewport.getColum( columnIndex );
+        if( Objects.isNull( column ) )
           return;
 
+        m_selection.setClickedHeaderColumn( column );
+
         final ZmlTableHeaderContextMenuProvider menuProvider = new ZmlTableHeaderContextMenuProvider();
-        menuProvider.fillMenu( m_viewport, colum, m_manager );
+        menuProvider.fillMenu( m_viewport, column, m_manager );
+
+        // System.out.println( "Column selected:" + column );
       }
       else
       {
         /** table cell was selected */
-        final LayerCell cell = m_table.getCellByPosition( column, row );
+        final LayerCell cell = m_table.getCellByPosition( columnPosition, rowPosition );
         final Object objDataValue = cell.getDataValue();
         if( !(objDataValue instanceof IZmlModelValueCell) )
           return;
 
         final IZmlModelValueCell modelCell = (IZmlModelValueCell) objDataValue;
 
-        final int columnIndexByPosition = m_table.getColumnIndexByPosition( column );
-        final int rowIndexByPosition = m_table.getRowIndexByPosition( row );
-
-        m_selection.updateLastSelectedCellPosition( rowIndexByPosition, columnIndexByPosition );
+        final int columnIndex = m_table.getColumnIndexByPosition( columnPosition );
+        final int rowIndex = m_table.getRowIndexByPosition( rowPosition );
+        m_selection.updateLastSelectedCellPosition( rowIndex, columnIndex );
 
         final ZmlTableContextMenuProvider menuProvider = new ZmlTableContextMenuProvider();
         menuProvider.fillMenu( modelCell.getColumn(), m_manager );
-      }
 
-      SELECTED_COLUMN = column - 1;
+        // System.out.println( "Column selected:" + modelCell.getColumn() );
+      }
 
       m_manager.update( true );
       m_contextMenu.setVisible( true );

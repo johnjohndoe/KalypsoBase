@@ -38,14 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table;
+package org.kalypso.zml.ui.table.nat.layers;
 
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 
 /**
- * @author Dirk Kuch
+ * @author Holger Albert
  */
-public interface IZmlTableListener
+public interface IZmlTableSelectionListener
 {
-  void eventTableChanged( String type, IZmlModelColumn... columns );
+  void clickedHeaderColumnChanged( IZmlModelColumn column );
 }
