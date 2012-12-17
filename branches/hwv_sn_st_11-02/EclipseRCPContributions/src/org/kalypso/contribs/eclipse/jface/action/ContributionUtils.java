@@ -80,9 +80,9 @@ public final class ContributionUtils
    *          The uri of the extension to add.
    * @see IMenuService#populateContributionManager(ContributionManager, String)
    */
-  public static void populateContributionManager( final IServiceLocator serviceLocator, final IContributionManager contirbutionManager, final String uri )
+  public static void populateContributionManager( final IServiceLocator serviceLocator, final IContributionManager contributionManager, final String uri )
   {
-    final ContributionManager conMgr = findContributionManager( contirbutionManager );
+    final ContributionManager conMgr = findContributionManager( contributionManager );
     final IMenuService menuService = (IMenuService) serviceLocator.getService( IMenuService.class );
     if( menuService != null )
       menuService.populateContributionManager( conMgr, uri );

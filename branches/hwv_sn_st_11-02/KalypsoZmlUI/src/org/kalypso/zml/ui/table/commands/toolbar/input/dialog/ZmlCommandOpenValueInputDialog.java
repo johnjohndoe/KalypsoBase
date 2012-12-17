@@ -57,10 +57,6 @@ import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
  */
 public class ZmlCommandOpenValueInputDialog extends AbstractHandler
 {
-
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event )
   {
@@ -77,6 +73,5 @@ public class ZmlCommandOpenValueInputDialog extends AbstractHandler
     dialog.open();
 
     return Status.OK_STATUS;
-
   }
 }
