@@ -48,7 +48,6 @@ import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
  */
 public class ComponentHandlerSortContainer
 {
-
   private final Integer m_index;
 
   private final IComponentUiHandler m_handler;
@@ -80,72 +79,50 @@ public class ComponentHandlerSortContainer
     if( getIndex() < 0 )
       return 1;
 
-    if( IWspmPointProperties.POINT_PROPERTY_ID.equals( m_identifier ) )
+    switch( m_identifier )
     {
-      return 1;
-    }
+      case IWspmPointProperties.POINT_PROPERTY_ID:
+        return 1;
 
-    else if( IWspmPointProperties.POINT_PROPERTY_BREITE.equals( m_identifier ) )
-    {
-      return 100;
-    }
-    else if( IWspmPointProperties.POINT_PROPERTY_HOEHE.equals( m_identifier ) )
-    {
-      return 110;
-    }
-    else if( IWspmPointProperties.POINT_PROPERTY_HOCHWERT.equals( m_identifier ) )
-    {
-      return 150;
-    }
-    else if( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT.equals( m_identifier ) )
-    {
-      return 160;
-    }
+      case IWspmPointProperties.POINT_PROPERTY_BREITE:
+        return 100;
+      case IWspmPointProperties.POINT_PROPERTY_HOEHE:
+        return 110;
 
-    else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( m_identifier ) )
-    {
-      return 500;
-    }
-    else if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS.equals( m_identifier ) )
-    {
-      return 510;
-    }
-    else if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST.equals( m_identifier ) )
-    {
-      return 520;
-    }
-    else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_FACTOR.equals( m_identifier ) )
-    {
-      return 530;
-    }
+      case IWspmPointProperties.POINT_PROPERTY_RECHTSWERT:
+        return 150;
+      case IWspmPointProperties.POINT_PROPERTY_HOCHWERT:
+        return 160;
 
-    else if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS.equals( m_identifier ) )
-    {
-      return 600;
-    }
-    else if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX.equals( m_identifier ) )
-    {
-      return 610;
-    }
-    else if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY.equals( m_identifier ) )
-    {
-      return 620;
-    }
-    else if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP.equals( m_identifier ) )
-    {
-      return 630;
-    }
+      case IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS:
+        return 500;
 
-    else if( IWspmPointProperties.POINT_PROPERTY_COMMENT.equals( m_identifier ) )
-    {
-      return 800;
-    }
-    else if( IWspmPointProperties.POINT_PROPERTY_CODE.equals( m_identifier ) )
-    {
-      return 810;
-    }
+      case IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS:
+        return 510;
+      case IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST:
+        return 520;
+      case IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_FACTOR:
+        return 530;
 
-    return 999;
+      case IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS:
+        return 600;
+
+      case IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX:
+        return 610;
+      case IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY:
+        return 620;
+      case IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP:
+        return 630;
+
+      case IWspmPointProperties.POINT_PROPERTY_COMMENT:
+        return 800;
+
+      case IWspmPointProperties.POINT_PROPERTY_CODE:
+        return 810;
+
+      default:
+        return 999;
+    }
   }
 
   public String getIdentifier( )
