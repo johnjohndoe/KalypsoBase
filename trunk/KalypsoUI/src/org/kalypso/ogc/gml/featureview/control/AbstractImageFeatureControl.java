@@ -48,6 +48,7 @@ import java.net.URL;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.URIUtil;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -90,6 +91,10 @@ public abstract class AbstractImageFeatureControl extends AbstractFeatureControl
 
   protected URL resolveImagePath( final String imgPath ) throws MalformedURLException, URISyntaxException
   {
+    // REMARK: prevent empty string to resolve to gml file location
+    if( StringUtils.isBlank( imgPath ) )
+      return null;
+
     final Feature feature = getFeature();
     final GMLWorkspace workspace = feature.getWorkspace();
     final URL context = workspace.getContext();
