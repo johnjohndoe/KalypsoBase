@@ -1,7 +1,0 @@
-<!-- removed DTD reference - otherwise jaxb tries to connect to the referenced oasis web site -->
-
-<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
-
-  <uri name="simspec.core.simulation.kalypso.org" uri="modelspec.xsd" />
-
-</catalog>

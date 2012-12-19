@@ -1,5 +1,0 @@
-<!-- removed DTD reference - otherwise jaxb tries to connect to the referenced oasis web site -->
-
-<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
-	<uri name="http://www.mapserver.org/mapserver" uri="mapfile.xsd" />
-</catalog>
