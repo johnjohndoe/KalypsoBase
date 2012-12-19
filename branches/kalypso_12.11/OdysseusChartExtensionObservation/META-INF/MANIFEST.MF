@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: OdysseusChartExtensionObservation Plug-in
+Bundle-SymbolicName: de.openali.odysseus.chart.ext.observation;singleton:=true
+Bundle-Version: 12.11.0.qualifier
+Require-Bundle: org.kalypso.core,
+ de.openali.odysseus.chart.ext.base;visibility:=reexport
+Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: org.kalypso.chart.ext.observation
