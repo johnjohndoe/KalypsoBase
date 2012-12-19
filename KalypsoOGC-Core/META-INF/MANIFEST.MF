@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoOGC-Core Plug-in
+Bundle-SymbolicName: org.kalypso.ogc.core;singleton:=true
+Bundle-Version: 12.11.0.qualifier
+Bundle-Activator: org.kalypso.ogc.core.Activator
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.equinox.http.registry,
+ org.kalypso.commons,
+ org.kalypso.contribs.eclipsercp
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
+Import-Package: javax.servlet,
+ javax.servlet.http
+Export-Package: net.opengis.ows._1,
+ net.opengis.wps._1_0,
+ org.kalypso.ogc.core.adapter,
+ org.kalypso.ogc.core.exceptions,
+ org.kalypso.ogc.core.operations,
+ org.kalypso.ogc.core.service,
+ org.kalypso.ogc.core.utils
