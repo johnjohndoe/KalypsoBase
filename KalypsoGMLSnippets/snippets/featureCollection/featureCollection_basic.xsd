@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Simple version of the feature collectino example. A simple list of (inlined) features. 
+		I.e. inside the gml, the sub features must be defined inside the feature collection and cannot be referenced. -->
+<xs:schema targetNamespace="org.kalypso.gml.snippets.featureCollection_basic" xmlns="org.kalypso.gml.snippets.featureCollection_basic"
+		xmlns:gml="http://www.opengis.net/gml" elementFormDefault="qualified" attributeFormDefault="unqualified"
+		xmlns:xs="http://www.w3.org/2001/XMLSchema">
+		<xs:annotation>
+				<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+						<!-- Force gml version via kalypso specific appinfo. -->
+						<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+				</xs:appinfo>
+		</xs:annotation>
+
+		<!-- Import GML-Schema: schemaLocation not specified, gml-namespace is known to kalypso-catalog -->
+		<xs:import namespace="http://www.opengis.net/gml" />
+
+		<!-- The root feature of the example gml. Contains the collection (list) of member features. -->
+		<!-- As we want to restrict our collection to specific feature types, we DO NOT substitute gml:_FeatureCollection, 
+				as in that case we would have to restrict gml:AbstractFeatureCollection, which is quite ugly. 
+				This is in the spirit of gml.  -->
+		<xs:element name="SimpleCollection" substitutionGroup="gml:_Feature">
+				<xs:complexType>
+						<xs:complexContent>
+								<!-- We DO NOT extend/restrict gml:AbstractFeatureCollectionType. See above.  -->
+								<xs:extension base="gml:AbstractFeatureType">
+										<xs:sequence>
+												<!--  The property which defines the list of the members of this collection. -->
+												<!-- Here, the list is a list of several properties [0..n], each containing one single feature. -->
+												<xs:element name="member" minOccurs="0" maxOccurs="unbounded">
+														<xs:complexType>
+																<xs:sequence>
+																		<!-- Reference to the sub-feature. Inlining here does not work -->
+																		<!-- TODO: better comment. Is it not allowed according to gml or does it just not work with kalypso? -->
+																		<xs:element ref="SimpleSubFeature"/>
+																</xs:sequence>
+														</xs:complexType>
+												</xs:element>
+										</xs:sequence>
+								</xs:extension>
+						</xs:complexContent>
+				</xs:complexType>
+		</xs:element>
+
+		<!-- Definition of the members of the above collection. Just a simlpe feature. -->
+		<xs:element name="SimpleSubFeature" substitutionGroup="gml:_Feature">
+				<xs:complexType>
+						<xs:complexContent>
+								<xs:extension base="gml:AbstractFeatureType">
+										<xs:sequence>
+												<xs:element name="value" type="xs:double" />
+										</xs:sequence>
+								</xs:extension>
+						</xs:complexContent>
+				</xs:complexType>
+		</xs:element>
+
+
+</xs:schema>
