@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+	targetNamespace="org.kalypso.gml.snippets.singleFeature_namedType"
+	xmlns="org.kalypso.gml.snippets.singleFeature_namedType"
+	xmlns:gml="http://www.opengis.net/gml" elementFormDefault="qualified"
+	attributeFormDefault="unqualified"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<!-- Force gml version via kalypso specific appinfo. -->
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<!-- Import GML-Schema: schemaLocation not specified, gml-namespace is known to kalypso-catalog -->
+	<xs:import namespace="http://www.opengis.net/gml" />
+
+	<xs:element name="SimpleFeature" type="SimpleFeatureType"
+		substitutionGroup="gml:_Feature" />
+	<!--  Externally (an so named) type -->
+	<xs:complexType name="SimpleFeatureType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<!--  The one additional property, named 'value'. It is mandatory and can occur only once. -->
+					<xs:element name="value" type="xs:double" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+</xs:schema>
