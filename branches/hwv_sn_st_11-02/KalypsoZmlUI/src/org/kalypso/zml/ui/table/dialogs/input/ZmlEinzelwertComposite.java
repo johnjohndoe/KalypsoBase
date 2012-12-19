@@ -44,7 +44,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.TreeSet;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -69,7 +68,6 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
@@ -167,7 +165,7 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
     {
       final Date date = row.getDate();
       final Date[] existing = m_model.getExistingDateValues();
-      final Date[] dayAnchors = getDayAnchors( existing );
+      final Date[] dayAnchors = ZmlEinzelwertHelper.getDayAnchors( existing );
 
       final EnhancedComboViewer<Date> viewerDay = new EnhancedComboViewer<Date>( base, toolkit, new DateWidgetRule() );
       viewerDay.addListener( this );
@@ -191,9 +189,7 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
 
             final Date selection = viewerDay.getSelection();
             if( selection != null )
-            {
               return ZmlEinzelwertHelper.compareDayAnchor( d, selection );
-            }
           }
 
           return false;
@@ -389,25 +385,6 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
     }
 
     return null;
-  }
-
-  private Date[] getDayAnchors( final Date[] existing )
-  {
-    final Set<Date> anchors = new TreeSet<Date>();
-
-    for( final Date date : existing )
-    {
-      final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
-      calendar.setTime( date );
-
-      calendar.set( Calendar.HOUR_OF_DAY, 0 );
-      calendar.set( Calendar.MINUTE, 0 );
-      calendar.set( Calendar.MILLISECOND, 0 );
-
-      anchors.add( calendar.getTime() );
-    }
-
-    return anchors.toArray( new Date[] {} );
   }
 
   /**

@@ -141,9 +141,7 @@ public class ZmlEinzelwert
     }
 
     if( m_value != null )
-    {
       buffer.append( String.format( "%.3f", m_value ) );
-    }
 
     return buffer.toString();
   }
@@ -163,5 +161,4 @@ public class ZmlEinzelwert
 
     return true;
   }
-
 }
