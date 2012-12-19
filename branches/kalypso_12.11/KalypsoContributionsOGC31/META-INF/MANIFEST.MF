@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoContributionsOGC31 Plug-in
+Bundle-SymbolicName: org.kalypso.contribs.ogc31; singleton:=true
+Bundle-Version: 12.11.0.qualifier
+Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
+Require-Bundle: org.junit;resolution:=optional,
+ org.kalypso.commons
+Bundle-ActivationPolicy: lazy
+Export-Package: org.kalypso.contribs.ogc31
+Bundle-Activator: org.kalypso.contribs.ogc31.KalypsoOGC31Plugin
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
