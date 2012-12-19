@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:shp="org.kalypso.shape" xmlns:custom="org.kalypso.shape.custom_${CUSTOM_NAMESPACE_SUFFIX}" targetNamespace="org.kalypso.shape.custom_${CUSTOM_NAMESPACE_SUFFIX}" elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+  <import namespace="http://www.opengis.net/gml" />
+  <import namespace="org.kalypso.shape" />
+
+  <element name="ShapeCollection" substitutionGroup="shp:ShapeCollection" abstract="true" type="custom:CustomShapeCollectionType" />
+  <complexType name="CustomShapeCollectionType" abstract="true">
+    <complexContent>
+      <extension base="shp:AbstractShapeCollectionType">
+        <sequence>
+          <element name="featureMember" minOccurs="0" maxOccurs="unbounded">
+            <complexType>
+              <sequence>
+                <element ref="custom:Shape" />
+              </sequence>
+            </complexType>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <element name="Shape" type="custom:ShapeType" substitutionGroup="shp:_${GEOM_TYPE_NAME}Shape" />
+  <complexType name="ShapeType">
+    <complexContent>
+      <extension base="shp:${GEOM_TYPE_NAME}ShapeType">
+        <sequence>
+<!--           <element name="GEOM" type="${CUSTOM_FEATURE_GEOMETRY_PROPERTY_TYPE}" minOccurs="0" maxOccurs="1" />  -->
+           ${CUSTOM_FEATURE_PROPERTY_ELEMENTS}
+          <!-- At the end, so we can read the shape more performantly and avoid object constructions -->
+
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+</schema>

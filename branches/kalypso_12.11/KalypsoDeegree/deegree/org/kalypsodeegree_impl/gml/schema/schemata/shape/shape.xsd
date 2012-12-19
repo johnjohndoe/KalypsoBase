@@ -1,0 +1,181 @@
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:common="org.kalypso.gml.common" xmlns:shp="org.kalypso.shape" targetNamespace="org.kalypso.shape" elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+  <!-- ***************************IMPORTS********************************* -->
+  <import namespace="http://www.opengis.net/gml" />
+  <import namespace="org.kalypso.gml.common" />
+
+  <!-- ***************************DEFINITIONS***************************** -->
+  <element name="ShapeCollection" substitutionGroup="gml:_Feature" abstract="true" type="shp:AbstractShapeCollectionType" />
+  <complexType name="AbstractShapeCollectionType" abstract="true">
+    <complexContent>
+      <extension base="gml:AbstractFeatureType">
+        <sequence>
+          <element name="type" type="shp:ShapeTypeNumber" />
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <element name="_Shape" abstract="true" type="shp:ShapeType" substitutionGroup="gml:_Feature" />
+  <complexType name="ShapeType">
+    <complexContent>
+      <extension base="common:EmptyFeatureBaseType">
+          <element name="GEOM" type="gml:GeometryPropertyType" minOccurs="0" maxOccurs="1" />
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <element name="_NullShape" abstract="true" type="shp:NullShapeType" substitutionGroup="shp:_Shape" />
+  <complexType name="NullShapeType">
+    <complexContent>
+      <extension base="shp:ShapeType">
+        <sequence>
+          <element name="GEOM" type="gml:PointPropertyType" minOccurs="0" maxOccurs="1" />
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <element name="_PointShape" abstract="true" type="shp:PointShapeType" substitutionGroup="shp:_Shape" />
+  <complexType name="PointShapeType">
+    <complexContent>
+      <extension base="shp:ShapeType">
+        <sequence>
+          <element name="GEOM" type="gml:PointPropertyType" minOccurs="0" maxOccurs="1" />
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <element name="_MultiPointShape" abstract="true" type="shp:MultiPointShapeType" substitutionGroup="shp:_Shape" />
+  <complexType name="MultiPointShapeType">
+    <complexContent>
+      <extension base="shp:ShapeType">
+        <sequence>
+          <element name="GEOM" type="gml:MultiPointPropertyType" minOccurs="0" maxOccurs="1" />
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <element name="_PolylineShape" abstract="true" type="shp:PolylineShapeType" substitutionGroup="shp:_Shape" />
+  <complexType name="PolylineShapeType">
+    <complexContent>
+      <extension base="shp:ShapeType">
+        <sequence>
+          <element name="GEOM" type="gml:MultiCurvePropertyType" minOccurs="0" maxOccurs="1" />
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <element name="_PolygonShape" abstract="true" type="shp:PolygonShapeType" substitutionGroup="shp:_Shape" />
+  <complexType name="PolygonShapeType">
+    <complexContent>
+      <extension base="shp:ShapeType">
+        <sequence>
+          <element name="GEOM" type="gml:MultiSurfacePropertyType" minOccurs="0" maxOccurs="1" />
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <simpleType name="ShapeTypeNumber">
+    <restriction base="int">
+      <enumeration value="0">
+        <annotation>
+          <documentation xml:lang="de">
+            <label>Null</label>
+          </documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="1">
+        <annotation>
+          <documentation xml:lang="de">
+            <label>Point</label>
+          </documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="3">
+        <annotation>
+          <documentation xml:lang="de">
+            <label>Polyline</label>
+          </documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="5">
+        <annotation>
+          <documentation xml:lang="de">
+            <label>Polygone</label>
+          </documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="8">
+        <annotation>
+          <documentation xml:lang="de">
+            <label>Multipoint</label>
+          </documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="11">
+        <annotation>
+          <documentation xml:lang="de">
+            <label>PointZ</label>
+          </documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="13">
+        <annotation>
+          <documentation xml:lang="de">
+            <label>PolylineZ</label>
+          </documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="15">
+        <annotation>
+          <documentation xml:lang="de">
+            <label>PolygoneZ</label>
+          </documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="18">
+        <annotation>
+          <documentation xml:lang="de">
+            <label>MultiPointZ</label>
+          </documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="21">
+        <annotation>
+          <documentation xml:lang="de">
+            <label>PointM</label>
+          </documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="23">
+        <annotation>
+          <documentation xml:lang="de">
+            <label>PolylineM</label>
+          </documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="25">
+        <annotation>
+          <documentation xml:lang="de">
+            <label>PolygonM</label>
+          </documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="28">
+        <annotation>
+          <documentation xml:lang="de">
+            <label>MultipointM</label>
+          </documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="31">
+        <annotation>
+          <documentation xml:lang="de">
+            <label>Multipatch</label>
+          </documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+</schema>
