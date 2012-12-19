@@ -143,7 +143,6 @@ public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog implements IZml
 
   private void saveChanges( )
   {
-
     final ZmlEinzelwert[] rows = m_model.getRows();
     for( final ZmlEinzelwert row : rows )
     {

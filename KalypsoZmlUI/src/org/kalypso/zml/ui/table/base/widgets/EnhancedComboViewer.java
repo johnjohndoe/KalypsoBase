@@ -98,7 +98,6 @@ public class EnhancedComboViewer<T> extends AbstractEnhancedWidget<T>
 
     m_viewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
-
       @SuppressWarnings("unchecked")
       @Override
       public void selectionChanged( final SelectionChangedEvent event )

@@ -47,7 +47,6 @@ package org.kalypso.ogc.sensor.metadata;
  */
 public interface ITimeseriesConstants extends IMetadataConstants
 {
-
   String MD_PROPERTY_KEEP_METADATA_PREFEX = "reload_keepMetaData";
 
   /** the alarm-level feature used to show the alarm-levels in some views */

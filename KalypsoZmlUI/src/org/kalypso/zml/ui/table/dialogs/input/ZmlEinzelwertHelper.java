@@ -42,6 +42,8 @@ package org.kalypso.zml.ui.table.dialogs.input;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -55,12 +57,29 @@ public final class ZmlEinzelwertHelper
   {
   }
 
+  public static Date[] getDayAnchors( final Date[] existing )
+  {
+    final Set<Date> anchors = new TreeSet<Date>();
+
+    for( final Date date : existing )
+    {
+      final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
+      calendar.setTime( date );
+
+      calendar.set( Calendar.HOUR_OF_DAY, 0 );
+      calendar.set( Calendar.MINUTE, 0 );
+      calendar.set( Calendar.MILLISECOND, 0 );
+
+      anchors.add( calendar.getTime() );
+    }
+
+    return anchors.toArray( new Date[] {} );
+  }
+
   public static boolean compareDayAnchor( final Date d1, final Date d2 )
   {
     if( d1 == null || d2 == null )
-    {
       return false;
-    }
 
     final Calendar c1 = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
     c1.setTime( d1 );

@@ -50,7 +50,6 @@ import org.kalypso.core.KalypsoCorePlugin;
  */
 public class DateWidgetRule implements IWidgetRule<Date>
 {
-
   /**
    * @see org.kalypso.zml.ui.table.base.widgets.ITextBoxRule#getFormatedString(java.lang.Object)
    */
