@@ -1,0 +1,531 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension-point id="toolWizards" name="toolWizards" schema="schema/toolWizards.exsd"/>
+   <extension-point id="coverageManagementAction" name="coverageManagementAction" schema="schema/coverageManagementAction.exsd"/>
+   
+   <extension point="org.kalypso.core.catalogContribution">
+      <catalogContribution class="org.kalypso.gml.ui.catalog.GmlFeatureTypeStyleCatalogContribution" name="GML Style Catalog"/>
+   </extension>
+   
+   <extension point="org.eclipse.ui.commands">
+      <command categoryId="org.kalypso.ogc.gml.map.category" description="%org.kalypso.ogc.gml.map.CoverageManagementCommand.description" id="org.kalypso.ogc.gml.map.CoverageManagementCommand" name="%org.kalypso.ogc.gml.map.CoverageManagementCommand.name" />
+      <command id="org.kalypso.gml.ui.toolWizards" name="%org.kalypso.gml.ui.toolWizards.name" description="%org.kalypso.gml.ui.toolWizards.description"/>
+      <command
+            description="%org.kalyso.gml.ui.command.editFeature.description"
+            id="org.kalyso.gml.ui.command.editFeature"
+            name="%org.kalyso.gml.ui.command.editFeature.name">
+      </command>
+      <command
+            description="%org.kalyso.gml.ui.command.addFeature.description"
+            id="org.kalyso.gml.ui.command.addFeature"
+            name="%org.kalyso.gml.ui.command.addFeature.name">
+      </command>
+      <command
+            description="%org.kalyso.gml.ui.command.deleteFeature.description"
+            id="org.kalyso.gml.ui.command.deleteFeature"
+            name="%org.kalyso.gml.ui.command.deleteFeature.name">
+      </command>
+      <command
+            description="%org.kalyso.gml.ui.command.duplicateFeature.description"
+            id="org.kalyso.gml.ui.command.duplicateFeature"
+            name="%org.kalyso.gml.ui.command.duplicateFeature.name">
+      </command>
+      <command
+            description="%org.kalyso.gml.ui.command.featureUp.description"
+            id="org.kalyso.gml.ui.command.featureUp"
+            name="%org.kalyso.gml.ui.command.featureUp.name">
+      </command>
+      <command
+            description="%org.kalyso.gml.ui.command.featureDown.description"
+            id="org.kalyso.gml.ui.command.featureDown"
+            name="%org.kalyso.gml.ui.command.featureDown.name">
+      </command>
+      <command
+            description="%org.kalyso.gml.ui.command.featuresSort.description"
+            id="org.kalyso.gml.ui.command.featuresSort"
+            name="%org.kalyso.gml.ui.command.featuresSort.name">
+      </command>
+     <command
+           id="org.kalypso.gml.ui.commands.OpenLegendCommand" categoryId="org.kalypso.ogc.gml.map.category"
+           name="%org.kalypso.gml.ui.commands.OpenLegendCommand.name" description="%org.kalypso.gml.ui.commands.OpenLegendCommand..description">
+           <commandParameter id="themeProperty" name="Theme Property" optional="true"/>
+     </command>
+   </extension>
+   <extension point="org.eclipse.ui.commandImages">
+      <image commandId="org.kalypso.ogc.gml.map.CoverageManagementCommand" icon="icons/obj16/manageCoverages.gif" />
+      <image commandId="org.kalypso.gml.ui.toolWizards" icon="icons/obj16/tools_16.png"/>
+      <!-- FIXME: fix names -->
+      <image commandId="org.kalyso.gml.ui.command.editFeature" icon="icons/obj16/gis_feature_edit.gif"/>
+      <image commandId="org.kalyso.gml.ui.command.addFeature" icon="icons/obj16/gis_feature_new.gif"/>
+      <image commandId="org.kalyso.gml.ui.command.deleteFeature" icon="icons/obj16/gis_feature_delete.gif"/>
+      <image commandId="org.kalyso.gml.ui.command.duplicateFeature" icon="icons/obj16/gis_feature_duplicate.gif"/>
+      <image commandId="org.kalyso.gml.ui.command.featureUp" icon="icons/obj16/gis_feature_up.gif"/>
+      <image commandId="org.kalyso.gml.ui.command.featureDown" icon="icons/obj16/gis_feature_down.gif"/>
+      <image commandId="org.kalyso.gml.ui.command.featuresSort" icon="icons/obj16/gis_features_sort.png"/>
+      <image commandId="org.kalypso.gml.ui.commands.OpenLegendCommand" icon="icons/elcl16/openLegend.gif"/>
+   </extension>
+   <extension point="org.eclipse.ui.handlers">
+		<handler commandId="org.kalypso.ogc.gml.map.CoverageManagementCommand">
+			<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+				<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.gml.ui.coverage.CoverageManagementWidget" />
+			</class>
+			<enabledWhen>
+				<and>
+					<!--reference definitionId="mapContext" /-->
+					<with variable="activeMapPanel">
+						<test property="org.kalypso.ui.test.map.hasTheme.qname" value="{http://www.opengis.net/gml}_Coverage" />
+					</with>
+				</and>
+			</enabledWhen>
+		</handler>
+          <handler commandId="org.kalypso.gml.ui.toolWizards" class="org.kalypso.gml.ui.tools.ToolWizardsHandler">
+             <activeWhen>
+                <test
+                      args="org.kalypso.gml.ui,toolWizards"
+                      forcePluginActivation="true"
+                      property="org.kalypso.contribs.eclipsercp.genericWizardTester.isEnabled">
+                </test>
+             </activeWhen>
+          </handler>
+          <handler class="org.kalypso.gml.ui.internal.feature.EditFeatureHandler" commandId="org.kalyso.gml.ui.command.editFeature">
+             <enabledWhen>
+                <with variable="selection">
+                   <and>
+                      <count value="1"/>
+                      <iterate ifEmpty="false" operator="and">
+                         <instanceof value="org.kalypsodeegree.model.feature.Feature"/>
+                      </iterate>
+                   </and>
+                </with>
+             </enabledWhen>
+          </handler>
+          <handler class="org.kalypso.gml.ui.internal.gmltable.AddFeatureHandler" commandId="org.kalyso.gml.ui.command.addFeature">
+             <enabledWhen>
+                <with variable="activeGmlTable">
+                    <!-- -refernece not null -->
+                    <!-- Fixme: introduce tests -->
+                    <instanceof value="java.lang.Object"/>
+                </with>
+             </enabledWhen>
+          </handler>
+          <handler class="org.kalypso.gml.ui.internal.feature.DeleteFeatureHandler" commandId="org.kalyso.gml.ui.command.deleteFeature">
+             <enabledWhen>
+                <with variable="selection">
+                   <and> <reference definitionId="org.kalypso.gml.ui.definition.selectionHasFeatures"/>
+                      <iterate ifEmpty="false" operator="and">
+                         <instanceof value="org.kalypsodeegree.model.feature.Feature"/>
+                      </iterate>
+                   </and>
+                </with>
+             </enabledWhen>
+          </handler>
+          <handler class="org.kalypso.gml.ui.internal.feature.DuplicateFeatureHandler" commandId="org.kalyso.gml.ui.command.duplicateFeature">
+             <enabledWhen>
+                <and>
+                  <reference definitionId="org.kalypso.gml.ui.definition.oneFeatureSelectionFeature"/>
+                  <with variable="selection">
+                    <iterate operator="and">
+                        <test property="org.kalypso.gml.catalogProperty" value="true" args="gmltree.showDuplicateMenu"/>
+                    </iterate>
+                  </with>
+                </and>
+             </enabledWhen>
+          </handler>
+          <handler
+                class="org.kalypso.gml.ui.internal.feature.MoveFeatureUpHandler"
+                commandId="org.kalyso.gml.ui.command.featureUp">
+             <enabledWhen>
+                 <and>
+                    <reference definitionId="org.kalypso.gml.ui.definition.oneFeatureSelectionFeature"/>
+                    <with variable="selection">
+                       <iterate ifEmpty="false" operator="and">
+                          <not><test property="org.kalypso.gml.isListFeatureFirst"/></not>
+                       </iterate>
+                    </with>
+                </and>
+             </enabledWhen>
+          </handler>
+          <handler
+                class="org.kalypso.gml.ui.internal.feature.MoveFeatureDownHandler"
+                commandId="org.kalyso.gml.ui.command.featureDown">
+             <enabledWhen>
+                 <and>
+                    <reference definitionId="org.kalypso.gml.ui.definition.oneFeatureSelectionFeature"/>
+                    <with variable="selection">
+                       <iterate ifEmpty="false" operator="and">
+                          <not><test property="org.kalypso.gml.isListFeatureLast"/></not>
+                       </iterate>
+                    </with>
+                </and>
+             </enabledWhen>
+          </handler>
+          <handler
+                class="org.kalypso.gml.ui.internal.feature.SortFeaturesHandler"
+                commandId="org.kalyso.gml.ui.command.featuresSort">
+             <enabledWhen>
+                <with
+                      variable="selection">
+                   <and>
+                      <count
+                            value="1">
+                      </count>
+                      <iterate
+                            ifEmpty="false"
+                            operator="and">
+                         <test
+                               property="org.kalypso.gml.isListProperty">
+                         </test>
+                      </iterate>
+                   </and>
+                </with>
+             </enabledWhen>
+          </handler>
+         <handler commandId="org.kalypso.gml.ui.commands.OpenLegendCommand">
+            <class class="org.kalypso.gml.ui.map.legend.OpenLegendHandler"/>
+         </handler>
+   </extension>
+   <extension point="org.kalypso.core.themeInfo">
+      <themeInfo class="org.kalypso.gml.ui.coverage.CoverageThemeInfo" id="org.kalypso.gml.ui.coverage.CoverageThemeInfo"/>
+      <!-- REMARK: registered twice, for backwards compatibility. This id should not be used any more. -->
+      <themeInfo class="org.kalypso.gml.ui.coverage.CoverageThemeInfo" id="org.kalypso.gml.ui.map.CoverageThemeInfo"/>
+   </extension>
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution locationURI="toolbar:org.kalypso.ui.menus.mapToolbar?before=widgetAdditions">
+			<command commandId="org.kalypso.ogc.gml.map.CoverageManagementCommand" style="radio" tooltip="%org.kalypso.ogc.gml.map.CoverageManagementCommand.description">
+				<visibleWhen checkEnabled="false">
+					<and>
+						<with variable="activeEditorId">
+							<equals value="org.kalypso.ui.editor.mapeditor.GisMapEditor" />
+						</with>
+						<!--reference definitionId="mapContext" /-->
+						<with variable="activeMapPanel">
+							<test property="org.kalypso.ui.test.map.hasTheme.qname" value="{http://www.opengis.net/gml}_Coverage" />
+						</with>
+					</and>
+				</visibleWhen>
+			</command>		
+		</menuContribution>
+		<menuContribution locationURI="menu:org.kalypso.ui.menus.mapMenu?before=widgetAdditions">
+			<command commandId="org.kalypso.ogc.gml.map.CoverageManagementCommand" style="radio" tooltip="%org.kalypso.ogc.gml.map.CoverageManagementCommand.description">
+				<visibleWhen checkEnabled="false">
+					<and>
+						<with variable="activeEditorId">
+							<equals value="org.kalypso.ui.editor.mapeditor.GisMapEditor" />
+						</with>
+						<!--reference definitionId="mapContext" /-->
+						<with variable="activeMapPanel">
+							<test property="org.kalypso.ui.test.map.hasTheme.qname" value="{http://www.opengis.net/gml}_Coverage" />
+						</with>
+					</and>
+				</visibleWhen>
+			</command>		
+		</menuContribution>
+		
+        <menuContribution locationURI="popup:org.eclipse.ui.popup.any?before=importExportStart">
+           <separator name="featureCommands" visible="true"/>
+           <command commandId="org.kalyso.gml.ui.command.editFeature" style="push">
+              <visibleWhen checkEnabled="true"/>
+           </command>
+           <command commandId="org.kalyso.gml.ui.command.deleteFeature" style="push">
+              <visibleWhen checkEnabled="true"/>
+           </command>
+           <command commandId="org.kalyso.gml.ui.command.duplicateFeature" style="push">
+              <visibleWhen checkEnabled="true"/>
+           </command>
+           <command commandId="org.kalyso.gml.ui.command.featureUp" style="push">
+              <visibleWhen checkEnabled="true"/>
+           </command>
+           <command commandId="org.kalyso.gml.ui.command.featureDown" style="push">
+              <visibleWhen checkEnabled="true"/>
+           </command>
+           <separator name="featureCommandsEnd" visible="true"/>
+        </menuContribution>
+
+        <menuContribution locationURI="popup:org.eclipse.ui.popup.any?before=importExportEnd">
+           <separator name="gmlToolsStart" visible="false"/>
+           <command commandId="org.kalypso.gml.ui.toolWizards" style="push">
+                 <visibleWhen checkEnabled="true"/>
+           </command>
+           <command commandId="org.kalyso.gml.ui.command.featuresSort" style="push">
+              <visibleWhen checkEnabled="true"/>
+           </command>
+           <separator name="gmlToolsEnd" visible="true"/>
+        </menuContribution>
+
+        <menuContribution locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+            <toolbar id="org.kalypso.gml.toolbar">
+               <separator name="featureCommands"/>
+               <command commandId="org.kalyso.gml.ui.command.editFeature" style="push">
+                  <visibleWhen checkEnabled="true"/>
+               </command>
+               <command commandId="org.kalyso.gml.ui.command.deleteFeature" style="push">
+                  <visibleWhen checkEnabled="true"/>
+               </command>
+               <command commandId="org.kalyso.gml.ui.command.duplicateFeature" style="push">
+                  <visibleWhen checkEnabled="true"/>
+               </command>
+               <command commandId="org.kalyso.gml.ui.command.featureUp" style="push">
+                  <visibleWhen checkEnabled="true"/>
+               </command>
+               <command commandId="org.kalyso.gml.ui.command.featureDown" style="push">
+                  <visibleWhen checkEnabled="true"/>
+               </command>
+               <separator name="gmlToolsStart" visible="true"/>
+               <command commandId="org.kalypso.ui.command.import" style="push">
+                     <visibleWhen checkEnabled="true"/>
+               </command>
+               <command commandId="org.kalypso.ui.command.export" style="push">
+                     <visibleWhen checkEnabled="true"/>
+               </command>
+               <command commandId="org.kalypso.gml.ui.toolWizards" style="push">
+                     <visibleWhen checkEnabled="true"/>
+               </command>
+               <command commandId="org.kalyso.gml.ui.command.featuresSort" style="push">
+                  <visibleWhen checkEnabled="true"/>
+               </command>
+               <separator name="gmlToolsEnd" visible="true"/>
+            </toolbar>
+        </menuContribution>
+        
+        <menuContribution locationURI="popup:org.kalypso.ui.views.mapView.outline?after=additions">
+            <command commandId="org.kalypso.gml.ui.toolWizards" style="push">
+                <visibleWhen checkEnabled="true"/>
+            </command>
+        </menuContribution>
+	</extension>
+
+    <extension point="org.eclipse.core.expressions.propertyTesters">
+       <propertyTester
+             class="org.kalypso.gml.ui.extensions.FeatureSelectionTester"
+             id="org.kalypso.gml.ui.propertyTester.features"
+             namespace="org.kalypso.gml.ui.featureSelection"
+             properties="isNotEmpty,hasGeometryOfType"
+             type="org.eclipse.jface.viewers.ISelection">
+       </propertyTester>
+    </extension>
+
+    <extension point="org.eclipse.core.expressions.definitions">
+          <definition id="org.kalypso.gml.ui.definition.selectionHasFeatures">
+             <with variable="selection">
+                <test property="org.kalypso.gml.ui.featureSelection.isNotEmpty"/>
+             </with>
+          </definition>
+          <definition id="org.kalypso.gml.ui.definition.selectionHasTins">
+             <with variable="selection">
+                <test property="org.kalypso.gml.ui.featureSelection.hasGeometryOfType" value="org.kalypsodeegree.model.geometry.GM_TriangulatedSurface"/>
+             </with>
+          </definition>
+          <definition id="org.kalypso.gml.ui.definition.oneFeatureSelectionFeature">
+                <with variable="selection">
+                   <and>
+                      <count value="1"/>
+                      <reference definitionId="org.kalypso.gml.ui.definition.selectionHasFeatures"/>
+                      <iterate ifEmpty="false" operator="and">
+                         <test property="org.kalypso.gml.isListFeature"/>
+                      </iterate>
+                   </and>
+                </with>
+          </definition>
+    </extension>
+    <extension
+          point="org.eclipse.ui.newWizards">
+       <wizard
+             canFinishEarly="false"
+             category="org.kalypso.ui.newwizards.kalypso"
+             class="org.kalypso.gml.ui.internal.shape.ShapeFileNewWizard"
+             hasPages="true"
+             icon="icons/obj16/file_shp.gif"
+             id="org.kalypso.gml.ui.shape.ShapeFileNewWizard"
+             name="%org.kalypso.gml.ui.shape.ShapeFileNewWizard.name">
+            <description>%org.kalypso.gml.ui.shape.ShapeFileNewWizard.description</description>
+            <selection class="org.eclipse.core.resources.IResource" />
+       </wizard>
+    </extension>
+    <extension
+          point="org.eclipse.ui.perspectiveExtensions">
+       <perspectiveExtension
+             targetID="org.kalypso.ui.perspectives.ModelerPerspectiveFactory">
+          <newWizardShortcut
+                id="org.kalypso.gml.ui.shape.ShapeFileNewWizard">
+          </newWizardShortcut>
+       </perspectiveExtension>
+       <perspectiveExtension
+             targetID="org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory">
+          <newWizardShortcut
+                id="org.kalypso.gml.ui.shape.ShapeFileNewWizard">
+          </newWizardShortcut>
+       </perspectiveExtension>
+    </extension>
+    <extension
+          point="org.kalypso.ui.exportWizards">
+       <category id="shapeExportWizards" name="%shapeExportWizards.name" parentCategory="exportWizards">
+       </category>
+       <wizard
+             category="exportWizards/shapeExportWizards"
+             class="org.kalypso.gml.ui.commands.exportshape.ExportShapeWizard"
+             icon="icons/obj16/exportShp.gif"
+             id="org.kalypso.gml.ui.commands.exportshape.ExportShapeWizard"
+             name="%org.kalypso.ui.views.outline.ShapeExport.name">
+          <description>
+             %org.kalypso.ui.views.outline.ShapeExport.description
+          </description>
+       </wizard>
+       <wizard
+             category="exportWizards/shapeExportWizards"
+             class="org.kalypso.gml.ui.commands.exportshape.ExportTin2ShapeWizard"
+             icon="icons/obj16/exportTin.gif"
+             id="org.kalypso.gml.ui.commands.exportshape.ExportTin2ShapeWizard"
+             name="%org.kalypso.gml.ui.commands.Tin2ShapeExport.name">
+          <description>
+             %org.kalypso.gml.ui.commands.Tin2ShapeExport.description
+          </description>
+       </wizard>
+     <wizard
+           category="exportWizards"
+           class="org.kalypso.gml.ui.commands.exporthmo.ExportHMOWizard"
+           id="org.kalypso.gml.ui.commands.exporthmo.ExportHMOWizard"
+           icon="icons/obj16/exportHmo.gif"
+           name="%org.kalypso.gml.ui.commands.exporthmo.ExportHMOWizard.name">
+           <description>%org.kalypso.gml.ui.commands.exporthmo.ExportHMOWizard.description</description>
+     </wizard>
+     <wizard
+           category="exportWizards"
+           class="org.kalypso.gml.ui.commands.exportgrid.RectifiedGridCoverageExportWizard"
+           id="org.kalypso.gml.ui.commands.exportgrid.RectifiedGridCoverageExportWizard"
+           icon="icons/obj16/gridImport.gif"
+           name="%org.kalypso.gml.ui.commands.exportgrid.RectifiedGridCoverageExportWizard.name">
+           <description>%org.kalypso.gml.ui.commands.exportgrid.RectifiedGridCoverageExportWizard.description</description>
+     </wizard>
+    </extension>
+    <extension
+          point="org.kalypso.ui.importWizards">
+       <wizard
+             class="org.kalypso.gml.ui.internal.coverage.imports.ImportCoveragesWizard"
+             id="org.kalypso.gml.ui.commands.importgrid.AddRectifiedGridCoveragesWizard"
+             icon="icons/obj16/gridImport.gif"
+             name="%org.kalypso.gml.ui.commands.importgrid.AddRectifiedGridCoveragesWizard.name">
+             <description>%org.kalypso.gml.ui.commands.importgrid.AddRectifiedGridCoveragesWizard.description</description>
+       </wizard>
+    </extension>
+    <extension
+          point="org.kalypso.contribs.eclipsercp.wizardEnablement">
+       <wizardEnablement
+             wizardID="org.kalypso.gml.ui.commands.exportshape.ExportShapeWizard">
+          <enablement>
+             <reference
+                   definitionId="org.kalypso.gml.ui.definition.selectionHasFeatures">
+             </reference>
+          </enablement>
+       </wizardEnablement>
+       <wizardEnablement
+             wizardID="org.kalypso.gml.ui.commands.exportshape.ExportTin2ShapeWizard">
+          <enablement>
+             <reference
+                   definitionId="org.kalypso.gml.ui.definition.selectionHasTins">
+             </reference>
+          </enablement>
+       </wizardEnablement>
+       <wizardEnablement wizardID="org.kalypso.gml.ui.commands.exporthmo.ExportHMOWizard">
+          <enablement>
+               <with variable="selection">
+                  <test property="org.kalypso.gml.ui.featureSelection.hasGeometryOfType" value="org.kalypsodeegree.model.geometry.GM_TriangulatedSurface"/>
+               </with>
+          </enablement>
+       </wizardEnablement>
+       <wizardEnablement wizardID="org.kalypso.gml.ui.commands.exportgrid.RectifiedGridCoverageExportWizard">
+          <enablement>
+            <with variable="selection">
+               <iterate ifEmpty="false" operator="and">
+                    <!-- FIXME: should be more flexible about the selection; see Tin Export for a better example -->
+                  <test
+                        forcePluginActivation="false"
+                        property="org.kalypso.gml.qname"
+                        value="{http://www.opengis.net/gml}_Coverage">
+                  </test>
+               </iterate>
+            </with>
+          </enablement>
+       </wizardEnablement>
+       <wizardEnablement wizardID="org.kalypso.gml.ui.commands.importgrid.AddRectifiedGridCoveragesWizard">
+          <enablement>
+            <with variable="selection">
+               <iterate ifEmpty="false" operator="and">
+                  <test
+                        forcePluginActivation="false"
+                        property="org.kalypso.gml.qname"
+                        value="{org.kalypso.gml.common.coverage}CoverageCollection">
+                  </test>
+               </iterate>
+            </with>
+          </enablement>
+       </wizardEnablement>
+    </extension>
+    <extension point="org.kalypso.gml.ui.toolWizards">
+       <category id="toolWizards" name="Tool Wizards"/>
+       <wizard
+             class="org.kalypso.gml.ui.internal.feature.editProperties.EditFeaturePropertiesWizard"
+             icon="icons/obj16/gis_feature_editProperties.gif"
+             id="org.kalypso.gml.ui.internal.feature.editProperties.EditFeaturePropertiesWizard"
+             name="%org.kalyso.gml.ui.command.featuresPropertyBatchEdit.name">
+          <description>%org.kalyso.gml.ui.command.featuresPropertyBatchEdit.description</description>
+       </wizard>
+    </extension>
+    <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
+        <wizardEnablement wizardID="org.kalypso.gml.ui.internal.feature.editProperties.EditFeaturePropertiesWizard">
+           <enablement>
+                <with variable="selection">
+                   <and> <reference definitionId="org.kalypso.gml.ui.definition.selectionHasFeatures"/>
+                      <iterate ifEmpty="false" operator="and">
+                         <instanceof value="org.kalypsodeegree.model.feature.Feature"/>
+                      </iterate>
+                   </and>
+                </with>
+           </enablement>
+        </wizardEnablement>
+    </extension>
+    
+    <!-- View menu for GML-Table -->
+    <extension point="org.eclipse.ui.menus">
+        <menuContribution locationURI="toolbar:org.kalypso.ui.editor.gistableeditor.GttViewPart">
+           <command commandId="org.kalyso.gml.ui.command.addFeature" style="push"/>
+           <command commandId="org.kalyso.gml.ui.command.deleteFeature" style="push"/>
+           <command commandId="org.kalyso.gml.ui.command.duplicateFeature" style="push"/>
+           <command commandId="org.kalyso.gml.ui.command.featureUp" style="push"/>
+           <command commandId="org.kalyso.gml.ui.command.featureDown" style="push"/>
+           
+           <separator name="featureCommandsEnd" visible="true"/>
+           
+           <command commandId="org.kalypso.ui.command.import" style="push"/>
+           <command commandId="org.kalypso.ui.command.export" style="push"/>
+           <command commandId="org.kalypso.gml.ui.toolWizards" style="push"/>
+           
+           <separator name="additions" visible="true" />
+        </menuContribution>
+     </extension>
+    
+    <extension point="org.kalypso.ui.addLayerWizard">
+      <wizard
+            class="org.kalypso.gml.ui.internal.shape.CreateShapeSourceWizard"
+            icon="icons/obj16/file_shp.gif"
+            id="org.kalypso.gml.ui.createShapeThemeWizard"
+            name="%org.kalypso.gml.ui.createShapeThemeWizard.name">
+         <description>%org.kalypso.gml.ui.createShapeThemeWizard.description</description>
+      </wizard>
+    
+      <wizardSelection description="Default selection used for the map editor." id="org.kalypso.ui.addlayer.wizardselection.default">
+         <wizardRef wizardId="org.kalypso.ui.wizard.shape"/>
+         <wizardRef wizardId="org.kalypso.gml.ui.createShapeThemeWizard"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.wms"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.wfs"/>
+         <wizardRef wizardId="gml"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.raster"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.image"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.others.LegendThemeWizard"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.others.CascadingThemeWizard"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.others.ScaleThemeWizard"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.others.ImageThemeWizard"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.others.TextThemeWizard"/>
+      </wizardSelection>
+    </extension>
+</plugin>
