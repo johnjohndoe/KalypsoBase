@@ -1,0 +1,25 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoGmlUI Plug-in
+Bundle-SymbolicName: org.kalypso.gml.ui; singleton:=true
+Bundle-Version: 12.11.0.qualifier
+Bundle-Activator: org.kalypso.gml.ui.KalypsoGmlUIPlugin
+Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
+Bundle-Localization: plugin
+Require-Bundle: org.junit;resolution:=optional,
+ org.kalypso.contribs.ogc31,
+ org.kalypso.gml.processes,
+ org.kalypso.ui.addlayer,
+ org.eclipse.core.expressions,
+ org.kalypso.featureview
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: org.kalypso.gml.ui,
+ org.kalypso.gml.ui.commands.exportshape,
+ org.kalypso.gml.ui.commands.importshape,
+ org.kalypso.gml.ui.coverage,
+ org.kalypso.gml.ui.coverage.imports,
+ org.kalypso.gml.ui.gml,
+ org.kalypso.gml.ui.jface,
+ org.kalypso.gml.ui.map.legend,
+ org.kalypso.gml.ui.util
