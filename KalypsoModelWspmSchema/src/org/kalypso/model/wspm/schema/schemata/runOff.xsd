@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file is part of Kalypso
+
+  Copyright (c) 2008 by
+
+  Björnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de
+  Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
+  (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
+
+  Kalypso is free software: you can redistribute it and/or modify it under the terms
+  of the GNU Lesser General Public License (LGPL) as published by the Free Software
+  Foundation, either version 3 of the License, or (at your option) any later version.
+
+  Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public
+  License along with Kalypso. If not, see <http://www.gnu.org/licenses/>.
+-->
+<schema targetNamespace="org.kalypso.model.wspmrunoff" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns:runoff="org.kalypso.model.wspmrunoff">
+
+  <import namespace="http://www.opengis.net/gml" />
+  <import namespace="http://www.opengis.net/om" />
+
+  <!-- Abflussereignisse -->
+  <complexType name="RunOffEventInlinePropertyType">
+    <sequence minOccurs="1" maxOccurs="1">
+      <element ref="runoff:RunOffEvent" />
+    </sequence>
+  </complexType>
+  <complexType name="RunOffEventLinkPropertyType">
+    <sequence minOccurs="0" maxOccurs="0">
+      <element ref="runoff:RunOffEvent" />
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup" />
+  </complexType>
+  <element name="RunOffEvent" type="runoff:RunOffEventType" substitutionGroup="om:Observation">
+    <annotation>
+      <documentation>Run-off event</documentation>
+    </annotation>
+  </element>
+  <complexType name="RunOffEventType">
+    <annotation>
+      <documentation>Wir definieren einen eigenen Observation Typ für
+        Abflussereignisse. Ein Abflussereignis leitet von CommonObservation
+        ab und beinhaltet also die Tupel. Sie werden anhand von
+        resultDefinition angegeben. TODO: es sollte eine feste
+        resultDefinition für Abflüsse vorgegeben sein..
+      </documentation>
+    </annotation>
+    <complexContent>
+      <extension base="om:ObservationType">
+        <sequence minOccurs="0" maxOccurs="1">
+          <element name="returnPeriod" type="runoff:PositiveIntType" default="1">
+            <!-- default = "1" only for backward compatibility -->
+            <annotation>
+              <documentation><![CDATA[Return interval of the event]]></documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <simpleType name="PositiveIntType">
+    <restriction base="int">
+      <minInclusive value="1" />
+    </restriction>
+  </simpleType>
+  <!-- Wasserspiegelfixierung -->
+  <complexType name="WaterlevelFixationInlinePropertyType">
+    <sequence minOccurs="1" maxOccurs="1">
+      <element ref="runoff:WaterlevelFixation" />
+    </sequence>
+  </complexType>
+  <complexType name="WaterlevelFixationLinkPropertyType">
+    <sequence minOccurs="0" maxOccurs="0">
+      <element ref="runoff:WaterlevelFixation" />
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup" />
+  </complexType>
+  <element name="WaterlevelFixation" type="runoff:WaterlevelFixationType" substitutionGroup="om:Observation">
+    <annotation>
+      <documentation>Water level fixing</documentation>
+    </annotation>
+  </element>
+  <complexType name="WaterlevelFixationType">
+    <annotation>
+      <documentation>Wir definieren einen eigenen Observation Typ für
+        Wasserspiegelfixierungen. Ein Wasserspiegelfixierungen leitet von
+        CommonObservation ab und beinhaltet also die Tupel. Sie werden
+        anhand von resultDefinition angegeben. TODO: es sollte eine feste
+        resultDefinition für Wasserspiegelfixierungen vorgegeben sein..
+      </documentation>
+    </annotation>
+    <complexContent>
+      <extension base="om:ObservationType" />
+    </complexContent>
+  </complexType>
+</schema>
