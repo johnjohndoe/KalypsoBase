@@ -160,5 +160,4 @@ public class MetadataRequestHandler implements IRequestHandler
   {
     return m_parameters.getParameterValue( key, null );
   }
-
 }
