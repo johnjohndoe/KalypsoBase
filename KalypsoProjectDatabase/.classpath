@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="lib" path="lib/hibernate/annotations/lib/ejb3-persistence.jar" sourcepath="KalypsoProjectDatabasesrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/hibernate/annotations/hibernate-annotations.jar" sourcepath="lib/hibernate/annotations/src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/hibernate/annotations/lib/hibernate-commons-annotations.jar" sourcepath="KalypsoProjectDatabasesrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/hibernate/annotations/lib/test/log4j.jar" sourcepath="KalypsoProjectDatabasesrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/hibernate/core/hibernate3.jar" sourcepath="lib/hibernate/core/src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/hibernate/core/lib/required/antlr-2.7.6.jar" sourcepath="KalypsoProjectDatabasesrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/hibernate/core/lib/required/commons-collections-3.1.jar" sourcepath="KalypsoProjectDatabasesrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/hibernate/core/lib/required/dom4j-1.6.1.jar" sourcepath="KalypsoProjectDatabasesrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/hibernate/core/lib/required/javassist-3.4.GA.jar" sourcepath="KalypsoProjectDatabasesrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/hibernate/core/lib/required/jta-1.1.jar" sourcepath="KalypsoProjectDatabasesrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/hsqldb/hsqldb_2_2_2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.2.5/activation.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.2.5/FastInfoset.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.2.5/gmbal-api-only.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.2.5/ha-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.2.5/http.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.2.5/jaxb-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.2.5/jaxb-impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.2.5/jaxb-xjc.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.2.5/jaxws-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.2.5/jaxws-rt.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.2.5/jaxws-tools.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.2.5/jsr173_api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.2.5/jsr181-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.2.5/jsr250-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.2.5/management-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.2.5/mimepull.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.2.5/policy.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.2.5/resolver.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.2.5/saaj-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.2.5/saaj-impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.2.5/stax-ex.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.2.5/streambuffer.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.2.5/woodstox.jar"/>
+	<classpathentry kind="output" path="build/bin"/>
+</classpath>
