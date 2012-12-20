@@ -676,6 +676,7 @@
         <LineCap>ROUND</LineCap>
         <LineJoin>ROUND</LineJoin>
       </LineStyle>
+
       <!-- V styles (line and point) -->
       <!-- erste Farbe umgestellt von einem braun Ton BDAB7A auf echtes Blau 0000FF - wegen Saale -->
       <LineStyle role="v_line_0">
