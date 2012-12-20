@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:ksp="http://www.ksp.org/om" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+     xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
+     xmlns:swe="http://www.opengis.net/swe" xmlns:xlink="http://www.w3.org/1999/xlink"
+     targetNamespace="http://www.ksp.org/om">
+    
+     <xs:annotation>
+          <xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+               <kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+          </xs:appinfo>
+     </xs:annotation>
+    
+     <xs:import namespace="http://www.opengis.net/gml" schemaLocation="../gml/3.1.1/base/gml.xsd"/>
+     <xs:import namespace="http://www.opengis.net/om" schemaLocation="../om/1.0.30/om.xsd"/>
+     <xs:import namespace="http://www.opengis.net/swe" schemaLocation="../sweCommon/1.0.30/swe.xsd"/>
+     <xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="../xlink/1.0.0/xlinks.xsd"/>
+
+     <xs:element name="metaData" type="ksp:MetaDataType"/>
+
+     <xs:complexType name="MetaDataType">
+          <xs:sequence>
+               <xs:element name="name" type="xs:string"/>
+               <xs:element name="value">
+                    <xs:complexType>
+                         <xs:complexContent>
+                              <xs:extension base="xs:anyType">
+                                   <xs:attribute name="type" use="optional" type="xs:QName" default="xs:string">
+                                        <xs:annotation>
+                                             <xs:documentation>Wenn kein type angegeben wird, wird
+                                                  der value-Inhalt als String
+                                             gewertet</xs:documentation>
+                                        </xs:annotation>
+                                   </xs:attribute>
+                              </xs:extension>
+                         </xs:complexContent>
+                    </xs:complexType>
+               </xs:element>
+          </xs:sequence>
+     </xs:complexType>
+</xs:schema>
