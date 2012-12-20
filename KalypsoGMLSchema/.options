@@ -1,0 +1,6 @@
+# Debug output
+org.kalypso.gmlschema/debug/annotationproviders = false
+org.kalypso.gmlschema/debug/parsing = false
+org.kalypso.gmlschema/debug/parsing/verbose = false
+org.kalypso.gmlschema/debug/loading = false
+org.kalypso.gmlschema/debug/catalog = false
