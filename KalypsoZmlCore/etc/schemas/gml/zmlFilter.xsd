@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="org.kalypso.zml.core.filter" xmlns:zf="org.kalypso.zml.core.filter" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" elementFormDefault="qualified">
+	<import namespace="http://www.w3.org/1999/xlink" />
+	<import namespace="http://www.opengis.net/gml"/>
+
+	<!-- Abstract Element & Type -->
+	<element name="AbstractZmlFilter" type="zf:AbstractZmlFilterType" abstract="true" substitutionGroup="gml:_Feature" />
+	<complexType name="AbstractZmlFilterType" abstract="true">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<!-- Define general properties here. -->
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<!-- Interpolation Filter Element & Type -->
+	<element name="InterpolationZmlFilter" type="zf:InterpolationZmlFilterType" substitutionGroup="zf:AbstractZmlFilter" />
+	<complexType name="InterpolationZmlFilterType">
+		<complexContent>
+			<extension base="zf:AbstractZmlFilterType">
+				<sequence>
+					<element name="calendarAmount" type="int" default="1" minOccurs="1" maxOccurs="1" />
+					<element name="calendarField" type="string" default="HOUR_OF_DAY" minOccurs="1" maxOccurs="1" />
+					<element name="defaultStatus" type="int" default="0" minOccurs="1" maxOccurs="1" />
+					<element name="defaultValue" type="string" default="0.0" minOccurs="1" maxOccurs="1" />
+					<element name="forceFill" type="boolean" default="true" minOccurs="1" maxOccurs="1" />
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<!-- Interval Filter Element & Type -->
+	<element name="IntervalZmlFilter" type="zf:IntervalZmlFilterType" substitutionGroup="zf:AbstractZmlFilter" />
+	<complexType name="IntervalZmlFilterType">
+		<complexContent>
+			<extension base="zf:AbstractZmlFilterType">
+				<sequence>
+					<element name="calendarAmount" type="int" default="1" minOccurs="1" maxOccurs="1" />
+					<element name="calendarField" type="string" default="HOUR_OF_DAY" minOccurs="1" maxOccurs="1" />
+					<element name="defaultStatus" type="int" default="0" minOccurs="1" maxOccurs="1" />
+					<element name="defaultValue" type="double" default="0.0" minOccurs="1" maxOccurs="1" />
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<!-- Round Filter Element & Type -->
+	<element name="RoundZmlFilter" type="zf:RoundFilterType" substitutionGroup="zf:AbstractZmlFilter" />
+	<complexType name="RoundFilterType">
+		<complexContent>
+			<extension base="zf:AbstractZmlFilterType">
+				<sequence>
+					<element name="factor" type="int" minOccurs="1" maxOccurs="1" />
+					<element name="mode" type="string" minOccurs="1" maxOccurs="1" />
+					<element name="axisType" type="string" minOccurs="1" maxOccurs="1" />
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>
