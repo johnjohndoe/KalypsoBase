@@ -74,7 +74,6 @@ import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.ZmlTableComposite;
 import org.kalypso.zml.ui.table.nat.base.ZmlModelCellDisplayConverter;
 import org.kalypso.zml.ui.table.nat.base.ZmlModelRowHeaderDisplayConverter;
 import org.kalypso.zml.ui.table.nat.context.menu.NatTableContextMenuSupport;
@@ -114,11 +113,11 @@ public class ZmlTable extends Composite implements IZmlTable
 
   protected ZmlTablePager m_pager;
 
-  public ZmlTable( final ZmlTableComposite table, final IZmlModel model, final FormToolkit toolkit )
+  public ZmlTable( final Composite parent, final IZmlModel model, final FormToolkit toolkit )
   {
-    super( table, SWT.NULL );
-    m_viewport = new ZmlModelViewport( model );
+    super( parent, SWT.NULL );
 
+    m_viewport = new ZmlModelViewport( model );
     m_viewport.addListener( new IZmlColumnModelListener()
     {
       @Override

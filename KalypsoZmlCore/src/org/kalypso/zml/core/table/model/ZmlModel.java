@@ -91,7 +91,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
 
   private final URL m_context;
 
-  ZmlModelColumnLoader m_loader;
+  private final ZmlModelColumnLoader m_loader;
 
   private final Map<String, AbstractColumnType> m_columnTypeMap = new LinkedHashMap<String, AbstractColumnType>();
 

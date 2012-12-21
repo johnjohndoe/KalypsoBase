@@ -122,5 +122,4 @@ public final class CopyObservationHelper implements ICopyObservationMetaDataCons
   {
     return base + "_" + count.toString();
   }
-
 }
