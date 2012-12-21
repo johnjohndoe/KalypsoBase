@@ -118,7 +118,13 @@ public class Record implements IRecord
     setValue( index, value, false );
   }
 
-  private void setValue( final int index, final Object value, final boolean doNotFireEvent )
+  /**
+   * Set to public to allow setting of values specially on big time series without rising the change event 
+   * for every value set. This was the case e.g. in paste operation of time series in control panel   
+   * fix for #957
+   */
+  @Override
+  public void setValue( final int index, final Object value, final boolean doNotFireEvent )
   {
     final Object oldValue = m_values.get( index );
     if( ObjectUtils.equals( value, oldValue ) )
