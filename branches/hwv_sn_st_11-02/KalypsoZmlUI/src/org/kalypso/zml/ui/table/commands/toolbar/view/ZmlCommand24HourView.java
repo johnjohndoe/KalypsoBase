@@ -57,7 +57,7 @@ public class ZmlCommand24HourView extends AbstractHourViewCommand
   public Object execute( final ExecutionEvent event )
   {
     if( HandlerUtils.isSelected( event ) )
-      return updateResulution( event, RESULTION, false );
+      return updateResolution( event, RESULTION, false );
 
     return Status.OK_STATUS;
   }

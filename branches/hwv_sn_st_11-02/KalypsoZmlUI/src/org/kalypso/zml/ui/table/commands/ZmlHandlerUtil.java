@@ -100,5 +100,4 @@ public final class ZmlHandlerUtil
 
     return getTable( locator );
   }
-
 }

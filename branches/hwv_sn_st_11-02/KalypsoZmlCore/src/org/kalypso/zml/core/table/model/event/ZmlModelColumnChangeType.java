@@ -79,7 +79,7 @@ public class ZmlModelColumnChangeType implements IZmlModelColumnEvent
 
   public boolean resultionChanged( )
   {
-    return (m_type & IZmlModelColumnEvent.RESULUTION_CHANGED) != 0;
+    return (m_type & IZmlModelColumnEvent.RESOLUTION_CHANGED) != 0;
   }
 
   public boolean doForceChange( )

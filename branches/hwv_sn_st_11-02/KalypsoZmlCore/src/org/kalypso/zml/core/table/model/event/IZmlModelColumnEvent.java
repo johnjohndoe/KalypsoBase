@@ -55,5 +55,5 @@ public interface IZmlModelColumnEvent
 
   int IGNORE_TYPES_CHANGED = 16;
 
-  int RESULUTION_CHANGED = 32;
+  int RESOLUTION_CHANGED = 32;
 }
