@@ -50,13 +50,13 @@ import org.kalypso.zml.core.table.model.view.ZmlViewResolutionFilter;
  */
 public class ZmlCommand6HourView extends AbstractHourViewCommand
 {
-  private static final int RESULUTION = 6;
+  private static final int RESOLUTION = 6;
 
   @Override
   public Object execute( final ExecutionEvent event )
   {
     if( HandlerUtils.isSelected( event ) )
-      return updateResulution( event, RESULUTION, false );
+      return updateResolution( event, RESOLUTION, false );
 
     return Status.OK_STATUS;
   }
@@ -67,12 +67,12 @@ public class ZmlCommand6HourView extends AbstractHourViewCommand
     if( filter == null )
       return false;
 
-    if( RESULUTION != filter.getResolution() )
+    if( RESOLUTION != filter.getResolution() )
       return false;
+
     if( filter.isStuetzstellenMode() )
       return false;
 
     return true;
   }
-
 }

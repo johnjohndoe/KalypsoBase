@@ -54,7 +54,7 @@ public class ZmlCommandViewStuetzstellen extends AbstractHourViewCommand
   public Object execute( final ExecutionEvent event )
   {
     if( HandlerUtils.isSelected( event ) )
-      return updateResulution( event, 0, true );
+      return updateResolution( event, 0, true );
 
     return Status.OK_STATUS;
   }

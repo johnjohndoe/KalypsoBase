@@ -176,7 +176,7 @@ public class ZmlViewResolutionFilter
     else
       m_offset += number;
 
-    m_model.fireModelChanged( IZmlModelColumnEvent.RESULUTION_CHANGED );
+    m_model.fireModelChanged( IZmlModelColumnEvent.RESOLUTION_CHANGED );
   }
 
   public void setParameters( final int resolution, final boolean mode )
@@ -187,7 +187,7 @@ public class ZmlViewResolutionFilter
     m_resolution = resolution;
     m_stuetzstellenMode = mode;
 
-    m_model.fireModelChanged( IZmlModelColumnEvent.RESULUTION_CHANGED );
+    m_model.fireModelChanged( IZmlModelColumnEvent.RESOLUTION_CHANGED );
   }
 
   public int getResolution( )

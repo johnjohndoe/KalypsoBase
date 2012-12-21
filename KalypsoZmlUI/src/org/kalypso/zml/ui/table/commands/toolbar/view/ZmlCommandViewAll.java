@@ -57,7 +57,7 @@ public class ZmlCommandViewAll extends AbstractHourViewCommand
   public Object execute( final ExecutionEvent event )
   {
     if( HandlerUtils.isSelected( event ) )
-      return updateResulution( event, RESULUTION, false );
+      return updateResolution( event, RESULUTION, false );
 
     return Status.OK_STATUS;
   }
