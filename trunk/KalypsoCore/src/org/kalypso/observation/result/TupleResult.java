@@ -168,8 +168,12 @@ public class TupleResult implements List<IRecord>
     if( m_ordinalNumberComponent != null )
     {
       int i = 1;
+      /*
+       * setting of ordinal number doesn't need to fire event on each value.
+       * one event is fired after every call of renumber function.
+       * */
       for( final IRecord record : m_records )
-        record.setValue( m_ordinalNumberComponentIndex, new BigInteger( new Integer( i++ ).toString() ) );
+        record.setValue( m_ordinalNumberComponentIndex, new BigInteger( new Integer( i++ ).toString() ), true );
     }
   }
 
@@ -217,6 +221,8 @@ public class TupleResult implements List<IRecord>
     m_isSorted = true;
 
     renumber();
+    
+    fireRecordsChanged( m_records.toArray( new IRecord[m_records.size()] ), TYPE.CHANGED );
   }
 
   @Override
@@ -264,12 +270,7 @@ public class TupleResult implements List<IRecord>
   @Override
   public boolean addAll( final Collection< ? extends IRecord> c )
   {
-    checkRecords( c );
-
-    final boolean result = m_records.addAll( c );
-    fireRecordsChanged( c.toArray( new IRecord[c.size()] ), TYPE.ADDED );
-
-    return result;
+    return addAll( m_records.size(), c );
   }
 
   @Override
@@ -278,8 +279,13 @@ public class TupleResult implements List<IRecord>
     checkRecords( c );
 
     final boolean result = m_records.addAll( index, c );
-    fireRecordsChanged( c.toArray( new IRecord[c.size()] ), TYPE.ADDED );
+    
+    m_isSorted = false;
+    sort();
 
+    fireRecordsChanged( c.toArray( new IRecord[c.size()] ), TYPE.ADDED );
+    
+    
     return result;
   }
 
@@ -399,7 +405,10 @@ public class TupleResult implements List<IRecord>
       removedRecords[i] = (IRecord)objects[i];
 
     fireRecordsChanged( removedRecords, TYPE.REMOVED );
-
+    
+    //force renumber of not removed
+    fireRecordsChanged( m_records.toArray( new IRecord[m_records.size()] ), TYPE.CHANGED );
+    
     return removeAll;
   }
 

@@ -56,6 +56,8 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
@@ -63,19 +65,14 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.featureview.control.TupleResultFeatureControlHandlerProvider;
-import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.om.table.LastLineContentProvider;
 import org.kalypso.ogc.gml.om.table.LastLineLabelProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
-import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.internal.i18n.Messages;
-import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
 
 /**
  * Pastes the contents of the clipboard to the TupleResult
@@ -84,12 +81,19 @@ import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
  */
 public class PasteFromClipboardHandler extends AbstractHandler
 {
+//  private final Collection<IFeatureChangeListener> m_changelisteners = new ArrayList<>();
+
+  String trstring = null;
+
+  TupleResultContentProvider resultContentProvider = null;
+
+  TupleResult m_tupleResult;
+
   @Override
   public Object execute( final ExecutionEvent event )
   {
     final Shell shell = HandlerUtil.getActiveShell( event );
 
-    String trstring = null;
     try
     {
       trstring = (String)Toolkit.getDefaultToolkit().getSystemClipboard().getContents( this ).getTransferData( DataFlavor.stringFlavor );
@@ -106,7 +110,7 @@ public class PasteFromClipboardHandler extends AbstractHandler
       return null;
     }
 
-    final TupleResult tupleResult = ToolbarCommandUtils.findTupleResult( event );
+    m_tupleResult = ToolbarCommandUtils.findTupleResult( event );
 
     final TableViewer tupleResultViewer = ToolbarCommandUtils.findTableViewer( event );
     if( tupleResultViewer == null )
@@ -116,7 +120,6 @@ public class PasteFromClipboardHandler extends AbstractHandler
     }
 
     final IContentProvider contentProvider = tupleResultViewer.getContentProvider();
-    TupleResultContentProvider resultContentProvider = null;
     if( contentProvider instanceof TupleResultContentProvider )
       resultContentProvider = (TupleResultContentProvider)contentProvider;
     else if( contentProvider instanceof LastLineContentProvider )
@@ -129,28 +132,31 @@ public class PasteFromClipboardHandler extends AbstractHandler
     if( resultContentProvider == null )
       return null;
 
-    final IComponentUiHandlerProvider factory = resultContentProvider.getFactory();
-    if( !(factory instanceof TupleResultFeatureControlHandlerProvider) )
-      return null;
+    int firstIndex = m_tupleResult.size();
+    final IStructuredSelection selection = (IStructuredSelection)tupleResultViewer.getSelection();
+    if( !selection.isEmpty() )
+    {
+      final Object firstElement = selection.getFirstElement();
+      firstIndex = m_tupleResult.indexOf( firstElement );
+      if( selection.size() > 1 )
+      {
+        m_tupleResult.removeAll( selection.toList() );
 
-    final IComponent[] components = tupleResult.getComponents();
-    final XsdBaseTypeHandler< ? >[] typeHandlers = ObservationFeatureFactory.typeHandlersForComponents( components );
+        final int indexToSelect = Math.min( firstIndex, m_tupleResult.size() - 1 );
+        if( indexToSelect != -1 )
+          tupleResultViewer.setSelection( new StructuredSelection( m_tupleResult.get( indexToSelect ) ) );
+      }
 
-    final IRecord[] records = parseRecords( shell, trstring, tupleResult, components, typeHandlers, resultContentProvider );
-    if( records == null )
-      return null;
-
-    // TODO: Instead clear, we could replace the current selection
-    tupleResult.clear();
-    for( final IRecord record : records )
-      tupleResult.add( record );
+    }
+    parseRecords( shell, firstIndex );
 
     return null;
   }
 
-  private IRecord[] parseRecords( final Shell shell, final String trstring, final TupleResult tupleResult, final IComponent[] components, final XsdBaseTypeHandler< ? >[] typeHandlers, final TupleResultContentProvider contentProvider )
+  IRecord[] parseRecords( final Shell shell, final int firstIndex )
   {
     final Collection<IRecord> records = new ArrayList<>();
+
     final IStatusCollector stati = new StatusCollector( KalypsoGisPlugin.getId() );
 
     final StringTokenizer st1 = new StringTokenizer( trstring, "\n" ); //$NON-NLS-1$
@@ -162,15 +168,16 @@ public class PasteFromClipboardHandler extends AbstractHandler
       final String line = st1.nextToken();
       if( line.startsWith( LastLineLabelProvider.DUMMY_ELEMENT_TEXT ) )
         break;
-
-      final IRecord record = addRecord( tupleResult, components, typeHandlers, ordinalNumber, line, contentProvider, stati );
-      if( record != null )
+      final IRecord record = m_tupleResult.createRecord();
+      IRecord filledRecord = setValuesToRecordFromParsedLine( ordinalNumber, line, stati, record );
+      if( filledRecord != null )
       {
-        // Add record to observation afterwards
         records.add( record );
-        ordinalNumber++;
       }
+      ordinalNumber++;
     }
+
+    m_tupleResult.addAll( firstIndex, records );
 
     // TODO: move error handling out of this method
     if( stati.size() > 0 )
@@ -188,7 +195,7 @@ public class PasteFromClipboardHandler extends AbstractHandler
     return records.toArray( new IRecord[records.size()] );
   }
 
-  private IRecord addRecord( final TupleResult tupleResult, final IComponent[] components, final XsdBaseTypeHandler< ? >[] typeHandlers, final int ordinalNumber, final String line, final TupleResultContentProvider contentProvider, final IStatusCollector stati )
+  private IRecord setValuesToRecordFromParsedLine( final int ordinalNumber, final String line, final IStatusCollector stati, final IRecord record )
   {
     /* parse values */
     final String[] tokens = StringUtils.split( line, '\t' );
@@ -202,9 +209,15 @@ public class PasteFromClipboardHandler extends AbstractHandler
       final String token = tokens[i];
       try
       {
-        final IComponentUiHandler compHandler = contentProvider.getHandler( "" + i ); //$NON-NLS-1$
+        final IComponentUiHandler compHandler = resultContentProvider.getHandler( "" + i ); //$NON-NLS-1$
         if( compHandler != null )
+        {
           values[i] = compHandler.parseValue( token );
+          record.setValue( i, values[i], true );
+        }
+        else{
+          parseErrors++;
+        }
       }
       catch( final Exception e )
       {
@@ -216,7 +229,8 @@ public class PasteFromClipboardHandler extends AbstractHandler
     }
 
     /* ignore lines that cannot be parsed (e.g. header lines) */
-    if( parseErrors == tokens.length )
+//    if( parseErrors == tokens.length )
+    if( parseErrors > 1 || tokens.length < m_tupleResult.getComponents().length - 1 )
     {
       stati.add( IStatus.INFO, "Line %d: skipped", null, ordinalNumber );
       return null;
@@ -229,29 +243,7 @@ public class PasteFromClipboardHandler extends AbstractHandler
         stati.add( element );
     }
 
-    final IRecord record = tupleResult.createRecord();
-
-    // Prepare for parse exception: fill row with default values
-    for( int i = 0; i < components.length; i++ )
-    {
-      final XsdBaseTypeHandler< ? > handler = typeHandlers[i];
-      final IComponent component = components[i];
-      // FIXME: arrg: this is really, really bad, whoever did that.... grrrrr.... just causing work to other people....!
-      if( component.getId().equals( "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber" ) ) //$NON-NLS-1$
-        record.setValue( i, handler.convertToJavaValue( new Integer( ordinalNumber ).toString() ) );
-      else
-        record.setValue( i, component.getDefaultValue() );
-    }
-
-    /* apply values */
-    for( int i = 0; i < values.length; i++ )
-    {
-      final Object value = values[i];
-      final IComponentUiHandler compHandler = contentProvider.getHandler( "" + i ); //$NON-NLS-1$
-      if( compHandler != null )
-        compHandler.setValue( record, value );
-    }
-
     return record;
   }
+
 }

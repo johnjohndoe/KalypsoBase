@@ -85,7 +85,9 @@ public interface IRecord
   /**
    * Sets the value for the given index. Ask the owner (TupleResult) for the index of a certain component.
    */
-  void setValue( int index, Object value ) throws IndexOutOfBoundsException;
+  void setValue( int index, final Object value ) throws IndexOutOfBoundsException;
+
+  void setValue( int index, final Object value, final boolean doNotFireEvent ) throws IndexOutOfBoundsException;
 
   int indexOfComponent( String componentID );
 
