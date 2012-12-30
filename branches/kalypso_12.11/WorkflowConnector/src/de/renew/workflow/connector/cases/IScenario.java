@@ -56,7 +56,7 @@ public interface IScenario
   /** old case base uri (before refactoring case://{projectname}/{foldername} */
   String OLD_CASE_BASE_URI = "case://"; //$NON-NLS-1$
 
-  /** old case base uri (before refactoring case://{foldername} */
+  /** new case base uri (before refactoring case://{foldername} */
   String NEW_CASE_BASE_URI = "scenario://"; //$NON-NLS-1$
 
   /**
