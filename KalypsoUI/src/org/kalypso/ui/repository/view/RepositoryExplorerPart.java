@@ -54,7 +54,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.handlers.CollapseAllHandler;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheetEntry;
@@ -93,6 +96,8 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
   public static final String ID = "org.kalypso.ui.repository.view.RepositoryExplorerPart"; //$NON-NLS-1$
 
   private ObservationChooser m_chooser;
+
+  private CollapseAllHandler m_collapseHandler;
 
   @Override
   public Object getAdapter( final Class adapter )
@@ -133,6 +138,9 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
   {
     removeSelectionChangedListener( this );
 
+    if( m_collapseHandler != null )
+      m_collapseHandler.dispose();
+
     super.dispose();
   }
 
@@ -143,17 +151,25 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
 
     addSelectionChangedListener( this );
 
-    getSite().setSelectionProvider( m_chooser );
+    final IWorkbenchPartSite site = getSite();
+    site.setSelectionProvider( m_chooser );
 
     final MenuManager menuMgr = new MenuManager();
     final Menu menu = menuMgr.createContextMenu( m_chooser.getViewer().getTree() );
     m_chooser.getViewer().getTree().setMenu( menu );
 
-    getSite().registerContextMenu( /* "org.kalypso.ogc.sensor.view.observationBrowser", */menuMgr, m_chooser );
+    site.registerContextMenu( /* "org.kalypso.ogc.sensor.view.observationBrowser", */menuMgr, m_chooser );
 
     if( m_memento != null )
       restoreState( m_memento );
     m_memento = null;
+
+    /* register tree handlers */
+    final IHandlerService handlerService = (IHandlerService)site.getService( IHandlerService.class );
+
+    final TreeViewer treeViewer = m_chooser.getViewer();
+    m_collapseHandler = new CollapseAllHandler( treeViewer );
+    handlerService.activateHandler( CollapseAllHandler.COMMAND_ID, m_collapseHandler );
   }
 
   @Override

@@ -510,7 +510,7 @@
 			<command commandId="org.kalypso.ui.command.repositoryDumpStructure"></command>
 			<command commandId="org.kalypso.ui.command.repositoryDumpExtended"></command>
 			<separator name="manageTree" visible="true"/>
-			<command commandId="org.kalypso.ui.command.repositoryCollapseAll"></command>
+            <command commandId="org.eclipse.ui.navigate.collapseAll" style="push"/>
 			<separator name="repositoryTools" visible="true"/>
 			<command commandId="org.kalypso.ui.command.repositoryExportAsFile"></command>
 			<command commandId="org.kalypso.ui.command.repositoryCopyLink"></command>
@@ -530,7 +530,7 @@
 			<command commandId="org.kalypso.ui.command.repositoryDumpExtended"></command>
 			<separator name="manageTree" visible="true">
 			</separator>
-			<command commandId="org.kalypso.ui.command.repositoryCollapseAll"></command>
+			<command commandId="org.eclipse.ui.navigate.collapseAll"></command>
 			<separator name="repositoryTools" visible="true">
 			</separator>
 			<command commandId="org.kalypso.ui.command.repositoryExportAsFile"></command>
@@ -701,7 +701,6 @@
 		<command categoryId="org.kalypo.ui.commandCategory.repositoryContainer" description="%command.description.16" id="org.kalypso.ui.command.repositoryReload" name="%command.name.20"/>
 		<command categoryId="org.kalypo.ui.commandCategory.repositoryContainer" description="%command.description.17" id="org.kalypso.ui.command.repositoryDumpStructure" name="%command.name.21"/>
 		<command categoryId="org.kalypo.ui.commandCategory.repositoryContainer" description="%org.kalypso.ui.command.repositoryDumpExtended.description" id="org.kalypso.ui.command.repositoryDumpExtended" name="%org.kalypso.ui.command.repositoryDumpExtended.name"/>
-		<command categoryId="org.kalypo.ui.commandCategory.repositoryContainer" defaultHandler="org.kalypso.ogc.sensor.view.actions.CollapseAllHandler" description="%command.description.18" id="org.kalypso.ui.command.repositoryCollapseAll" name="%command.name.22"/>
 		<command categoryId="org.kalypo.ui.commandCategory.repositoryContainer" description="%command.description.19" id="org.kalypso.ui.command.repositoryExportAsFile" name="%command.name.23"/>
 		<command categoryId="org.kalypo.ui.commandCategory.repositoryContainer" description="%command.description.20" id="org.kalypso.ui.command.repositoryCopyLink" name="%command.name.24"/>
 		<command categoryId="org.kalypo.ui.commandCategory.repositoryContainer" description="%command.description.21" id="org.kalypso.ui.command.repositoryShowWQ" name="%command.name.25"/>
@@ -717,8 +716,6 @@
 		</image>
 		<image commandId="org.kalypso.ui.command.repositoryDumpStructure" icon="icons/repository/repository_rep.gif"/>
 		<image commandId="org.kalypso.ui.command.repositoryDumpExtended" icon="icons/repository/repository_rep.gif"/>
-		<image commandId="org.kalypso.ui.command.repositoryCollapseAll" icon="icons/util/tree_collapse_all.gif">
-		</image>
 		<image commandId="org.kalypso.ui.command.repositoryExportAsFile" icon="icons/repository/zml_download.gif">
 		</image>
 		<image commandId="org.kalypso.ui.command.repositoryCopyLink" icon="icons/observation/observation_link.gif">
