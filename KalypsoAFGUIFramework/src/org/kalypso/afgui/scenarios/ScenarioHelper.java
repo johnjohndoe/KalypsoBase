@@ -43,6 +43,7 @@ package org.kalypso.afgui.scenarios;
 import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -66,6 +67,7 @@ import org.kalypso.core.status.StatusDialog;
 import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.connector.WorkflowProjectNature;
 import de.renew.workflow.connector.cases.IScenario;
+import de.renew.workflow.connector.cases.IScenarioManager;
 import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.connector.worklist.ITaskExecutor;
@@ -116,7 +118,7 @@ public class ScenarioHelper
   /**
    * This function activates a given scenario.<br/>
    * Must be invoked in the swt thread.
-   *
+   * 
    * @param scenario
    *          The scenario to activate.
    */
@@ -160,7 +162,7 @@ public class ScenarioHelper
 
   /**
    * This function activates a given scenario.
-   *
+   * 
    * @param scenario
    *          The scenario.
    * @deprecated Use {@link #activateScenario2(IScenario)} instead.
@@ -185,7 +187,7 @@ public class ScenarioHelper
 
   /**
    * This function returns the active scenario.
-   *
+   * 
    * @return The active scenario.
    */
   public static IScenario getActiveScenario( )
@@ -236,5 +238,40 @@ public class ScenarioHelper
     final IPath subPath = subFolder.getFullPath();
 
     return parentPath.isPrefixOf( subPath );
+  }
+
+  /**
+   * search the scenario that has the given container as scenario folder.
+   */
+  public static IScenario findScenario( final IContainer scenarioFolder ) throws CoreException
+  {
+    final IProject project = scenarioFolder.getProject();
+
+    final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
+    if( nature == null )
+      return null;
+
+    final IScenarioManager caseManager = nature.getCaseManager();
+    if( caseManager == null )
+      return null;
+
+    final IPath scenarioFullPath = scenarioFolder.getFullPath();
+    final String scenarioPath = scenarioFullPath.makeRelative().toPortableString();
+
+    /* try old style uri's */
+    final String oldUri = String.format( "%s%s", IScenario.OLD_CASE_BASE_URI, scenarioPath );
+    final IScenario oldStyleScenario = caseManager.getCase( oldUri );
+    if( oldStyleScenario != null )
+      return oldStyleScenario;
+
+    /* try new style uri's */
+    final IPath scenarioRelativePath = scenarioFullPath.makeRelativeTo( scenarioFolder.getProject().getFullPath() );
+    final String scenarioPathWithoutProject = scenarioRelativePath.toPortableString();
+    final String newUri = String.format( "%s%s", IScenario.NEW_CASE_BASE_URI, scenarioPathWithoutProject );
+    final IScenario newStyleScenario = caseManager.getCase( newUri );
+    if( newStyleScenario != null )
+      return newStyleScenario;
+
+    return null;
   }
 }
