@@ -55,6 +55,7 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.progress.IProgressConstants;
@@ -264,6 +265,10 @@ public final class KeyInfo extends Job
       }
 
       return m_loader.getStatus();
+    }
+    catch( final OperationCanceledException e )
+    {
+      return Status.CANCEL_STATUS;
     }
     catch( final CoreException ce )
     {
