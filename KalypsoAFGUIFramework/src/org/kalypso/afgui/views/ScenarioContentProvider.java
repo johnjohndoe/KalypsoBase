@@ -46,7 +46,6 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
 
   private final boolean m_showResources;
 
-
   public ScenarioContentProvider( )
   {
     this( true );
@@ -72,7 +71,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
 
     if( parentElement instanceof IProject )
     {
-      final IProject project = (IProject) parentElement;
+      final IProject project = (IProject)parentElement;
       if( !project.isOpen() )
       {
         // project is closed or does not exist
@@ -106,7 +105,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
     }
     else if( parentElement instanceof IScenario )
     {
-      final IScenario scenario = (IScenario) parentElement;
+      final IScenario scenario = (IScenario)parentElement;
       final IScenarioList iList = scenario.getDerivedScenarios();
       final List<IScenario> scenarios = iList.getScenarios();
 
@@ -126,7 +125,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
     }
     if( element != null && element instanceof IProject )
     {
-      final IProject project = (IProject) element;
+      final IProject project = (IProject)element;
       if( !project.isOpen() )
       {
         // project is closed or does not exist
@@ -156,7 +155,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
     }
     else if( element instanceof IScenario )
     {
-      final IScenario scenario = (IScenario) element;
+      final IScenario scenario = (IScenario)element;
 
       return !scenario.getDerivedScenarios().getScenarios().isEmpty();
     }
@@ -200,7 +199,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
       else
       {
         final IProject project = caze.getProject();
-        final StructuredViewer viewer = (StructuredViewer) m_viewer;
+        final StructuredViewer viewer = (StructuredViewer)m_viewer;
         final IScenario parentScenario = caze.getParentScenario();
         if( parentScenario != null )
         {
@@ -241,7 +240,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
       return new Object[0];
     }
 
-    final IScenario scenario = (IScenario) element;
+    final IScenario scenario = (IScenario)element;
     final IScenarioList derivedScenarios = scenario.getDerivedScenarios();
     if( derivedScenarios == null )
     {
@@ -281,12 +280,12 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
   {
     if( element instanceof IResource )
     {
-      return ((IResource) element).getParent();
+      return ((IResource)element).getParent();
     }
 
     if( element instanceof IScenario )
     {
-      final IScenario scenario = (IScenario) element;
+      final IScenario scenario = (IScenario)element;
       final IScenario parentScenario = scenario.getParentScenario();
       if( parentScenario != null )
         return parentScenario;
