@@ -118,14 +118,10 @@ public class ZmlViewResolutionFilter
 
   public boolean select( final IZmlModelRow row )
   {
-
     if( m_resolution == 0 )
     {
       if( m_stuetzstellenMode )
-      {
-
         return hasStuetzstelle( row );
-      }
 
       return true;
     }
