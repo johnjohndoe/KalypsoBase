@@ -57,9 +57,11 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
+import org.kalypso.zml.core.table.model.IZmlColumnModelListener;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.debug.KalypsoZmlUiDebug;
 import org.kalypso.zml.ui.table.nat.ZmlTable;
@@ -75,6 +77,15 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
   {
     @Override
     public void clickedHeaderColumnChanged( final IZmlModelColumn column )
+    {
+      fireChanged();
+    }
+  };
+
+  private final IZmlColumnModelListener m_columnModelListener = new IZmlColumnModelListener()
+  {
+    @Override
+    public void modelChanged( final ZmlModelColumnChangeType type )
     {
       fireChanged();
     }
@@ -114,6 +125,9 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
     final IZmlTableSelection selection = m_table.getSelection();
     selection.addSelectionListener( m_selectionListener );
 
+    final ZmlModelViewport modelViewport = m_table.getModelViewport();
+    modelViewport.addListener( m_columnModelListener );
+
     if( hasToolbar( tableType ) )
       initToolbar( tableType, toolbar, m_toolkit );
 
@@ -123,6 +137,9 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
   @Override
   public void dispose( )
   {
+    final ZmlModelViewport modelViewport = m_table.getModelViewport();
+    modelViewport.removeListener( m_columnModelListener );
+
     final IZmlTableSelection selection = m_table.getSelection();
     selection.removeSelectionListener( m_selectionListener );
 

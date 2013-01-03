@@ -121,7 +121,6 @@ public class ZmlModelViewport
           doClean( type );
       }
     } );
-
   }
 
   public void accept( final IZmlModelRowVisitor visitor )
@@ -303,6 +302,11 @@ public class ZmlModelViewport
   public final void addListener( final IZmlColumnModelListener listener )
   {
     m_listeners.add( listener );
+  }
+
+  public final void removeListener( final IZmlColumnModelListener listener )
+  {
+    m_listeners.remove( listener );
   }
 
   public void fireModelChanged( final int type )
