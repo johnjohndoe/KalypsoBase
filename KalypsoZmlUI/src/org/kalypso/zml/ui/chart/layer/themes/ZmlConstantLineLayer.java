@@ -249,8 +249,10 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
    */
   private IMetadataLayerBoundary[] buildBoundaries( final IObservation observation )
   {
-
     final MetadataList metadata = observation.getMetadataList();
+
+    // FIXME: we just need a parameterized abstraction here, why stil specialized handling at all?
+    // FIXME: this is no real abstraction and way too complicated: overdesign!
 
     /**
      * *urks* special handling for alarmstufen layer!
@@ -259,6 +261,7 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
     {
       try
       {
+        // FIXME: is this still necessary? we can reference to styles now...
         final URL url = ConfigUtils.findCentralConfigLocation( "layers/grenzwerte/alarmstufen.kod" ); //$NON-NLS-1$    
 
         final KodBoundaryLayerProvider provider = new KodBoundaryLayerProvider( metadata, url, getDataHandler().getTargetAxisId() );
@@ -270,6 +273,8 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
       {
         ex.printStackTrace();
       }
+
+      // FIXMME: fall through here OK??
     }
 
     final IParameterContainer parameters = getProvider().getParameterContainer();
@@ -282,7 +287,6 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
     }
 
     return new IMetadataLayerBoundary[] {};
-
   }
 
   @Override

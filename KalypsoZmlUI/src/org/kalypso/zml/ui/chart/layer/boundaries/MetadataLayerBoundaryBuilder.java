@@ -75,6 +75,8 @@ public class MetadataLayerBoundaryBuilder implements ICoreRunnableWithProgress
 
   private final Set<IMetadataLayerBoundary> m_boundaries = new HashSet<IMetadataLayerBoundary>();
 
+  // FIXME: the builder should not know anything abotu the parameter container -> the provider should parse all
+// parameters and give them to the layer instead
   private final IParameterContainer m_parameters;
 
   private final IStyleSet m_styleSet;

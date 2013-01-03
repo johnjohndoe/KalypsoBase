@@ -915,6 +915,7 @@
           </Layer>
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:hauptzahlen#hauptzahlen" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#meldegrenze" />
+          <!-- FIXME: each alarmstufen layer shows ALL alrmstufen, so they are painted 4 times! -->
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_1" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_2" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_3" />
