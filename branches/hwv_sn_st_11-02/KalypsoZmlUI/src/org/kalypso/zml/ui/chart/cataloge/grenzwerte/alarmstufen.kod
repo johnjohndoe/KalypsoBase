@@ -21,6 +21,7 @@ FF6600 (orange)
 FF0000 (rot)
 FF00FF (magenta)
 -->
+<!-- FIXME: does not belong in ZML UI -> move to PROGNOSE -->
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
   <Chart id="alarmstufen">
     <Styles>

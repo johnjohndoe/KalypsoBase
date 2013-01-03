@@ -105,9 +105,16 @@ public class KodBoundaryLayer implements IMetadataLayerBoundary
     else if( styles.length == 1 )
       return (ILineStyle) m_styles.getStyle( styles[0] );
 
+    // FIXME: ugly and also just a special case for alarmstufen, this 'abstraction' is crap
     // like Alarmstufe 4
-    final String boundary = m_boundary.getName();
-    final String id = boundary.substring( boundary.lastIndexOf( " " ) + 1 ); //$NON-NLS-1$
+    final String name = m_boundary.getName();
+//    final String id = boundary.substring( boundary.lastIndexOf( " " ) + 1 ); //$NON-NLS-1$
+
+    // HOTFIX: also crap, btu works at the moment: we know that the label-id is the id of the alrmstufe (like '4'),
+    // so we use it to identify the alarmstufe here
+    final Pattern pattern = new Pattern( m_labelTokenizer );
+    final RETokenizer tokenizer = new RETokenizer( pattern, name );
+    final String id = tokenizer.nextToken();
 
     for( final String style : styles )
     {
@@ -133,8 +140,15 @@ public class KodBoundaryLayer implements IMetadataLayerBoundary
       return (ITextStyle) m_styles.getStyle( styles[0] );
 
     // like Alarmstufe 4
-    final String boundary = m_boundary.getName();
-    final String id = boundary.substring( boundary.lastIndexOf( " " ) + 1 ); //$NON-NLS-1$
+    final String name = m_boundary.getName();
+//    final String id = boundary.substring( boundary.lastIndexOf( " " ) + 1 ); //$NON-NLS-1$
+
+    // HOTFIX: also crap, btu works at the moment: we know that the label-id is the id of the alrmstufe (like '4'),
+    // so we use it to identify the alarmstufe here
+    final Pattern pattern = new Pattern( m_labelTokenizer );
+    final RETokenizer tokenizer = new RETokenizer( pattern, name );
+    final String id = tokenizer.nextToken();
+
 
     for( final String style : styles )
     {
