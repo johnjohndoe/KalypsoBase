@@ -86,9 +86,9 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
 
   protected ZmlTable m_table;
 
-  public ZmlTableComposite( final Composite parent, final FormToolkit toolkit, final IZmlModel model )
+  public ZmlTableComposite( final Composite parent, final FormToolkit toolkit, final IZmlModel model, final int style )
   {
-    super( parent, SWT.NULL );
+    super( parent, style );
     m_toolkit = toolkit;
 
     final GridLayout layout = LayoutHelper.createGridLayout();

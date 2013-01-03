@@ -68,12 +68,18 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
   {
   }
 
-  public static final DateFormat DATE_FORMAT = DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.SHORT );
+  private static final DateFormat DATE_FORMAT = DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.SHORT );
   static
   {
     DATE_FORMAT.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
   }
 
+  /**
+   * This function parses dates in a other way. Should be private.
+   * 
+   * @deprecated Should not be used from the outside.
+   */
+  @Deprecated
   public static String formatDate( final Date date )
   {
     return DATE_FORMAT.format( date );
@@ -280,6 +286,12 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
       return DATE_FORMAT.parse( property );
 
     return null;
+  }
+
+  public static void setAusgabeZeitpunkt( final MetadataList metadata, final Date forecast )
+  {
+    final String outputDate = DATE_FORMAT.format( forecast );
+    metadata.put( IMetadataConstants.AUSGABE_ZEITPUNKT, outputDate );
   }
 
   public static void setTimestep( final MetadataList mdl, final Period timestep )
