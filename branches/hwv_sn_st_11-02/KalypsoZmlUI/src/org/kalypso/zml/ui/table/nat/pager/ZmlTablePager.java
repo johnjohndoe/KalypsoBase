@@ -125,7 +125,13 @@ public class ZmlTablePager
 
     final int index = ArrayUtils.indexOf( m_viewport.getRows(), row );
     final ShowRowInViewportCommand command = new ShowRowInViewportCommand( m_bodyLayer, index );
+
+    // FIXME: would be nice, if the last date was also selected again. For this we need to remeber this date (old
+    // selection).
+    // final SelectCellCommand cmd2 = new SelectCellCommand( m_bodyLayer.getSelectionLayer(), 0, index, false, false );
+
     m_table.doCommand( command );
+    // m_table.doCommand( cmd2 );
   }
 
   private Date findForecastDate( )
