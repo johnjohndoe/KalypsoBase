@@ -22,6 +22,15 @@
    </extension>
    <extension
          point="org.eclipse.ui.navigator.viewer">
+         <viewer viewerId="org.kalypso.kalypso1d2d.pjt.views.ScenarioView">
+               <options>
+                  <property name="org.eclipse.ui.navigator.hideLinkWithEditorAction" value="true"/>
+                  <property name="org.eclipse.ui.navigator.hideAvailableCustomizationsDialog" value="true"/>
+               </options>
+         </viewer>
+         <viewerActionBinding
+               viewerId="KalypsoAFGUIFramework.viewerActionBinding1">
+         </viewerActionBinding>
       <viewerContentBinding
             viewerId="org.kalypso.kalypso1d2d.pjt.views.ScenarioView">
          <includes>
@@ -102,28 +111,16 @@
       </commonFilter>
    </extension>
    <extension point="org.eclipse.ui.handlers">
-      <handler class="org.kalypso.afgui.internal.handlers.ActivateScenarioHandler" commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ActivateScenario"/>
+      <handler class="org.kalypso.afgui.internal.handlers.ActivateScenarioHandler" commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ActivateScenario">
+        <enabledWhen>
+           <reference definitionId="oneScenario"/>
+        </enabledWhen>
+      </handler>
       <handler class="org.kalypso.afgui.handlers.AddScenarioHandler" commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddScenario"/>
       <handler class="org.kalypso.afgui.internal.handlers.NewProjectHandler" commandId="org.kalypso.afgui.command.newproject"/>
-      <handler class="org.kalypso.afgui.internal.handlers.DeleteScenarioHandler" commandId="org.eclipse.ui.edit.delete">
-         <activeWhen>
-                <and>
-                    <with variable="activePartId">
-                        <or>
-                            <equals value="org.kalypso.kalypso1d2d.pjt.views.WorklistView"/>
-                            <equals value="org.kalypso.kalypso1d2d.pjt.views.ScenarioView"/>
-                        </or>
-                    </with>
-                    <with variable="selection">
-                       <count value="1"/>
-                       <iterate ifEmpty="false" operator="and">
-                           <or>
-                              <instanceof value="de.renew.workflow.connector.cases.IScenario"/>
-                              <instanceof value="org.eclipse.core.resources.IProject"/>
-                           </or>
-                       </iterate>
-                    </with>
-                </and>
+      <handler class="org.kalypso.afgui.internal.handlers.DeleteScenarioHandler" commandId="org.eclipse.ui.edit.delete" >
+         <activeWhen >
+            <reference definitionId="canDeleteSelectedElement"/>
          </activeWhen>
       </handler>
       <handler class="org.kalypso.afgui.internal.handlers.CopyScenarioHandler" commandId="org.eclipse.ui.edit.copy">
@@ -175,11 +172,7 @@
    
    <extension point="org.eclipse.ui.menus">
       <menuContribution locationURI="popup:org.kalypso.kalypso1d2d.pjt.views.ScenarioView">
-         <command commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ActivateScenario">
-            <visibleWhen>
-               <reference definitionId="oneScenario"/>
-            </visibleWhen>
-         </command>
+         <command commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ActivateScenario" />
          <command commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddScenario"/>
          <command commandId="org.eclipse.ui.edit.copy">
             <visibleWhen checkEnabled="true"/>
@@ -193,22 +186,23 @@
             <visibleWhen checkEnabled="true"/>
          </command>
          
+         <!-- this one does not work, maybe popup menues automatically get additions? -->
+         <!--
          <separator name="additions" visible="false"/>
+         -->
+         <separator name="scenario" visible="false"/>
       </menuContribution>
       
       <menuContribution locationURI="toolbar:org.kalypso.kalypso1d2d.pjt.views.ScenarioView">
-         <separator name="scenario" visible="true"/>
+         <separator name="group.new" visible="true"/>
          <command commandId="org.kalypso.afgui.command.newproject"/>
-         <command commandId="org.eclipse.ui.edit.delete">
-            <visibleWhen checkEnabled="true"/>
-         </command>
-         <command commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ActivateScenario">
-            <visibleWhen>
-               <reference definitionId="oneScenario"/>
-            </visibleWhen>
-         </command>
          <command commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddScenario"/>
+         <separator name="group.open" visible="true"/>
+         <command commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ActivateScenario"/>
+         <separator name="group.edit" visible="true" />
+         <command commandId="org.eclipse.ui.edit.delete"/>
          <separator name="additions" visible="true"/>
+         <separator name="scenario" visible="true"/>
       </menuContribution>
       
       <menuContribution locationURI="toolbar:org.kalypso.ui.views.mapView.outline?after=theme">
@@ -225,6 +219,9 @@
       </menuContribution>
 
       <menuContribution locationURI="popup:org.kalypso.afgui.breadcrumbs">
+        <command commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ActivateScenario">
+          <visibleWhen checkEnabled="true"/>
+        </command>
         <command commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddScenario" tooltip="Derive Scenario">
           <visibleWhen checkEnabled="true"/>
         </command>
@@ -262,6 +259,25 @@
                <instanceof value="de.renew.workflow.connector.cases.IScenario"/>
             </iterate>
          </and>
+      </definition>
+      <definition id="canDeleteSelectedElement">
+            <and>
+                <with variable="activePartId">
+                    <or>
+                        <equals value="org.kalypso.kalypso1d2d.pjt.views.WorklistView"/>
+                        <equals value="org.kalypso.kalypso1d2d.pjt.views.ScenarioView"/>
+                    </or>
+                </with>
+                <with variable="selection">
+                   <count value="1"/>
+                   <iterate ifEmpty="false" operator="and">
+                       <or>
+                          <instanceof value="de.renew.workflow.connector.cases.IScenario"/>
+                          <instanceof value="org.eclipse.core.resources.IProject"/>
+                       </or>
+                   </iterate>
+                </with>
+            </and>
       </definition>
    </extension>
    
