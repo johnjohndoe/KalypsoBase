@@ -299,7 +299,7 @@ public final class GeoGridUtilities
       if( grid.getSourceCRS() != null && !grid.getSourceCRS().equals( targetCRS ) )
       {
         final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( targetCRS );
-        return (GM_Polygon)geoTransformer.transform( surface );
+        return geoTransformer.transform( surface );
       }
 
       return surface;
@@ -360,7 +360,7 @@ public final class GeoGridUtilities
       if( grid.getSourceCRS() != null && !grid.getSourceCRS().equals( targetCRS ) )
       {
         final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( targetCRS );
-        return (GM_Polygon)geoTransformer.transform( surface );
+        return geoTransformer.transform( surface );
       }
 
       return surface;

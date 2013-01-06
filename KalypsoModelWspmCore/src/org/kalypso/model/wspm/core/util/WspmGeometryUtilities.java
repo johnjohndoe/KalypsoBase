@@ -134,8 +134,8 @@ public final class WspmGeometryUtilities
 
         if( compRechtswert != -1 && compHochwert != -1 )
         {
-          rw = (Double) point.getValue( compRechtswert );
-          hw = (Double) point.getValue( compHochwert );
+          rw = (Double)point.getValue( compRechtswert );
+          hw = (Double)point.getValue( compHochwert );
 
           /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
           if( StringUtils.isBlank( srsName ) && rw != null )
@@ -148,7 +148,7 @@ public final class WspmGeometryUtilities
           if( compBreite == -1 )
             throw new IllegalStateException( "Cross sections without width or easting/northing attributes detected - geometric processing not possible." ); //$NON-NLS-1$
 
-          rw = (Double) point.getValue( compBreite );
+          rw = (Double)point.getValue( compBreite );
           hw = profil.getStation() * 1000;
 
           /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
@@ -158,7 +158,7 @@ public final class WspmGeometryUtilities
           }
         }
 
-        final Double h = compHoehe == -1 ? null : (Double) point.getValue( compHoehe );
+        final Double h = compHoehe == -1 ? null : (Double)point.getValue( compHoehe );
 
         final GM_Position position = createPosition( rw, hw, h );
         if( position != null )
@@ -171,7 +171,7 @@ public final class WspmGeometryUtilities
       final GM_Position[] poses = positions.toArray( new GM_Position[positions.size()] );
       final GM_Curve curve = GeometryFactory.createGM_Curve( poses, srsName );
 
-      return (GM_Curve) WspmGeometryUtilities.GEO_TRANSFORMER.transform( curve );
+      return WspmGeometryUtilities.GEO_TRANSFORMER.transform( curve );
     }
     catch( final Exception e )
     {
@@ -215,8 +215,8 @@ public final class WspmGeometryUtilities
 
       if( compRechtswert != -1 && compHochwert != -1 )
       {
-        rw = (Double) point.getValue( compRechtswert );
-        hw = (Double) point.getValue( compHochwert );
+        rw = (Double)point.getValue( compRechtswert );
+        hw = (Double)point.getValue( compHochwert );
 
         /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
         if( StringUtils.isBlank( srsName ) && rw != null )
@@ -229,7 +229,7 @@ public final class WspmGeometryUtilities
         if( compBreite == -1 )
           throw new IllegalStateException( "Cross sections without width or easting/northing attributes detected - geometric processing not possible." ); //$NON-NLS-1$
 
-        rw = (Double) point.getValue( compBreite );
+        rw = (Double)point.getValue( compBreite );
         hw = profil.getStation() * 1000;
 
         /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
@@ -239,7 +239,7 @@ public final class WspmGeometryUtilities
         }
       }
 
-      final Double h = compHoehe == -1 ? null : (Double) point.getValue( compHoehe );
+      final Double h = compHoehe == -1 ? null : (Double)point.getValue( compHoehe );
 
       final GM_Position position = createPosition( rw, hw, h );
       if( position == null )
@@ -258,8 +258,7 @@ public final class WspmGeometryUtilities
   /**
    * Creates a {@link GM_Point} from rw/hw information.
    * <p>
-   * We assume that rw/hw are in a GAUSS-KRUEGER coordinate system, the exact one is determined from the first digit of
-   * the rw value.
+   * We assume that rw/hw are in a GAUSS-KRUEGER coordinate system, the exact one is determined from the first digit of the rw value.
    */
   public static GM_Point pointFromRwHw( final double rw, final double hw, final double h ) throws Exception
   {
@@ -281,7 +280,7 @@ public final class WspmGeometryUtilities
 
     final GM_Point point = GeometryFactory.createGM_Point( position, crsName );
     if( transformer != null )
-      return (GM_Point) transformer.transform( point );
+      return transformer.transform( point );
 
     return point;
   }

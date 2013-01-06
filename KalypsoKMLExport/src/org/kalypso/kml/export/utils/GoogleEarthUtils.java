@@ -23,13 +23,13 @@ public class GoogleEarthUtils
   public static void setLookAt( final GM_Envelope boundingBox, final String coordinatesSystem, final Kml kml ) throws Exception
   {
     // set look at to the middle of bounding box
-    final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( GoogleEarthUtils.GOOGLE_EARTH_CS );
+//    final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( GoogleEarthUtils.GOOGLE_EARTH_CS );
 
-    final GM_Position min = boundingBox.getMin();
+//    final GM_Position min = boundingBox.getMin();
 
     // point
-    final GM_Position pos = GeometryFactory.createGM_Position( min.getX() + boundingBox.getWidth() / 2, min.getY() + boundingBox.getHeight() / 2 );
-    final GM_Point middle = (GM_Point) transformer.transform( GeometryFactory.createGM_Point( pos, coordinatesSystem ) );
+//    final GM_Position pos = GeometryFactory.createGM_Position( min.getX() + boundingBox.getWidth() / 2, min.getY() + boundingBox.getHeight() / 2 );
+//    final GM_Point middle = transformer.transform( GeometryFactory.createGM_Point( pos, coordinatesSystem ) );
 
     // FIXME
 // final LookAtType lookAtType = factory.createLookAtType();
@@ -57,11 +57,11 @@ public class GoogleEarthUtils
 
     // north = min.getX
     // west = min.gety
-    final GM_Point northWest = (GM_Point) transformer.transform( GeometryFactory.createGM_Point( min, srcCRS ) );
+    final GM_Point northWest = transformer.transform( GeometryFactory.createGM_Point( min, srcCRS ) );
 
     // south = max.getX
     // east = max.getY
-    final GM_Point southEast = (GM_Point) transformer.transform( GeometryFactory.createGM_Point( max, srcCRS ) );
+    final GM_Point southEast = transformer.transform( GeometryFactory.createGM_Point( max, srcCRS ) );
 
     throw new UnsupportedOperationException();
 

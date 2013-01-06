@@ -163,8 +163,8 @@ public class RectangleGeometryBuilder implements IGeometryBuilder
       /* convert the two points into four */
       final GM_Position[] poses = new GM_Position[4];
 
-      final GM_Point transformedPoint1 = (GM_Point)transformer.transform( m_startPoint );
-      final GM_Point transformedPoint2 = (GM_Point)transformer.transform( m_endPoint );
+      final GM_Point transformedPoint1 = transformer.transform( m_startPoint );
+      final GM_Point transformedPoint2 = transformer.transform( m_endPoint );
 
       final GM_Position pos1 = transformedPoint1.getPosition();
       final GM_Position pos2 = transformedPoint2.getPosition();

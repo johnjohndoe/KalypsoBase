@@ -83,9 +83,6 @@ public class PointGeometryBuilder implements IGeometryBuilder
     return finish();
   }
 
-  /**
-   * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#finish()
-   */
   @Override
   public GM_Object finish( ) throws Exception
   {
@@ -94,15 +91,12 @@ public class PointGeometryBuilder implements IGeometryBuilder
 
     final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( m_crs );
 
-    final GM_Point transformedPoint = (GM_Point)transformer.transform( m_point );
+    final GM_Point transformedPoint = transformer.transform( m_point );
 
     m_result = GeometryFactory.createGM_Point( transformedPoint.getPosition(), m_crs );
     return m_result;
   }
 
-  /**
-   * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#paint(java.awt.Graphics, org.kalypsodeegree.graphics.transformation.GeoTransform)
-   */
   @Override
   public void paint( final Graphics g, final GeoTransform projection, final Point currentPoint )
   {
@@ -127,18 +121,12 @@ public class PointGeometryBuilder implements IGeometryBuilder
       g.drawRect( x[i] - sizeOuter / 2, y[i] - sizeOuter / 2, sizeOuter, sizeOuter );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#removeLastPoint()
-   */
   @Override
   public void removeLastPoint( )
   {
     // nothing to do...
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#removePoints()
-   */
   @Override
   public void reset( )
   {

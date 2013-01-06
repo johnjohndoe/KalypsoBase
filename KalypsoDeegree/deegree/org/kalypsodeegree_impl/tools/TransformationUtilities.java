@@ -56,9 +56,9 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain.OffsetVector;
 import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
@@ -109,7 +109,7 @@ public class TransformationUtilities
     final GM_Point origin = GeometryFactory.createGM_Point( sourceEnvelope.getMin().getX(), sourceEnvelope.getMin().getY(), sourceEnvelope.getCoordinateSystem() );
     final RectifiedGridDomain gridDomain = new RectifiedGridDomain( origin, offsetX, offsetY, range );
 
-    internalTransformation( (Graphics2D) g, worldToScreenTransformation, remoteImage, gridDomain, targetCrs );
+    internalTransformation( (Graphics2D)g, worldToScreenTransformation, remoteImage, gridDomain, targetCrs );
   }
 
   /**
@@ -139,7 +139,7 @@ public class TransformationUtilities
     if( !targetCS.equals( gridDomain.getOrigin( null ).getCoordinateSystem() ) )
     {
       final IGeoTransformer geoTrans1 = GeoTransformerFactory.getGeoTransformer( gridDomain.getOrigin( null ).getCoordinateSystem() );
-      destScreenSurface = (GM_Polygon) geoTrans1.transform( sourceScreenSurface );
+      destScreenSurface = geoTrans1.transform( sourceScreenSurface );
     }
     else
       destScreenSurface = sourceScreenSurface;
@@ -206,7 +206,7 @@ public class TransformationUtilities
     final GM_Envelope buffImageEnv = GeometryFactory.createGM_Envelope( buffImage_min, buffImage_max, targetCS );
 
     final AffineTransform trafo = new AffineTransform();
-    trafo.translate( (int) buffImageEnv.getMin().getX(), (int) buffImageEnv.getMin().getY() );
+    trafo.translate( (int)buffImageEnv.getMin().getX(), (int)buffImageEnv.getMin().getY() );
 
     /* Translate the image, so that the subImage is at the right position. */
     trafo.translate( -paintImage.getMinX() * scaleX, -paintImage.getMinY() * scaleY );
@@ -221,8 +221,8 @@ public class TransformationUtilities
     trafo.shear( shearX / destImageWidth, shearY / destImageHeight );
 
     /* We cannot draw, if the image would have one or both side with 0 pixels. */
-    final int width2 = (int) buffImageEnv.getWidth();
-    final int height2 = (int) buffImageEnv.getHeight();
+    final int width2 = (int)buffImageEnv.getWidth();
+    final int height2 = (int)buffImageEnv.getHeight();
     if( width2 <= 0 || height2 <= 0 )
       return;
 

@@ -1383,7 +1383,7 @@ public final class GeometryUtilities
     for( int i = 0; i < result.length; i++ )
     {
       if( input[i] != null )
-        result[i] = (G)transformer.transform( input[i] );
+        result[i] = transformer.transform( input[i] );
     }
 
     return result;
