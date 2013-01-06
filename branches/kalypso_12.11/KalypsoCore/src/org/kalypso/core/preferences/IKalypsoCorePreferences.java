@@ -51,5 +51,9 @@ public interface IKalypsoCorePreferences
 
   String PREFS_CONFIG_TIMEZONE = "CONFIG_TIMEZONE";//$NON-NLS-1$
 
-  String PREFS_OS_TIMEZONE = "OS_TIMEZONE";//$NON-NLS-1$
+  /** boolean: if <code>true</code>, when using the mouse wheel ni the map, the map will zoom in/out relative to the current mouse position */
+  String PREFERENCE_MAP_KEEP_POSITION_ON_MOUSE_WHEEL = "map.keep.position.on.wheel"; //$NON-NLS-1$
+
+  /** inverts the direction of mouse wheel zoom in map */
+  String PREFERENCE_MAP_INVERT_MOUSE_WHEEL_ZOOM = "map.invert.mouse.wheel.zoom"; //$NON-NLS-1$
 }
