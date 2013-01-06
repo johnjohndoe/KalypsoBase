@@ -53,8 +53,6 @@ import org.mt4j.util.logging.MTLoggerFactory;
  */
 public class MTWin7TouchInput
 {
-  private MTMapPanelApp app;
-
   private static MTWin7TouchProcessor currentTouchProcessor = null;
 
   private static MTWin7CanvasHandleSeeker handleSeeker = null;
@@ -79,18 +77,16 @@ public class MTWin7TouchInput
     return instance;
   }
 
-  public void registerNewCanvas( MTMapPanelApp mtMapPanelApp, long parentHandle, MTMouseInput mouseInput )
+  public void registerNewCanvas( final MTMapPanelApp mtMapPanelApp, final long parentHandle, final MTMouseInput mouseInput )
   {
-    this.app = mtMapPanelApp;
-
     disposeWin7Dll();
 
     win7inputDllLoader = new Win7DllClassLoader();
     win7inputSource = win7inputDllLoader.loadWin7Dll();
 
-    long awtCanvasHandle = handleSeeker.findSunAwtCanvasHWND( parentHandle );
+    final long awtCanvasHandle = handleSeeker.findSunAwtCanvasHWND( parentHandle );
     handleSeeker.registerTouchWindowByHwnd( awtCanvasHandle );
-    win7inputSource.setSunAwtCanvasHandle( (int) awtCanvasHandle );
+    win7inputSource.setSunAwtCanvasHandle( (int)awtCanvasHandle );
 
     currentTouchProcessor = new MTWin7TouchProcessor( mtMapPanelApp, this, mouseInput );
 
@@ -106,7 +102,7 @@ public class MTWin7TouchInput
 
   boolean initialized;
 
-  public boolean pollMTEvent( Native_WM_TOUCH_Event myEvent )
+  public boolean pollMTEvent( final Native_WM_TOUCH_Event myEvent )
   {
     return win7inputSource.pollMTEvent( myEvent );
   }
@@ -126,7 +122,7 @@ public class MTWin7TouchInput
   {
     if( win7inputDllLoader != null )
     {
-      long start = System.currentTimeMillis();
+      final long start = System.currentTimeMillis();
       win7inputSource.cleanup();
       win7inputSource = null;
       win7inputDllLoader = null;
@@ -146,7 +142,7 @@ public class MTWin7TouchInput
             win7DllWait.wait( 10000 / 10 );
           }
         }
-        catch( InterruptedException e )
+        catch( final InterruptedException e )
         {
           // do not care
         }

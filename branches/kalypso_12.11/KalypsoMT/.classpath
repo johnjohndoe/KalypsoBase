@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="srcext">
 		<attributes>
@@ -25,7 +25,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/batik/js.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/batik/pdf-transcoder.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/batik/xml-apis.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/batik" sourcepath="lib/batik"/>
 	<classpathentry exported="true" kind="lib" path="lib/jogl/gluegen-rt-natives-linux-amd64.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jogl/gluegen-rt-natives-linux-i586.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jogl/gluegen-rt-natives-macosx-ppc.jar"/>
@@ -41,10 +40,8 @@
 	<classpathentry exported="true" kind="lib" path="lib/jogl/jogl-natives-windows-i586.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jogl/jogl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jogl/opengl.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jogl" sourcepath="lib/jogl"/>
 	<classpathentry exported="true" kind="lib" path="lib/tuio/tuio4j.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/tuio/tuio4jinput.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/tuio" sourcepath="lib/tuio"/>
 	<classpathentry exported="true" kind="lib" path="lib/whirlylib/commons-collections-3.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/whirlylib/commons-logging.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/whirlylib/concurrent-1.3.4.jar"/>
