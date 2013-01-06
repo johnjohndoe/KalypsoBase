@@ -42,6 +42,7 @@ package org.kalypso.afgui.internal.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -70,47 +71,53 @@ public class RenameScenarioHandler extends AbstractHandler
     final IScenario scenario = AddScenarioHandler.findScenario( event );
     if( scenario == null )
     {
-      final String message = Messages.getString("RenameScenarioHandler_0"); //$NON-NLS-1$
+      final String message = Messages.getString( "RenameScenarioHandler_0" ); //$NON-NLS-1$
       return showInformation( shell, commandName, message );
     }
 
     /* Do not allow active scenario to be renamed */
-    final IScenario currentCase = ScenarioHelper.getActiveScenario();
-    if( currentCase == scenario )
-    {
-      final String message = Messages.getString("RenameScenarioHandler_1"); //$NON-NLS-1$
-      return showInformation( shell, commandName, message );
-    }
-
-    final IScenario parentScenario = scenario.getParentScenario();
-    if( parentScenario == null )
-    {
-      final String message = Messages.getString("RenameScenarioHandler_2"); //$NON-NLS-1$
-      showInformation( shell, commandName, message );
-      return null;
-    }
-
-    if( currentCase != null && ScenarioHelper.isSubScenario( scenario, currentCase ) )
-    {
-      final String message = Messages.getString("RenameScenarioHandler_3"); //$NON-NLS-1$
-      return showInformation( shell, commandName, message );
-    }
-
-    final IScenarioList derivedScenarios = scenario.getDerivedScenarios();
-    if( derivedScenarios != null && derivedScenarios.getScenarios().size() > 0 )
-    {
-      final String message = Messages.getString("RenameScenarioHandler_4"); //$NON-NLS-1$
-      return showInformation( shell, commandName, message );
-    }
+    final String cannotRenameInfo = canRename( scenario );
 
     /* Initialize data */
     final IScenarioOperation operation = new RenameScenarioOperation();
+    final IScenario parentScenario = scenario.getParentScenario();
+
     final ScenarioData data = new ScenarioData( parentScenario, scenario, operation, null );
+
+    // If we cannot rename, we can still change the properties
+    if( cannotRenameInfo != null )
+    {
+      data.setInitialPageMessage( IMessageProvider.INFORMATION, cannotRenameInfo );
+      data.setNameFieldEnabled( false );
+      data.setCopySubScenariosEnabled( false );
+    }
+
+    data.setOwnNameAllowed( true );
     data.setDerivedVisible( false );
     data.setName( scenario.getName() );
     data.setComment( scenario.getDescription() );
 
     ScenarioWizard.stopTaskAndOpenWizard( shell, data );
+
+    return null;
+  }
+
+  private String canRename( final IScenario scenario )
+  {
+    final IScenario currentCase = ScenarioHelper.getActiveScenario();
+    if( currentCase == scenario )
+      return Messages.getString( "RenameScenarioHandler_1" ); //$NON-NLS-1$
+
+    final IScenario parentScenario = scenario.getParentScenario();
+    if( parentScenario == null )
+      return Messages.getString( "RenameScenarioHandler_2" ); //$NON-NLS-1$
+
+    if( currentCase != null && ScenarioHelper.isSubScenario( scenario, currentCase ) )
+      return Messages.getString( "RenameScenarioHandler_3" ); //$NON-NLS-1$
+
+    final IScenarioList derivedScenarios = scenario.getDerivedScenarios();
+    if( derivedScenarios != null && derivedScenarios.getScenarios().size() > 0 )
+      return Messages.getString( "RenameScenarioHandler_4" ); //$NON-NLS-1$
 
     return null;
   }

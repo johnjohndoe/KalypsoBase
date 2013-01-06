@@ -1,5 +1,20 @@
-/**
+/** This file is part of Kalypso
  *
+ *  Copyright (c) 2012 by
+ *
+ *  Björnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de
+ *  Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
+ *  (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
+ *
+ *  Kalypso is free software: you can redistribute it and/or modify it under the terms  
+ *  of the GNU Lesser General Public License (LGPL) as published by the Free Software 
+ *  Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ *  Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+ *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.kalypso.afgui.internal.handlers;
 
@@ -39,9 +54,8 @@ import org.kalypso.ui.views.map.MapView;
 import de.renew.workflow.connector.cases.IScenario;
 
 /**
- * Loads a template file in the current map view. Requires that the current context contains the map view. Use a
- * {@link ViewContextHandler} for this purpose.
- *
+ * Loads a template file in the current map view. Requires that the current context contains the map view. Use a {@link ViewContextHandler} for this purpose.
+ * 
  * @author Stefan Kurzbach
  */
 public class MapViewInputContextHandler extends AbstractHandler
@@ -61,13 +75,13 @@ public class MapViewInputContextHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
 
     /* project absolute location */
     final IStorageEditorInput input = findInput();
 
     // find map view
-    final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
+    final IWorkbenchWindow window = (IWorkbenchWindow)context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final IWorkbenchPage activePage = window == null ? null : window.getActivePage();
     final IViewPart view = activePage == null ? null : activePage.findView( MapView.ID );
 
@@ -78,12 +92,12 @@ public class MapViewInputContextHandler extends AbstractHandler
     else
     {
       // there is a map view and a file
-      final MapView mapView = (MapView) view;
+      final MapView mapView = (MapView)view;
       // FIXME: if( mapView.isDirty() )
-        mapView.doSave( false, new NullProgressMonitor() );
+      mapView.doSave( false, new NullProgressMonitor() );
       mapView.setInput( input );
 
-      final IMapPanel mapPanel = (IMapPanel) mapView.getAdapter( IMapPanel.class );
+      final IMapPanel mapPanel = (IMapPanel)mapView.getAdapter( IMapPanel.class );
 
       // make sure that no theme is active when initializing this context
       final Job unsetActiveThemeJob = new Job( "" ) //$NON-NLS-1$

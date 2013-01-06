@@ -1,5 +1,20 @@
-/**
+/** This file is part of Kalypso
  *
+ *  Copyright (c) 2012 by
+ *
+ *  Björnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de
+ *  Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
+ *  (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
+ *
+ *  Kalypso is free software: you can redistribute it and/or modify it under the terms  
+ *  of the GNU Lesser General Public License (LGPL) as published by the Free Software 
+ *  Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ *  Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+ *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.kalypso.afgui.internal.handlers;
 
@@ -52,10 +67,10 @@ public class ThemeContextHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
 
-    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-    final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
+    final Shell shell = (Shell)context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final IWorkbenchWindow window = (IWorkbenchWindow)context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final IWorkbenchPage activePage = window == null ? null : window.getActivePage();
 
     // TODO: do not program against a fixed view id; better try to adapt part to MapPanel instead: this works for every
@@ -64,7 +79,7 @@ public class ThemeContextHandler extends AbstractHandler
 
     if( m_featureType != null && view != null && view instanceof MapView )
     {
-      final MapView mapView = (MapView) view;
+      final MapView mapView = (MapView)view;
       final IMapPanel mapPanel = mapView.getMapPanel();
 
       MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "org.kalypso.afgui.handlers.ThemeContextHandler.1" ), Messages.getString( "org.kalypso.afgui.handlers.ThemeContextHandler.2" ) ); //$NON-NLS-1$ //$NON-NLS-2$

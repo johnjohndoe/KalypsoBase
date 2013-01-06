@@ -77,7 +77,7 @@ public class SetAsBaseScenarioHandler extends AbstractHandler
     /* Find scenario. */
     final IScenario scenario = AddScenarioHandler.findScenario( event );
     if( scenario == null )
-      return showInformation( shell, HandlerUtils.getCommandName( event ), Messages.getString("SetAsBaseScenarioHandler_0") ); //$NON-NLS-1$
+      return showInformation( shell, HandlerUtils.getCommandName( event ), Messages.getString( "SetAsBaseScenarioHandler_0" ) ); //$NON-NLS-1$
 
     /* Stop current task. */
     final ITaskExecutionAuthority taskExecutionAuthority = KalypsoAFGUIFrameworkPlugin.getTaskExecutionAuthority();

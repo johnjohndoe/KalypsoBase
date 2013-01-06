@@ -53,6 +53,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.afgui.internal.i18n.Messages;
 import org.kalypso.commons.java.util.AbstractModelObject;
+import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
 
 import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.connector.cases.IScenarioList;
@@ -88,12 +89,17 @@ public class ScenarioData extends AbstractModelObject
 
   private boolean m_derivedVisible = true;
 
+  private MessageProvider m_initialPageMessage;
+
+  private boolean m_nameFieldEnabled = true;
+
+  private boolean m_isOwnNameAllowed = false;
+
   /**
    * @param templateScenario
    *          Will be shown as template scenario to the user.
    * @param parentScenario
-   *          The forbidden folder names will be derived from this scenario (not always the same as the
-   *          <code>parentScenario</code>). I.e. all sub-folder of this folder are forbidden.
+   *          The forbidden folder names will be derived from this scenario (not always the same as the <code>parentScenario</code>). I.e. all sub-folder of this folder are forbidden.
    */
   public ScenarioData( final IScenario parentScenario, final IScenario templateScenario, final IScenarioOperation operation, final Boolean copySubScenarios )
   {
@@ -163,23 +169,26 @@ public class ScenarioData extends AbstractModelObject
   public Set<String> getExistingNames( )
   {
     final Comparator<String> ignoreCaseComparator = new Comparator<String>()
-        {
+    {
       @Override
       public int compare( final String o1, final String o2 )
       {
         return o1.compareToIgnoreCase( o2 );
       }
-        };
+    };
 
-        final Set<String> names = new TreeSet<>( ignoreCaseComparator );
+    final Set<String> names = new TreeSet<>( ignoreCaseComparator );
 
-        final IScenarioList derivedScenarios = m_parentScenario.getDerivedScenarios();
+    final IScenarioList derivedScenarios = m_parentScenario.getDerivedScenarios();
 
-        final List<IScenario> scenarios = derivedScenarios.getScenarios();
-        for( final IScenario scenario : scenarios )
-          names.add( scenario.getName() );
+    final List<IScenario> scenarios = derivedScenarios.getScenarios();
+    for( final IScenario scenario : scenarios )
+      names.add( scenario.getName() );
 
-        return Collections.unmodifiableSet( names );
+    if( isOwnNameAllowed() && m_templateScenario != null )
+      names.remove( m_templateScenario.getName() );
+
+    return Collections.unmodifiableSet( names );
   }
 
   /**
@@ -189,38 +198,51 @@ public class ScenarioData extends AbstractModelObject
   public Set<String> getExistingFolders( )
   {
     final Comparator<String> ignoreCaseComparator = new Comparator<String>()
-        {
+    {
       @Override
       public int compare( final String o1, final String o2 )
       {
         // REMARK: using same case sensitive rules as the current file system.
         return IOCase.SYSTEM.checkCompareTo( o1, o2 );
       }
-        };
+    };
 
-        final Set<String> folders = new TreeSet<>( ignoreCaseComparator );
+    final Set<String> folders = new TreeSet<>( ignoreCaseComparator );
 
-        final IFolder folder = m_parentScenario.getDerivedFolder();
+    final IFolder folder = m_parentScenario.getDerivedFolder();
 
-        try
+    try
+    {
+      if( folder.exists() )
+      {
+        final IResource[] members = folder.members();
+        for( final IResource member : members )
         {
-          if( folder.exists() )
-          {
-            final IResource[] members = folder.members();
-            for( final IResource member : members )
-            {
-              if( member instanceof IFolder )
-                folders.add( member.getName() );
-            }
-          }
+          if( member instanceof IFolder )
+            folders.add( member.getName() );
         }
-        catch( final CoreException e )
-        {
-          e.printStackTrace();
-          // error handling?
-        }
+      }
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+      // error handling?
+    }
 
-        return Collections.unmodifiableSet( folders );
+    if( isOwnNameAllowed() && m_templateScenario != null )
+      folders.remove( m_templateScenario.getName() );
+
+    return Collections.unmodifiableSet( folders );
+  }
+
+  private boolean isOwnNameAllowed( )
+  {
+    return m_isOwnNameAllowed;
+  }
+
+  public void setOwnNameAllowed( final boolean isOwnNameAllowed )
+  {
+    m_isOwnNameAllowed = isOwnNameAllowed;
   }
 
   public IProject getProject( )
@@ -294,5 +316,25 @@ public class ScenarioData extends AbstractModelObject
   public void setDerivedVisible( final boolean derivedVisible )
   {
     m_derivedVisible = derivedVisible;
+  }
+
+  public void setInitialPageMessage( final int type, final String message )
+  {
+    m_initialPageMessage = new MessageProvider( message, type );
+  }
+
+  public MessageProvider getInitialPageMessage( )
+  {
+    return m_initialPageMessage;
+  }
+
+  public boolean isNameFieldEnabled( )
+  {
+    return m_nameFieldEnabled;
+  }
+
+  public void setNameFieldEnabled( final boolean nameFieldEnabled )
+  {
+    m_nameFieldEnabled = nameFieldEnabled;
   }
 }
