@@ -109,7 +109,7 @@ public class ScenarioManager implements IScenarioManager
 
   /**
    * Initializes the {@link ICaseManager} on the given project
-   *
+   * 
    * @param project
    *          the project, must not be <code>null</code>
    * @exception CoreException
@@ -167,7 +167,7 @@ public class ScenarioManager implements IScenarioManager
       try
       {
         final URL url = metaDataFile.getRawLocationURI().toURL();
-        final CaseList cases = (CaseList) JC.createUnmarshaller().unmarshal( url );
+        final CaseList cases = (CaseList)JC.createUnmarshaller().unmarshal( url );
         return new CaseListHandler( cases, project );
       }
       catch( final Throwable e )
@@ -210,21 +210,20 @@ public class ScenarioManager implements IScenarioManager
 
   /**
    * Saves the changes in the scenario structure to the database.
-   *
+   * 
    * @param monitor
    *          the progess monitor to report progress to or <code>null</code> if no progress reporting is desired
    * @exception CoreException
    *              if this method fails. Reasons include:
    *              <ul>
    *              <li>The database is not accessible or writable.</li>
-   *              <li>An error specific to the kind of database has occured. It will be included in the cause of the
-   *              exception.</li>
+   *              <li>An error specific to the kind of database has occured. It will be included in the cause of the exception.</li>
    */
   public void persist( final IProgressMonitor monitor ) throws CoreException
   {
     try
     {
-      monitor.beginTask( Messages.getString("ScenarioManager.0"), 5000 ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "ScenarioManager.0" ), 5000 ); //$NON-NLS-1$
 
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
       final Marshaller marshaller = JC.createMarshaller();
@@ -375,7 +374,7 @@ public class ScenarioManager implements IScenarioManager
     {
       final Case myCaze = caze.getCase();
       if( myCaze instanceof Scenario )
-        resultList.add( new ScenarioHandler( (Scenario) myCaze, caze.getProject() ) );
+        resultList.add( new ScenarioHandler( (Scenario)myCaze, caze.getProject() ) );
     }
 
     return resultList;
@@ -432,9 +431,9 @@ public class ScenarioManager implements IScenarioManager
     /* Get the scenario folder. */
     final IFolder scenarioFolder = derivedFolder.getFolder( scenarioName );
     if( scenarioFolder.exists() )
-      throw new CoreException( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, String.format( Messages.getString("ScenarioManager.1"), scenarioName ) ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, String.format( Messages.getString( "ScenarioManager.1" ), scenarioName ) ) ); //$NON-NLS-1$
 
-    monitor.beginTask( Messages.getString("ScenarioManager.2"), 100 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "ScenarioManager.2" ), 100 ); //$NON-NLS-1$
 
     /* First copy data, then register it to avoid registered scenarios without data */
     copyScenarioData( templateScenario, scenarioFolder, copySubScenarios, new SubProgressMonitor( monitor, 90 ) );
@@ -521,23 +520,30 @@ public class ScenarioManager implements IScenarioManager
   @Override
   public void renameScenario( final IScenario scenario, final String name, final String comment, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString("ScenarioManager.3"), 100 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "ScenarioManager.3" ), 100 ); //$NON-NLS-1$
 
     final IScenario parentScenario = scenario.getParentScenario();
-    validateScenarioName( parentScenario, name );
 
-    /* rename folder */
-    final IFolder folder = scenario.getFolder();
-    final IPath newPath = folder.getFullPath().removeLastSegments( 1 ).append( name );
-    folder.move( newPath, false, new SubProgressMonitor( monitor, 90 ) );
-
-    /* recreate scenario */
-    scenario.getScenario().setName( name );
+    /* update description */
     scenario.getScenario().setDescription( comment );
 
-    /* Create the uri */
-    final String uri = createUri( name, parentScenario );
-    scenario.getScenario().setURI( uri );
+    /* update name, if changed */
+    final String oldName = scenario.getName();
+    if( !oldName.equals( name ) )
+    {
+      validateScenarioName( parentScenario, name );
+
+      /* rename folder */
+      final IFolder folder = scenario.getFolder();
+      final IPath newPath = folder.getFullPath().removeLastSegments( 1 ).append( name );
+      folder.move( newPath, false, new SubProgressMonitor( monitor, 90 ) );
+
+      scenario.getScenario().setName( name );
+
+      /* Create the uri */
+      final String uri = createUri( name, parentScenario );
+      scenario.getScenario().setURI( uri );
+    }
 
     persist( new SubProgressMonitor( monitor, 10 ) );
   }
