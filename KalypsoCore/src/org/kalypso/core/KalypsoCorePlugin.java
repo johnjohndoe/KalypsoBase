@@ -42,29 +42,19 @@
 package org.kalypso.core;
 
 import java.io.File;
-import java.util.Calendar;
 import java.util.TimeZone;
 
-import org.apache.commons.lang3.StringUtils;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.CatalogSLD;
-import org.kalypso.core.i18n.Messages;
 import org.kalypso.core.internal.DictionaryCache;
-import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.deegree.binding.gml.Dictionary;
 import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.osgi.framework.BundleContext;
 
@@ -74,11 +64,6 @@ import org.osgi.framework.BundleContext;
 public class KalypsoCorePlugin extends AbstractUIPlugin
 {
   private static KalypsoCorePlugin INSTANCE;
-
-  /**
-   * Storage for preferences.
-   */
-  private ScopedPreferenceStore m_preferenceStore;
 
   private IFeatureSelectionManager m_selectionManager = null;
 
@@ -169,98 +154,11 @@ public class KalypsoCorePlugin extends AbstractUIPlugin
   }
 
   /**
-   * Gets the kalypso timezone (to be used to display any dates in the UI).<br>
-   * The timezone is set in the user-preferences. If the preference is not set, the value of the system property
-   * 'kalypso.timezone' will be used, or, if not set, the system timezone (see {@link TimeZone#getDefault()}). <br>
-   * The user preferences can explicitly be set to:
-   * <ul>
-   * <li>OS_TIMEZONE: {@link TimeZone#getDefault() is always used}</li>
-   * <li>CONFIG_TIMEZONE: timezone definition from config.ini (kalypso.timezone) is used (defaults to system timezone if not set)</li>
-   * </ul>
+   * @see KalypsoCorePreferences#getTimeZone()
    */
   public TimeZone getTimeZone( )
   {
-    final TimeZone timezone = getInternalTimeZone();
-
-    /** we want to get rid of daylight saving times and only support GMT based time zones! */
-    final String identifier = timezone.getID();
-    if( !StringUtils.containsIgnoreCase( identifier, "gmt" ) ) //$NON-NLS-1$
-    {
-      final Calendar calendar = Calendar.getInstance();
-      calendar.set( Calendar.MONTH, 0 ); // get offset from winter daylight saving time!
-      final int offset = timezone.getOffset( calendar.getTimeInMillis() );
-
-      return TimeZone.getTimeZone( String.format( "GMT%+d", offset ) ); //$NON-NLS-1$
-    }
-
-    return timezone;
-
-  }
-
-  private TimeZone getInternalTimeZone( )
-  {
-    final String timeZoneID = getPreferenceStore().getString( IKalypsoCorePreferences.DISPLAY_TIMEZONE );
-    if( IKalypsoCorePreferences.PREFS_OS_TIMEZONE.equals( timeZoneID ) )
-      return TimeZone.getDefault();
-
-    final String timezone;
-    if( timeZoneID == null || timeZoneID.isEmpty() || IKalypsoCorePreferences.PREFS_CONFIG_TIMEZONE.equals( timeZoneID ) )
-      timezone = System.getProperty( IKalypsoCoreConstants.CONFIG_PROPERTY_TIMEZONE, null );
-    else
-      timezone = timeZoneID;
-
-    if( timezone == null || timezone.isEmpty() )
-      return TimeZone.getDefault();
-
-    try
-    {
-      return TimeZone.getTimeZone( timezone );
-    }
-    catch( final Exception e )
-    {
-      final IStatus status = new Status( IStatus.WARNING, getID(), Messages.getString( "org.kalypso.core.KalypsoCorePlugin.warning_timezone", timezone ), e ); //$NON-NLS-1$
-      getLog().log( status );
-
-      return TimeZone.getDefault();
-    }
-
-  }
-
-  /**
-   * This function returns the coordinate system set in the preferences.
-   * 
-   * @return The coordinate system.
-   * @deprecated Use {@link KalypsoDeegreePlugin#getDefault()#getCoordinateSystem()} instead.
-   */
-  @Deprecated
-  public String getCoordinatesSystem( )
-  {
-    return KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-  }
-
-  /**
-   * Copied from {@link org.eclipse.ui.plugin.AbstractUIPlugin}.
-   * <p>
-   * Returns the preference store for this UI plug-in. This preference store is used to hold persistent settings for this plug-in in the context of a workbench. Some of these settings will be user
-   * controlled, whereas others may be internal setting that are never exposed to the user.
-   * <p>
-   * If an error occurs reading the preference store, an empty preference store is quietly created, initialized with defaults, and returned.
-   * </p>
-   * <p>
-   * <strong>NOTE:</strong> As of Eclipse 3.1 this method is no longer referring to the core runtime compatibility layer and so plug-ins relying on Plugin#initializeDefaultPreferences will have to
-   * access the compatibility layer themselves.
-   * </p>
-   * 
-   * @return the preference store
-   */
-  @Override
-  public synchronized IPreferenceStore getPreferenceStore( )
-  {
-    /* Create the preference store lazily. */
-    if( m_preferenceStore == null )
-      m_preferenceStore = new ScopedPreferenceStore( new InstanceScope(), getBundle().getSymbolicName() );
-
-    return m_preferenceStore;
+    return KalypsoCorePreferences.getTimeZone();
   }
 
   /**

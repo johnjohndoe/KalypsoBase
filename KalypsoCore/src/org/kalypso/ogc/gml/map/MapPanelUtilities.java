@@ -102,9 +102,45 @@ public final class MapPanelUtilities
     return GeometryFactory.createGM_Envelope( newMin, newMax, bbox.getCoordinateSystem() );
   }
 
+  /* zooms in/out, but keeps the the given point at the same relative position in the box as before */
+  public static GM_Envelope calcZoomInBoundingBox( final GM_Envelope bbox, final GM_Position invariantPosition, final boolean in )
+  {
+    if( bbox == null )
+      return null;
+
+    final GM_Position currentMax = bbox.getMax();
+    final GM_Position currentMin = bbox.getMin();
+
+    final double percent = in ? 0.7 : 1.3;
+
+    final double maxX = currentMax.getX();
+    final double minX = currentMin.getX();
+    final double maxY = currentMax.getY();
+    final double minY = currentMin.getY();
+
+    final double px = invariantPosition.getX();
+    final double py = invariantPosition.getY();
+
+    final double oldWidth = maxX - minX;
+    final double oldHeight = maxY - minY;
+
+    final double newWidth = oldWidth * percent;
+    final double newHeight = oldHeight * percent;
+
+    final double kx = (px - minX) / (maxX - px);
+    final double ky = (py - minY) / (maxY - py);
+
+    final double newMinX = px - kx * oldWidth / (kx + 1) * percent;
+    final double newMaxX = newMinX + newWidth;
+    final double newMinY = py - ky * oldHeight / (ky + 1) * percent;
+    final double newMaxY = newMinY + newHeight;
+
+    return GeometryFactory.createGM_Envelope( newMinX, newMinY, newMaxX, newMaxY, bbox.getCoordinateSystem() );
+  }
+
   static double getRatio( final IMapPanel mapPanel )
   {
-    return (double) mapPanel.getHeight() / (double) mapPanel.getWidth();
+    return (double)mapPanel.getHeight() / (double)mapPanel.getWidth();
   }
 
   /**
@@ -114,7 +150,7 @@ public final class MapPanelUtilities
   public static void paintIntoExtent( final Graphics g, final GeoTransform g2world2screen, final BufferedImage image, final GM_Envelope imageBounds, final Color bgColor )
   {
     final Rectangle imageScreenBounds = GeoTransformUtils.world2screen( g2world2screen, imageBounds );
-    final Rectangle screenBounds = new Rectangle( 0, 0, (int) g2world2screen.getDestWidth(), (int) g2world2screen.getDestHeight() );
+    final Rectangle screenBounds = new Rectangle( 0, 0, (int)g2world2screen.getDestWidth(), (int)g2world2screen.getDestHeight() );
     if( bgColor != null )
       fillExterior( g, screenBounds, imageScreenBounds, bgColor );
     g.drawImage( image, imageScreenBounds.x, imageScreenBounds.y, imageScreenBounds.width, imageScreenBounds.height, null );
@@ -150,5 +186,4 @@ public final class MapPanelUtilities
     if( noFillArea.y < bottom )
       g.fillRect( left, noFillArea.y + noFillArea.height, width, bottom - noFillArea.y - noFillArea.height );
   }
-
 }

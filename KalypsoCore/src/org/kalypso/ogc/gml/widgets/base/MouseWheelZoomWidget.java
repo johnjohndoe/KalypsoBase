@@ -43,11 +43,14 @@ package org.kalypso.ogc.gml.widgets.base;
 import java.awt.event.MouseWheelEvent;
 
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.core.KalypsoCorePreferences;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.MapPanelUtilities;
+import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author Andreas von Dömming
@@ -88,11 +91,19 @@ public class MouseWheelZoomWidget extends AbstractWidget
     final boolean in = wheelRotation > 0 ? false : true;
 
     GM_Envelope boundingBox = mapPanel.getBoundingBox();
-    for( int i = 0; i < Math.abs( wheelRotation ); i++ )
-      boundingBox = MapPanelUtilities.calcZoomInBoundingBox( boundingBox, in );
+    if( boundingBox == null )
+      return;
 
-    if( boundingBox != null )
-      getCommandTarget().postCommand( new ChangeExtentCommand( mapPanel, boundingBox ), null );
+    final boolean panToMousePosition = KalypsoCorePreferences.isMapKeepPositionOnWheel();
+    final boolean invertWheelDirection = KalypsoCorePreferences.invertMapWheelZoom();
+    final boolean direction = invertWheelDirection ? !in : in;
+
+    final GM_Point mousePosition = panToMousePosition ? MapUtilities.transform( mapPanel, e.getPoint() ) : boundingBox.getCenter();
+
+    for( int i = 0; i < Math.abs( wheelRotation ); i++ )
+      boundingBox = MapPanelUtilities.calcZoomInBoundingBox( boundingBox, mousePosition.getPosition(), direction );
+
+    getCommandTarget().postCommand( new ChangeExtentCommand( mapPanel, boundingBox ), null );
 
     e.consume();
   }
