@@ -458,7 +458,7 @@ public final class GisTemplateHelper
       if( targetCS != null )
       {
         final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( targetCS );
-        return (GM_Polygon)transformer.transform( bboxAsSurface );
+        return transformer.transform( bboxAsSurface );
       }
 
       return bboxAsSurface;

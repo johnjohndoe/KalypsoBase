@@ -75,7 +75,7 @@ import com.vividsolutions.jts.geom.Point;
 
 /**
  * TODO: merge / check this class with {@link ProfilUtil}
- *
+ * 
  * @author Holger Albert, Thomas Jung , Kim Werner
  */
 public final class WspmProfileHelper
@@ -97,7 +97,7 @@ public final class WspmProfileHelper
    * <li>The points of the segment with the lowest distance will be used for projection.</li>
    * </ol>
    * </p>
-   *
+   * 
    * @param point
    *          The geo point, must be in the same coordinate system as the profile is. It does not have to lie on the
    *          profile.
@@ -109,7 +109,7 @@ public final class WspmProfileHelper
   {
     final String srs = WspmProfileHelper.getCoordinateSystem( profile );
 
-    final GM_Point p = (GM_Point) JTSAdapter.wrap( point, srs );
+    final GM_Point p = (GM_Point)JTSAdapter.wrap( point, srs );
 
     return getWidthPosition( p, profile, srs );
   }
@@ -122,13 +122,13 @@ public final class WspmProfileHelper
   {
     final String srs = WspmProfileHelper.getCoordinateSystem( profile );
 
-    final GM_Point pointInProfileCrs = (GM_Point) point.transform( srs );
+    final GM_Point pointInProfileCrs = (GM_Point)point.transform( srs );
     return getWidthPosition( pointInProfileCrs, profile, srs );
   }
 
   /**
    * Returns the coordinate system of the profile.
-   *
+   * 
    * @deprecated Every IProfile shoul have its own srs
    */
   @Deprecated
@@ -147,7 +147,7 @@ public final class WspmProfileHelper
   @Deprecated
   public static Double getWidthPosition( final Point point, final IProfile profile, final String srsName ) throws Exception
   {
-    final GM_Point p = (GM_Point) JTSAdapter.wrap( point, srsName );
+    final GM_Point p = (GM_Point)JTSAdapter.wrap( point, srsName );
 
     return getWidthPosition( p, profile, srsName );
   }
@@ -164,7 +164,7 @@ public final class WspmProfileHelper
    * <li>The points of the segment with the lowest distance will be used for projection.</li>
    * </ol>
    * </p>
-   *
+   * 
    * @param geoPoint
    *          The geo point. It does not have to lie on the profile.
    * @param profile
@@ -195,8 +195,8 @@ public final class WspmProfileHelper
         continue;
       }
 
-      final double rechtsWert = (Double) valueRechtswert;
-      final double hochWert = (Double) valueHochwert;
+      final double rechtsWert = (Double)valueRechtswert;
+      final double hochWert = (Double)valueHochwert;
 
       if( rechtsWert > 0.0 || hochWert > 0.0 )
       {
@@ -215,7 +215,7 @@ public final class WspmProfileHelper
     final String crs;
     if( srsName == null )
     {
-      crs = TimeseriesUtils.getCoordinateSystemNameForGkr( Double.toString( (Double) geoReferencedPoints.get( 0 ).getValue( iRechtswert ) ) );
+      crs = TimeseriesUtils.getCoordinateSystemNameForGkr( Double.toString( (Double)geoReferencedPoints.get( 0 ).getValue( iRechtswert ) ) );
     }
     else
     {
@@ -225,7 +225,7 @@ public final class WspmProfileHelper
     final String kalypsoCrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
     /* Transform geo point into the coord-system of the line. */
-    final GM_Point transformedGeoPoint = (GM_Point) geoPoint.transform( kalypsoCrs );
+    final GM_Point transformedGeoPoint = (GM_Point)geoPoint.transform( kalypsoCrs );
     final Geometry comparePoint = JTSAdapter.export( transformedGeoPoint );
 
     double distance = Double.MAX_VALUE;
@@ -238,12 +238,12 @@ public final class WspmProfileHelper
     {
       /* We need a line string of the two neighbouring points. */
       final IRecord tempPointOne = geoReferencedPoints.get( i );
-      final double rechtsWertOne = (Double) tempPointOne.getValue( iRechtswert );
-      final double hochWertOne = (Double) tempPointOne.getValue( iHochwert );
+      final double rechtsWertOne = (Double)tempPointOne.getValue( iRechtswert );
+      final double hochWertOne = (Double)tempPointOne.getValue( iHochwert );
 
       final IRecord tempPointTwo = geoReferencedPoints.get( i + 1 );
-      final double rechtsWertTwo = (Double) tempPointTwo.getValue( iRechtswert );
-      final double hochWertTwo = (Double) tempPointTwo.getValue( iHochwert );
+      final double rechtsWertTwo = (Double)tempPointTwo.getValue( iRechtswert );
+      final double hochWertTwo = (Double)tempPointTwo.getValue( iHochwert );
 
       /* Create the gm points. */
       final GM_Point geoPointOne = GeometryFactory.createGM_Point( rechtsWertOne, hochWertOne, crs );
@@ -276,8 +276,8 @@ public final class WspmProfileHelper
     final double toGeoPointLength = JTSUtilities.getLengthBetweenPoints( segment.getCoordinate( 0 ), geoCoordinate );
 
     /* Using Breite to build. */
-    final double breiteOne = (Double) pointOne.getValue( iBreite );
-    final double breiteTwo = (Double) pointTwo.getValue( iBreite );
+    final double breiteOne = (Double)pointOne.getValue( iBreite );
+    final double breiteTwo = (Double)pointTwo.getValue( iBreite );
 
     /* Important: The interpolation is done here :). */
     final double toProfilePointLength = toGeoPointLength / geoSegmentLength * (breiteTwo - breiteOne);
@@ -287,7 +287,7 @@ public final class WspmProfileHelper
 
   /**
    * Returns the geographic coordinates (x, y, z) for a given width coordinate as GM_Point.
-   *
+   * 
    * @param width
    *          width coordinate
    * @param profile
@@ -303,12 +303,12 @@ public final class WspmProfileHelper
     if( gmPoint.getCoordinateSystem() == null || gmPoint.getCoordinateSystem().isEmpty() )
       return gmPoint;
 
-    return (GM_Point) WspmGeometryUtilities.GEO_TRANSFORMER.transform( gmPoint );
+    return WspmGeometryUtilities.GEO_TRANSFORMER.transform( gmPoint );
   }
 
   /**
    * This function returns the geographic coordinates (x, y, z) for a given width coordinate as GM_Point.
-   *
+   * 
    * @param width
    *          The width coordinate.
    * @param profile
@@ -334,20 +334,20 @@ public final class WspmProfileHelper
     {
       /* We need a line string of the two neighbouring points. */
       final IRecord tempPointOne = geoReferencedPoints[i];
-      final Double widthValueOne = (Double) tempPointOne.getValue( iBreite );
-      final Double heightValueOne = (Double) tempPointOne.getValue( iHoehe );
+      final Double widthValueOne = (Double)tempPointOne.getValue( iBreite );
+      final Double heightValueOne = (Double)tempPointOne.getValue( iHoehe );
       final double heightOne = heightValueOne == null ? Double.NaN : heightValueOne;
 
-      final Double rechtsWertOne = (Double) tempPointOne.getValue( iRechtswert );
-      final Double hochWertOne = (Double) tempPointOne.getValue( iHochwert );
+      final Double rechtsWertOne = (Double)tempPointOne.getValue( iRechtswert );
+      final Double hochWertOne = (Double)tempPointOne.getValue( iHochwert );
 
       final IRecord tempPointTwo = geoReferencedPoints[i + 1];
-      final Double widthValueTwo = (Double) tempPointTwo.getValue( iBreite );
-      final Double heightValueTwo = (Double) tempPointTwo.getValue( iHoehe );
+      final Double widthValueTwo = (Double)tempPointTwo.getValue( iBreite );
+      final Double heightValueTwo = (Double)tempPointTwo.getValue( iHoehe );
       final double heightTwo = heightValueTwo == null ? Double.NaN : heightValueTwo;
 
-      final Double rechtsWertTwo = (Double) tempPointTwo.getValue( iRechtswert );
-      final Double hochWertTwo = (Double) tempPointTwo.getValue( iHochwert );
+      final Double rechtsWertTwo = (Double)tempPointTwo.getValue( iRechtswert );
+      final Double hochWertTwo = (Double)tempPointTwo.getValue( iHochwert );
 
       /* Find the right segment with the neighbouring points. */
       if( widthValueOne < width && widthValueTwo > width )
@@ -377,7 +377,7 @@ public final class WspmProfileHelper
    * Returns the corresponding height for an given width coordinate. if the width is outside of the profile points, the
    * first / last point height is returned. Else the height is obtained by linear interpolation between the adjacent
    * profile points.
-   *
+   * 
    * @param width
    *          width coordinate
    * @param profile
@@ -393,7 +393,7 @@ public final class WspmProfileHelper
    * Returns the corresponding value for an given width coordinate. if the width is outside the valid range of profile
    * points, the first / last value is returned. Else the value is obtained by linear interpolation between the adjacent
    * profile points.
-   *
+   * 
    * @param width
    *          width coordinate
    * @param profile
@@ -454,34 +454,34 @@ public final class WspmProfileHelper
         {
           /* We have two adjacent valid widths/values */
           final double widthOne = lastValidWidth.doubleValue();
-          final double widthTwo = ((Number) currentWidth).doubleValue();
+          final double widthTwo = ((Number)currentWidth).doubleValue();
 
           if( widthOne <= width & width <= widthTwo )
           {
             /* The width we are looking fore lies between the two adjacent widths -> interpolate */
             final double valueOne = lastValidValue.doubleValue();
-            final double valueTwo = ((Number) currentValue).doubleValue();
+            final double valueTwo = ((Number)currentValue).doubleValue();
             return (width - widthOne) * (valueTwo - valueOne) / (widthTwo - widthOne) + valueOne;
           }
         }
 
-        lastValidWidth = (Number) currentWidth;
-        lastValidValue = (Number) currentValue;
+        lastValidWidth = (Number)currentWidth;
+        lastValidValue = (Number)currentValue;
       }
     }
 
-    if( width < (Double) points[0].getValue( iBreite ) )
-      return (Double) points[0].getValue( indexValueComponent );
+    if( width < (Double)points[0].getValue( iBreite ) )
+      return (Double)points[0].getValue( indexValueComponent );
 
-    if( width > (Double) points[points.length - 1].getValue( iBreite ) )
-      return (Double) points[points.length - 1].getValue( indexValueComponent );
+    if( width > (Double)points[points.length - 1].getValue( iBreite ) )
+      return (Double)points[points.length - 1].getValue( indexValueComponent );
 
     return null;
   }
 
   /**
    * gets the geo-points of the intersect between profile and water level
-   *
+   * 
    * @param profil
    *          input profile
    * @param wspHoehe
@@ -560,8 +560,8 @@ public final class WspmProfileHelper
 
       if( valueX instanceof Number && valueY instanceof Number )
       {
-        final double x = ((Number) valueX).doubleValue();
-        final double y = ((Number) valueY).doubleValue();
+        final double x = ((Number)valueX).doubleValue();
+        final double y = ((Number)valueY).doubleValue();
         if( !Double.isNaN( x ) && !Double.isNaN( y ) )
         {
           if( Math.abs( y ) > dy )
@@ -601,7 +601,7 @@ public final class WspmProfileHelper
 
   /**
    * cuts an IProfil at defined geo-points, that have to lie on the profile-line.
-   *
+   * 
    * @param profile
    *          the profile
    * @param firstPoint
@@ -692,7 +692,7 @@ public final class WspmProfileHelper
 
     for( final IProfileRecord point : profilPointList )
     {
-      final double currentWidth = (Double) point.getValue( iBreite );
+      final double currentWidth = (Double)point.getValue( iBreite );
       if( currentWidth > startWidth & currentWidth < endWidth )
       {
         final IProfileRecord pt = tmpProfil.createProfilPoint();
@@ -776,7 +776,7 @@ public final class WspmProfileHelper
 
   /**
    * Inserts new points into an existing profile.<br/>
-   *
+   * 
    * @param insertSign
    *          If -1, new points are inserted at the beginning of the profile, 'width' goes into negative direction.
    *          Else, points are inserted at the end of the profile with ascending width.
@@ -792,7 +792,7 @@ public final class WspmProfileHelper
     final int insertPositition = insertSign < 0 ? 0 : profile.getPoints().length - 1;
     final IRecord point = profile.getPoint( insertPositition );
     final int iBreite = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
-    double breite = (Double) point.getValue( iBreite );
+    double breite = (Double)point.getValue( iBreite );
 
     final List<IProfileRecord> newRecords = new ArrayList<>( newPoints.length );
 
@@ -830,7 +830,7 @@ public final class WspmProfileHelper
 
   public static IProfile convertLinestringToEmptyProfile( final GM_Curve curve, final String profileType ) throws GM_Exception
   {
-    final LineString jtsCurve = (LineString) JTSAdapter.export( curve );
+    final LineString jtsCurve = (LineString)JTSAdapter.export( curve );
     return convertLinestringToEmptyProfile( jtsCurve, profileType );
   }
 

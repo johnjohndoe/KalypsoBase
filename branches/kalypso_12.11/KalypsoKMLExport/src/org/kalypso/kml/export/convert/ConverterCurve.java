@@ -30,7 +30,7 @@ public class ConverterCurve
     for( final GM_Position position : positions )
     {
       final GM_Point point = GeometryFactory.createGM_Point( position, curve.getCoordinateSystem() );
-      final GM_Point kmlPoint = (GM_Point) transformer.transform( point );
+      final GM_Point kmlPoint = transformer.transform( point );
 
       kmlLineString.addToCoordinates( kmlPoint.getX(), kmlPoint.getY() );
     }

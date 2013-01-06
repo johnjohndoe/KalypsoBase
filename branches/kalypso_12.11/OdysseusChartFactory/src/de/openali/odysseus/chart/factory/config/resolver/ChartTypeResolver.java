@@ -336,7 +336,7 @@ public final class ChartTypeResolver implements IReferenceResolver
       for( final ScreenAxisType screenAxis : screenAxes )
       {
         if( screenAxis.getId().equals( identifier ) )
-          return (AxisType)screenAxis;
+          return screenAxis;
       }
     }
 

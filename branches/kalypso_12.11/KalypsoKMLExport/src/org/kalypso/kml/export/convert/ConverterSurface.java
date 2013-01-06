@@ -43,7 +43,7 @@ public class ConverterSurface
     for( final GM_Position position : exteriorRing )
     {
       final GM_Point point = GeometryFactory.createGM_Point( position, gmo.getCoordinateSystem() );
-      final GM_Point kmlPoint = (GM_Point)transformer.transform( point );
+      final GM_Point kmlPoint = transformer.transform( point );
 
       outerRing.addToCoordinates( kmlPoint.getX(), kmlPoint.getY() );
     }
@@ -67,7 +67,7 @@ public class ConverterSurface
       for( final GM_Position position : innerRing )
       {
         final GM_Point point = GeometryFactory.createGM_Point( position, gmo.getCoordinateSystem() );
-        final GM_Point kmlPoint = (GM_Point)transformer.transform( point );
+        final GM_Point kmlPoint = transformer.transform( point );
 
         innerLinearRing.addToCoordinates( kmlPoint.getX(), kmlPoint.getY() );
       }

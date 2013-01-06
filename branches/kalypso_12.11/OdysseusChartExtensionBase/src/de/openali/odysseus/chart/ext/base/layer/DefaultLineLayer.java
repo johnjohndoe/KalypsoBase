@@ -75,7 +75,6 @@ public class DefaultLineLayer extends AbstractLineLayer
     return getNumericRange( getDomainAxis(), m_dataContainer.getDomainRange() );
   }
 
-  @SuppressWarnings( "rawtypes" )
   @Override
   public IDataRange<Double> getTargetRange( final IDataRange<Double> domainIntervall )
   {

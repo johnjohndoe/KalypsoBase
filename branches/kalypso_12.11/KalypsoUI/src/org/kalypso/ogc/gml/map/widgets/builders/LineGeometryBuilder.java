@@ -167,7 +167,7 @@ public class LineGeometryBuilder implements IGeometryBuilder
       final GM_Position[] poses = new GM_Position[m_points.size()];
       for( int i = 0; i < poses.length; i++ )
       {
-        final GM_Point transformedPoint = (GM_Point)transformer.transform( m_points.get( i ) );
+        final GM_Point transformedPoint = transformer.transform( m_points.get( i ) );
         poses[i] = transformedPoint.getPosition();
       }
 

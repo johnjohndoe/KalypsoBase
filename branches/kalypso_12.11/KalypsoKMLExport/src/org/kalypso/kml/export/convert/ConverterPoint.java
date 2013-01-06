@@ -20,7 +20,7 @@ public class ConverterPoint
     final Point point = new Point();
 
     final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( GoogleEarthUtils.GOOGLE_EARTH_CS );
-    final GM_Point kmlPoint = (GM_Point) transformer.transform( gmo );
+    final GM_Point kmlPoint = transformer.transform( gmo );
 
     point.addToCoordinates( kmlPoint.getX(), kmlPoint.getY() );
 

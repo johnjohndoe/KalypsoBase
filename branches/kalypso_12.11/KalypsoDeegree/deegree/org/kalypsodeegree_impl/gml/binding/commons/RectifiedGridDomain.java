@@ -156,7 +156,7 @@ public class RectifiedGridDomain
       return surface;
 
     final IGeoTransformer geoTrans = GeoTransformerFactory.getGeoTransformer( cs );
-    return (GM_Polygon)geoTrans.transform( surface );
+    return geoTrans.transform( surface );
   }
 
   public String getCoordinateSystem( )
@@ -170,7 +170,7 @@ public class RectifiedGridDomain
       return m_origin;
 
     final IGeoTransformer geoTrans = GeoTransformerFactory.getGeoTransformer( cs );
-    return (GM_Point)geoTrans.transform( m_origin );
+    return geoTrans.transform( m_origin );
   }
 
   /**
