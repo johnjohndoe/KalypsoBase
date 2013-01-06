@@ -310,7 +310,7 @@ final class GM_Envelope_Impl implements GM_Envelope, Serializable
     if( other == null || !(other instanceof GM_Envelope_Impl) )
       return false;
 
-    final GM_Envelope otherEnvelope = (GM_Envelope) other;
+    final GM_Envelope otherEnvelope = (GM_Envelope)other;
 
     if( !ObjectUtils.equals( m_coordinateSystem, otherEnvelope.getCoordinateSystem() ) )
       return false;
@@ -385,9 +385,6 @@ final class GM_Envelope_Impl implements GM_Envelope, Serializable
     return ret;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.geometry.GM_Envelope#getPaned(org.kalypsodeegree.model.geometry.GM_Point)
-   */
   @Override
   public GM_Envelope getPaned( final GM_Point center )
   {
@@ -402,13 +399,19 @@ final class GM_Envelope_Impl implements GM_Envelope, Serializable
     return GeometryFactory.createGM_Envelope( minx, miny, maxx, maxy, m_coordinateSystem );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.geometry.GM_Envelope#getCoordinateSystem()
-   */
   @Override
   public String getCoordinateSystem( )
   {
     return m_coordinateSystem;
+  }
+
+  @Override
+  public GM_Point getCenter( )
+  {
+    final double cx = m_minX + (m_maxX - m_minX) / 2.0;
+    final double cy = m_minY + (m_maxY - m_minY) / 2.0;
+
+    return GeometryFactory.createGM_Point( cx, cy, m_coordinateSystem );
   }
 }
 

@@ -113,7 +113,7 @@ public interface GM_Envelope extends Cloneable
 
   /**
    * merges two GM_Envelops and returns the minimum envelope containing both.
-   *
+   * 
    * @return merged envelope
    */
   GM_Envelope getMerged( GM_Envelope envelope );
@@ -131,18 +131,19 @@ public interface GM_Envelope extends Cloneable
 
   /**
    * This function returns the coordinate system, the coordinates of the contained positions are in.
-   *
+   * 
    * @return The coordinate system.
    */
   public String getCoordinateSystem( );
 
   /**
    * Checks if this point is completly equal to the submitted geometry
-   *
+   * 
    * @param exact
    *          If <code>false</code>, the positions are compardd by {@link GM_Position#equals(Object, false)}
    * @see GM_Position#equals(Object, boolean)
    */
   public boolean equals( final Object other, final boolean exact );
 
+  GM_Point getCenter( );
 }
