@@ -116,7 +116,11 @@
            <reference definitionId="oneScenario"/>
         </enabledWhen>
       </handler>
-      <handler class="org.kalypso.afgui.handlers.AddScenarioHandler" commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddScenario"/>
+      <handler class="org.kalypso.afgui.handlers.AddScenarioHandler" commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddScenario">
+         <activeWhen>
+            <reference definitionId="oneScenario"/>
+         </activeWhen>
+      </handler>
       <handler class="org.kalypso.afgui.internal.handlers.NewProjectHandler" commandId="org.kalypso.afgui.command.newproject"/>
       <handler class="org.kalypso.afgui.internal.handlers.DeleteScenarioHandler" commandId="org.eclipse.ui.edit.delete" >
          <activeWhen >
