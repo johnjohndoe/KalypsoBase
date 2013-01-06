@@ -72,7 +72,7 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
 
   private static final double MT_FAKE_MOUSE_CLICK_DISTANCE = 20;
 
-  private final ArrayDeque<MTMouseEventData> eventQueue = new ArrayDeque<MTMouseInput.MTMouseEventData>();
+  private final ArrayDeque<MTMouseEventData> eventQueue = new ArrayDeque<>();
 
   private final WidgetManager m_mgr;
 

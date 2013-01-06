@@ -55,7 +55,7 @@ public class MTDefaultScene extends AbstractScene
   public MTDefaultScene( final AbstractMTApplication mtApplication, final String name )
   {
     super( mtApplication, name );
-    this.mtApp = (MTMapPanelApp) mtApplication;
+    this.mtApp = (MTMapPanelApp)mtApplication;
 
     m_mapPanel = mtApp.getMapPanel();
 
@@ -94,7 +94,7 @@ public class MTDefaultScene extends AbstractScene
       @Override
       public boolean processGestureEvent( final MTGestureEvent ge )
       {
-        final DragEvent e = (DragEvent) ge;
+        final DragEvent e = (DragEvent)ge;
         final Vector3D v = e.getTo();
         final MTMouseInput m_mouse = mtApp.getMouseInput();
         if( e.getId() == MTGestureEvent.GESTURE_STARTED )
@@ -125,7 +125,7 @@ public class MTDefaultScene extends AbstractScene
       @Override
       public boolean processGestureEvent( final MTGestureEvent ge )
       {
-        final TapAndHoldEvent e = (TapAndHoldEvent) ge;
+        final TapAndHoldEvent e = (TapAndHoldEvent)ge;
         // final Vector3D v = e.getLocationOnScreen();
         final MTMouseInput m_mouse = mtApp.getMouseInput();
 
@@ -173,7 +173,7 @@ public class MTDefaultScene extends AbstractScene
   private class MapDrag implements IGestureEventListener
   {
     PanToWidget widget;
-    
+
     Point originalPoint;
 
     Point translationVect;
@@ -189,15 +189,15 @@ public class MTDefaultScene extends AbstractScene
     {
       if( g instanceof PanEvent )
       {
-        final PanEvent dragEvent = (PanEvent) g;
+        final PanEvent dragEvent = (PanEvent)g;
 
         final Vector3D tVect = dragEvent.getTranslationVector();
 
         if( dragEvent.getId() == MTGestureEvent.GESTURE_STARTED )
         {
-          originalPoint = new Point( (int) dragEvent.getFirstCursor().getCurrentEvtPosX(), (int) dragEvent.getFirstCursor().getCurrentEvtPosY() );
-          
-          widget.mousePressed( MouseEvents.toMouseEvent(originalPoint ));
+          originalPoint = new Point( (int)dragEvent.getFirstCursor().getCurrentEvtPosX(), (int)dragEvent.getFirstCursor().getCurrentEvtPosY() );
+
+          widget.mousePressed( MouseEvents.toMouseEvent( originalPoint ) );
           translationVect = new Point( 0, 0 );
         }
         else if( dragEvent.getId() == MTGestureEvent.GESTURE_UPDATED )
@@ -208,18 +208,15 @@ public class MTDefaultScene extends AbstractScene
         else
         {
           final Point newPoint = new Point( originalPoint.x + translationVect.x, originalPoint.y + translationVect.y );
-          widget.mouseReleased(  MouseEvents.toMouseEvent( newPoint ));
+          widget.mouseReleased( MouseEvents.toMouseEvent( newPoint ) );
         }
 
       }
       return true;
     }
-
-    
-
   }
 
-  private class MapScale implements IGestureEventListener
+  class MapScale implements IGestureEventListener
   {
     private Vector3D lastMiddle;
 
@@ -230,7 +227,7 @@ public class MTDefaultScene extends AbstractScene
     {
       if( g instanceof ZoomEvent )
       {
-        final ZoomEvent se = (ZoomEvent) g;
+        final ZoomEvent se = (ZoomEvent)g;
         final float scale = se.getCamZoomAmount();
         // System.out.println("X:" + x + " Y:" +y);
 

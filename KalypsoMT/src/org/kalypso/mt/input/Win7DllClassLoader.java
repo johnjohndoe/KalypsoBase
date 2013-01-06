@@ -63,7 +63,7 @@ public class Win7DllClassLoader extends ClassLoader
   public Win7DllClassLoader( )
   {
     super( Win7DllClassLoader.class.getClassLoader() );
-    classes = new HashMap<String, Class< ? >>();
+    classes = new HashMap<>();
     MTWin7TouchInput.getSingleton().win7DllWait[0] = false;
   }
 
@@ -128,18 +128,19 @@ public class Win7DllClassLoader extends ClassLoader
     return src;
   }
 
-  private final Object leaf = new Object()
-  {
-    @Override
-    protected void finalize( ) throws Throwable
-    {
-      synchronized( MTWin7TouchInput.getSingleton().win7DllWait )
-      {
-        MTWin7TouchInput.getSingleton().win7DllWait[0] = true;
-        MTWin7TouchInput.getSingleton().win7DllWait.notify();
-      }
-    }
-  };
+  // FIXME: obscure, was this necessary?
+//  private final Object leaf = new Object()
+//  {
+//    @Override
+//    protected void finalize( ) throws Throwable
+//    {
+//      synchronized( MTWin7TouchInput.getSingleton().win7DllWait )
+//      {
+//        MTWin7TouchInput.getSingleton().win7DllWait[0] = true;
+//        MTWin7TouchInput.getSingleton().win7DllWait.notify();
+//      }
+//    }
+//  };
 
   @Override
   protected void finalize( ) throws Throwable

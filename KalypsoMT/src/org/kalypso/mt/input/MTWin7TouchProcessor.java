@@ -82,7 +82,7 @@ public class MTWin7TouchProcessor extends AbstractInputSource
     m_wmTouchEvent.x = -1;
     m_wmTouchEvent.y = -1;
 
-    touchToCursorID = new HashMap<Integer, Long>();
+    touchToCursorID = new HashMap<>();
   }
 
   @Override
