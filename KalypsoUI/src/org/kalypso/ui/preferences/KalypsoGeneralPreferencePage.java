@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IntegerFieldEditor;
@@ -56,6 +57,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.kalypso.contribs.eclipse.jface.preference.ComboStringFieldEditor;
 import org.kalypso.contribs.java.util.TimezoneUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.KalypsoCorePreferences;
 import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.GeoGridUtilities.Interpolation;
@@ -79,10 +81,15 @@ public class KalypsoGeneralPreferencePage extends FieldEditorPreferencePage impl
 
   private ComboFieldEditor m_rasterInterpolationEditor;
 
+  private BooleanFieldEditor m_wheelPositionEditor;
+
+  private BooleanFieldEditor m_wheelInvertEditor;
+
   public KalypsoGeneralPreferencePage( )
   {
     super( GRID );
-    setPreferenceStore( KalypsoCorePlugin.getDefault().getPreferenceStore() );
+
+    setPreferenceStore( KalypsoCorePreferences.getStore() );
     setDescription( Messages.getString( "org.kalypso.ui.preferences.KalypsoGeneralPreferencePage.0" ) ); //$NON-NLS-1$
   }
 
@@ -125,10 +132,25 @@ public class KalypsoGeneralPreferencePage extends FieldEditorPreferencePage impl
     // Gruml... field editors change layout of parent...
     GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( rasterPaintingGroup );
 
+    /* other map options */
+    final Group generalMapOptionsGroup = new Group( getFieldEditorParent(), SWT.NONE );
+    generalMapOptionsGroup.setText( Messages.getString("KalypsoGeneralPreferencePage.4") ); //$NON-NLS-1$
+
+    final String wheelPositionLabel = Messages.getString("KalypsoGeneralPreferencePage.5"); //$NON-NLS-1$
+    m_wheelPositionEditor = new BooleanFieldEditor( IKalypsoCorePreferences.PREFERENCE_MAP_KEEP_POSITION_ON_MOUSE_WHEEL, wheelPositionLabel, generalMapOptionsGroup );
+
+    final String wheelInvertLabel = Messages.getString("KalypsoGeneralPreferencePage.6"); //$NON-NLS-1$
+    m_wheelInvertEditor = new BooleanFieldEditor( IKalypsoCorePreferences.PREFERENCE_MAP_INVERT_MOUSE_WHEEL_ZOOM, wheelInvertLabel, generalMapOptionsGroup );
+
+    // Gruml... field editors change layout of parent...
+    GridLayoutFactory.swtDefaults().numColumns( 1 ).applyTo( generalMapOptionsGroup );
+
     /* register all fields */
     addField( m_timeZoneEditor );
     addField( m_rasterPixelEditor );
     addField( m_rasterInterpolationEditor );
+    addField( m_wheelPositionEditor );
+    addField( m_wheelInvertEditor );
   }
 
   private String[][] getInterpolationNamesAndValues( )
@@ -151,8 +173,7 @@ public class KalypsoGeneralPreferencePage extends FieldEditorPreferencePage impl
   {
     super.initialize();
 
-    m_timeZoneEditor.setPreferenceStore( KalypsoCorePlugin.getDefault().getPreferenceStore() );
-    m_timeZoneEditor.load();
+    // Reinitialize editor on stores that are NOT the default store
 
     m_rasterPixelEditor.setPreferenceStore( KalypsoDeegreePreferences.getStore() );
     m_rasterPixelEditor.load();
