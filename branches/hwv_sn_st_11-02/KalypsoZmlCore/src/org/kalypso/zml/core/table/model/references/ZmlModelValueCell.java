@@ -45,6 +45,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.resources.IFile;
@@ -187,6 +188,9 @@ public class ZmlModelValueCell extends AbstractZmlCell implements IZmlModelValue
 
     try
     {
+      if( StringUtils.isBlank( href ) )
+        return null;
+
       final IFile resource = ResourceUtilities.findFileFromPath( new Path( href ) );
       if( resource != null )
         return resource.getProjectRelativePath().toOSString();

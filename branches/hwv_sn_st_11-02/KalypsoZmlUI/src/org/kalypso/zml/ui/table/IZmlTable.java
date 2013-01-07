@@ -46,15 +46,13 @@ import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.ui.table.nat.layers.BodyLayerStack;
 import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
+import org.kalypso.zml.ui.table.nat.pager.IZmlTablePagerCallback;
 
 /**
  * @author Dirk Kuch
  */
 public interface IZmlTable
 {
-  // FIXME remove from interface!
-  void dispose( );
-
   ZmlModelViewport getModelViewport( );
 
   void refresh( ZmlModelColumnChangeType type );
@@ -65,4 +63,7 @@ public interface IZmlTable
 
   NatTable getTable( );
 
+  IZmlTablePagerCallback getCallback( );
+
+  void setCallback( IZmlTablePagerCallback callback );
 }

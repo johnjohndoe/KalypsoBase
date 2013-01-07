@@ -59,7 +59,6 @@ public class FindClosestDateVisitor implements IZmlModelRowVisitor
   public FindClosestDateVisitor( final Date base )
   {
     m_base = base.getTime();
-
   }
 
   @Override
@@ -79,5 +78,4 @@ public class FindClosestDateVisitor implements IZmlModelRowVisitor
   {
     return m_row;
   }
-
 }
