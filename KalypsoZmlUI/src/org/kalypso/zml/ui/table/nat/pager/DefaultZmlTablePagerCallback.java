@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.nat.pager;
 
@@ -50,97 +50,118 @@ import net.sourceforge.nattable.viewport.command.ShowRowInViewportCommand;
 import net.sourceforge.nattable.viewport.event.ScrollEvent;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.nat.layers.BodyLayerStack;
 
 /**
- * @author Dirk Kuch
+ * @author Holger Albert
  */
-public class ZmlTablePager
+public class DefaultZmlTablePagerCallback implements IZmlTablePagerCallback
 {
-  private boolean m_firstRun = true;
-
-  private final ZmlModelViewport m_viewport;
-
-  final NatTable m_table;
-
-  private final BodyLayerStack m_bodyLayer;
-
-  protected Date m_lastRow;
-
-  public ZmlTablePager( final ZmlModelViewport viewport, final NatTable table, final BodyLayerStack bodyLayer )
+  private final ILayerListener m_listener = new ILayerListener()
   {
-    m_viewport = viewport;
-    m_table = table;
-    m_bodyLayer = bodyLayer;
-
-    m_table.addLayerListener( new ILayerListener()
+    @Override
+    public void handleLayerEvent( final ILayerEvent event )
     {
-      @Override
-      public void handleLayerEvent( final ILayerEvent event )
-      {
-        if( event instanceof ScrollEvent )
-        {
-          // choose last row and the table paging will be correct - in most cases :-)
-          final int rowCount = m_table.getRowCount();
-          final LayerCell cell = m_table.getCellByPosition( 1, rowCount - 1 );
-          if( Objects.isNull( cell ) )
-            return;
+      doHandleLayerEvent( event );
+    }
+  };
 
-          final Object dataValue = cell.getDataValue();
-          if( dataValue instanceof IZmlModelCell )
-          {
-            final IZmlModelCell modelCell = (IZmlModelCell) dataValue;
-            m_lastRow = modelCell.getIndexValue();
-          }
-        }
-      }
-    } );
+  private final IZmlTable m_zmlTable;
+
+  private boolean m_firstRun;
+
+  private Date m_lastRow;
+
+  public DefaultZmlTablePagerCallback( final IZmlTable zmlTable )
+  {
+    m_zmlTable = zmlTable;
+    m_firstRun = true;
+    m_lastRow = null;
+
+    final NatTable table = zmlTable.getTable();
+    table.addLayerListener( m_listener );
   }
 
-  public void update( final ZmlModelColumnChangeType event )
+  protected void doHandleLayerEvent( final ILayerEvent event )
   {
-    Date date = null;
-    if( m_firstRun )
-      date = findForecastDate();
+    if( event instanceof ScrollEvent )
+    {
+      // choose last row and the table paging will be correct - in most cases :-)
+      final NatTable table = m_zmlTable.getTable();
+      final int rowCount = table.getRowCount();
+      final LayerCell cell = table.getCellByPosition( 1, rowCount - 1 );
+      if( cell == null )
+        return;
 
-    if( Objects.isNull( date ) )
-      date = m_lastRow;
+      final Object dataValue = cell.getDataValue();
+      if( dataValue instanceof IZmlModelCell )
+      {
+        final IZmlModelCell modelCell = (IZmlModelCell) dataValue;
+        m_lastRow = modelCell.getIndexValue();
+      }
+    }
+  }
 
-    if( Objects.isNull( date ) )
+  @Override
+  public void updateVisibleDate( )
+  {
+    final ZmlModelViewport viewport = m_zmlTable.getModelViewport();
+    final BodyLayerStack bodyLayer = m_zmlTable.getBodyLayer();
+
+    final Date date = findDate( m_zmlTable );
+    if( date == null )
       return;
 
     final FindClosestDateVisitor visitor = new FindClosestDateVisitor( date );
-    m_viewport.accept( visitor );
+    viewport.accept( visitor );
 
     final IZmlModelRow row = visitor.getRow();
-    if( Objects.isNull( row ) )
+    if( row == null )
       return;
 
-    final int index = ArrayUtils.indexOf( m_viewport.getRows(), row );
-    final ShowRowInViewportCommand command = new ShowRowInViewportCommand( m_bodyLayer, index );
+    final int index = ArrayUtils.indexOf( viewport.getRows(), row );
 
-    // FIXME: would be nice, if the last date was also selected again. For this we need to remeber this date (old
-    // selection).
+    // FIXME: Would be nice, if the last date was also selected again.
+    // FIXME: For this we need to remeber this date (old selection).
+    final ShowRowInViewportCommand command = new ShowRowInViewportCommand( bodyLayer, index );
     // final SelectCellCommand cmd2 = new SelectCellCommand( m_bodyLayer.getSelectionLayer(), 0, index, false, false );
 
-    m_table.doCommand( command );
+    m_zmlTable.getTable().doCommand( command );
     // m_table.doCommand( cmd2 );
   }
 
-  private Date findForecastDate( )
+  @Override
+  public void dispose( )
   {
-    final ZmlModelViewport viewport = m_viewport;
+    final NatTable table = m_zmlTable.getTable();
+    table.removeLayerListener( m_listener );
+  }
+
+  private Date findDate( final IZmlTable table )
+  {
+    Date date = null;
+    if( m_firstRun )
+      date = findForecastDate( table );
+
+    if( date == null )
+      return m_lastRow;
+
+    return date;
+  }
+
+  private Date findForecastDate( final IZmlTable table )
+  {
+    final ZmlModelViewport viewport = table.getModelViewport();
     final IZmlModelColumn[] columns = viewport.getColumns();
 
     final Date date = findForecastDate( columns );
-    if( Objects.isNull( date ) )
+    if( date == null )
       return null;
 
     m_firstRun = false;
@@ -156,7 +177,7 @@ public class ZmlTablePager
         continue;
 
       final Date date = MetadataHelper.getForecastStart( column.getMetadata() );
-      if( Objects.isNotNull( date ) )
+      if( date != null )
         return date;
     }
 

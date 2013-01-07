@@ -57,6 +57,7 @@ import net.sourceforge.nattable.resize.command.InitializeAutoResizeColumnsComman
 import net.sourceforge.nattable.style.DisplayMode;
 import net.sourceforge.nattable.util.GCFactory;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -85,8 +86,9 @@ import org.kalypso.zml.ui.table.nat.layers.BodyLayerStack;
 import org.kalypso.zml.ui.table.nat.layers.ColumnHeaderLayerStack;
 import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 import org.kalypso.zml.ui.table.nat.layers.RowHeaderLayerStack;
+import org.kalypso.zml.ui.table.nat.pager.DefaultZmlTablePagerCallback;
+import org.kalypso.zml.ui.table.nat.pager.IZmlTablePagerCallback;
 import org.kalypso.zml.ui.table.nat.pager.UpdateChartSelectionListener;
-import org.kalypso.zml.ui.table.nat.pager.ZmlTablePager;
 import org.kalypso.zml.ui.table.nat.painter.ZmlColumnHeaderCellPainter;
 import org.kalypso.zml.ui.table.nat.painter.ZmlModelCellPainter;
 import org.kalypso.zml.ui.table.nat.painter.ZmlRowHeaderCellPainter;
@@ -97,6 +99,8 @@ import org.kalypso.zml.ui.table.nat.tooltip.ZmlTableTooltip;
  */
 public class ZmlTable extends Composite implements IZmlTable
 {
+  protected IZmlTablePagerCallback m_callback;
+
   private UIJob m_updateJob;
 
   private static final MutexRule MUTEX_TABLE_UPDATE = new MutexRule( "Aktualisiere Tabelle" ); // $NON-NLS-1$
@@ -110,8 +114,6 @@ public class ZmlTable extends Composite implements IZmlTable
   private ColumnHeaderLayerStack m_columnHeaderLayer;
 
   private GridLayer m_gridLayer;
-
-  protected ZmlTablePager m_pager;
 
   public ZmlTable( final Composite parent, final IZmlModel model, final FormToolkit toolkit )
   {
@@ -189,27 +191,24 @@ public class ZmlTable extends Composite implements IZmlTable
     m_table.addMouseListener( new NatTableContextMenuSupport( m_table, m_viewport, getSelection() ) );
     m_table.addLayerListener( new UpdateChartSelectionListener( getSelection() ) );
 
-    m_pager = new ZmlTablePager( m_viewport, m_table, m_bodyLayer );
+    m_callback = new DefaultZmlTablePagerCallback( this );
   }
 
   @Override
   public void dispose( )
   {
     m_table.dispose();
+    m_callback.dispose();
     // m_viewport.dispose(); TODO
 
     super.dispose();
   }
-
-  protected int m_event = 0;
 
   @Override
   public synchronized void refresh( final ZmlModelColumnChangeType event )
   {
     if( Objects.isNotNull( m_updateJob ) )
       m_updateJob.cancel();
-
-    m_event |= event.getEvent();
 
     m_updateJob = new UIJob( "Zeitreihen-Tabelle wird aktualisiert" )
     {
@@ -222,15 +221,12 @@ public class ZmlTable extends Composite implements IZmlTable
         if( ZmlTable.this.isDisposed() )
           return Status.OK_STATUS;
 
-        final ZmlModelColumnChangeType change = new ZmlModelColumnChangeType( m_event );
-        m_event = 0;
-
         m_table.fireLayerEvent( new VisualRefreshEvent( m_bodyLayer ) );
         m_table.refresh();
 
         doResizeColumns();
 
-        m_pager.update( change );
+        m_callback.updateVisibleDate();
 
         return Status.OK_STATUS;
       }
@@ -255,16 +251,6 @@ public class ZmlTable extends Composite implements IZmlTable
     return m_table;
   }
 
-  protected void doResizeColumns( )
-  {
-    final int count = m_table.getColumnCount();
-    for( int index = 1; index <= count; index++ )
-    {
-      final InitializeAutoResizeColumnsCommand command = new InitializeAutoResizeColumnsCommand( m_gridLayer, index, m_table.getConfigRegistry(), new GCFactory( m_table ) );
-      m_gridLayer.doCommand( command );
-    }
-  }
-
   @Override
   public ZmlModelViewport getModelViewport( )
   {
@@ -275,5 +261,29 @@ public class ZmlTable extends Composite implements IZmlTable
   public IZmlTableSelection getSelection( )
   {
     return m_bodyLayer.getSelection();
+  }
+
+  @Override
+  public IZmlTablePagerCallback getCallback( )
+  {
+    return m_callback;
+  }
+
+  @Override
+  public void setCallback( final IZmlTablePagerCallback callback )
+  {
+    Assert.isNotNull( callback );
+    m_callback.dispose();
+    m_callback = callback;
+  }
+
+  protected void doResizeColumns( )
+  {
+    final int count = m_table.getColumnCount();
+    for( int index = 1; index <= count; index++ )
+    {
+      final InitializeAutoResizeColumnsCommand command = new InitializeAutoResizeColumnsCommand( m_gridLayer, index, m_table.getConfigRegistry(), new GCFactory( m_table ) );
+      m_gridLayer.doCommand( command );
+    }
   }
 }
