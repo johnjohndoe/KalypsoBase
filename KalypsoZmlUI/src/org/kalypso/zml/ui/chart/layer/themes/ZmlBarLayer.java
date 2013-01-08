@@ -73,6 +73,7 @@ import de.openali.odysseus.chart.ext.base.layer.BarPaintManager;
 import de.openali.odysseus.chart.ext.base.layer.IBarLayerPainter;
 import de.openali.odysseus.chart.framework.OdysseusChartExtensions;
 import de.openali.odysseus.chart.framework.exception.MalformedValueException;
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
@@ -150,6 +151,15 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   @Override
   public IDataRange<Double> getTargetRange( final IDataRange<Double> domainIntervall )
   {
+    // FIXME: @Kim das ist genau das was ich vermeien wollte, jetzt funktioniert die Screen-Achse nicht mehr so wie gedacht ;-(
+    final Number fixedHeight = getFixedHeight();
+    if( fixedHeight != null )
+    {
+      final de.openali.odysseus.chart.framework.model.mapper.IAxis targetAxis = getTargetAxis();
+      final int screenHeight = targetAxis.getScreenHeight();
+      return new DataRange<>( 0.0, (double)screenHeight );
+    }
+
     return m_range.getTargetRange();
   }
 

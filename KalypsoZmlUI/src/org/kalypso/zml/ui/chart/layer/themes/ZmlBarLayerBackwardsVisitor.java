@@ -126,7 +126,7 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
     m_layer = layer;
     m_paintManager = paintManager;
     m_mapper = layer.getCoordinateMapper();
-    m_baseLine = m_mapper.numericToScreen( 0.0,0.0).y;
+    m_baseLine = m_mapper.logicalToScreen( null, 0.0 ).y;
   }
 
   @Override

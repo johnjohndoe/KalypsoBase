@@ -206,13 +206,6 @@ public abstract class AbstractAxis<T> implements IAxis<T>
     return false;
   }
 
-//
-//  @Override
-//  public IDataRange<Double> getSelection( )
-//  {
-//    return m_activeRange;
-//  }
-
   public boolean isAllowZoom( )
   {
     return m_allowZoom;
