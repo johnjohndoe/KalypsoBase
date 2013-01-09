@@ -44,9 +44,15 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.PaletteData;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.progress.UIJob;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -60,7 +66,11 @@ public class ChartPaintJob extends Job
 {
   private final ChartImageComposite m_chart;
 
+  final RGB m_backgroundRGB;
+
   private Image m_plotImage;
+
+  private Image m_layerImage;
 
   private Rectangle m_clientArea = null;
 
@@ -72,12 +82,14 @@ public class ChartPaintJob extends Job
 
   private ImageData m_plotData;
 
-  public ChartPaintJob( final ChartImageComposite chart )
+  private ImageData m_layerData;
+
+  public ChartPaintJob( final ChartImageComposite chart, final RGB backgroundRGB )
   {
     super( "Painting chart" ); //$NON-NLS-1$
-
+    m_backgroundRGB = backgroundRGB;
     m_chart = chart;
-
+    m_plotInfo = null;
     m_redrawJob = new ChartRedrawJob( this );
     m_redrawJob.setUser( false );
     m_redrawJob.setSystem( true );
@@ -96,12 +108,9 @@ public class ChartPaintJob extends Job
     if( m_chart.isDisposed() )
       return Status.OK_STATUS;
 
-    final Rectangle bounds = getClientArea();
-
     /* start redrawing the chart regularly */
     setDoRedraw( true );
-
-    final IStatus status = doPaint( bounds, monitor );
+    final IStatus status = doPaint( m_clientArea, monitor );
 
     /* Stop redrawing */
     setDoRedraw( false );
@@ -127,11 +136,6 @@ public class ChartPaintJob extends Job
     return m_doRedraw;
   }
 
-  private synchronized Rectangle getClientArea( )
-  {
-    return m_clientArea;
-  }
-
   public synchronized void setClientArea( final Rectangle clientArea )
   {
     m_clientArea = clientArea;
@@ -144,33 +148,49 @@ public class ChartPaintJob extends Job
 
     if( monitor.isCanceled() )
       return Status.CANCEL_STATUS;
-
     if( bounds.width == 0 || bounds.height == 0 )
       return Status.OK_STATUS;
-
+    final Display display = m_chart.getDisplay();
     // final Image plotImage = createPlotImage( bounds );
-    // Hotfix: cacheing the image leads to a race condition and sometimes only a blank image is shown initially.
-    final Image plotImage = new Image( m_chart.getDisplay(), bounds.width, bounds.height );
+    // Hotfix: caching the image leads to a race condition and sometimes only a blank image is shown initially.
+    final ImageData imageData = new ImageData( bounds.width, bounds.height, 24, new PaletteData( 0xFF, 0xFF00, 0xFF0000 ) );
+    final Color colorBackground = new Color( display, m_backgroundRGB );
+    imageData.transparentPixel = imageData.palette.getPixel( ChartPainter.COLOR_TRANSPARENT );
+
+    final Image plotImage = new Image( display, imageData );
+
+    final GC plotGC = new GC( plotImage );
+    plotGC.setAntialias( SWT.ON );
+    plotGC.setTextAntialias( SWT.ON );
+    plotGC.setAdvanced( true );
+    plotGC.setBackground( colorBackground );
+    plotGC.fillRectangle( bounds );
+
+    final Image layerImage = new Image( display, imageData );
+    final GC layerGC = new GC( layerImage );
+    layerGC.setAntialias( SWT.ON );
+    layerGC.setTextAntialias( SWT.ON );
+    layerGC.setAdvanced( true );
+    layerGC.setBackground( colorBackground );
+    layerGC.fillRectangle( bounds );
+
     synchronized( this )
     {
       m_plotImage = plotImage;
+      m_layerImage = layerImage;
     }
-
-    // if( plotImage == null )
-    // return Status.OK_STATUS;
-
     try
     {
       final IChartModel model = m_chart.getChartModel();
       if( model == null )
         return Status.OK_STATUS;
 
-      final ChartPainter chartPainter = new ChartPainter( model, plotImage );
+      final ChartPainter chartPainter = new ChartPainter( model, bounds );
 
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
 
-      final IStatus status = chartPainter.paintImage( monitor );
+      final IStatus status = chartPainter.paintImage( monitor, plotGC, layerGC);
       m_plotInfo = chartPainter.getInfoObject();
       return status;
     }
@@ -179,10 +199,16 @@ public class ChartPaintJob extends Job
       synchronized( this )
       {
         m_plotImage = null;
-
         m_plotData = plotImage.getImageData();
-
+        plotGC.dispose();
         plotImage.dispose();
+
+        m_layerImage = null;
+        m_layerData = layerImage.getImageData();
+        layerGC.dispose();
+        layerImage.dispose();
+
+        colorBackground.dispose();
       }
     }
   }
@@ -215,9 +241,16 @@ public class ChartPaintJob extends Job
     {
       if( m_plotImage != null )
         m_plotData = m_plotImage.getImageData();
+      if( m_layerImage != null )
+        m_layerData = m_layerImage.getImageData();
     }
 
     m_chart.redraw();
+  }
+
+  public synchronized ImageData getLayerImageData( )
+  {
+    return m_layerData;
   }
 
   public synchronized ImageData getPlotImageData( )

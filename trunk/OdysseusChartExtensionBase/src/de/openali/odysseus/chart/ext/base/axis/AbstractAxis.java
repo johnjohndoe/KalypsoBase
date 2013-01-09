@@ -152,7 +152,7 @@ public abstract class AbstractAxis<T> implements IAxis<T>
   @Override
   public IDataRange<T> getLogicalRange( )
   {
-    return new DataRange<>( numericToLogical( m_numericRange.getMin() ), numericToLogical( m_numericRange.getMax() ) );
+    return new DataRange<>( numericToLogical( getNumericRange( ).getMin() ), numericToLogical( getNumericRange( ).getMax() ) );
   }
 
   @Override

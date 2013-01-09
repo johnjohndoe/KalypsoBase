@@ -47,11 +47,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
@@ -73,22 +75,34 @@ import de.openali.odysseus.chart.framework.util.img.legend.config.DefaultChartLe
  */
 public class ChartPainter
 {
-  private final IChartModel m_model;
-
-  private ChartImageInfo m_infoObject;
-
   public static Image createChartImage( final IChartModel model, final Rectangle size, final IProgressMonitor monitor )
   {
     if( size.width == 0 || size.height == 0 )
       return null;
 
     final Device dev = ChartUtilities.getDisplay();
-    final Image image = new Image( dev, size.width, size.height );
-
-    final ChartPainter painter = new ChartPainter( model, image );
-    painter.paintImage( monitor );
-
-    return image;
+    final Image plotImage = new Image( dev, size.width, size.height );
+    final Image layerImage = new Image( dev, size.width, size.height );
+    final GC layerGC = new GC( layerImage );
+    final GC plot_GC = new GC( plotImage );
+    plot_GC.setAntialias( SWT.ON );
+    plot_GC.setTextAntialias( SWT.ON );
+    plot_GC.setAdvanced( true );
+    try
+    {
+      final ChartPainter painter = new ChartPainter( model, size );
+      painter.paintImage( monitor, plot_GC, layerGC );
+      final ChartImageInfo chartInfo = painter.getInfoObject();
+      final Rectangle layerRect = chartInfo.getLayerRect();
+      plot_GC.drawImage( layerImage, layerRect.x, layerRect.y );
+    }
+    finally
+    {
+      plot_GC.dispose();
+      layerGC.dispose();
+      layerImage.dispose();
+    }
+    return plotImage;
   }
 
   public static ImageData createChartImageData( final IChartModel model, final Rectangle size, final IProgressMonitor monitor )
@@ -104,21 +118,21 @@ public class ChartPainter
     }
   }
 
-  private final ChartLegendCanvas m_legendPainter;
+  private final IChartModel m_model;
 
-  private final Image m_image;
+  private ChartImageInfo m_infoObject;
+
+  private final ChartLegendCanvas m_legendPainter;
 
   private final ChartTitlePainter m_titlePainter;
 
   private final Rectangle m_paintRect;
 
-  public ChartPainter( final IChartModel model, final Image image )
+  public static RGB COLOR_TRANSPARENT = new RGB( 254, 254, 254 );
+
+  public ChartPainter( final IChartModel model, final Rectangle imageSize )// , final GC plotGC, final GC layerGC )
   {
     m_model = model;
-    m_image = image;
-
-    final Rectangle imageSize = image.getBounds();
-
     final IBasicChartSettings settings = m_model.getSettings();
 
     m_paintRect = RectangleUtils.inflateRect( imageSize, settings.getChartInsets() );
@@ -225,39 +239,23 @@ public class ChartPainter
         final ILineStyle lineStyle = StyleUtils.getDefaultLineStyle();
         lineStyle.setWidth( 1 );
         edge.setLineStyle( lineStyle );
-//        for( final IAxis<?> axis : m_model.getMapperRegistry().getAxesAt( position ) )
-//        {
-//          if( axis.isVisible() )
-//          {
-//            edge.setLineStyle( axis.getRenderer().getLineStyle() );
-//            break;
-//          }
-//        }
       }
     }
-    //TODO check this
-    plotFrame.paint( gc, new Rectangle( rect.x - 1, rect.y, rect.width+1, rect.height ) );
+    // TODO check this
+    plotFrame.paint( gc, new Rectangle( rect.x - 1, rect.y, rect.width + 1, rect.height ) );
   }
 
-  public final IStatus paintImage( final IProgressMonitor monitor )
+  public final IStatus paintImage( final IProgressMonitor monitor, final GC plot_GC, final GC layer_GC )
   {
     if( monitor.isCanceled() )
       return Status.CANCEL_STATUS;
 
     final ChartImageInfo infoObject = new ChartImageInfo();
-
+    final Color color_Transparent = new Color( plot_GC.getDevice(), COLOR_TRANSPARENT );
     Image legendImage = null;
-
-    final GC gc = new GC( m_image );
-
     try
     {
-      gc.setAntialias( SWT.ON );
-      gc.setTextAntialias( SWT.ON );
-      gc.setAdvanced( true );
-
       infoObject.setClientRect( m_paintRect );
-
       final Insets plotInsets = m_model.getSettings().getPlotInsets();
 
       final Rectangle titleRect = calculateTitleRect( m_paintRect );
@@ -288,40 +286,46 @@ public class ChartPainter
       infoObject.setLayerRect( plotClientRect );
       m_infoObject = infoObject;
 
+      plot_GC.setBackground( color_Transparent );
+      plot_GC.fillRectangle( plotRect );
+
       // FIXME: plot insets do not really act like expected; check this...
       setAxesHeight( plotRect, plotClientRect );
 
-      m_titlePainter.paint( gc, titleRect );
+      final ChartPlotPainter plotPainter = new ChartPlotPainter( m_model, new Point( plotClientRect.width, plotClientRect.height ) );
+      plotPainter.paint( layer_GC, infoObject, monitor );
+
+      m_titlePainter.paint( plot_GC, titleRect );
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
 
-      paintFrameRect( gc, plotRect );
-      paintAxes( POSITION.TOP, gc, plotRect.x, axisTopRect.y + axisTopRect.height, plotInsets.left, axisTopRect.width, 0, true );
+      paintFrameRect( plot_GC, plotRect );
+      paintAxes( POSITION.TOP, plot_GC, plotRect.x, axisTopRect.y + axisTopRect.height, plotInsets.left, axisTopRect.width, 0, true );
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
 
-      paintAxes( POSITION.LEFT, gc, plotRect.x, axisLeftRect.y, plotInsets.top, axisLeftRect.height, 90, false );
+      paintAxes( POSITION.LEFT, plot_GC, plotRect.x, axisLeftRect.y, plotInsets.top, axisLeftRect.height, 90, false );
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
 
-      paintAxes( POSITION.RIGHT, gc, axisRightRect.x, axisRightRect.y, plotInsets.top, axisRightRect.height, 90, true );
+      paintAxes( POSITION.RIGHT, plot_GC, axisRightRect.x, axisRightRect.y, plotInsets.top, axisRightRect.height, 90, true );
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
 
-      paintAxes( POSITION.BOTTOM, gc, plotRect.x, axisBottomRect.y, plotInsets.left, axisBottomRect.width, 0, false );
+      paintAxes( POSITION.BOTTOM, plot_GC, plotRect.x, axisBottomRect.y, plotInsets.left, axisBottomRect.width, 0, false );
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
 
       legendImage = m_legendPainter.createImage();
       if( legendImage != null )
-        gc.drawImage( legendImage, legendRect.x, legendRect.y );
+        plot_GC.drawImage( legendImage, legendRect.x, legendRect.y );
 
       // Layer könnten sonst in die Achsen zeichnen
       // REMARK: not the plotClientRect, the layer may still paint into the insets
-      gc.setClipping( plotRect );
+      // plot_GC.setClipping( plotRect );
 
-      final ChartPlotPainter plotPainter = new ChartPlotPainter( m_model, new Point( plotClientRect.width, plotClientRect.height ) );
-      plotPainter.paint( gc, infoObject, monitor );
+      // plot_GC.setBackground( legendImage.getDevice().getSystemColor( 0xFEFEFE ) );// ,COLOR_TRANSPARENT));
+      // plot_GC.fillRectangle( plotRect );
 
       return Status.OK_STATUS;
     }
@@ -331,19 +335,18 @@ public class ChartPainter
     }
     finally
     {
+      color_Transparent.dispose();
       if( legendImage != null )
         legendImage.dispose();
-
-      gc.dispose();
     }
   }
 
   private void setAxesHeight( final Rectangle plotRect, final Rectangle size )
   {
-    final int axisWidth = size.width;// - plotInsets.left - plotInsets.right;
-    final int axisHeight = size.height;// - plotInsets.top - plotInsets.bottom;
+    final int axisWidth = size.width;
+    final int axisHeight = size.height;
 
-    for( final IAxis axis : m_model.getAxisRegistry().getAxes() )
+    for( final IAxis< ? > axis : m_model.getAxisRegistry().getAxes() )
     {
       final ORIENTATION orientation = axis.getPosition().getOrientation();
       switch( orientation )

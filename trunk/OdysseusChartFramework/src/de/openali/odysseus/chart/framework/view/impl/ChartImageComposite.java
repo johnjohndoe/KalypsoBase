@@ -19,11 +19,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.eclipse.core.runtime.SafeRunnable;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 
-import de.openali.odysseus.chart.framework.OdysseusChartFramework;
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.event.IAxisRegistryEventListener;
 import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
-import de.openali.odysseus.chart.framework.model.event.IAxisRegistryEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.ChartModelEventHandler;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -37,148 +36,6 @@ import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
  */
 public class ChartImageComposite extends Canvas implements IChartComposite
 {
-  @Override
-  public ChartImageInfo getPlotInfo( )
-  {
-    return m_paintJob.getPlotInfo();
-  }
-
-  private final ChartModelEventHandler m_chartModelEventHandler = new ChartModelEventHandler();
-
-  private final ILayerManagerEventListener m_layerEventListener = new ChartImageLayerManagerEventListener( this );
-
-  private final IAxisRegistryEventListener m_mapperListener = new ChartImageMapperRegistryEventListener( this );
-
-  private IChartModel m_model;
-
-  private Rectangle m_dragArea = null;
-
-  private Point m_panOffset = new Point( 0, 0 );
-
-  private EditInfo m_editInfo = null;
-
-  private final ChartImagePlotHandler m_plotHandler = new ChartImagePlotHandler( this );
-
-  private final ChartPaintJob m_paintJob = new ChartPaintJob( this );
-
-  private boolean m_invalidatePending;
-
-  public ChartImageComposite( final Composite parent, final int style, final IChartModel model, final RGB backgroundRGB )
-  {
-    super( parent, style | SWT.DOUBLE_BUFFERED );
-
-    addPaintListener( new PaintListener()
-    {
-      @Override
-      public void paintControl( final PaintEvent paintEvent )
-      {
-        handlePaint( paintEvent );
-      }
-    } );
-
-    addDisposeListener( new DisposeListener()
-    {
-      @Override
-      public void widgetDisposed( final DisposeEvent e )
-      {
-        dispose();
-      }
-    } );
-
-    addControlListener( new ControlAdapter()
-    {
-      @Override
-      public void controlResized( final ControlEvent arg0 )
-      {
-        updateClientArea();
-        invalidate();
-      }
-    } );
-
-    updateClientArea();
-    setBackground( OdysseusChartFramework.getDefault().getColorRegistry().getResource( parent.getDisplay(), backgroundRGB ) );
-    setChartModel( model );
-  }
-
-  void updateClientArea( )
-  {
-    m_paintJob.setClientArea( getClientArea() );
-  }
-
-  @Override
-  public void dispose( )
-  {
-    unregisterListener();
-
-    m_plotHandler.dispose();
-
-    m_paintJob.dispose();
-
-    super.dispose();
-  }
-
-  @Override
-  public IChartModel getChartModel( )
-  {
-    return m_model;
-  }
-
-  @Override
-  public void invalidate( )
-  {
-    m_paintJob.cancel();
-
-    // REMARK: prevent schedule if this composite is not really visible;
-    // we just remember that an invalidation should take place on next redraw
-    // This is a performance optimization for the case when the chart is not visible
-    // if( !isVisible() )
-    // {
-    // m_invalidatePending = true;
-    // return;
-    // }
-
-    m_invalidatePending = false;
-
-    m_paintJob.schedule( 50 );
-  }
-
-  final void handlePaint( final PaintEvent paintEvent )
-  {
-    if( m_invalidatePending )
-      invalidate();
-
-    final ImageData plotData = m_paintJob.getPlotImageData();
-    final Point panOffset = m_panOffset;
-    final Rectangle dragArea = m_dragArea;
-    final EditInfo editInfo = m_editInfo;
-
-    if( plotData == null )
-      return;
-
-    final GC paintGC = paintEvent.gc;
-
-    final Image plotImage = new Image( paintEvent.display, plotData );
-    paintGC.drawImage( plotImage, -panOffset.x, -panOffset.y );
-    plotImage.dispose();
-
-    paintDragArea( paintGC, dragArea );
-    paintEditInfo( paintGC, editInfo );
-
-    final IChartHandlerManager manager = getPlotHandler();
-    final IChartHandler[] handlers = manager.getActiveHandlers();
-    for( final IChartHandler handler : handlers )
-    {
-      SafeRunner.run( new SafeRunnable()
-      {
-        @Override
-        public void run( ) throws Exception
-        {
-          handler.paintControl( paintEvent );
-        }
-      } );
-    }
-  }
-
   private static void paintDragArea( final GC gcw, final Rectangle dragArea )
   {
     // Wenn ein DragRectangle da ist, dann muss nur das gezeichnet werden
@@ -212,6 +69,156 @@ public class ChartImageComposite extends Canvas implements IChartComposite
       editInfo.getEditFigure().paint( gc );
   }
 
+  private final ChartModelEventHandler m_chartModelEventHandler = new ChartModelEventHandler();
+
+  private final ILayerManagerEventListener m_layerEventListener = new ChartImageLayerManagerEventListener( this );
+
+  private final IAxisRegistryEventListener m_mapperListener = new ChartImageMapperRegistryEventListener( this );
+
+  private IChartModel m_model;
+
+  private Rectangle m_dragArea = null;
+
+  private Point m_panOffset = new Point( 0, 0 );
+
+  private EditInfo m_editInfo = null;
+
+  private final ChartImagePlotHandler m_plotHandler = new ChartImagePlotHandler( this );
+
+  private final ChartPaintJob m_paintJob;
+
+  private boolean m_invalidatePending;
+
+  public ChartImageComposite( final Composite parent, final int style, final IChartModel model, final RGB backgroundRGB )
+  {
+    super( parent, style | SWT.DOUBLE_BUFFERED );
+    m_paintJob = new ChartPaintJob( this,backgroundRGB);
+    addPaintListener( new PaintListener()
+    {
+      @Override
+      public void paintControl( final PaintEvent paintEvent )
+      {
+        handlePaint( paintEvent );
+      }
+    } );
+
+    addDisposeListener( new DisposeListener()
+    {
+      @Override
+      public void widgetDisposed( final DisposeEvent e )
+      {
+        dispose();
+      }
+    } );
+
+    addControlListener( new ControlAdapter()
+    {
+      @Override
+      public void controlResized( final ControlEvent arg0 )
+      {
+        updateClientArea();
+        invalidate();
+      }
+    } );
+    updateClientArea();
+    setChartModel( model );
+  }
+
+  @Override
+  public void addListener( final IChartModelEventListener listener )
+  {
+    m_chartModelEventHandler.addListener( listener );
+  }
+
+  @Override
+  public void dispose( )
+  {
+    unregisterListener();
+
+    m_plotHandler.dispose();
+
+    m_paintJob.dispose();
+
+    super.dispose();
+  }
+
+  @Override
+  public IChartModel getChartModel( )
+  {
+    return m_model;
+  }
+
+  @Override
+  public IChartHandlerManager getPlotHandler( )
+  {
+    return m_plotHandler;
+  }
+
+  @Override
+  public ChartImageInfo getPlotInfo( )
+  {
+    return m_paintJob.getPlotInfo();
+  }
+
+  final void handlePaint( final PaintEvent paintEvent )
+  {
+    if( m_invalidatePending )
+      invalidate();
+
+    final ImageData plotData = m_paintJob.getPlotImageData();
+    final ImageData layerData = m_paintJob.getLayerImageData();
+    final Point panOffset = m_panOffset;
+    final Rectangle dragArea = m_dragArea;
+    final EditInfo editInfo = m_editInfo;
+
+    if( plotData == null )
+      return;
+
+    final GC paintGC = paintEvent.gc;
+    final Image layerImage = new Image( paintEvent.display, layerData );
+    paintGC.drawImage( layerImage, -panOffset.x, -panOffset.y );
+    layerImage.dispose();
+    final Image plotImage = new Image( paintEvent.display, plotData );
+    paintGC.drawImage( plotImage, 0, 0 );
+    plotImage.dispose();
+
+    paintDragArea( paintGC, dragArea );
+    paintEditInfo( paintGC, editInfo );
+
+    final IChartHandlerManager manager = getPlotHandler();
+    final IChartHandler[] handlers = manager.getActiveHandlers();
+    for( final IChartHandler handler : handlers )
+    {
+      SafeRunner.run( new SafeRunnable()
+      {
+        @Override
+        public void run( ) throws Exception
+        {
+          handler.paintControl( paintEvent );
+        }
+      } );
+    }
+  }
+
+  @Override
+  public void invalidate( )
+  {
+    m_paintJob.cancel();
+
+    // REMARK: prevent schedule if this composite is not really visible;
+    // we just remember that an invalidation should take place on next redraw
+    // This is a performance optimization for the case when the chart is not visible
+    // if( !isVisible() )
+    // {
+    // m_invalidatePending = true;
+    // return;
+    // }
+
+    m_invalidatePending = false;
+
+    m_paintJob.schedule( 50 );
+  }
+
   private void registerListener( )
   {
     if( m_model == null )
@@ -219,6 +226,12 @@ public class ChartImageComposite extends Canvas implements IChartComposite
 
     m_model.getLayerManager().addListener( m_layerEventListener );
     m_model.getAxisRegistry().addListener( m_mapperListener );
+  }
+
+  @Override
+  public void removeListener( final IChartModelEventListener listener )
+  {
+    m_chartModelEventHandler.removeListener( listener );
   }
 
   public void setChartModel( final IChartModel model )
@@ -281,21 +294,8 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     m_model.getAxisRegistry().removeListener( m_mapperListener );
   }
 
-  @Override
-  public IChartHandlerManager getPlotHandler( )
+  void updateClientArea( )
   {
-    return m_plotHandler;
-  }
-
-  @Override
-  public void addListener( final IChartModelEventListener listener )
-  {
-    m_chartModelEventHandler.addListener( listener );
-  }
-
-  @Override
-  public void removeListener( final IChartModelEventListener listener )
-  {
-    m_chartModelEventHandler.removeListener( listener );
+    m_paintJob.setClientArea( getClientArea() );
   }
 }

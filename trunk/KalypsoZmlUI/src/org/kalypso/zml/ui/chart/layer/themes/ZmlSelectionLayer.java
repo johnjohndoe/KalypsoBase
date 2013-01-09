@@ -40,9 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.themes;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
@@ -80,7 +78,7 @@ public class ZmlSelectionLayer extends AbstractChartLayer
 
   public ZmlSelectionLayer( final ILayerProvider layerProvider, final IStyleSet styleSet )
   {
-    super( layerProvider ,styleSet);
+    super( layerProvider, styleSet );
 
     final StyleSetVisitor visitor = new StyleSetVisitor( false );
     m_lineStyle = visitor.visit( getStyleSet(), ILineStyle.class, 0 );
@@ -107,66 +105,33 @@ public class ZmlSelectionLayer extends AbstractChartLayer
     final IAxis domainAxis = mapper.getDomainAxis();
     final IAxis targetAxis = mapper.getTargetAxis();
 
-    final IDataRange<Double> domainRange = domainAxis.getNumericRange();
-    final IDataRange<Double> targetRange = targetAxis.getNumericRange();
-
-    final Double min = domainRange.getMin();
-    final Double max = domainRange.getMax();
-    if( Objects.isNull( min, max ) )
-      return;
-
-    final DateRange dateRange = new DateRange( new Date( min.longValue() ), new Date( max.longValue() ) );
+    final IDataRange<Date> domainRange = domainAxis.getLogicalRange();
+    final IDataRange<Integer> targetRange = targetAxis.getLogicalRange();
+    final DateRange dateRange = new DateRange( domainRange.getMin(), domainRange.getMax() );
     if( !dateRange.intersects( m_selectedDateRange ) )
       return;
 
-    final Integer x1 = Math.abs( domainAxis.logicalToScreen( m_selectedDateRange.getFrom().getTime() ) );
-    final Integer x2 = Math.abs( domainAxis.logicalToScreen( m_selectedDateRange.getTo().getTime() ) );
-
-    final Integer yMin = targetAxis.numericToScreen( targetRange.getMin() );
-    final Integer yMax = targetAxis.numericToScreen( targetRange.getMax() );
+    final Integer x1 = domainAxis.logicalToScreen( m_selectedDateRange.getFrom() );
+    final Integer x2 = domainAxis.logicalToScreen( m_selectedDateRange.getTo() );
+    final Integer yMin = targetAxis.logicalToScreen( targetRange.getMin() );
+    final Integer yMax = targetAxis.logicalToScreen( targetRange.getMax() );
 
     final PolygonFigure figure = new PolygonFigure();
-    figure.setStyle( m_areaStyle );
-
-    final List<Point> points = new ArrayList<>();
-    points.add( new Point( x1, yMin ) );
-    points.add( new Point( x1, yMax ) );
-    points.add( new Point( x2, yMax ) );
-    points.add( new Point( x2, yMin ) );
-
-    figure.setPoints( points.toArray( new Point[] {} ) );
+    figure.setPoints( new Point[] { new Point( x1, yMin ), new Point( x1, yMax ), new Point( x2, yMax ), new Point( x2, yMin ) } );
     figure.paint( gc );
   }
 
   @SuppressWarnings( "rawtypes" )
   private void paintSingleSelect( final GC gc )
   {
-    final ICoordinateMapper mapper = getCoordinateMapper();
-
-    final IAxis domainAxis = mapper.getDomainAxis();
+    final ICoordinateMapper<Date,Integer> mapper = getCoordinateMapper();
     final IAxis targetAxis = mapper.getTargetAxis();
-
-    final IDataRange<Double> domainRange = domainAxis.getNumericRange();
-    final IDataRange<Double> targetRange = targetAxis.getNumericRange();
-
-    final Double min = domainRange.getMin();
-    final Double max = domainRange.getMax();
-    if( Objects.isNull( min, max ) )
-      return;
-
-    final DateRange dateRange = new DateRange( new Date( min.longValue() ), new Date( max.longValue() ) );
-    if( !dateRange.containsLazyInclusive( m_selection ) )
-      return;
-
-    final double logicalX = min.doubleValue() + m_selection.getTime() - min.doubleValue();
-    final Integer x = Math.abs( domainAxis.numericToScreen( logicalX ) );
-
-    final Integer yMin = targetAxis.numericToScreen( targetRange.getMin() );
-    final Integer yMax = targetAxis.numericToScreen( targetRange.getMax() );
-
     final PolylineFigure polylineFigure = new PolylineFigure();
     polylineFigure.setStyle( m_lineStyle );
-    polylineFigure.setPoints( new Point[] { new Point( x, yMin ), new Point( x, yMax ) } );
+    final IDataRange<Integer> targetRange = targetAxis.getLogicalRange();
+    final Point p1 = mapper.logicalToScreen( m_selection, targetRange.getMin() );
+    final Point p2 = mapper.logicalToScreen( m_selection, targetRange.getMax() );
+    polylineFigure.setPoints( new Point[] { p1, p2 } );
     polylineFigure.paint( gc );
   }
 

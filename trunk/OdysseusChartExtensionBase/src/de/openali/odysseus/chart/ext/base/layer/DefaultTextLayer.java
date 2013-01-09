@@ -91,11 +91,14 @@ public class DefaultTextLayer extends AbstractChartLayer
 
       final double anchorX = bean.getTextAnchorX().doubleValue();
       final double anchorY = bean.getTextAnchorY().doubleValue();
-
-      final double screenPosX = getDomainAxis().getScreenHeight() * anchorX;
-      final double screenPosY = getTargetAxis().getScreenHeight() * anchorY;
-
-      m_labelRenderer.paint( gc, new Point( (int) screenPosX, (int) screenPosY ) );
+      
+      final Point anchor=cm.logicalToScreen( anchorX, anchorY );
+      
+//      final double screenPosX = getDomainAxis().getScreenHeight() * anchorX;
+//      final double screenPosY = getTargetAxis().getScreenHeight() * anchorY;
+//
+//      m_labelRenderer.paint( gc, new Point( (int) screenPosX, (int) screenPosY ) );
+      m_labelRenderer.paint( gc, anchor );
     }
   }
 
