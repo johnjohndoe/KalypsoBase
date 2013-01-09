@@ -117,6 +117,7 @@ public class ZmlSelectionLayer extends AbstractChartLayer
     final Integer yMax = targetAxis.logicalToScreen( targetRange.getMax() );
 
     final PolygonFigure figure = new PolygonFigure();
+    figure.setStyle(m_areaStyle);
     figure.setPoints( new Point[] { new Point( x1, yMin ), new Point( x1, yMax ), new Point( x2, yMax ), new Point( x2, yMin ) } );
     figure.paint( gc );
   }
