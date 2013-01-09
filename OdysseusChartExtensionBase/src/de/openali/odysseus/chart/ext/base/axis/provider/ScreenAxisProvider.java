@@ -38,14 +38,27 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.chart.framework.model.mapper;
+package de.openali.odysseus.chart.ext.base.axis.provider;
+
+import de.openali.odysseus.chart.ext.base.axis.ScreenCoordinateAxis;
+import de.openali.odysseus.chart.factory.provider.AbstractAxisProvider;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 
 /**
- * marker interface for screen axis
- * 
- * @author Dirk Kuch
+ * @author alibu
  */
-public interface IScreenAxis<T> extends IAxis<T>
+public class ScreenAxisProvider extends AbstractAxisProvider
 {
+  @Override
+  public IAxis getAxis( )
+  {
+    return new ScreenCoordinateAxis( getId(), getPosition() );
+  }
 
+  @Override
+  public IAxis getScreenAxis( final String identifier, final POSITION position )
+  {
+    return new ScreenCoordinateAxis( identifier, position );
+  }
 }

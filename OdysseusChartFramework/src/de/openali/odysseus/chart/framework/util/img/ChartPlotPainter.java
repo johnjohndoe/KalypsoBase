@@ -79,7 +79,7 @@ public class ChartPlotPainter
     return m_size;
   }
 
-  public void paint( final GC gc, final ChartImageInfo chartIamgeInfo, final IProgressMonitor monitor )
+  public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
     final IChartLayer[] layers = getLayersForPaint();
 
@@ -92,11 +92,12 @@ public class ChartPlotPainter
     try
     {
       monitor.beginTask( "Painting layers", layers.length );
-
+      gc.setAlpha( 0 );
+      gc.fillRectangle( gc.getClipping());
       for( final IChartLayer layer : layers )
       {
         if( layer.isVisible() )
-          layer.paint( gc, chartIamgeInfo, new SubProgressMonitor( monitor, 1 ) );
+          layer.paint( gc, chartImageInfo, new SubProgressMonitor( monitor, 1 ) );
 
         if( monitor.isCanceled() )
           throw new OperationCanceledException();

@@ -30,6 +30,14 @@
              class="de.openali.odysseus.chart.ext.base.axis.provider.GenericLinearAxisProvider"
              id="de.openali.odysseus.chart.ext.axis.provider.GenericLinear">
        </provider>
+       <provider
+             class="de.openali.odysseus.chart.ext.base.axis.provider.ScreenAxisProvider"
+             id="de.openali.odysseus.chart.ext.base.axis.provider.ScreenAxisProvider">
+       </provider>
+       <provider
+             class="de.openali.odysseus.chart.ext.base.axis.provider.NormalizedAxisProvider"
+             id="de.openali.odysseus.chart.ext.base.axis.provider.NormalizedAxisProvider">
+       </provider>
    </extension>
       <extension
          point="de.openali.odysseus.chart.factory.AxisRendererProvider">
