@@ -46,11 +46,12 @@ import org.kalypso.commons.xml.NS;
  * <p>
  * -----------------------------------------------------
  * </p>
- *
+ * 
  * @author Andreas Poth
  * @version $Revision$ $Date$
  *          <p>
  */
+// FIXME: analogous to Polygon and Surface, we need to distinguish between MultiSurface and MultiPolygon
 public interface GM_MultiSurface extends GM_MultiPrimitive
 {
   public static final QName MULTI_SURFACE_ELEMENT = new QName( NS.GML3, "MultiSurface" );
@@ -63,7 +64,7 @@ public interface GM_MultiSurface extends GM_MultiPrimitive
   /**
    * inserts a GM_Surface in the aggregation. all elements with an index equal or larger index will be moved. if index
    * is larger then getSize() - 1 or smaller then 0 or gms equals null an exception will be thrown.
-   *
+   * 
    * @param gms
    *          GM_Surface to insert.
    * @param index
@@ -74,7 +75,7 @@ public interface GM_MultiSurface extends GM_MultiPrimitive
   /**
    * sets the submitted GM_Surface at the submitted index. the element at the position <code>index</code> will be
    * removed. if index is larger then getSize() - 1 or smaller then 0 or gms equals null an exception will be thrown.
-   *
+   * 
    * @param gms
    *          GM_Surface to set.
    * @param index
@@ -84,7 +85,7 @@ public interface GM_MultiSurface extends GM_MultiPrimitive
 
   /**
    * removes the submitted GM_Surface from the aggregation
-   *
+   * 
    * @return the removed GM_Surface
    */
   GM_Polygon removeSurface( GM_Polygon gms );
@@ -92,7 +93,7 @@ public interface GM_MultiSurface extends GM_MultiPrimitive
   /**
    * removes the GM_Surface at the submitted index from the aggregation. if index is larger then getSize() - 1 or
    * smaller then 0 an exception will be thrown.
-   *
+   * 
    * @return the removed GM_Surface
    */
   GM_Polygon removeSurfaceAt( int index ) throws GM_Exception;
