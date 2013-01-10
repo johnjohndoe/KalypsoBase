@@ -53,7 +53,6 @@ import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.format.ISOPeriodFormat;
 import org.joda.time.format.PeriodFormatter;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
@@ -81,23 +80,17 @@ public class MetadataRequestHandler implements IRequestHandler
     final String keyStart = getKey( "start" ); //$NON-NLS-1$
     final String keyEnd = getKey( "end" ); //$NON-NLS-1$
 
-    if( StringUtils.isBlank( keyStart ) )
-      return null;
-
-    if( StringUtils.isBlank( keyEnd ) )
-      return null;
-
     final Date from = getDate( metadata, keyStart, "startOffset" ); //$NON-NLS-1$
     final Date to = getDate( metadata, keyEnd, "endOffset" ); //$NON-NLS-1$
-
-    if( Objects.isNull( from, to ) )
-      return null;
 
     return new ObservationRequest( new DateRange( from, to ) );
   }
 
   private Date getDate( final MetadataList metadata, final String key, final String offset )
   {
+    if( StringUtils.isBlank( key ) )
+      return null;
+
     if( key.startsWith( "metadata:" ) )//$NON-NLS-1$
     {
       final Date base = getFromMetadata( metadata, key );
@@ -167,5 +160,4 @@ public class MetadataRequestHandler implements IRequestHandler
   {
     return m_parameters.getParameterValue( key, null );
   }
-
 }
