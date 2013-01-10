@@ -126,7 +126,7 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
     m_layer = layer;
     m_paintManager = paintManager;
     m_mapper = layer.getCoordinateMapper();
-    m_baseLine = m_mapper.logicalToScreen( null, 0.0 ).y;
+    m_baseLine = m_mapper.numericToScreen( null, 0.0 ).y;
   }
 
   @Override
@@ -234,7 +234,7 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
   private Number getTargetValue( final IObservationValueContainer container ) throws SensorException
   {
     if( m_fixedHeight != null )
-      return m_fixedHeight;
+      return m_fixedHeight.intValue();
 
     return (Number)container.get( m_valueAxis );
   }
