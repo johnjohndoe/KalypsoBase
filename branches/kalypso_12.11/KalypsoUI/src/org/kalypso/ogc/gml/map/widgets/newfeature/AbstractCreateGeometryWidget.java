@@ -38,6 +38,7 @@ import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_LineString;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
@@ -145,6 +146,8 @@ public abstract class AbstractCreateGeometryWidget extends DeprecatedMouseWidget
     if( GM_Polygon.POLYGON_ELEMENT.equals( valueQName ) )
       m_builder = new PolygonGeometryBuilder( 0, targetCrs );
     else if( GMLConstants.QN_MULTI_POLYGON.equals( valueQName ) )
+      m_builder = new MultiPolygonGeometryBuilder( 0, targetCrs );
+    else if( GM_MultiSurface.MULTI_SURFACE_ELEMENT.equals( valueQName ) )
       m_builder = new MultiPolygonGeometryBuilder( 0, targetCrs );
     else if( GM_LineString.LINE_STRING_ELEMENT.equals( valueQName ) )
       m_builder = new LineGeometryBuilder( 0, targetCrs );
