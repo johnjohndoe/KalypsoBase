@@ -7,7 +7,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 /**
  * @author kimwerner
  */
-public class NormalizedAxis extends IntegerAxis
+public class NormalizedAxis extends GenericLinearAxis
 {
   public NormalizedAxis( final String id, final POSITION pos )
   {
@@ -20,7 +20,7 @@ public class NormalizedAxis extends IntegerAxis
   {
     // use fixed normalized values
     // see IAxisConstants ALIGNMENT
-    // 0.0 => alignment Top, 1.0=>alignment Bottom, 0,5 => Center
+    // 0.0 => alignment Top, 1.0=>alignment Bottom, 0.5 => Center
     return new DataRange<>( 0.0, 1.0);
   }
 
