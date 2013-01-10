@@ -80,7 +80,7 @@ public class ZmlSelectionLayer extends AbstractChartLayer
 
   public ZmlSelectionLayer( final ILayerProvider layerProvider, final IStyleSet styleSet )
   {
-    super( layerProvider ,styleSet);
+    super( layerProvider, styleSet );
 
     final StyleSetVisitor visitor = new StyleSetVisitor( false );
     m_lineStyle = visitor.visit( getStyleSet(), ILineStyle.class, 0 );
@@ -119,8 +119,8 @@ public class ZmlSelectionLayer extends AbstractChartLayer
     if( !dateRange.intersects( m_selectedDateRange ) )
       return;
 
-    final Integer x1 = Math.abs( domainAxis.logicalToScreen( m_selectedDateRange.getFrom().getTime() ) );
-    final Integer x2 = Math.abs( domainAxis.logicalToScreen( m_selectedDateRange.getTo().getTime() ) );
+    final Integer x1 = Math.abs( domainAxis.logicalToScreen( m_selectedDateRange.getFrom() ) );
+    final Integer x2 = Math.abs( domainAxis.logicalToScreen( m_selectedDateRange.getTo() ) );
 
     final Integer yMin = targetAxis.numericToScreen( targetRange.getMin() );
     final Integer yMax = targetAxis.numericToScreen( targetRange.getMax() );
@@ -158,6 +158,7 @@ public class ZmlSelectionLayer extends AbstractChartLayer
     if( !dateRange.containsLazyInclusive( m_selection ) )
       return;
 
+    // FIXME: strange, the axis should calculate the logical...
     final double logicalX = min.doubleValue() + m_selection.getTime() - min.doubleValue();
     final Integer x = Math.abs( domainAxis.numericToScreen( logicalX ) );
 
