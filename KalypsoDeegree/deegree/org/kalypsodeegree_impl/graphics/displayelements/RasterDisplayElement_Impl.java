@@ -275,8 +275,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
       paintCellWise( g, grid, projection, targetCRS, clusterSize, clippedMinCell, clippedMaxCell, progress );
 
     /* DEBUG: This can be used to paint the grid cells and its center point. */
-    // paintCells( g, grid, projection, targetCRS, normalizedMinCell, normalizedMaxCell, true, true, new
-    // NullProgressMonitor() );
+    // paintCells( g, grid, projection, targetCRS, normalizedMinCell, normalizedMaxCell, true, true, new NullProgressMonitor() );
   }
 
   /**
