@@ -1,12 +1,13 @@
 package org.kalypso.gml.ui.commands.importshape;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -32,6 +33,9 @@ import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.shape.FileMode;
 import org.kalypso.shape.ShapeFile;
+import org.kalypso.shape.dbf.DBFField;
+import org.kalypso.shape.dbf.DBaseException;
+import org.kalypso.shape.dbf.FieldType;
 import org.kalypso.shape.dbf.IDBFField;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.ui.ImageProvider;
@@ -45,9 +49,26 @@ public class ImportShapeWizardPage extends WizardPage
 
   protected static final String DATA_PROPERTY = "property"; //$NON-NLS-1$
 
+  // REMARK: marker for optional parameters that are not assigned
+  static IDBFField FIELD_NONE;
+  static
+  {
+    try
+    {
+      FIELD_NONE = new DBFField( "XXX", FieldType.C, (short)128, (short)0 );
+    }
+    catch( final DBaseException e )
+    {
+      // will not happen
+      e.printStackTrace();
+    }
+  }
+
   private final Map<String, ComboViewer> m_propertyViewers = new HashMap<>();
 
   private final String[] m_properties;
+
+  private final Map<String, Boolean> m_optionalProperties = new HashMap<>();
 
   private FileChooserGroup m_shapeChooser;
 
@@ -66,9 +87,8 @@ public class ImportShapeWizardPage extends WizardPage
   }
 
   /**
-   * Creates the top level control for this dialog page under the given parent composite, then calls
-   * <code>setControl</code> so that the created control can be accessed via <code>getControl</code>
-   *
+   * Creates the top level control for this dialog page under the given parent composite, then calls <code>setControl</code> so that the created control can be accessed via <code>getControl</code>
+   * 
    * @param parent
    *          the parent composite
    */
@@ -120,7 +140,17 @@ public class ImportShapeWizardPage extends WizardPage
       m_propertyViewers.put( propertyLabel, propertyViewer );
 
       propertyViewer.setContentProvider( new ArrayContentProvider() );
-      propertyViewer.setLabelProvider( new FieldNameLabelProvider() );
+      propertyViewer.setLabelProvider( new FieldNameLabelProvider()
+      {
+        @Override
+        public String getText( final Object element )
+        {
+          if( element == FIELD_NONE )
+            return "<none selected>";
+
+          return super.getText( element );
+        }
+      } );
       propertyViewer.setSorter( new ViewerSorter() );
 
       final Control control = propertyViewer.getControl();
@@ -132,16 +162,21 @@ public class ImportShapeWizardPage extends WizardPage
         @Override
         public void selectionChanged( final SelectionChangedEvent event )
         {
-          final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-          final IDBFField field = (IDBFField) selection.getFirstElement();
-          control.setData( DATA_PROPERTY, field.getName() );
+          final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
+          final IDBFField field = (IDBFField)selection.getFirstElement();
+
+          if( field == null )
+            control.setData( DATA_PROPERTY, FIELD_NONE );
+          else
+            control.setData( DATA_PROPERTY, field );
+
           validatePage();
         }
       } );
     }
     // container for extended functionality
     final Composite extensionContainer = new Composite( container, SWT.NONE );
-    final GridLayout extensionContainerLayout = new GridLayout(1,true);
+    final GridLayout extensionContainerLayout = new GridLayout( 1, true );
     extensionContainer.setLayout( extensionContainerLayout );
     extensionContainer.setLayoutData( new GridData( SWT.FILL, SWT.TOP, true, false, 3, 1 ) );
     addCustomControls( extensionContainer );
@@ -154,7 +189,7 @@ public class ImportShapeWizardPage extends WizardPage
   /**
    * ancestors may override this for extended functionality
    */
-  protected void addCustomControls( @SuppressWarnings("unused") final Composite container )
+  protected void addCustomControls( @SuppressWarnings( "unused" ) final Composite container )
   {
   }
 
@@ -164,36 +199,42 @@ public class ImportShapeWizardPage extends WizardPage
 
     // FIXME: introduce '<none selected>' entry; page is only complete, if all entries have been selected
 
-    final IDBFField[] fields;
-    if( file != null && file.exists() )
-    {
-      fields = readFields( file );
-    }
-    else
-    {
-      fields = new IDBFField[0];
-    }
+    final IDBFField[] fields = readFields( file );
 
-    for( final ComboViewer viewer : m_propertyViewers.values() )
+    for( final Entry<String, ComboViewer> entry : m_propertyViewers.entrySet() )
     {
-      viewer.getControl().setData( DATA_PROPERTY, null );
-      viewer.setInput( fields );
+      final ComboViewer viewer = entry.getValue();
+
+      viewer.getControl().setData( DATA_PROPERTY, FIELD_NONE );
+
+      final IDBFField[] fieldWithUnkown = ArrayUtils.addAll( new IDBFField[] { FIELD_NONE }, fields );
+
+      viewer.setInput( fieldWithUnkown );
+
       viewer.getControl().setEnabled( fields != null );
       if( fields.length > 0 )
-        viewer.setSelection( new StructuredSelection( fields[0] ) );
+        viewer.setSelection( new StructuredSelection( fieldWithUnkown[0] ) );
     }
+  }
+
+  private boolean isOptional( final String property )
+  {
+    final Boolean isOptional = m_optionalProperties.get( property );
+    if( isOptional == null )
+      return false;
+
+    return isOptional;
   }
 
   private IDBFField[] readFields( final File file )
   {
-    ShapeFile shape = null;
-    try
-    {
-      if( file == null )
-        return null;
+    if( file == null || !file.isFile() )
+      return new IDBFField[0];
 
-      final String shapeBase = FilenameUtils.removeExtension( file.getAbsolutePath() );
-      shape = new ShapeFile( shapeBase, ShapeSerializer.getShapeDefaultCharset(), FileMode.READ );
+    final String shapeBase = FilenameUtils.removeExtension( file.getAbsolutePath() );
+
+    try( ShapeFile shape = new ShapeFile( shapeBase, ShapeSerializer.getShapeDefaultCharset(), FileMode.READ ) )
+    {
       final IDBFField[] fields = shape.getFields();
       shape.close();
       return fields;
@@ -203,19 +244,7 @@ public class ImportShapeWizardPage extends WizardPage
       e.printStackTrace();
       final String msg = String.format( Messages.getString( "org.kalypso.gml.ui.commands.importshape.ImportShapeWizardPage.4" ), e.getLocalizedMessage() ); //$NON-NLS-1$
       setErrorMessage( msg );
-      return null;
-    }
-    finally
-    {
-      try
-      {
-        if( shape != null )
-          shape.close();
-      }
-      catch( final IOException ignored )
-      {
-        // ignored
-      }
+      return new IDBFField[0];
     }
   }
 
@@ -245,6 +274,18 @@ public class ImportShapeWizardPage extends WizardPage
     if( m_selectedCRS == null )
       return new MessageProvider( Messages.getString( "org.kalypso.gml.ui.commands.importshape.ImportShapeWizardPage.5" ), ERROR ); //$NON-NLS-1$
 
+    for( final Entry<String, ComboViewer> entry : m_propertyViewers.entrySet() )
+    {
+      final String property = entry.getKey();
+      if( !isOptional( property ) && getProperty( property ) == null )
+      {
+        // FIXME: use real label of property instead of internal name!
+        final String propertyLabel = property;
+        final String message = String.format( "Property '%s' is not optional. Please select a shape attribute for this property.", propertyLabel );
+        return new MessageProvider( message, ERROR ); //$NON-NLS-1$
+      }
+    }
+
     return shapeMessage;
   }
 
@@ -259,7 +300,11 @@ public class ImportShapeWizardPage extends WizardPage
     if( comboViewer == null )
       return null;
 
-    return (String) comboViewer.getControl().getData( DATA_PROPERTY );
+    final IDBFField field = (IDBFField)comboViewer.getControl().getData( DATA_PROPERTY );
+    if( field == FIELD_NONE )
+      return null;
+
+    return field.getName();
   }
 
   public String getSelectedCRS( )
@@ -269,7 +314,14 @@ public class ImportShapeWizardPage extends WizardPage
 
   public Charset getSelectedCharset( )
   {
+    return ShapeSerializer.getShapeDefaultCharset();
+
     // TODO: for the moment we only allow the default charset of the platform.
-    return Charset.defaultCharset();
+//    return Charset.defaultCharset();
+  }
+
+  public void setOptional( final String property, final boolean isOptional )
+  {
+    m_optionalProperties.put( property, isOptional );
   }
 }
