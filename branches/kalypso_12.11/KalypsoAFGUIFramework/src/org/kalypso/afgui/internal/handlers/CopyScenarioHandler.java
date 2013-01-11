@@ -40,6 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.internal.handlers;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -92,10 +97,31 @@ public class CopyScenarioHandler extends AbstractHandler
     /* show wizard */
     final IScenarioOperation operation = new CreateScenarioOperation();
     final ScenarioData data = new ScenarioData( parentScenario, scenario, operation, false );
+    data.setName( guessCopyName( scenario, parentScenario ) );
 
     ScenarioWizard.stopTaskAndOpenWizard( shell, data );
 
     return null;
+  }
+
+  private String guessCopyName( final IScenario scenario, final IScenario parentScenario )
+  {
+    final Set<String> existingNames = new HashSet<>();
+
+    final List<IScenario> sisterScenarios = parentScenario.getDerivedScenarios().getScenarios();
+    for( final IScenario sisterScenario : sisterScenarios )
+      existingNames.add( sisterScenario.getName() );
+
+    final String name = scenario.getName();
+
+    for( int i = 2; i < 999; i++ )
+    {
+      final String guessedName = String.format( "%s (%d)", name, i );
+      if( !existingNames.contains( sisterScenarios ) )
+        return guessedName;
+    }
+
+    return StringUtils.EMPTY;
   }
 
   private Object showInformation( final Shell shell, final String windowTitle, final String message )
