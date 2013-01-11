@@ -548,6 +548,15 @@ public class Feature_Impl extends PlatformObject implements Feature
     return value.doubleValue();
   }
 
+  protected int getIntegerProperty( final QName property, final int defaultValue )
+  {
+    final Integer value = getProperty( property, Integer.class );
+    if( value == null )
+      return defaultValue;
+
+    return value.intValue();
+  }
+
   @Override
   public Feature getMember( final QName relationName )
   {
