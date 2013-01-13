@@ -11,8 +11,9 @@
   <layout>
     <mainWindow>
       <info folder="true" part="leftTop">
-        <folder activePageID="org.kalypso.kalypso1d2d.pjt.views.WorklistView" appearance="2" expanded="2">
+        <folder activePageID="org.kalypso.kalypso1d2d.pjt.views.ScenarioView" appearance="2" expanded="2">
           <page content="org.kalypso.kalypso1d2d.pjt.views.WorklistView" label="Aktivitäten" />
+          <page content="org.kalypso.kalypso1d2d.pjt.views.ScenarioView" label="Szenarios" />
           <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
             <part id="0" />
           </presentation>
@@ -27,14 +28,7 @@
         </folder>
       </info>
       
-      <info part="org.eclipse.ui.editorss" ratio="0.19542947" ratioLeft="248" ratioRight="1021" relationship="2" relative="leftTop" />
-      
-      <info folder="true" part="leftBottom" ratio="0.7347162" ratioLeft="673" ratioRight="243" relationship="4" relative="leftTop">
-        <folder activePageID="org.kalypso.kalypso1d2d.pjt.views.ScenarioView" appearance="2" expanded="2">
-          <page content="org.kalypso.kalypso1d2d.pjt.views.ScenarioView" label="Szenarios" />
-          <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"></presentation>
-        </folder>
-      </info>
+      <info part="org.eclipse.ui.editorss" ratio="0.19542947" ratioLeft="350" ratioRight="1021" relationship="2" relative="leftTop" />
     </mainWindow>
   </layout>
 </perspective>
