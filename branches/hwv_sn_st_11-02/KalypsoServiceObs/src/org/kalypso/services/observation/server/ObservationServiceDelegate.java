@@ -113,48 +113,36 @@ import org.kalypso.zml.request.Request;
 @SuppressWarnings("restriction")
 public class ObservationServiceDelegate implements IObservationService, IDisposable
 {
-  private final List<IRepository> m_repositories;
+  private final List<IRepository> m_repositories = new Vector<IRepository>();
 
   private ItemBean[] m_repositoryBeans = null;
 
   /** Bean-ID(String) --> IRepositoryItem */
-  private final Map<String, IRepositoryItem> m_mapBeanId2Item;
+  private final Map<String, IRepositoryItem> m_mapBeanId2Item = new Hashtable<String, IRepositoryItem>( 512 );
 
   /** IRepositoryItem --> ItemBean */
-  private final Map<IRepositoryItem, ItemBean[]> m_mapItem2Bean;
+  private final Map<IRepositoryItem, ItemBean[]> m_mapItem2Bean = new Hashtable<IRepositoryItem, ItemBean[]>( 512 );
 
   /** Repository-ID(String) --> IRepository */
-  private final Map<String, IRepository> m_mapRepId2Rep;
+  private final Map<String, IRepository> m_mapRepId2Rep = new Hashtable<String, IRepository>();
 
   /** Data-ID(String) --> File */
-  private final Map<String, File> m_mapDataId2File;
+  private final Map<String, File> m_mapDataId2File = new Hashtable<String, File>( 128 );
 
-  private final File m_tmpDir;
+  private final File m_tmpDir = FileUtilities.createNewTempDir( "Observations" ); //$NON-NLS-1$
 
-  private final Logger m_logger;
+  private final Logger m_logger = Logger.getLogger( ObservationServiceDelegate.class.getName() );
 
   private boolean m_initialized = false;
 
-  private final String m_configurationLocation;
+  private final String m_configurationLocation = FrameworkProperties.getProperty( KalypsoServiceObs.SYSPROP_CONFIGURATION_LOCATION );
 
   /**
    * Constructs the service by reading the configuration.
    */
   public ObservationServiceDelegate( )
   {
-    m_repositories = new Vector<IRepository>();
-    m_mapBeanId2Item = new Hashtable<String, IRepositoryItem>( 512 );
-    m_mapItem2Bean = new Hashtable<IRepositoryItem, ItemBean[]>( 512 );
-    m_mapRepId2Rep = new Hashtable<String, IRepository>();
-    m_mapDataId2File = new Hashtable<String, File>( 128 );
-
-    m_logger = Logger.getLogger( ObservationServiceDelegate.class.getName() );
-    m_initialized = false;
-
-    m_tmpDir = FileUtilities.createNewTempDir( "Observations" ); //$NON-NLS-1$
     m_tmpDir.deleteOnExit();
-
-    m_configurationLocation = FrameworkProperties.getProperty( KalypsoServiceObs.SYSPROP_CONFIGURATION_LOCATION );
 
     /* HINT: The init method tries to access another servlet in the same container. */
     init();
@@ -272,8 +260,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     {
       m_logger.throwing( getClass().getName(), "init", e ); //$NON-NLS-1$
 
-      /** don't throw exception - in sachsen anhalt it's normal that the wiski repository don't exists on server side */
-      // throw new RepositoryException( "Exception in KalypsoObservationService.init()", e ); //$NON-NLS-1$
+      // FIXME: should'nt we set m_initialized to false here? depending on the kind of error
     }
   }
 
@@ -357,20 +344,30 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
       final IRepositoryItem item = itemFromBean( obean );
 
       obs = (IObservation) item.getAdapter( IObservation.class );
+
+      if( obs == null )
+        m_logger.info( "Could not find an observation for " + obean.getId() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( final Exception e )
     {
       m_logger.info( "Could not find an observation for " + obean.getId() + ". Reason is:\n" + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
 
-      // this is not a fatal error, repository might be temporarely unavailable
+      // this is not a fatal error, repository might be temporarily unavailable
     }
 
     if( obs == null )
     {
+      // FIXME: check: why do we do this on the server side, dubious! We should rather throw an exception,
+      // the clients should handle this
+
       // obs could not be created, use the request now
       m_logger.info( "Creating request-based observation for " + obean.getId() ); //$NON-NLS-1$
+      m_logger.info( "Request was: " + hereHref ); //$NON-NLS-1$
       obs = RequestFactory.createDefaultObservation( requestType );
     }
+
+    if( obs == null )
+      throw new SensorException( String.format( "Unknwon repository item: %s", href ) ); //$NON-NLS-1$
 
     try
     {
@@ -637,12 +634,12 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
 
   /**
    * FIXME at the moment we assume that an new item should be created in all sub repositories
-   * 
-   * @see org.kalypso.services.observation.sei.IRepositoryService#makeItem(java.lang.String)
    */
   @Override
   public final void makeItem( final String itemIdentifier ) throws RepositoryException
   {
+    init();
+
     for( final IRepository repository : m_repositories )
     {
       if( repository instanceof IModifyableRepository )
@@ -655,12 +652,12 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
 
   /**
    * FIXME at the moment we assume that an item should be deleted in all sub repositories
-   * 
-   * @see org.kalypso.services.observation.sei.IRepositoryService#deleteItem(java.lang.String)
    */
   @Override
   public final void deleteItem( final String identifier ) throws RepositoryException
   {
+    init();
+
     for( final IRepository repository : m_repositories )
     {
       if( repository instanceof IModifyableRepository )
@@ -674,6 +671,8 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
   @Override
   public final void setItemData( final String identifier, final Object serializable ) throws RepositoryException
   {
+    init();
+
     for( final IRepository repository : m_repositories )
     {
       if( repository instanceof IWriteableRepository )
@@ -697,6 +696,8 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
   @Override
   public final void setItemName( final String identifier, final String name ) throws RepositoryException
   {
+    init();
+
     for( final IRepository repository : m_repositories )
     {
       if( repository instanceof IModifyableRepository )
@@ -714,6 +715,8 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
   @Override
   public boolean isMultipleSourceItem( final String identifier ) throws RepositoryException
   {
+    init();
+
     for( final IRepository repository : m_repositories )
     {
       final IRepositoryItem item = Repositories.findEquivalentItem( repository, identifier );
@@ -727,6 +730,8 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
   @Override
   public StatusBean getStatus( final String type )
   {
+    init();
+
     final Set<IStatus> stati = new LinkedHashSet<IStatus>();
     for( final IRepository repository : m_repositories )
       stati.add( repository.getStatus( type ) );

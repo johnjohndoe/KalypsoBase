@@ -130,6 +130,9 @@ public final class RequestFactory
   {
     final ObservationRequest request = ObservationRequest.createWith( xmlReq );
     final String[] axesTypes = request.getAxisTypes();
+
+    // FIXME: after release: if axesTypes.length == 0 return null;
+
     final String[] statusAxes = request.getAxisTypesWithStatus();
     final List<IAxis> axes = new Vector<IAxis>();
     for( final String axesType : axesTypes )
@@ -141,6 +144,13 @@ public final class RequestFactory
     }
 
     final IAxis valueAxis = AxisUtils.findValueAxis( axes.toArray( new IAxis[] {} ) );
+
+    if( valueAxis == null )
+    {
+      // something is wrong, we cannot proceed (leads to NPE)
+      return null;
+    }
+
     axes.add( DataSourceHelper.createSourceAxis( valueAxis ) );
 
     // create observation instance
