@@ -73,7 +73,6 @@ import org.kalypso.zml.core.table.schema.IndexColumnType;
  */
 public class ZmlRowHeaderCellPainter extends AbstractCellPainter
 {
-
   private final ZmlModelViewport m_viewport;
 
   public ZmlRowHeaderCellPainter( final ZmlModelViewport viewport )
@@ -84,12 +83,16 @@ public class ZmlRowHeaderCellPainter extends AbstractCellPainter
   @Override
   public void paintCell( final LayerCell cell, final GC gc, final Rectangle bounds, final IConfigRegistry configRegistry )
   {
+    // FIXME: dubious: registereing the styles every time a cell is painted, is this right??
+
     final Object object = cell.getDataValue();
     if( object instanceof IZmlModelRow )
     {
       final Style style = getStyle( (IZmlModelRow) object );
       configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
-      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.SELECT, GridRegion.ROW_HEADER.toString() );
+
+      final Style selectionStyle = getSelectionStyle( style );
+      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, selectionStyle, DisplayMode.SELECT, GridRegion.ROW_HEADER.toString() );
 
       final TextPainter painter = new TextPainter();
       painter.paintCell( cell, gc, bounds, configRegistry );
@@ -116,6 +119,26 @@ public class ZmlRowHeaderCellPainter extends AbstractCellPainter
     final HorizontalAlignmentEnum hAlign = HorizontalAlignmentEnum.LEFT;
     final VerticalAlignmentEnum vAlign = VerticalAlignmentEnum.MIDDLE;
     final BorderStyle borderStyle = null;
+
+    final Style cellStyle = new Style();
+    cellStyle.setAttributeValue( CellStyleAttributes.BACKGROUND_COLOR, bgColor );
+    cellStyle.setAttributeValue( CellStyleAttributes.FOREGROUND_COLOR, fgColor );
+    cellStyle.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, hAlign );
+    cellStyle.setAttributeValue( CellStyleAttributes.VERTICAL_ALIGNMENT, vAlign );
+    cellStyle.setAttributeValue( CellStyleAttributes.BORDER_STYLE, borderStyle );
+    cellStyle.setAttributeValue( CellStyleAttributes.FONT, font );
+
+    return cellStyle;
+  }
+
+  private Style getSelectionStyle( final Style style )
+  {
+    final Font font = style.getAttributeValue( CellStyleAttributes.FONT );
+    final Color bgColor = GUIHelper.COLOR_GRAY;
+    final Color fgColor = GUIHelper.COLOR_WHITE;
+    final HorizontalAlignmentEnum hAlign = style.getAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT );
+    final VerticalAlignmentEnum vAlign = style.getAttributeValue( CellStyleAttributes.VERTICAL_ALIGNMENT );
+    final BorderStyle borderStyle = style.getAttributeValue( CellStyleAttributes.BORDER_STYLE );
 
     final Style cellStyle = new Style();
     cellStyle.setAttributeValue( CellStyleAttributes.BACKGROUND_COLOR, bgColor );
