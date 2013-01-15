@@ -123,7 +123,6 @@ public class ZmlModelCellPainter extends AbstractCellPainter
 
   private ICellPainter getPainter( final IZmlModelValueCell cell )
   {
-
     final IZmlModelColumn column = cell.getColumn();
     if( Objects.isNull( column ) )
       return new TextPainter();

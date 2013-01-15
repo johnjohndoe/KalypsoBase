@@ -77,7 +77,6 @@ import org.kalypso.zml.core.table.rules.AppliedRule;
  */
 public class ZmlColumnHeaderCellPainter extends AbstractCellPainter
 {
-
   private final ZmlModelViewport m_viewport;
 
   public ZmlColumnHeaderCellPainter( final ZmlModelViewport viewport )
@@ -108,8 +107,11 @@ public class ZmlColumnHeaderCellPainter extends AbstractCellPainter
         ptr = move( ptr, image.getBounds() );
       }
 
-      final Style cellStyle = getStyle();
-      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, cellStyle, DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
+      final Style style = getStyle();
+      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
+
+      final Style selectionStyle = getSelectionStyle( style );
+      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, selectionStyle, DisplayMode.SELECT, GridRegion.COLUMN_HEADER.toString() );
 
       // TODO wrapped text painters increases column header size - how to shrink column header?
       final ICellPainter painter = new TextPainter();
@@ -119,6 +121,7 @@ public class ZmlColumnHeaderCellPainter extends AbstractCellPainter
       throw new UnsupportedOperationException();
   }
 
+
   private Rectangle move( final Rectangle ptr, final Rectangle bounds )
   {
     return new Rectangle( ptr.x + bounds.width, ptr.y, ptr.width - bounds.width, ptr.height );
@@ -126,13 +129,32 @@ public class ZmlColumnHeaderCellPainter extends AbstractCellPainter
 
   private Style getStyle( )
   {
-
     final Font font = GUIHelper.getFont( new FontData( "Verdana", 10, SWT.NORMAL ) );
     final Color bgColor = GUIHelper.COLOR_WIDGET_BACKGROUND;
     final Color fgColor = GUIHelper.COLOR_WIDGET_FOREGROUND;
     final HorizontalAlignmentEnum hAlign = HorizontalAlignmentEnum.RIGHT;
     final VerticalAlignmentEnum vAlign = VerticalAlignmentEnum.MIDDLE;
     final BorderStyle borderStyle = null;
+
+    final Style cellStyle = new Style();
+    cellStyle.setAttributeValue( CellStyleAttributes.BACKGROUND_COLOR, bgColor );
+    cellStyle.setAttributeValue( CellStyleAttributes.FOREGROUND_COLOR, fgColor );
+    cellStyle.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, hAlign );
+    cellStyle.setAttributeValue( CellStyleAttributes.VERTICAL_ALIGNMENT, vAlign );
+    cellStyle.setAttributeValue( CellStyleAttributes.BORDER_STYLE, borderStyle );
+    cellStyle.setAttributeValue( CellStyleAttributes.FONT, font );
+
+    return cellStyle;
+  }
+
+  private Style getSelectionStyle( final Style style )
+  {
+    final Font font = style.getAttributeValue( CellStyleAttributes.FONT );
+    final Color bgColor = GUIHelper.COLOR_GRAY;
+    final Color fgColor = GUIHelper.COLOR_WHITE;
+    final HorizontalAlignmentEnum hAlign = style.getAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT );
+    final VerticalAlignmentEnum vAlign = style.getAttributeValue( CellStyleAttributes.VERTICAL_ALIGNMENT );
+    final BorderStyle borderStyle = style.getAttributeValue( CellStyleAttributes.BORDER_STYLE );
 
     final Style cellStyle = new Style();
     cellStyle.setAttributeValue( CellStyleAttributes.BACKGROUND_COLOR, bgColor );
