@@ -46,14 +46,17 @@ import java.util.Set;
 
 import net.sourceforge.nattable.NatTable;
 import net.sourceforge.nattable.layer.ILayerListener;
+import net.sourceforge.nattable.layer.IUniqueIndexLayer;
 import net.sourceforge.nattable.layer.cell.LayerCell;
 import net.sourceforge.nattable.layer.event.ILayerEvent;
 import net.sourceforge.nattable.selection.command.SelectCellCommand;
 import net.sourceforge.nattable.selection.event.CellSelectionEvent;
 import net.sourceforge.nattable.selection.event.RowSelectionEvent;
-import net.sourceforge.nattable.viewport.command.ShowRowInViewportCommand;
+import net.sourceforge.nattable.viewport.ViewportLayer;
 import net.sourceforge.nattable.viewport.event.ScrollEvent;
 
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
@@ -78,13 +81,22 @@ public class DefaultZmlTablePagerCallback implements IZmlTablePagerCallback
     }
   };
 
+  private final ControlAdapter m_resizeListener = new ControlAdapter()
+  {
+    @Override
+    public void controlResized( final ControlEvent e )
+    {
+      handleTableResize();
+    }
+  };
+
   private final IZmlTable m_zmlTable;
 
-  private boolean m_firstRun;
+  private boolean m_firstRun = true;
 
-  private Date m_lastRow;
+  private Date m_originRow = null;
 
-  private Date m_focusRow;
+  private Date m_focusRow = null;
 
   private final Set<Date> m_selectedRows = new HashSet<Date>();
 
@@ -93,11 +105,19 @@ public class DefaultZmlTablePagerCallback implements IZmlTablePagerCallback
   public DefaultZmlTablePagerCallback( final IZmlTable zmlTable )
   {
     m_zmlTable = zmlTable;
-    m_firstRun = true;
-    m_lastRow = null;
 
     final NatTable table = zmlTable.getTable();
     table.addLayerListener( m_listener );
+
+    table.addControlListener( m_resizeListener );
+  }
+
+  protected void handleTableResize( )
+  {
+    // BUGFIX: if the table is initially not visible, the whole forecast date selection does not work
+    // as the viewport size is set to 0.
+    if( m_firstRun )
+      afterRefresh();
   }
 
   protected void doHandleLayerEvent( final ILayerEvent event )
@@ -106,27 +126,31 @@ public class DefaultZmlTablePagerCallback implements IZmlTablePagerCallback
       return;
 
     if( event instanceof ScrollEvent )
-    {
-      // choose last row and the table paging will be correct - in most cases :-)
-      final NatTable table = m_zmlTable.getTable();
-      final int rowCount = table.getRowCount();
-      final LayerCell cell = table.getCellByPosition( 1, rowCount - 1 );
-      if( cell == null )
-        return;
-
-      final Object dataValue = cell.getDataValue();
-      if( dataValue instanceof IZmlModelCell )
-      {
-        final IZmlModelCell modelCell = (IZmlModelCell) dataValue;
-        m_lastRow = modelCell.getIndexValue();
-      }
-    }
+      rememberOrigin();
 
     if( event instanceof RowSelectionEvent )
       rememberSelection();
 
     if( event instanceof CellSelectionEvent )
       rememberSelection();
+  }
+
+  private void rememberOrigin( )
+  {
+    /* remember current origin of viewport in order to restore it later */
+    final BodyLayerStack bodyLayer = m_zmlTable.getBodyLayer();
+    final ViewportLayer viewportLayer = bodyLayer.getViewportLayer();
+    final int originRowPosition = viewportLayer.getOriginRowPosition();
+    final LayerCell originCell = viewportLayer.getScrollableLayer().getCellByPosition( 0, originRowPosition );
+    if( originCell != null )
+    {
+      final Object originValue = originCell.getDataValue();
+      if( originValue instanceof IZmlModelCell )
+      {
+        final IZmlModelCell modelCell = (IZmlModelCell) originValue;
+        m_originRow = modelCell.getIndexValue();
+      }
+    }
   }
 
   private void rememberSelection( )
@@ -184,6 +208,9 @@ public class DefaultZmlTablePagerCallback implements IZmlTablePagerCallback
 
   private void applySelections( )
   {
+    if( m_zmlTable.getModelViewport().getColumns().length == 0 )
+      return;
+
     final BodyLayerStack bodyLayer = m_zmlTable.getBodyLayer();
 
     final Date[] selectedRows = m_selectedRows.toArray( new Date[m_selectedRows.size()] );
@@ -201,13 +228,81 @@ public class DefaultZmlTablePagerCallback implements IZmlTablePagerCallback
       selectRow( bodyLayer, focusRow );
 
     /* scroll viewport as it was before */
-    final Date date = findLastRowDate( m_zmlTable );
-    final int index = FindClosestDateVisitor.findRowIndex( m_zmlTable, date );
-    if( index != -1 )
+    if( m_firstRun )
     {
-      final ShowRowInViewportCommand command = new ShowRowInViewportCommand( bodyLayer, index );
-      m_zmlTable.getTable().doCommand( command );
+      if( makeForecastDateVisible() )
+        m_firstRun = false;
     }
+    else
+      resetOrigin();
+  }
+
+  private boolean makeForecastDateVisible( )
+  {
+    final Date forecastDate = findForecastDate( m_zmlTable );
+    final int index = FindClosestDateVisitor.findRowIndex( m_zmlTable, forecastDate );
+    if( index == -1 )
+      return true;
+
+    final ViewportLayer viewportLayer = m_zmlTable.getBodyLayer().getViewportLayer();
+    final int viewportRows = viewportLayer.getRowCount();
+    if( viewportRows == 0 )
+    {
+      /*
+       * probably table is invisible, we cannot correctly determine the origin of the forecast row, i.e. we do not do it
+       * now but later...
+       */
+      if( !m_zmlTable.getTable().isVisible() )
+        return false;
+    }
+
+    /* forecast date will be in middle of table */
+    final int wishIndexToSet = Math.max( 0, index - viewportRows / 2 + 1 );
+
+    setRowOrigin( wishIndexToSet );
+
+    m_originRow = forecastDate;
+
+    rememberOrigin();
+
+    return true;
+  }
+
+  private void setRowOrigin( final int wishIndexToSet )
+  {
+    final ViewportLayer viewportLayer = m_zmlTable.getBodyLayer().getViewportLayer();
+    final IUniqueIndexLayer dataLayer = viewportLayer.getScrollableLayer();
+
+    final int viewportRows = viewportLayer.getRowCount();
+    final int dataRows = dataLayer.getRowCount();
+
+    /*
+     * if > 0, we would scroll outside the viewport (empty are below last element), this is not ok, because next
+     * scrolling will compensate for this and will scroll a big amount at once
+     */
+    final int underCut = viewportRows - (dataRows - wishIndexToSet);
+
+    final int indexToSet;
+
+    if( underCut > 0 )
+      indexToSet = Math.max( 0, wishIndexToSet - underCut );
+    else
+      indexToSet = wishIndexToSet;
+
+    viewportLayer.setOriginRowPosition( indexToSet );
+  }
+
+  private void resetOrigin( )
+  {
+    final Date date = m_originRow;
+    if( date == null )
+      return;
+
+    final int index = FindClosestDateVisitor.findRowIndex( m_zmlTable, date );
+    if( index == -1 )
+      return;
+
+    setRowOrigin( index );
   }
 
   private void selectRow( final BodyLayerStack bodyLayer, final Date row )
@@ -231,18 +326,6 @@ public class DefaultZmlTablePagerCallback implements IZmlTablePagerCallback
     table.removeLayerListener( m_listener );
   }
 
-  private Date findLastRowDate( final IZmlTable table )
-  {
-    Date date = null;
-    if( m_firstRun )
-      date = findForecastDate( table );
-
-    if( date == null )
-      return m_lastRow;
-
-    return date;
-  }
-
   private Date findForecastDate( final IZmlTable table )
   {
     final ZmlModelViewport viewport = table.getModelViewport();
@@ -251,8 +334,6 @@ public class DefaultZmlTablePagerCallback implements IZmlTablePagerCallback
     final Date date = findForecastDate( columns );
     if( date == null )
       return null;
-
-    m_firstRun = false;
 
     return date;
   }
