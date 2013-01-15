@@ -70,6 +70,7 @@ import de.openali.odysseus.chart.ext.base.layer.IBarLayerPainter;
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
@@ -126,7 +127,7 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
     m_layer = layer;
     m_paintManager = paintManager;
     m_mapper = layer.getCoordinateMapper();
-    m_baseLine = m_mapper.numericToScreen( 0.0,0.0).y;
+    m_baseLine = m_mapper.normalizedToScreen(0.0,ALIGNMENT.TOP.doubleValue()).y;
   }
 
   @Override

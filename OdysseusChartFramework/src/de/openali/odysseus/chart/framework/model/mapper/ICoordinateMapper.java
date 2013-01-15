@@ -51,19 +51,30 @@ public interface ICoordinateMapper<T_Domain, T_Target>
 {
   IAxis<T_Domain> getDomainAxis( );
 
-  Point getScreenSize( );
-
   IAxis<T_Target> getTargetAxis( );
 
-  IPair<Double, Double> logicalToNumeric( T_Domain domainValue, T_Target targetValue );
+  IPair<Double, Double> logicalToNormalized( T_Domain domainValue, T_Target targetValue );
 
+  IPair<Double, Double> logicalToNumeric( T_Domain domainValue, T_Target targetValue );
+  
   Point logicalToScreen( T_Domain domainValue, T_Target targetValue );
 
-  Point numericToScreen( Double domainValue, Double targetValue );
+  IPair<T_Domain, T_Target> normalizedToLogical( Double domainValue, Double targetValue );
+  
+  IPair<Double, Double> normalizedToNumeric( Double domainValue,Double targetValue );
+  
+  Point normalizedToScreen( Double domainValue, Double targetValue );
 
   IPair<T_Domain, T_Target> numericToLogical( Double domainValue, Double targetValue );
 
-  IPair<T_Domain, T_Target> screenToLogical( Point screenValue );
+  IPair<Double, Double> numericToNormalized( Double domainValue, Double targetValue );
 
-  IPair<Double, Double> screenToNumeric( Point screenValue );
+  Point numericToScreen( Double domainValue, Double targetValue );
+
+  IPair<T_Domain, T_Target> screenToLogical(Integer domVal, Integer targetVal );
+
+  IPair<Double, Double> screenToNormalized( Integer domVal, Integer targetVal );
+
+  IPair<Double, Double> screenToNumeric( Integer domVal, Integer targetVal);
+
 }

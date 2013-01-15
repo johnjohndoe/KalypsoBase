@@ -47,7 +47,7 @@ public final class ProfilLayerUtils
     if( cm == null )
       return null;
 
-    final IPair<Number, Number> numeric = cm.screenToNumeric( point );
+    final IPair<Number, Number> numeric = cm.screenToNumeric( point.x,point.y );
 
     return new Point2D.Double( numeric.getDomain().doubleValue(), numeric.getTarget().doubleValue() );
   }
