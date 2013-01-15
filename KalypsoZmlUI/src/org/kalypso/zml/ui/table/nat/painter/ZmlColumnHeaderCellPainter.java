@@ -94,7 +94,12 @@ public class ZmlColumnHeaderCellPainter extends AbstractCellPainter
 
       final Style imageCellStyle = getStyle();
       imageCellStyle.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.LEFT );
+
       configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, imageCellStyle, DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
+
+      final Style selectionImageCellStyle = getSelectionStyle( imageCellStyle );
+      selectionImageCellStyle.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.LEFT );
+      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, selectionImageCellStyle, DisplayMode.SELECT, GridRegion.COLUMN_HEADER.toString() );
 
       Rectangle ptr = new Rectangle( bounds.x + 2, bounds.y, bounds.width - 4, bounds.height );
 
@@ -107,6 +112,7 @@ public class ZmlColumnHeaderCellPainter extends AbstractCellPainter
         ptr = move( ptr, image.getBounds() );
       }
 
+      // FIXME: happens for EVERY painted cell.... at least we should recycle the styles
       final Style style = getStyle();
       configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
 
