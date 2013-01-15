@@ -161,7 +161,6 @@ public class ZmlTableSelectionLayer extends SelectionLayer implements IZmlTableS
   public IZmlModelValueCell getFocusCell( )
   {
     final PositionCoordinate position = getSelectionAnchor();
-// final PositionCoordinate position = getLastSelectedCellPosition();
     if( position == null )
       return null;
 
