@@ -92,8 +92,8 @@ public class ChartPlotPainter
     try
     {
       monitor.beginTask( "Painting layers", layers.length );
-      gc.setAlpha( 0 );
-      gc.fillRectangle( gc.getClipping());
+    //  gc.setAlpha( 0 );
+    //  gc.fillRectangle( gc.getClipping());
       for( final IChartLayer layer : layers )
       {
         if( layer.isVisible() )

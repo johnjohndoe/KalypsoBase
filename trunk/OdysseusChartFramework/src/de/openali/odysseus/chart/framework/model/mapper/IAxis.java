@@ -3,8 +3,8 @@ package de.openali.odysseus.chart.framework.model.mapper;
 import de.openali.odysseus.chart.framework.exception.MalformedValueException;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRangeRestriction;
-import de.openali.odysseus.chart.framework.model.event.IEventProvider;
 import de.openali.odysseus.chart.framework.model.event.IAxisEventListener;
+import de.openali.odysseus.chart.framework.model.event.IEventProvider;
 import de.openali.odysseus.chart.framework.model.impl.IAxisVisitorBehavior;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
@@ -18,21 +18,13 @@ import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
  * 
  * @author burtscher
  */
-public interface IAxis<T> extends IEventProvider<IAxisEventListener>//extends IMapper
+public interface IAxis<T> extends IEventProvider<IAxisEventListener>// extends IMapper
 {
   void addLabel( final TitleTypeBean title );
 
   void clearLabels( );
 
   IAxisVisitorBehavior getAxisVisitorBehavior( );
-
-  String getIdentifier( );
-
-  /**
-   * method to store arbitrary data objects;
-   */
-  @Deprecated
-  void setData( String identifier, Object data );
 
   @Deprecated
   Object getData( String identifier );
@@ -50,6 +42,8 @@ public interface IAxis<T> extends IEventProvider<IAxisEventListener>//extends IM
    * @return axis direction - positive or negative
    */
   DIRECTION getDirection( );
+
+  String getIdentifier( );
 
   @Deprecated
   /**
@@ -102,6 +96,10 @@ public interface IAxis<T> extends IEventProvider<IAxisEventListener>//extends IM
 
   Double logicalToNumeric( T value );
 
+  /**
+   * use {@code ICoordinateMapper} instead
+   */
+  @Deprecated
   int logicalToScreen( T value );
 
   String logicalToXMLString( T value );
@@ -116,17 +114,31 @@ public interface IAxis<T> extends IEventProvider<IAxisEventListener>//extends IM
 
   /**
    * transforms a numeric value into a screen position
+   * use {@code ICoordinateMapper} instead
    */
+  @Deprecated
   int numericToScreen( Double value );
 
+  /**
+   * use {@code ICoordinateMapper} instead
+   */
+  @Deprecated
   T screenToLogical( int value );
 
   Double screenToNormalized( int value );
 
   /**
    * transforms a screen position into a numeric value
+   * use {@code ICoordinateMapper} instead
    */
+  @Deprecated
   Double screenToNumeric( int value );
+
+  /**
+   * method to store arbitrary data objects;
+   */
+  @Deprecated
+  void setData( String identifier, Object data );
 
   void setDirection( DIRECTION dir );
 

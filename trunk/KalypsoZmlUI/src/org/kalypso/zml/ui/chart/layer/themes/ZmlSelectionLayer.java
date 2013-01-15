@@ -97,13 +97,12 @@ public class ZmlSelectionLayer extends AbstractChartLayer
       paintMultiSelect( gc );
   }
 
-  @SuppressWarnings( { "unchecked", "rawtypes" } )
   private void paintMultiSelect( final GC gc )
   {
-    final ICoordinateMapper mapper = getCoordinateMapper();
+    final ICoordinateMapper<Date,Integer> mapper = getCoordinateMapper();
 
-    final IAxis domainAxis = mapper.getDomainAxis();
-    final IAxis targetAxis = mapper.getTargetAxis();
+    final IAxis<Date> domainAxis = mapper.getDomainAxis();
+    final IAxis<Integer> targetAxis = mapper.getTargetAxis();
 
     final IDataRange<Date> domainRange = domainAxis.getLogicalRange();
     final IDataRange<Integer> targetRange = targetAxis.getLogicalRange();
@@ -111,14 +110,17 @@ public class ZmlSelectionLayer extends AbstractChartLayer
     if( !dateRange.intersects( m_selectedDateRange ) )
       return;
 
-    final Integer x1 = domainAxis.logicalToScreen( m_selectedDateRange.getFrom() );
-    final Integer x2 = domainAxis.logicalToScreen( m_selectedDateRange.getTo() );
-    final Integer yMin = targetAxis.logicalToScreen( targetRange.getMin() );
-    final Integer yMax = targetAxis.logicalToScreen( targetRange.getMax() );
+//    final Integer x1 = domainAxis.logicalToScreen( m_selectedDateRange.getFrom() );
+//    final Integer x2 = domainAxis.logicalToScreen( m_selectedDateRange.getTo() );
+//    final Integer yMin = targetAxis.logicalToScreen( targetRange.getMin() );
+//    final Integer yMax = targetAxis.logicalToScreen( targetRange.getMax() );
 
+    final Point topLeft = mapper.logicalToScreen( m_selectedDateRange.getFrom(), targetRange.getMax() );
+    final Point bottomRight = mapper.logicalToScreen( m_selectedDateRange.getTo(), targetRange.getMin() );
+    
     final PolygonFigure figure = new PolygonFigure();
     figure.setStyle(m_areaStyle);
-    figure.setPoints( new Point[] { new Point( x1, yMin ), new Point( x1, yMax ), new Point( x2, yMax ), new Point( x2, yMin ) } );
+    figure.setPoints( new Point[] { new Point(topLeft.x, bottomRight.y ), topLeft, new Point( bottomRight.x, topLeft.y ), bottomRight } );
     figure.paint( gc );
   }
 
