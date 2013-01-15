@@ -75,15 +75,19 @@ public class ZmlRowHeaderCellPainter extends AbstractCellPainter
 {
   private final ZmlModelViewport m_viewport;
 
+  private final Style m_defaultStyle;
+
   public ZmlRowHeaderCellPainter( final ZmlModelViewport viewport )
   {
     m_viewport = viewport;
+
+    m_defaultStyle = getDefaultStyle();
   }
 
   @Override
   public void paintCell( final LayerCell cell, final GC gc, final Rectangle bounds, final IConfigRegistry configRegistry )
   {
-    // FIXME: dubious: registereing the styles every time a cell is painted, is this right??
+    // FIXME: dubious: registering the styles every time a cell is painted, is this right??
 
     final Object object = cell.getDataValue();
     if( object instanceof IZmlModelRow )
@@ -103,7 +107,7 @@ public class ZmlRowHeaderCellPainter extends AbstractCellPainter
   {
     final IndexColumnType base = TableTypes.findIndexColumn( m_viewport.getModel().getTableType() );
     if( Objects.isNull( base ) )
-      return getDefaultStyle();
+      return m_defaultStyle;
 
     final IZmlModelIndexCell cell = row.getIndexCell();
     final ZmlIndexCellStyleProvider provider = new ZmlIndexCellStyleProvider( cell.getBaseColumn() );

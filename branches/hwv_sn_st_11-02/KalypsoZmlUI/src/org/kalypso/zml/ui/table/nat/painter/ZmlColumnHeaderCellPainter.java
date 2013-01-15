@@ -79,9 +79,26 @@ public class ZmlColumnHeaderCellPainter extends AbstractCellPainter
 {
   private final ZmlModelViewport m_viewport;
 
+  private final Style m_style;
+
+  private final Style m_selectionStyle;
+
+  private final Style m_imageCellStyle;
+
+  private final Style m_selectionImageCellStyle;
+
   public ZmlColumnHeaderCellPainter( final ZmlModelViewport viewport )
   {
     m_viewport = viewport;
+
+    m_style = getStyle();
+    m_selectionStyle = getSelectionStyle( m_style );
+
+    m_imageCellStyle = getStyle();
+    m_imageCellStyle.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.LEFT );
+
+    m_selectionImageCellStyle = getSelectionStyle( m_imageCellStyle );
+    m_selectionImageCellStyle.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.LEFT );
   }
 
   @Override
@@ -92,14 +109,8 @@ public class ZmlColumnHeaderCellPainter extends AbstractCellPainter
     {
       final IZmlModelColumn column = (IZmlModelColumn) object;
 
-      final Style imageCellStyle = getStyle();
-      imageCellStyle.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.LEFT );
-
-      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, imageCellStyle, DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
-
-      final Style selectionImageCellStyle = getSelectionStyle( imageCellStyle );
-      selectionImageCellStyle.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.LEFT );
-      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, selectionImageCellStyle, DisplayMode.SELECT, GridRegion.COLUMN_HEADER.toString() );
+      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, m_imageCellStyle, DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
+      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, m_selectionImageCellStyle, DisplayMode.SELECT, GridRegion.COLUMN_HEADER.toString() );
 
       Rectangle ptr = new Rectangle( bounds.x + 2, bounds.y, bounds.width - 4, bounds.height );
 
@@ -112,12 +123,8 @@ public class ZmlColumnHeaderCellPainter extends AbstractCellPainter
         ptr = move( ptr, image.getBounds() );
       }
 
-      // FIXME: happens for EVERY painted cell.... at least we should recycle the styles
-      final Style style = getStyle();
-      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
-
-      final Style selectionStyle = getSelectionStyle( style );
-      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, selectionStyle, DisplayMode.SELECT, GridRegion.COLUMN_HEADER.toString() );
+      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, m_style, DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
+      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, m_selectionStyle, DisplayMode.SELECT, GridRegion.COLUMN_HEADER.toString() );
 
       // TODO wrapped text painters increases column header size - how to shrink column header?
       final ICellPainter painter = new TextPainter();
