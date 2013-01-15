@@ -42,8 +42,11 @@ package org.kalypso.zml.ui.table.nat.pager;
 
 import java.util.Date;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.IZmlModelRowVisitor;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
+import org.kalypso.zml.ui.table.IZmlTable;
 
 /**
  * @author Dirk Kuch
@@ -77,5 +80,25 @@ public class FindClosestDateVisitor implements IZmlModelRowVisitor
   public IZmlModelRow getRow( )
   {
     return m_row;
+  }
+
+  /**
+   * Convenience method to find the row with the given date.
+   */
+  public static int findRowIndex( final IZmlTable table, final Date date )
+  {
+    if( date == null )
+      return -1;
+
+    final ZmlModelViewport viewport = table.getModelViewport();
+
+    final FindClosestDateVisitor visitor = new FindClosestDateVisitor( date );
+    viewport.accept( visitor );
+
+    final IZmlModelRow row = visitor.getRow();
+    if( row == null )
+      return -1;
+
+    return ArrayUtils.indexOf( viewport.getRows(), row );
   }
 }

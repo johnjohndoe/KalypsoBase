@@ -160,11 +160,10 @@ public class ZmlTableSelectionLayer extends SelectionLayer implements IZmlTableS
   @Override
   public IZmlModelValueCell getFocusCell( )
   {
-    final PositionCoordinate position = getLastSelectedCellPosition();
-    if( Objects.isNull( position ) )
-    {
+    final PositionCoordinate position = getSelectionAnchor();
+// final PositionCoordinate position = getLastSelectedCellPosition();
+    if( position == null )
       return null;
-    }
 
     return m_model.getCell( position.getRowPosition(), position.getColumnPosition() );
   }
@@ -200,6 +199,7 @@ public class ZmlTableSelectionLayer extends SelectionLayer implements IZmlTableS
   public void setClickedHeaderColumn( final IZmlModelColumn clickedHeaderColumn )
   {
     m_clickedHeaderColumn = clickedHeaderColumn;
+
     fireClickedHeaderColumnChanged( clickedHeaderColumn );
   }
 

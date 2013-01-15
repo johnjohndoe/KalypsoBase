@@ -221,12 +221,14 @@ public class ZmlTable extends Composite implements IZmlTable
         if( ZmlTable.this.isDisposed() )
           return Status.OK_STATUS;
 
+        m_callback.beforeRefresh();
+
         m_table.fireLayerEvent( new VisualRefreshEvent( m_bodyLayer ) );
         m_table.refresh();
 
         doResizeColumns();
 
-        m_callback.updateVisibleDate();
+        m_callback.afterRefresh();
 
         return Status.OK_STATUS;
       }

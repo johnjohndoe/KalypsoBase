@@ -40,13 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.nat.pager;
 
-
 /**
  * @author Holger Albert
  */
 public interface IZmlTablePagerCallback
 {
-  void updateVisibleDate( );
+  void beforeRefresh( );
+
+  void afterRefresh( );
 
   void dispose( );
 }
