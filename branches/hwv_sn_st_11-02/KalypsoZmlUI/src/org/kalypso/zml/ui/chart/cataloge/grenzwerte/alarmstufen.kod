@@ -54,9 +54,10 @@ FF00FF (magenta)
       </TextStyle>
       <TextStyle role="alarmstufe_text_1">
         <Size>8</Size>
-        <TextColor>000000</TextColor>
+        <!-- schwarz zur besseren Sichtbarkeit -->
+        <TextColor>000000</TextColor>        
         <FontFamily>Arial</FontFamily>
-        <FillColor>FFFF00</FillColor>
+   <!--      <FillColor>FFFF00</FillColor> -->
         <FontWeight>BOLD</FontWeight>
         <FontStyle>NORMAL</FontStyle>
       </TextStyle>
