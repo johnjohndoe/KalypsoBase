@@ -188,10 +188,7 @@ public class DefaultZmlTablePagerCallback implements IZmlTablePagerCallback
       if( row == null )
         m_focusRow = null;
       else
-      {
         m_focusRow = row.getIndex();
-        System.out.format( "Set focus row to index %s%n", m_focusRow );
-      }
     }
   }
 
