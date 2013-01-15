@@ -112,6 +112,15 @@ public class DefaultZmlTablePagerCallback implements IZmlTablePagerCallback
     table.addControlListener( m_resizeListener );
   }
 
+  @Override
+  public void dispose( )
+  {
+    final NatTable table = m_zmlTable.getTable();
+    table.removeLayerListener( m_listener );
+
+    table.removeControlListener( m_resizeListener );
+  }
+
   protected void handleTableResize( )
   {
     // BUGFIX: if the table is initially not visible, the whole forecast date selection does not work
@@ -231,7 +240,10 @@ public class DefaultZmlTablePagerCallback implements IZmlTablePagerCallback
     if( m_firstRun )
     {
       if( makeForecastDateVisible() )
+      {
         m_firstRun = false;
+        m_zmlTable.getTable().removeControlListener( m_resizeListener );
+      }
     }
     else
       resetOrigin();
@@ -317,13 +329,6 @@ public class DefaultZmlTablePagerCallback implements IZmlTablePagerCallback
       final SelectCellCommand cmd = new SelectCellCommand( bodyLayer.getSelectionLayer(), column, rowIndex, false, true );
       m_zmlTable.getTable().doCommand( cmd );
     }
-  }
-
-  @Override
-  public void dispose( )
-  {
-    final NatTable table = m_zmlTable.getTable();
-    table.removeLayerListener( m_listener );
   }
 
   private Date findForecastDate( final IZmlTable table )
