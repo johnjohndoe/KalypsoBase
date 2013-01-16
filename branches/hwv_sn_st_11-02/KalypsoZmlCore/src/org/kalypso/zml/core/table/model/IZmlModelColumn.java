@@ -111,5 +111,7 @@ public interface IZmlModelColumn
 
   void setLabel( String label );
 
+  // FIXME does not belong here
+  // TODO: at least rename, this is the size of the underlying tuple model
   int size( ) throws SensorException;
 }
