@@ -53,23 +53,22 @@ import net.sourceforge.nattable.layer.CompositeLayer;
 import net.sourceforge.nattable.layer.DataLayer;
 import net.sourceforge.nattable.layer.event.VisualRefreshEvent;
 import net.sourceforge.nattable.painter.cell.decorator.BeveledBorderDecorator;
-import net.sourceforge.nattable.resize.command.InitializeAutoResizeColumnsCommand;
 import net.sourceforge.nattable.style.DisplayMode;
-import net.sourceforge.nattable.util.GCFactory;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
-import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.zml.core.table.model.IZmlColumnModelListener;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
@@ -99,25 +98,46 @@ import org.kalypso.zml.ui.table.nat.tooltip.ZmlTableTooltip;
  */
 public class ZmlTable extends Composite implements IZmlTable
 {
-  protected IZmlTablePagerCallback m_callback;
+  private final UIJob m_updateJob = new UIJob( "Zeitreihen-Tabelle wird aktualisiert" )
+  {
+    @Override
+    public IStatus runInUIThread( final IProgressMonitor monitor )
+    {
+      return handleTableRefresh( monitor );
+    }
+  };
 
-  private UIJob m_updateJob;
+  private final ControlListener m_resizeListener = new ControlAdapter()
+  {
+    @Override
+    public void controlResized( final ControlEvent e )
+    {
+      handleControlResized();
+    }
+  };
+
+  private IZmlTablePagerCallback m_callback;
 
   private static final MutexRule MUTEX_TABLE_UPDATE = new MutexRule( "Aktualisiere Tabelle" ); // $NON-NLS-1$
 
-  protected NatTable m_table;
+  private NatTable m_table;
 
-  protected BodyLayerStack m_bodyLayer;
+  private BodyLayerStack m_bodyLayer;
 
-  protected final ZmlModelViewport m_viewport;
-
-  private ColumnHeaderLayerStack m_columnHeaderLayer;
+  private final ZmlModelViewport m_viewport;
 
   private GridLayer m_gridLayer;
 
   public ZmlTable( final Composite parent, final IZmlModel model, final FormToolkit toolkit )
   {
     super( parent, SWT.NULL );
+
+    toolkit.adapt( this );
+    GridLayoutFactory.fillDefaults().applyTo( this );
+
+    m_updateJob.setUser( false );
+    m_updateJob.setSystem( true );
+    m_updateJob.setRule( MUTEX_TABLE_UPDATE );
 
     m_viewport = new ZmlModelViewport( model );
     m_viewport.addListener( new IZmlColumnModelListener()
@@ -129,26 +149,22 @@ public class ZmlTable extends Composite implements IZmlTable
       }
     } );
 
-    final GridLayout layout = LayoutHelper.createGridLayout();
-    layout.verticalSpacing = 0;
-    setLayout( layout );
+    doInit( toolkit );
 
-    doInit();
-
-    toolkit.adapt( this );
+    m_table.addControlListener( m_resizeListener );
   }
 
-  private void doInit( )
+  private void doInit( final FormToolkit toolkit )
   {
     m_bodyLayer = new BodyLayerStack( m_viewport );
 
-    m_columnHeaderLayer = new ColumnHeaderLayerStack( m_bodyLayer );
+    final ColumnHeaderLayerStack columnHeaderLayer = new ColumnHeaderLayerStack( m_bodyLayer );
     final RowHeaderLayerStack rowHeaderLayer = new RowHeaderLayerStack( m_bodyLayer );
 
-    final DefaultCornerDataProvider cornerDataProvider = new DefaultCornerDataProvider( m_columnHeaderLayer.getProvider(), rowHeaderLayer.getProvider() );
-    final CornerLayer cornerLayer = new CornerLayer( new DataLayer( cornerDataProvider ), rowHeaderLayer, m_columnHeaderLayer );
+    final DefaultCornerDataProvider cornerDataProvider = new DefaultCornerDataProvider( columnHeaderLayer.getProvider(), rowHeaderLayer.getProvider() );
+    final CornerLayer cornerLayer = new CornerLayer( new DataLayer( cornerDataProvider ), rowHeaderLayer, columnHeaderLayer );
 
-    m_gridLayer = new GridLayer( m_bodyLayer, m_columnHeaderLayer, rowHeaderLayer, cornerLayer, false );
+    m_gridLayer = new GridLayer( m_bodyLayer, columnHeaderLayer, rowHeaderLayer, cornerLayer, false );
     m_gridLayer.addConfiguration( new DefaultGridLayerConfiguration( m_gridLayer )
     {
       @Override
@@ -167,6 +183,8 @@ public class ZmlTable extends Composite implements IZmlTable
     m_table = new NatTable( this, m_gridLayer ); // no default style because of cell backgrounds
     m_table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
+    toolkit.adapt( m_table );
+
     final IConfigRegistry registry = m_table.getConfigRegistry();
 
     /** value converters */
@@ -178,6 +196,8 @@ public class ZmlTable extends Composite implements IZmlTable
     /** cell painters */
     registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlModelCellPainter( m_viewport ), DisplayMode.NORMAL, GridRegion.BODY.toString() );
     registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlRowHeaderCellPainter( m_viewport ), DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
+// registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlColumnHeaderCellPainter( m_viewport ),
+// DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
     registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new BeveledBorderDecorator( new ZmlColumnHeaderCellPainter( m_viewport ) ), DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
 
     /** editing support */
@@ -207,38 +227,29 @@ public class ZmlTable extends Composite implements IZmlTable
   @Override
   public synchronized void refresh( final ZmlModelColumnChangeType event )
   {
-    if( Objects.isNotNull( m_updateJob ) )
-      m_updateJob.cancel();
+    m_updateJob.cancel();
 
-    m_updateJob = new UIJob( "Zeitreihen-Tabelle wird aktualisiert" )
-    {
-      @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
-      {
-        if( monitor.isCanceled() )
-          return Status.CANCEL_STATUS;
+    m_updateJob.schedule( 50 );
+  }
 
-        if( ZmlTable.this.isDisposed() )
-          return Status.OK_STATUS;
+  protected IStatus handleTableRefresh( final IProgressMonitor monitor )
+  {
+    if( monitor.isCanceled() )
+      return Status.CANCEL_STATUS;
 
-        m_callback.beforeRefresh();
+    if( ZmlTable.this.isDisposed() )
+      return Status.OK_STATUS;
 
-        m_table.fireLayerEvent( new VisualRefreshEvent( m_bodyLayer ) );
-        m_table.refresh();
+    m_callback.beforeRefresh();
 
-        doResizeColumns();
+    m_table.fireLayerEvent( new VisualRefreshEvent( m_bodyLayer ) );
+    m_table.refresh();
 
-        m_callback.afterRefresh();
+    doResizeColumns();
 
-        return Status.OK_STATUS;
-      }
-    };
+    m_callback.afterRefresh();
 
-    m_updateJob.setUser( false );
-    m_updateJob.setSystem( true );
-
-    m_updateJob.setRule( MUTEX_TABLE_UPDATE );
-    m_updateJob.schedule( 333 );
+    return Status.OK_STATUS;
   }
 
   @Override
@@ -275,17 +286,19 @@ public class ZmlTable extends Composite implements IZmlTable
   public void setCallback( final IZmlTablePagerCallback callback )
   {
     Assert.isNotNull( callback );
+
     m_callback.dispose();
     m_callback = callback;
   }
 
+  protected void handleControlResized( )
+  {
+    doResizeColumns();
+  }
+
   protected void doResizeColumns( )
   {
-    final int count = m_table.getColumnCount();
-    for( int index = 1; index <= count; index++ )
-    {
-      final InitializeAutoResizeColumnsCommand command = new InitializeAutoResizeColumnsCommand( m_gridLayer, index, m_table.getConfigRegistry(), new GCFactory( m_table ) );
-      m_gridLayer.doCommand( command );
-    }
+    final ColumnResizeWorker worker = new ColumnResizeWorker( m_table, m_gridLayer );
+    worker.execute();
   }
 }
