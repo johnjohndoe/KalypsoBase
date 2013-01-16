@@ -87,20 +87,29 @@ public class ZmlRowHeaderCellPainter extends AbstractCellPainter
   @Override
   public void paintCell( final LayerCell cell, final GC gc, final Rectangle bounds, final IConfigRegistry configRegistry )
   {
-    // FIXME: dubious: registering the styles every time a cell is painted, is this right??
-
     final Object object = cell.getDataValue();
+    final TextPainter painter = createPainter( object, configRegistry );
+
+    painter.paintCell( cell, gc, bounds, configRegistry );
+  }
+
+  private TextPainter createPainter( final Object object, final IConfigRegistry configRegistry )
+  {
     if( object instanceof IZmlModelRow )
     {
+      // FIXME: dubious: registering the styles every time a cell is painted, is this right??
+      // FIXME: this stuff is called too often, should we implement some caching here?
+
       final Style style = getStyle( (IZmlModelRow) object );
       configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
 
       final Style selectionStyle = getSelectionStyle( style );
       configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, selectionStyle, DisplayMode.SELECT, GridRegion.ROW_HEADER.toString() );
 
-      final TextPainter painter = new TextPainter();
-      painter.paintCell( cell, gc, bounds, configRegistry );
+      return new TextPainter();
     }
+
+    throw new UnsupportedOperationException();
   }
 
   private Style getStyle( final IZmlModelRow row )
@@ -159,32 +168,17 @@ public class ZmlRowHeaderCellPainter extends AbstractCellPainter
   public int getPreferredWidth( final LayerCell cell, final GC gc, final IConfigRegistry configRegistry )
   {
     final Object object = cell.getDataValue();
-    if( object instanceof IZmlModelIndexCell )
-    {
-      final Style style = getStyle( (IZmlModelRow) object );
-      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
 
-      final TextPainter painter = new TextPainter();
-      return painter.getPreferredWidth( cell, gc, configRegistry );
-    }
-
-    throw new UnsupportedOperationException();
+    final TextPainter painter = createPainter( object, configRegistry );
+    return painter.getPreferredWidth( cell, gc, configRegistry );
   }
 
   @Override
   public int getPreferredHeight( final LayerCell cell, final GC gc, final IConfigRegistry configRegistry )
   {
     final Object object = cell.getDataValue();
-    if( object instanceof IZmlModelIndexCell )
-    {
-      final Style style = getStyle( (IZmlModelRow) object );
-      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
 
-      final TextPainter painter = new TextPainter();
-      return painter.getPreferredHeight( cell, gc, configRegistry );
-    }
-
-    throw new UnsupportedOperationException();
+    final TextPainter painter = createPainter( object, configRegistry );
+    return painter.getPreferredHeight( cell, gc, configRegistry );
   }
-
 }
