@@ -82,7 +82,7 @@ public class ZmlTablePasteWorker
 
     final IZmlModelValueCell cell = findStartCell( viewport, selection );
     if( cell == null )
-      return new Status(IStatus.INFO, KalypsoZmlUI.PLUGIN_ID, "Bitte selektieren Sie die Zelle, ab welcher eingefügt werden soll.");
+      return new Status( IStatus.INFO, KalypsoZmlUI.PLUGIN_ID, "Bitte selektieren Sie die Zelle, ab welcher eingefügt werden soll." );
 
     final Clipboard clipboard = new Clipboard( PlatformUI.getWorkbench().getDisplay() );
 
@@ -101,7 +101,7 @@ public class ZmlTablePasteWorker
     finally
     {
       clipboard.dispose();
-    }  
+    }
   }
 
   protected IZmlModelValueCell findStartCell( final ZmlModelViewport viewport, final IZmlTableSelection selection )
@@ -159,10 +159,15 @@ public class ZmlTablePasteWorker
         break;
       }
 
+      final boolean editable = ptr.getColumn().getDataColumn().isEditable();
+
       try
       {
-        final Object value = pasteData.getData( ptr, columnIndex, rowIndex );
-        ptr.doUpdate( value, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+        if( editable )
+        {
+          final Object value = pasteData.getData( ptr, columnIndex, rowIndex );
+          ptr.doUpdate( value, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+        }
       }
       catch( final Exception e )
       {
