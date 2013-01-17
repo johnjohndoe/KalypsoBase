@@ -31,133 +31,133 @@
          id="org.kalypso.contribs.java"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.contribs.eclipsercp"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.contribs.eclipseplatform"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.commons"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.contribs.ogc2x"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.contribs.ogc31"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.repository"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.deegree"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.gmlschema"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.deegree2"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.core"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.auth"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.metadoc"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.services.observation"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.ui"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.ui.addlayer"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.featureview"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.base"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.simulation.core"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
@@ -171,147 +171,147 @@
          id="org.kalypso.simulation.ui"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.gml.processes"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.gml.ui"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.debug.servlet"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="de.openali.odysseus.chart.framework"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.service.wps"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.service.ogc"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="de.renew.workflow.connector"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="de.renew.workflow.model"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.project.database"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.kml.export"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="de.openali.odysseus.chart.ext.base"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="de.openali.odysseus.chart.ext.observation"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="de.openali.odysseus.chart.factory"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="de.openali.odysseus.chart.ui"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.afgui"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.project.database.client"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.model.wspm.core"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.model.wspm.schema"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.model.wspm.ui"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.ftp.service"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
@@ -345,28 +345,28 @@
          id="org.kalypso.module"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.mapserver"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.zml.core"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.zml.ui"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
@@ -394,28 +394,28 @@
          id="org.kalypso.ogc.core"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.wps.adapter"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.wps.client"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.wps.server"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
@@ -429,21 +429,21 @@
          id="org.kalypso.jaxrs"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="1.9.1"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.json"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.mt"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
    <plugin
@@ -485,7 +485,7 @@
          id="org.apache.commons"
          download-size="0"
          install-size="0"
-         version="12.11.0.qualifier"
+         version="12.11.1.qualifier"
          unpack="false"/>
 
 </feature>

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoSimulationCore Plug-in
 Bundle-SymbolicName: org.kalypso.simulation.core; singleton:=true
-Bundle-Version: 12.11.0.qualifier
+Bundle-Version: 12.11.1.qualifier
 Bundle-Activator: org.kalypso.simulation.core.KalypsoSimulationCorePlugin
 Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
 Require-Bundle: org.kalypso.core;visibility:=reexport,
