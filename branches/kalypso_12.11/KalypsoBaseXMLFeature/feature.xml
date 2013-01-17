@@ -2,7 +2,7 @@
 <feature
       id="org.kalypso.base.feature.xml"
       label="KalypsoBaseXMLFeature"
-      version="12.11.0.qualifier"
+      version="12.11.1.qualifier"
       provider-name="kalypsobase.sourceforge.net"
       plugin="org.kalypso.base">
 
