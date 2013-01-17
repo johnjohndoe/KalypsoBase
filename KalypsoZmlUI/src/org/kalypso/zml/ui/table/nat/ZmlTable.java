@@ -60,7 +60,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
@@ -128,9 +127,9 @@ public class ZmlTable extends Composite implements IZmlTable
 
   private GridLayer m_gridLayer;
 
-  public ZmlTable( final Composite parent, final IZmlModel model, final FormToolkit toolkit )
+  public ZmlTable( final Composite parent, final int style, final IZmlModel model, final FormToolkit toolkit )
   {
-    super( parent, SWT.NULL );
+    super( parent, style );
 
     toolkit.adapt( this );
     GridLayoutFactory.fillDefaults().applyTo( this );

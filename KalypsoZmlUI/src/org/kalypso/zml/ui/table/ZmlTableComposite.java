@@ -118,7 +118,7 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
       toolbar.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     }
 
-    m_table = new ZmlTable( this, model, m_toolkit );
+    m_table = new ZmlTable( this, SWT.BORDER, model, m_toolkit );
     m_table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     // FIXME: Table composite must deliver events by listening to its table model (and other data)...
@@ -130,8 +130,6 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
 
     if( hasToolbar( tableType ) )
       initToolbar( tableType, toolbar, m_toolkit );
-
-    // this.layout();
   }
 
   @Override
