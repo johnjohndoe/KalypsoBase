@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoCommons Plug-in
 Bundle-SymbolicName: org.kalypso.commons;singleton:=true
-Bundle-Version: 12.11.0.qualifier
+Bundle-Version: 12.11.1.qualifier
 Bundle-ClassPath: lib/jaxb_2_2_4/activation.jar,
  lib/jaxb_2_2_4/jaxb-api.jar,
  lib/jaxb_2_2_4/jaxb-impl.jar,

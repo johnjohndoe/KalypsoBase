@@ -2,8 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoJaxRS Plug-in
 Bundle-SymbolicName: org.kalypso.jaxrs;singleton:=true
-Bundle-Version: 12.11.0.qualifier
-Bundle-Activator: org.kalypso.jaxrs.Activator
+Bundle-Version: 1.9.1
 Require-Bundle: org.eclipse.core.runtime
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
@@ -105,7 +104,6 @@ Export-Package: com.sun.jersey.api,
  com.sun.ws.rs.ext,
  javax.ws.rs,
  javax.ws.rs.core,
- javax.ws.rs.ext,
- org.kalypso.jaxrs
+ javax.ws.rs.ext
 Import-Package: javax.servlet,
  javax.servlet.http

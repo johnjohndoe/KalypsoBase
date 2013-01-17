@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Localization: plugin
 Bundle-Name: KalypsoZmlUI
 Bundle-SymbolicName: org.kalypso.zml.ui;singleton:=true
-Bundle-Version: 12.11.0.qualifier
+Bundle-Version: 12.11.1.qualifier
 Bundle-Activator: org.kalypso.zml.ui.KalypsoZmlUI
 Require-Bundle: org.kalypso.zml.core;visibility:=reexport,
  org.eclipse.core.expressions;visibility:=reexport,
