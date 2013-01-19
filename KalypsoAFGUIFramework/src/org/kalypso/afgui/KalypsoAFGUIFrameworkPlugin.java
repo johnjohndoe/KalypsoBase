@@ -33,6 +33,7 @@ import org.osgi.framework.BundleContext;
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 import de.renew.workflow.connector.context.ActiveWorkContext;
+import de.renew.workflow.connector.context.IActiveScenarioChangeListener;
 import de.renew.workflow.connector.worklist.ITaskExecutionAuthority;
 import de.renew.workflow.connector.worklist.ITaskExecutor;
 import de.renew.workflow.connector.worklist.TaskExecutionListener;
@@ -59,6 +60,8 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 
   private TaskExecutionListener m_taskExecutionListener;
 
+  private final IActiveScenarioChangeListener m_contextChangeListener = new DefaultTaskActivator();
+
   public KalypsoAFGUIFrameworkPlugin( )
   {
     plugin = this;
@@ -74,8 +77,8 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     if( PlatformUI.isWorkbenchRunning() )
     {
       final IWorkbench workbench = PlatformUI.getWorkbench();
-      final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-      final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
+      final IHandlerService handlerService = (IHandlerService)workbench.getService( IHandlerService.class );
+      final ICommandService commandService = (ICommandService)workbench.getService( ICommandService.class );
 
       m_taskExecutionListener = new TaskExecutionListener();
       commandService.addExecutionListener( m_taskExecutionListener );
@@ -146,6 +149,8 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
       m_scenarioDataProvider = new SzenarioDataProvider();
       m_activeWorkContext = new ActiveWorkContext( ScenarioHandlingProjectNature.ID, m_scenarioDataProvider );
 
+      m_activeWorkContext.addActiveContextChangeListener( m_contextChangeListener );
+
       if( PlatformUI.isWorkbenchRunning() )
       {
         // FIXME: must be called in ui thread
@@ -174,7 +179,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
       final IWorkbench workbench = PlatformUI.getWorkbench();
       if( !workbench.isClosing() )
       {
-        final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
+        final ICommandService commandService = (ICommandService)workbench.getService( ICommandService.class );
         if( commandService != null )
           commandService.removeExecutionListener( m_taskExecutionListener );
 
@@ -225,7 +230,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 
   /**
    * Returns the shared instance
-   *
+   * 
    * @return the shared instance
    */
   public static KalypsoAFGUIFrameworkPlugin getDefault( )
@@ -235,7 +240,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 
   /**
    * Returns an image descriptor for the image file at the given plug-in relative path
-   *
+   * 
    * @param path
    *          the path
    * @return the image descriptor
@@ -252,6 +257,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
       try
       {
         m_activeWorkContext.setCurrentCase( null, new NullProgressMonitor() );
+        m_activeWorkContext.removeActiveContextChangeListener( m_contextChangeListener );
       }
       catch( final CoreException e )
       {
