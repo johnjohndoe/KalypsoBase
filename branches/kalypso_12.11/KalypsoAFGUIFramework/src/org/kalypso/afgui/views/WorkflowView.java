@@ -13,14 +13,12 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.WorkflowHelper;
 import org.kalypso.afgui.internal.i18n.Messages;
 import org.kalypso.afgui.internal.ui.workflow.WorkflowBreadcrumbViewer;
 import org.kalypso.afgui.internal.ui.workflow.WorkflowControl;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.eclipse.jface.viewers.SelectionProviderAdapter;
 
-import de.renew.workflow.base.ITask;
 import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
@@ -92,35 +90,8 @@ public class WorkflowView extends ViewPart
   {
     m_breadcrumbViewer.setScenario( scenario );
 
-    final IWorkflow lastWorkflow = m_workflowControl.getWorkflow();
-
-    final ITask lastActiveTask = m_workflowControl.getTaskExecutor().getActiveTask();
-
     final IWorkflow workflow = ScenarioHelper.findWorkflow( scenario, newProject );
     m_workflowControl.setWorkflow( workflow );
-
-    final ITask defaultTask = getDefaultTask( lastWorkflow, workflow, lastActiveTask );
-
-    KalypsoAFGUIFrameworkPlugin.getTaskExecutor().execute( defaultTask );
-  }
-
-  private ITask getDefaultTask( final IWorkflow lastWorkflow, final IWorkflow newWorkflow, final ITask lastActiveTask )
-  {
-    // FIXME: would be nice to re-aktivate the last used task for workflow s of the same nature.
-    // But the old task is now always null, because the scenario the task was reset before activating the new scenario.
-    // We need to remember the task-uri of the last aktivated task.
-
-    // final String lastWorkflowURI = lastWorkflow == null ? null : lastWorkflow.getURI();
-    // final String newWorkflowURI = newWorkflow == null ? null : newWorkflow.getURI();
-    //
-    // /* It old and new workflow are of the same kind, keep the last active task */
-    // if( ObjectUtils.equals( lastWorkflowURI, newWorkflowURI ) )
-    // {
-    // return lastActiveTask;
-    // }
-
-    /* Get the scenario workflow. */
-    return WorkflowHelper.getDefaultTask( newWorkflow );
   }
 
   @Override

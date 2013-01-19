@@ -22,7 +22,7 @@ import de.renew.workflow.connector.internal.i18n.Messages;
 
 /**
  * Represents the work context for a user.
- *
+ * 
  * @author Stefan Kurzbach
  */
 public class ActiveWorkContext
@@ -148,12 +148,12 @@ public class ActiveWorkContext
       final IProject project = caze.getProject();
       if( project.exists() && project.isOpen() )
       {
-        final ScenarioHandlingProjectNature nature = (ScenarioHandlingProjectNature) project.getNature( m_natureID );
+        final ScenarioHandlingProjectNature nature = (ScenarioHandlingProjectNature)project.getNature( m_natureID );
         setCurrentProject( nature );
       }
       else
       {
-        final String message = String.format( Messages.getString("ActiveWorkContext_0"), project.getName(), caze.getName() ); //$NON-NLS-1$
+        final String message = String.format( Messages.getString( "ActiveWorkContext_0" ), project.getName(), caze.getName() ); //$NON-NLS-1$
         throw new CoreException( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, message ) );
       }
     }
