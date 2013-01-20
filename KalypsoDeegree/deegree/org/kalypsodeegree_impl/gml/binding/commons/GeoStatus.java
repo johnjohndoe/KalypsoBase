@@ -46,7 +46,7 @@ import java.util.Date;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.Charsets;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.DateUtilities;
@@ -59,7 +59,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * The feature based implementation of {@link IGeoStatus}.
- *
+ * 
  * @author Thomas Jung
  */
 public class GeoStatus extends Feature_Impl implements IGeoStatus
@@ -105,7 +105,7 @@ public class GeoStatus extends Feature_Impl implements IGeoStatus
 
     try
     {
-      final String encodedString = (String) getProperty( QNAME_PROP_STATUS_EXCEPTION );
+      final String encodedString = (String)getProperty( QNAME_PROP_STATUS_EXCEPTION );
       if( encodedString == null || encodedString.isEmpty() )
         return null;
 
@@ -116,10 +116,15 @@ public class GeoStatus extends Feature_Impl implements IGeoStatus
 
       final InputStream bis = new ByteArrayInputStream( bytes );
       final ObjectInputStream ois = new ObjectInputStream( bis );
-      final Throwable t = (Throwable) ois.readObject();
+      final Throwable t = (Throwable)ois.readObject();
       ois.close();
 
       return t;
+    }
+    catch( final ClassNotFoundException e )
+    {
+      // FIXME: always happens, as we would need to bundle class loader to be able ot load custom exception from a plugin that is not in our downstream dependencies.
+      return null;
     }
     catch( final Throwable e )
     {
@@ -183,7 +188,7 @@ public class GeoStatus extends Feature_Impl implements IGeoStatus
 
   private SEVERITYTYPE getSeverityType( )
   {
-    final String value = (String) getProperty( QNAME_PROP_STATUS_SEVERITY );
+    final String value = (String)getProperty( QNAME_PROP_STATUS_SEVERITY );
 
     return SEVERITYTYPE.valueOf( value );
   }
@@ -198,12 +203,9 @@ public class GeoStatus extends Feature_Impl implements IGeoStatus
   public void setException( final Throwable t )
   {
     // REMARK: we do serialize the exception as a byte stream and write it as string into the gml
-    ObjectOutputStream oos = null;
-
-    try
+    final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    try( ObjectOutputStream oos = new ObjectOutputStream( bos ) )
     {
-      final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-      oos = new ObjectOutputStream( bos );
       oos.writeObject( t );
       oos.close();
 
@@ -211,17 +213,13 @@ public class GeoStatus extends Feature_Impl implements IGeoStatus
       final byte[] bytes = bos.toByteArray();
       final byte[] encodedBytes = Base64.encodeBase64( bytes );
 
-      final String encodedThrowable = new String( encodedBytes, "UTF-8" );
+      final String encodedThrowable = new String( encodedBytes, Charsets.UTF_8 );
       setProperty( QNAME_PROP_STATUS_EXCEPTION, encodedThrowable );
     }
     catch( final IOException e )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       KalypsoDeegreePlugin.getDefault().getLog().log( status );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( oos );
     }
   }
 
