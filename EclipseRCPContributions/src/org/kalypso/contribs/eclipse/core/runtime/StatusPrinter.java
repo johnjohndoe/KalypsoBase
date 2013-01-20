@@ -41,6 +41,7 @@
 package org.kalypso.contribs.eclipse.core.runtime;
 
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -48,7 +49,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 
 /**
- * Prints a {@link IStatus} nd all of it's children into a {@link PrintWriter}.
+ * Prints a {@link IStatus} and all of it's children into a {@link PrintWriter}.
  * 
  * @author Gernot Belger
  */
@@ -63,6 +64,19 @@ public class StatusPrinter
   private final PrintWriter m_pw;
 
   private int m_indentationStep = DEFAULT_INDENTATION_STEP;
+
+  public static String toString( final IStatus status )
+  {
+    final StringWriter sw = new StringWriter();
+    final PrintWriter pw = new PrintWriter( sw );
+
+    final StatusPrinter printer = new StatusPrinter( 0, pw );
+    printer.print( status );
+
+    pw.close();
+
+    return sw.toString();
+  }
 
   /**
    * @param indentation
@@ -88,7 +102,7 @@ public class StatusPrinter
 
     if( status instanceof IStatusWithTime )
     {
-      final Date time = ((IStatusWithTime) status).getTime();
+      final Date time = ((IStatusWithTime)status).getTime();
       m_pw.print( m_df.format( time ) );
       m_pw.print( ' ' );
     }
@@ -96,7 +110,7 @@ public class StatusPrinter
     m_pw.print( StringUtils.repeat( ' ', m_indentation ) );
     m_pw.print( severity );
     m_pw.print( ": " );
-    m_pw.print( status.getMessage() );
+    m_pw.println( status.getMessage() );
 
     final Throwable exception = status.getException();
     if( exception != null )
