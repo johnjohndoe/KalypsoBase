@@ -59,6 +59,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 /**
@@ -88,7 +89,7 @@ public class FeatureListComparator
     m_hash = new HashMap<>();
   }
 
-  public IStatus compareList( ) throws Exception
+  public IStatus compareList( ) throws GMLXPathException
   {
     /* The status collector. */
     final IStatusCollector collector = new StatusCollectorWithTime( KalypsoCorePlugin.getID() );
@@ -100,18 +101,18 @@ public class FeatureListComparator
       throw new IllegalArgumentException( String.format( "GMLXPath '%s' does not point to a feature list...", m_listPath.toString() ) ); //$NON-NLS-1$
 
     /* Cast. */
-    final FeatureList referenceList = (FeatureList) referenceQuery;
-    final FeatureList selectedList = (FeatureList) selectedQuery;
+    final FeatureList referenceList = (FeatureList)referenceQuery;
+    final FeatureList selectedList = (FeatureList)selectedQuery;
 
     /* Fill the reference (feature one) into the hash. */
     for( int i = 0; i < referenceList.size(); i++ )
     {
-      final Feature referenceFeature = (Feature) referenceList.get( i );
+      final Feature referenceFeature = (Feature)referenceList.get( i );
 
       final Object referenceKey = resolveKeyProperty( referenceFeature, i );
       if( m_hash.containsKey( referenceKey ) )
       {
-        collector.add( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( Messages.getString("FeatureListComparator_1"), referenceKey ) ) ); //$NON-NLS-1$
+        collector.add( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( Messages.getString( "FeatureListComparator_1" ), referenceKey ) ) ); //$NON-NLS-1$
         continue;
       }
 
@@ -121,7 +122,7 @@ public class FeatureListComparator
     /* Fill the selected (feature two) into the hash. */
     for( int i = 0; i < selectedList.size(); i++ )
     {
-      final Feature selectedFeature = (Feature) selectedList.get( i );
+      final Feature selectedFeature = (Feature)selectedList.get( i );
 
       final Object selectedKey = resolveKeyProperty( selectedFeature, i );
       if( !m_hash.containsKey( selectedKey ) )
@@ -133,7 +134,7 @@ public class FeatureListComparator
       final FeaturePair featurePair = m_hash.get( selectedKey );
       if( featurePair.getTwo() != null )
       {
-        collector.add( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( Messages.getString("FeatureListComparator_2"), selectedKey ) ) ); //$NON-NLS-1$
+        collector.add( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( Messages.getString( "FeatureListComparator_2" ), selectedKey ) ) ); //$NON-NLS-1$
         continue;
       }
 
@@ -158,14 +159,14 @@ public class FeatureListComparator
       /* For the feature in the reference list, there is no feature in the selected list. */
       if( one != null && two == null )
       {
-        collector.add( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( Messages.getString("FeatureListComparator_3"), key ) ) ); //$NON-NLS-1$
+        collector.add( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( Messages.getString( "FeatureListComparator_3" ), key ) ) ); //$NON-NLS-1$
         continue;
       }
 
       /* For the feature in the selected list, there is no feature in the reference list. */
       if( one == null && two != null )
       {
-        collector.add( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( Messages.getString("FeatureListComparator_4"), key ) ) ); //$NON-NLS-1$
+        collector.add( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( Messages.getString( "FeatureListComparator_4" ), key ) ) ); //$NON-NLS-1$
         continue;
       }
 
@@ -181,7 +182,7 @@ public class FeatureListComparator
     }
 
     final IFeatureType featureType = m_referenceFeature.getFeatureType();
-    final IPropertyType property = (IPropertyType) GMLXPathUtilities.query( m_listPath, featureType );
+    final IPropertyType property = (IPropertyType)GMLXPathUtilities.query( m_listPath, featureType );
     final IAnnotation annotation = property.getAnnotation();
     final String label = annotation.getLabel();
 
@@ -191,7 +192,7 @@ public class FeatureListComparator
   private Object resolveKeyProperty( final Feature referenceFeature, final int i )
   {
     if( m_uniqueProperty == PROPERTY_COUNTER )
-      return String.format( Messages.getString("FeatureListComparator_5"), i ); //$NON-NLS-1$
+      return String.format( Messages.getString( "FeatureListComparator_5" ), i ); //$NON-NLS-1$
 
     return referenceFeature.getProperty( m_uniqueProperty );
   }
