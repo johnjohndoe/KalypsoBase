@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.scenarios;
 
+import java.util.List;
+
 import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
@@ -273,5 +275,26 @@ public class ScenarioHelper
       return newStyleScenario;
 
     return null;
+  }
+
+  /**
+   * Returns the base scenario for the given project.<br/>
+   * Returns <code>null</code>, if an exception occurs.
+   */
+  public static IScenario getBaseScenarioQuiet( final IProject project )
+  {
+    try
+    {
+      final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
+      final IScenarioManager caseManager = nature.getCaseManager();
+
+      final List<IScenario> cases = caseManager.getCases();
+      return cases.get( 0 );
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 }
