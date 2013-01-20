@@ -5,7 +5,7 @@ package de.renew.workflow.connector.cases;
  */
 public interface ICaseManagerListener
 {
-  public void caseAdded( final IScenario scneario );
+  public void caseAdded( final IScenario scenario );
 
   public void caseRemoved( final IScenario scenario );
 }
