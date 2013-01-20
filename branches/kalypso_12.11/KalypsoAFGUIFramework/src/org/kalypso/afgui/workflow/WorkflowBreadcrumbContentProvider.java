@@ -71,13 +71,13 @@ public class WorkflowBreadcrumbContentProvider implements ITreeContentProvider
   {
     if( inputElement instanceof IWorkspaceRoot )
     {
-    final Object[] scenarioElements = m_scenarioProvider.getElements( inputElement );
+      final Object[] scenarioElements = m_scenarioProvider.getElements( inputElement );
 
-    final Object[] elements = new Object[scenarioElements.length + 1];
-    elements[0] = Messages.getString( "org.kalypso.afgui.views.WorkflowView.0" ); //$NON-NLS-1$
-    System.arraycopy( scenarioElements, 0, elements, 1, scenarioElements.length );
+      final Object[] elements = new Object[scenarioElements.length + 1];
+      elements[0] = Messages.getString( "org.kalypso.afgui.views.WorkflowView.0" ); //$NON-NLS-1$
+      System.arraycopy( scenarioElements, 0, elements, 1, scenarioElements.length );
 
-    return elements;
+      return elements;
     }
 
     return m_scenarioProvider.getElements( inputElement );
