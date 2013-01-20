@@ -2,8 +2,11 @@ package org.kalypso.afgui.views;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -30,8 +33,32 @@ import de.renew.workflow.connector.context.IActiveScenarioChangeListener;
 /**
  * @author Stefan Kurzbach
  */
-public class ScenarioContentProvider extends WorkbenchContentProvider implements ICaseManagerListener, IActiveScenarioChangeListener
+public class ScenarioContentProvider extends WorkbenchContentProvider
 {
+  private final IActiveScenarioChangeListener m_activeScenarioListener = new IActiveScenarioChangeListener()
+  {
+    @Override
+    public void activeScenarioChanged( final ScenarioHandlingProjectNature newProject, final IScenario caze )
+    {
+      refreshViewer( null );
+    }
+  };
+
+  private final ICaseManagerListener m_caseManagerListener = new ICaseManagerListener()
+  {
+    @Override
+    public void caseRemoved( final IScenario scenario )
+    {
+      refreshViewer( scenario );
+    }
+
+    @Override
+    public void caseAdded( final IScenario scenario )
+    {
+      refreshViewer( scenario );
+    }
+  };
+
   private final IResourceChangeListener m_resourceListener = new IResourceChangeListener()
   {
     @Override
@@ -42,9 +69,11 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
     }
   };
 
-  private Viewer m_viewer;
+  private final Map<IProject, IScenarioManager> m_cachedManagers = new HashMap<>();
 
   private final boolean m_showResources;
+
+  private Viewer m_viewer;
 
   public ScenarioContentProvider( )
   {
@@ -56,7 +85,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
     m_showResources = showResources;
 
     final ActiveWorkContext activeWorkContext = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext();
-    activeWorkContext.addActiveContextChangeListener( this );
+    activeWorkContext.addActiveContextChangeListener( m_activeScenarioListener );
 
     ResourcesPlugin.getWorkspace().addResourceChangeListener( m_resourceListener, IResourceChangeEvent.POST_CHANGE );
   }
@@ -66,9 +95,6 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
   {
     final Object[] children = m_showResources ? super.getChildren( parentElement ) : new Object[] {};
 
-    // TODO: does that really belong here??? should'nt it be more correct to add the resource content provider to the
-    // scenario view in order to allow the displayment of resources?
-
     if( parentElement instanceof IProject )
     {
       final IProject project = (IProject)parentElement;
@@ -77,40 +103,68 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
         // project is closed or does not exist
         return new Object[0];
       }
-      else
-      {
-        try
-        {
-          final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
-          if( nature != null )
-          {
-            // is of correct nature
-            final List<Object> resultList = new ArrayList<>( children.length + 3 );
-            resultList.addAll( Arrays.asList( children ) );
-            final IScenarioManager caseManager = nature.getCaseManager();
-            if( caseManager != null )
-            {
-              caseManager.addCaseManagerListener( this );
-              resultList.addAll( caseManager.getCases() );
-            }
-            return resultList.toArray();
-          }
-        }
-        catch( final CoreException e )
-        {
-          // cannot happen, all cases checked?
-          e.printStackTrace();
-        }
-      }
+
+      final IScenarioManager caseManager = getCaseManager( project );
+      if( caseManager == null )
+        return ArrayUtils.EMPTY_OBJECT_ARRAY;
+
+      // is of correct nature
+      final List<Object> resultList = new ArrayList<>( children.length + 3 );
+      resultList.addAll( Arrays.asList( children ) );
+
+      resultList.addAll( caseManager.getCases() );
+
+      return resultList.toArray();
     }
-    else if( parentElement instanceof IScenario )
+
+    if( parentElement instanceof IScenario )
     {
       final IScenario scenario = (IScenario)parentElement;
-      final IScenarioList iList = scenario.getDerivedScenarios();
-      final List<IScenario> scenarios = iList.getScenarios();
-
-      return scenarios.toArray( new IScenario[] {} );
+      return getSortedChildScenarios( scenario );
     }
+
+    return children;
+  }
+
+  private synchronized IScenarioManager getCaseManager( final IProject project )
+  {
+    if( m_cachedManagers.containsKey( project ) )
+      return m_cachedManagers.get( project );
+
+    try
+    {
+      final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
+      if( nature == null )
+        return null;
+
+      // FIXME: never removed, resource leak!
+      final IScenarioManager manager = nature.getCaseManager();
+      m_cachedManagers.put( project, manager );
+
+      manager.addCaseManagerListener( m_caseManagerListener );
+
+      return manager;
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  private Object[] getSortedChildScenarios( final IScenario scenario )
+  {
+    final IScenarioList derivedScenarios = scenario.getDerivedScenarios();
+    if( derivedScenarios == null )
+      return new Object[0];
+
+    final List<IScenario> scenarios = derivedScenarios.getScenarios();
+    if( scenarios == null || scenarios.size() == 0 )
+      return new Object[0];
+
+    final IScenario[] children = scenarios.toArray( new IScenario[scenarios.size()] );
+    // REMARK: sort by name here, as we do not always have access to the viewer in order so set a comparator there.
+    Arrays.sort( children, new ScenarioNameComparator() );
 
     return children;
   }
@@ -119,76 +173,23 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
   public boolean hasChildren( final Object element )
   {
     final boolean hasChildren = super.hasChildren( element );
+
     if( hasChildren )
-    {
       return true;
-    }
-    if( element != null && element instanceof IProject )
-    {
-      final IProject project = (IProject)element;
-      if( !project.isOpen() )
-      {
-        // project is closed or does not exist
-        return false;
-      }
-      else
-      {
-        try
-        {
-          final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
-          if( nature != null )
-          {
-            final IScenarioManager caseManager = nature.getCaseManager();
-            if( caseManager != null )
-            {
-              final List<IScenario> rootScenarios = caseManager.getCases();
-              return rootScenarios != null && !rootScenarios.isEmpty();
-            }
-          }
-        }
-        catch( final CoreException e )
-        {
-          // cannot happen, all cases checked?
-          e.printStackTrace();
-        }
-      }
-    }
-    else if( element instanceof IScenario )
-    {
-      final IScenario scenario = (IScenario)element;
 
-      return !scenario.getDerivedScenarios().getScenarios().isEmpty();
-    }
-
-    return false;
+    final Object[] children = getChildren( element );
+    return children.length > 0;
   }
 
   @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
     m_viewer = viewer;
+
     super.inputChanged( viewer, oldInput, newInput );
   }
 
-  @Override
-  public void caseAdded( final IScenario caze )
-  {
-    refreshViewer( caze );
-  }
-
-  @Override
-  public void caseRemoved( final IScenario caze )
-  {
-    refreshViewer( caze );
-  }
-
-  @Override
-  public void activeScenarioChanged( final ScenarioHandlingProjectNature newProject, final IScenario caze )
-  {
-    refreshViewer( null );
-  }
-
-  private void refreshViewer( final IScenario caze )
+  void refreshViewer( final IScenario caze )
   {
     if( m_viewer instanceof StructuredViewer )
     {
@@ -223,7 +224,11 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
   public void dispose( )
   {
     final ActiveWorkContext activeWorkContext = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext();
-    activeWorkContext.removeActiveContextChangeListener( this );
+    activeWorkContext.removeActiveContextChangeListener( m_activeScenarioListener );
+
+    for( final IScenarioManager manager : m_cachedManagers.values() )
+      manager.removeCaseManagerListener( m_caseManagerListener );
+
     super.dispose();
   }
 
@@ -231,29 +236,12 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
   public Object[] getElements( final Object element )
   {
     if( element instanceof IResource )
-    {
       return super.getElements( element );
-    }
 
     if( !(element instanceof IScenario) )
-    {
       return new Object[0];
-    }
 
-    final IScenario scenario = (IScenario)element;
-    final IScenarioList derivedScenarios = scenario.getDerivedScenarios();
-    if( derivedScenarios == null )
-    {
-      return new Object[0];
-    }
-
-    final List<IScenario> scenarios = derivedScenarios.getScenarios();
-    if( scenarios == null || scenarios.size() == 0 )
-    {
-      return new Object[0];
-    }
-
-    return scenarios.toArray();
+    return getSortedChildScenarios( (IScenario)element );
   }
 
   protected void handleResourceChanged( final IResourceDelta delta )
