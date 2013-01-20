@@ -50,7 +50,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.kalypso.afgui.handlers.AddScenarioHandler;
+import org.kalypso.afgui.helper.ScenarioHandlerUtils;
 import org.kalypso.afgui.internal.i18n.Messages;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
@@ -71,7 +71,7 @@ public class CopyScenarioHandler extends AbstractHandler
     final String commandName = HandlerUtils.getCommandName( event );
 
     /* Find scenario */
-    final IScenario scenario = AddScenarioHandler.findScenario( event );
+    final IScenario scenario = ScenarioHandlerUtils.findScenario( event );
     if( scenario == null )
     {
       final String message = Messages.getString( "CopyScenarioHandler_0" ); //$NON-NLS-1$

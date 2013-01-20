@@ -43,11 +43,13 @@ package org.kalypso.module;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author Dirk Kuch
  */
 public interface IKalypsoModuleProjectOpenAction
 {
-  IStatus open( IProject project ) throws CoreException;
+  IStatus open( Shell shell, Point mousePosition, IProject project ) throws CoreException;
 }

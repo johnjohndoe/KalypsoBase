@@ -1,4 +1,4 @@
-package org.kalypso.afgui.views;
+package org.kalypso.afgui.internal.workflow;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -83,7 +83,7 @@ public class WorkflowView extends ViewPart
     // REMARK: tricky: if we immediately execute, the progress dialog for activating the scenario may still be open
     // I this case, we get errors when activating the views (during task activation), because the workflow window
     // is not active right now.
-    job.schedule( 500 );
+    job.schedule( 0 );
   }
 
   void doUpdateControls( final ScenarioHandlingProjectNature newProject, final IScenario scenario )

@@ -20,13 +20,14 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.kalypso.afgui.internal.DefaultTaskActivator;
 import org.kalypso.afgui.internal.PerspectiveWatcher;
 import org.kalypso.afgui.internal.SzenarioDataProvider;
 import org.kalypso.afgui.internal.TaskExecutionAuthority;
 import org.kalypso.afgui.internal.TaskExecutor;
+import org.kalypso.afgui.internal.workflow.WorkflowView;
 import org.kalypso.afgui.perspective.Perspective;
 import org.kalypso.afgui.scenarios.ScenarioDataChangeListenerExtension;
-import org.kalypso.afgui.views.WorkflowView;
 import org.kalypso.commons.java.lang.Objects;
 import org.osgi.framework.BundleContext;
 

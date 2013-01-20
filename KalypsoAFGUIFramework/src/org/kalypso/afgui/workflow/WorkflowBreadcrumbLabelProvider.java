@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.afgui.ui.workflow;
+package org.kalypso.afgui.workflow;
 
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.IFontProvider;
@@ -53,7 +53,7 @@ import de.renew.workflow.connector.cases.IScenario;
 /**
  * @author Gernot Belger
  */
-public class WorkflowBreadCrumbLabelProvider extends LabelProvider implements IFontProvider
+public class WorkflowBreadcrumbLabelProvider extends LabelProvider implements IFontProvider
 {
   private final WorkbenchLabelProvider m_labelProvider = new WorkbenchLabelProvider();
 

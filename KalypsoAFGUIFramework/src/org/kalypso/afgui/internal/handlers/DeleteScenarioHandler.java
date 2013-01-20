@@ -39,8 +39,8 @@ import org.eclipse.ui.actions.DeleteResourceAction;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.afgui.internal.i18n.Messages;
+import org.kalypso.afgui.internal.workflow.WorkflowView;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.views.WorkflowView;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.jface.window.ShellProvider;
 
