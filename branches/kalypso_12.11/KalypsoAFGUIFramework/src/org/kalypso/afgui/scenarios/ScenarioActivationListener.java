@@ -39,8 +39,6 @@ class ScenarioActivationListener implements ISelectionChangedListener, IOpenList
 {
   private final ScenarioSelectionPopup m_selectionPopup;
 
-  private int count = 0;
-
   private final Shell m_shell;
 
   private final Point m_mousePosition;
@@ -72,11 +70,6 @@ class ScenarioActivationListener implements ISelectionChangedListener, IOpenList
 
   private void handleActivation( final IStructuredSelection selection )
   {
-    count++;
-
-    if( count < 2 )
-      return;
-
     final Object firstElement = selection.getFirstElement();
     if( !(firstElement instanceof IScenario) )
       return;

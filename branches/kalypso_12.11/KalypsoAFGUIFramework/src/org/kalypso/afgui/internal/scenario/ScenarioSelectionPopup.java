@@ -23,6 +23,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -31,6 +32,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.views.ScenarioContentProvider;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 
@@ -101,9 +103,23 @@ public class ScenarioSelectionPopup extends PopupDialog
 
     m_viewer.setContentProvider( new ScenarioContentProvider( false ) );
     m_viewer.setLabelProvider( WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider() );
-    m_viewer.setAutoExpandLevel( 2 );
+    m_viewer.setAutoExpandLevel( 2/* TreeViewer.ALL_LEVELS */);
 
     m_viewer.setInput( m_project );
+
+    /* show the currently active scenario */
+    final IScenario activeScenario = ScenarioHelper.getActiveScenario();
+    if( activeScenario != null )
+    {
+      m_viewer.reveal( activeScenario );
+      m_viewer.setSelection( new StructuredSelection( activeScenario ) );
+    }
+    else
+    {
+      final IScenario baseScenario = ScenarioHelper.getBaseScenarioQuiet( m_project );
+      if( baseScenario != null )
+        m_viewer.setSelection( new StructuredSelection( baseScenario ) );
+    }
 
     setSelectionListener( m_selectionListener );
     setOpenListener( m_openListener );
