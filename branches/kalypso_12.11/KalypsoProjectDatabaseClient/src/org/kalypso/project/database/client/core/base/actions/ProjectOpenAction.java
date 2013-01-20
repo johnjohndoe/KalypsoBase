@@ -46,8 +46,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
@@ -113,9 +115,9 @@ public class ProjectOpenAction implements IProjectAction
     {
       final OPEN_TYPE type = valueOf( name() );
       if( eLocal.equals( type ) )
-        return (Messages.getString("ProjectOpenAction.0")); //$NON-NLS-1$
+        return (Messages.getString( "ProjectOpenAction.0" )); //$NON-NLS-1$
       else if( eLocalOffline.equals( type ) )
-        return Messages.getString("ProjectOpenAction.1"); //$NON-NLS-1$
+        return Messages.getString( "ProjectOpenAction.1" ); //$NON-NLS-1$
       else if( eTranscendenceReadable.equals( type ) )
         return Messages.getString( "org.kalypso.project.database.client.core.base.actions.ProjectOpenAction.7" ); //$NON-NLS-1$
       else if( eTranscendenceReadableServerLocked.equals( type ) )
@@ -187,47 +189,49 @@ public class ProjectOpenAction implements IProjectAction
 
     link.setToolTipText( String.format( "%s (%s", m_handler.getName(), m_type.getStatus() ) ); //$NON-NLS-1$
 
-    final Shell shell = body.getShell();
-
     link.addHyperlinkListener( new HyperlinkAdapter()
     {
       @Override
       public void linkActivated( final HyperlinkEvent e )
       {
-        runAction( shell );
+        runAction( e );
       }
     } );
   }
 
-  protected void runAction( final Shell shell )
+  protected void runAction( final HyperlinkEvent e )
   {
     final String actionLabel = m_handler.getName();
 
     final IProject project = m_handler.getProject();
 
-    final IStatus status = doOpenProject( project );
+    final Display display = e.widget.getDisplay();
+    final Shell shell = display.getActiveShell();
+    final Point mousePosition = display.getCursorLocation();
+
+    final IStatus status = doOpenProject( shell, mousePosition, project );
 
     if( status.isOK() || status.matches( IStatus.CANCEL ) )
       return;
 
-    new StatusDialog( shell, status, actionLabel ).open();
+    StatusDialog.open( shell, status, actionLabel );
   }
 
-  private IStatus doOpenProject( final IProject project )
+  private IStatus doOpenProject( final Shell shell, final Point mousePosition, final IProject project )
   {
     /* Some common checks, common to all the open actions */
 
     /* Validate parameters */
     if( !project.exists() )
     {
-      final String message = String.format( Messages.getString("ProjectOpenAction.2"), project.getName() ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "ProjectOpenAction.2" ), project.getName() ); //$NON-NLS-1$
       return new Status( IStatus.ERROR, KalypsoProjectDatabaseClient.PLUGIN_ID, message );
     }
 
     if( !project.isOpen() )
     {
       // TODO: instead: we should ask the user if we should open the project.
-      final String message = String.format( Messages.getString("ProjectOpenAction.3"), project.getName() ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "ProjectOpenAction.3" ), project.getName() ); //$NON-NLS-1$
       return new Status( IStatus.ERROR, KalypsoProjectDatabaseClient.PLUGIN_ID, message );
     }
 
@@ -235,7 +239,7 @@ public class ProjectOpenAction implements IProjectAction
 
     try
     {
-      return action.open( project );
+      return action.open( shell, mousePosition, project );
     }
     catch( final CoreException e )
     {
@@ -244,7 +248,7 @@ public class ProjectOpenAction implements IProjectAction
     }
     catch( final Exception e )
     {
-      final String msg = String.format( Messages.getString("ProjectOpenAction.4"), e.getLocalizedMessage() ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString( "ProjectOpenAction.4" ), e.getLocalizedMessage() ); //$NON-NLS-1$
       return new Status( IStatus.ERROR, KalypsoProjectDatabaseClient.PLUGIN_ID, msg, e );
     }
   }

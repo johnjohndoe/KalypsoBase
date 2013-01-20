@@ -71,9 +71,6 @@ public abstract class ProjectOpenAction extends Action implements IProjectOpenAc
     setToolTipText( Messages.getString( "org.kalypso.core.projecthandle.local.ProjectOpenAction.10", m_item.getName() ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
-   */
   @Override
   public void runWithEvent( final Event event )
   {
@@ -85,15 +82,15 @@ public abstract class ProjectOpenAction extends Action implements IProjectOpenAc
 
     if( !status.isOK() )
     {
-      new StatusDialog( shell, status, getText() ).open();
+      StatusDialog.open( shell, status, getText() );
       return;
     }
 
-    final IStatus openStatus = doOpenProject();
+    final IStatus openStatus = doOpenProject( event );
     if( openStatus.isOK() || openStatus.matches( IStatus.CANCEL ) )
       return;
 
-    new StatusDialog( shell, openStatus, getText() ).open();
+    StatusDialog.open( shell, openStatus, getText() );
   }
 
   private IStatus checkProject( )
@@ -104,14 +101,14 @@ public abstract class ProjectOpenAction extends Action implements IProjectOpenAc
     /* Validate parameters */
     if( !project.exists() )
     {
-      final String message = String.format( Messages.getString("ProjectOpenAction.0"), project.getName() ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "ProjectOpenAction.0" ), project.getName() ); //$NON-NLS-1$
       return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), message );
     }
 
     if( !project.isOpen() )
     {
       // TODO: instead: we should ask the user if we should open the project.
-      final String message = String.format( Messages.getString("ProjectOpenAction.1"), project.getName() ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "ProjectOpenAction.1" ), project.getName() ); //$NON-NLS-1$
       return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), message );
     }
 
@@ -120,6 +117,5 @@ public abstract class ProjectOpenAction extends Action implements IProjectOpenAc
     return Status.OK_STATUS;
   }
 
-  protected abstract IStatus doOpenProject( );
-
+  protected abstract IStatus doOpenProject( Event event );
 }

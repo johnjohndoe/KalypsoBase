@@ -69,11 +69,11 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.menus.IMenuService;
 import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.afgui.internal.i18n.Messages;
+import org.kalypso.afgui.internal.workflow.WorkflowView;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.ui.workflow.WorkflowBreadCrumbLabelProvider;
-import org.kalypso.afgui.ui.workflow.WorkflowBreadcrumbContentProvider;
 import org.kalypso.afgui.views.ScenarioViewerFilter;
-import org.kalypso.afgui.views.WorkflowView;
+import org.kalypso.afgui.workflow.WorkflowBreadcrumbLabelProvider;
+import org.kalypso.afgui.workflow.WorkflowBreadcrumbContentProvider;
 
 import de.renew.workflow.connector.cases.IScenario;
 
@@ -92,7 +92,7 @@ public class WorkflowBreadcrumbViewer extends BreadcrumbViewer
 
     m_view = view;
 
-    setLabelProvider( new WorkflowBreadCrumbLabelProvider() );
+    setLabelProvider( new WorkflowBreadcrumbLabelProvider() );
     setToolTipLabelProvider( new WorkflowBreadCrumbTooltipProvider() );
 
     setContentProvider( new WorkflowBreadcrumbContentProvider() );
@@ -127,7 +127,7 @@ public class WorkflowBreadcrumbViewer extends BreadcrumbViewer
     viewer.setContentProvider( getContentProvider() );
 
     // REMARK: cannot reuse label provider of breadcrumb, because it gets disposed if drop-down is closed
-    viewer.setLabelProvider( new WorkflowBreadCrumbLabelProvider() );
+    viewer.setLabelProvider( new WorkflowBreadcrumbLabelProvider() );
     setToolTipLabelProvider( new WorkflowBreadCrumbTooltipProvider() );
 
     viewer.setFilters( getFilters() );

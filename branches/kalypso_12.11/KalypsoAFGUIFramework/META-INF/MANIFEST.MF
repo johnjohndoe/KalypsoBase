@@ -19,13 +19,12 @@ Require-Bundle: de.openali.odysseus.chart.ui,
  org.kalypso.ui.addlayer
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.afgui,
- org.kalypso.afgui.handlers,
  org.kalypso.afgui.helper,
  org.kalypso.afgui.model,
  org.kalypso.afgui.perspective,
  org.kalypso.afgui.scenarios,
- org.kalypso.afgui.ui.workflow,
  org.kalypso.afgui.views,
- org.kalypso.afgui.wizards
+ org.kalypso.afgui.wizards,
+ org.kalypso.afgui.workflow
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: .

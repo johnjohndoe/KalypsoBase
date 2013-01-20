@@ -44,6 +44,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.module.IKalypsoModule;
 import org.kalypso.module.IKalypsoModuleProjectOpenAction;
@@ -67,11 +71,8 @@ public class OpenModuleProjectAction extends ProjectOpenAction
     m_item = item;
   }
 
-  /**
-   * @see org.kalypso.core.projecthandle.local.ProjectOpenAction#doOpenProject()
-   */
   @Override
-  protected IStatus doOpenProject( )
+  protected IStatus doOpenProject( final Event event )
   {
     try
     {
@@ -80,7 +81,12 @@ public class OpenModuleProjectAction extends ProjectOpenAction
 
       final IKalypsoModuleProjectOpenAction action = m_module.getProjectOpenAction();
       final IProject project = m_item.getProject();
-      return action.open( project );
+
+      final Display display = event.widget.getDisplay();
+      final Shell shell = display.getActiveShell();
+      final Point cursorLocation = display.getCursorLocation();
+
+      return action.open( shell, cursorLocation, project );
     }
     catch( final CoreException e )
     {

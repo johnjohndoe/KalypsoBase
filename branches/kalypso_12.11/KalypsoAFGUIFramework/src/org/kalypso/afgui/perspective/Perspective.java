@@ -4,7 +4,7 @@ import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.IPlaceholderFolderLayout;
-import org.kalypso.afgui.views.WorkflowView;
+import org.kalypso.afgui.internal.workflow.WorkflowView;
 import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.ogc.gml.outline.ViewContentOutline;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;

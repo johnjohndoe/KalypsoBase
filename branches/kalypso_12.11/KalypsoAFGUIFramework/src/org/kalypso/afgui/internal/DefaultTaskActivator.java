@@ -16,12 +16,13 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.kalypso.afgui;
+package org.kalypso.afgui.internal;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 
 import de.renew.workflow.base.ITask;
@@ -35,7 +36,7 @@ import de.renew.workflow.connector.context.IActiveScenarioChangeListener;
  * 
  * @author Gernot Belger
  */
-class DefaultTaskActivator implements IActiveScenarioChangeListener
+public class DefaultTaskActivator implements IActiveScenarioChangeListener
 {
   @Override
   public void activeScenarioChanged( final ScenarioHandlingProjectNature newProject, final IScenario scenario )
@@ -57,7 +58,7 @@ class DefaultTaskActivator implements IActiveScenarioChangeListener
     // REMARK: tricky: if we immediately execute, the progress dialog for activating the scenario may still be open
     // I this case, we get errors when activating the views (during task activation), because the workflow window
     // is not active right now.
-    job.schedule();
+    job.schedule( 250 );
   }
 
   protected void doActivateDefaultTask( final ScenarioHandlingProjectNature newProject, final IScenario scenario )

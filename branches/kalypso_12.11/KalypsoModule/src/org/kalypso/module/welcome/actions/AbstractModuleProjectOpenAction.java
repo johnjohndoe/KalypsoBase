@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.extension.project;
+package org.kalypso.module.welcome.actions;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -47,22 +47,15 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.ui.IPageLayout;
-import org.eclipse.ui.IPerspectiveDescriptor;
-import org.eclipse.ui.IPerspectiveRegistry;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.intro.IIntroManager;
-import org.eclipse.ui.navigator.CommonNavigator;
-import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.progress.IProgressService;
-import org.eclipse.ui.views.navigator.ResourceNavigator;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.module.IKalypsoModuleProjectOpenAction;
 import org.kalypso.module.nature.ModuleNature;
@@ -82,47 +75,33 @@ public abstract class AbstractModuleProjectOpenAction implements IKalypsoModuleP
   }
 
   @Override
-  public final IStatus open( final IProject project ) throws CoreException
+  public IStatus open( final Shell shell, final Point mousePosition, final IProject project ) throws CoreException
   {
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-    if( window == null )
-      return Status.CANCEL_STATUS;
-
-    final IWorkbenchPage page = window.getActivePage();
+    final IWorkbenchPage page = findActivePage();
     if( page == null )
       return Status.CANCEL_STATUS;
-
-    // TODO: we should also have some kind of close action: close the currently open project (for example, Scenario
-    // based projects should unload the currently active scenario ). We could equally close a project before it is
-    // deleted.
 
     final IStatus versionStatus = checkProjectModule( project );
     if( !versionStatus.isOK() )
       return versionStatus;
 
-    /* We need to do this first, the open actions sometimes depend on it */
-    final String perspective = getFinalPerspective();
-    hideIntroAndOpenPerspective( page, perspective );
+    /* now hide welcome page */
+    hideIntro();
 
-    if( revealProjectInExplorer() )
-      revealProjectInExplorer( page, project );
-
-    return doOpen( page, project );
+    return doOpen( shell, mousePosition, page, project );
   }
 
-  /**
-   * Returns the id of the perspective that should be opened when the project is opened. <br/>
-   * Return <code>null</code>, if the perspective should not be changed.
-   */
-  protected abstract String getFinalPerspective( );
+  protected IWorkbenchPage findActivePage( )
+  {
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+    if( window == null )
+      return null;
 
-  /**
-   * Return <code>true</code>, if the opened project should be revealed in the project explorer resp. navigator.
-   */
-  protected abstract boolean revealProjectInExplorer( );
+    return window.getActivePage();
+  }
 
-  protected abstract IStatus doOpen( IWorkbenchPage page, IProject project ) throws CoreException;
+  protected abstract IStatus doOpen( final Shell shell, final Point mousePosition, final IWorkbenchPage page, final IProject project ) throws CoreException;
 
   /**
    * For backwards compatibility: we enforce the ModuleNature here, setting the module-id if it was never set before.
@@ -140,56 +119,15 @@ public abstract class AbstractModuleProjectOpenAction implements IKalypsoModuleP
       }
     };
 
-    final IProgressService progress = (IProgressService) PlatformUI.getWorkbench().getService( IProgressService.class );
+    final IProgressService progress = (IProgressService)PlatformUI.getWorkbench().getService( IProgressService.class );
     return RunnableContextHelper.execute( progress, true, false, operation );
   }
 
-  private void revealProjectInExplorer( final IWorkbenchPage page, final IProject project ) throws PartInitException
-  {
-    // At least show project in Resource Navigator
-    final StructuredSelection projectSelection = new StructuredSelection( project );
-
-    final CommonNavigator projectExplorer = (CommonNavigator) page.findView( IPageLayout.ID_PROJECT_EXPLORER );
-    if( projectExplorer != null )
-    {
-      page.showView( IPageLayout.ID_PROJECT_EXPLORER, null, IWorkbenchPage.VIEW_ACTIVATE );
-      final CommonViewer commonViewer = projectExplorer.getCommonViewer();
-      commonViewer.collapseAll();
-      commonViewer.setSelection( projectSelection );
-      commonViewer.expandToLevel( project, 1 );
-    }
-    else
-    {
-      final ResourceNavigator view = (ResourceNavigator) page.showView( IPageLayout.ID_RES_NAV );
-      if( view != null )
-      {
-        final TreeViewer treeViewer = view.getTreeViewer();
-        treeViewer.collapseAll();
-        view.selectReveal( projectSelection );
-        treeViewer.expandToLevel( project, 1 );
-      }
-    }
-  }
-
-  private void hideIntroAndOpenPerspective( final IWorkbenchPage page, final String perspective )
+  private void hideIntro( )
   {
     /* hide intro */
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IIntroManager introManager = workbench.getIntroManager();
     introManager.closeIntro( introManager.getIntro() );
-
-    if( perspective == null )
-      return;
-
-    /* Open desired perspective */
-    if( page == null )
-      return;
-
-    final IPerspectiveRegistry perspectiveRegistry = workbench.getPerspectiveRegistry();
-
-    final IPerspectiveDescriptor descriptor = perspectiveRegistry.findPerspectiveWithId( perspective );
-    if( descriptor != null )
-      page.setPerspective( descriptor );
   }
-
 }
