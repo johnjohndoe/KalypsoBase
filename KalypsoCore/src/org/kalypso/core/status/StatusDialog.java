@@ -71,7 +71,7 @@ import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
  * <li>'copy to clipboard' button</li>
  * <li>toolbar for tree: collapse all, expand all</li>
  * </ul>
- *
+ * 
  * @author Gernot Belger
  */
 public class StatusDialog extends AbstractStatusDialog
@@ -136,6 +136,7 @@ public class StatusDialog extends AbstractStatusDialog
     for( final IAction additionalAction : m_actions )
       toolBarManager.add( additionalAction );
 
+    // FIXME add to actions instead
     // FIXME
     // toolBarManager.add( new MailStatusAction( getStatus() ) );
     toolBarManager.add( new CopyStatusClipboardAction( getStatus() ) );
