@@ -55,9 +55,6 @@ import org.kalypso.contribs.eclipse.compare.FileStructureComparator;
  */
 public class FileContentAssertDumper implements IElementDumper
 {
-  /**
-   * @see org.kalypso.commons.compare.IElementDumper#dumpElement(org.eclipse.compare.structuremergeviewer.ICompareInput)
-   */
   @Override
   public void dumpElement( final ICompareInput input )
   {
@@ -66,8 +63,8 @@ public class FileContentAssertDumper implements IElementDumper
 
     if( left instanceof FileStructureComparator && right instanceof FileStructureComparator )
     {
-      final File leftFile = ((FileStructureComparator) left).getFile();
-      final File rightFile = ((FileStructureComparator) right).getFile();
+      final File leftFile = ((FileStructureComparator)left).getFile();
+      final File rightFile = ((FileStructureComparator)right).getFile();
       if( leftFile.isFile() && rightFile.isFile() )
         FileAssert.assertFileContentEquals( leftFile, rightFile );
     }
