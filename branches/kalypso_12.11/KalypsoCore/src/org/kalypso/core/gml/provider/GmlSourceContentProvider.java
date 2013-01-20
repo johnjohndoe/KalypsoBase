@@ -102,9 +102,6 @@ public class GmlSourceContentProvider implements ITreeContentProvider
     return children;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
-   */
   @Override
   public Object getParent( final Object element )
   {
@@ -112,9 +109,6 @@ public class GmlSourceContentProvider implements ITreeContentProvider
     return cp.getParent( element );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
-   */
   @Override
   public boolean hasChildren( final Object element )
   {
@@ -122,14 +116,10 @@ public class GmlSourceContentProvider implements ITreeContentProvider
     return cp.hasChildren( element );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
-   */
   @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
-    m_provider = (IGmlSourceProvider[]) newInput;
+    m_provider = (IGmlSourceProvider[])newInput;
 
     m_contentProvider.clear();
 
@@ -154,6 +144,7 @@ public class GmlSourceContentProvider implements ITreeContentProvider
 
   public IGmlSourceProvider getProvider( final Object element )
   {
+    // FIXME: does not work!
     if( !m_providerHash.containsKey( element ) )
       throw new IllegalStateException( String.format( "Unknown element: %s", element ) ); //$NON-NLS-1$
 
@@ -165,5 +156,4 @@ public class GmlSourceContentProvider implements ITreeContentProvider
     final IGmlSourceProvider provider = getProvider( parentElement );
     return m_contentProvider.get( provider );
   }
-
 }
