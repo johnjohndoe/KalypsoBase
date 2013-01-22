@@ -58,6 +58,7 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.NullOutputStream;
 import org.apache.commons.lang3.StringUtils;
@@ -85,6 +86,30 @@ public class ZipUtilities
   }
 
   /**
+   * Unzips the contents of an URL into a directory using the apache zip classes.
+   * 
+   * @param zipStream
+   *          Is closed after this operation.
+   */
+  public static void unzipApache( final URL resource, final File targetDir, final boolean overwriteExisting, final String encoding ) throws IOException
+  {
+    final File file = File.createTempFile( "unzipTmpFile", ".zip" ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    try
+    {
+      file.deleteOnExit();
+
+      FileUtils.copyURLToFile( resource, file );
+
+      unzipApache( file, targetDir, overwriteExisting, encoding );
+    }
+    finally
+    {
+      file.delete();
+    }
+  }
+
+  /**
    * Unzips a stream into a directory using the apache zip classes.
    * 
    * @param zipStream
@@ -93,25 +118,21 @@ public class ZipUtilities
   public static void unzipApache( final InputStream zipStream, final File targetDir, final boolean overwriteExisting, final String encoding ) throws IOException
   {
     final File file = File.createTempFile( "unzipTmpFile", ".zip" ); //$NON-NLS-1$ //$NON-NLS-2$
-    file.deleteOnExit();
 
-    OutputStream os = null;
     try
     {
-      os = new BufferedOutputStream( new FileOutputStream( file ) );
-      IOUtils.copy( zipStream, os );
-      os.close();
+      file.deleteOnExit();
+
+      FileUtils.copyInputStreamToFile( zipStream, file );
 
       unzipApache( file, targetDir, overwriteExisting, encoding );
     }
     finally
     {
       IOUtils.closeQuietly( zipStream );
-      IOUtils.closeQuietly( os );
 
       file.delete();
     }
-
   }
 
   /** Unzips a zip archive into a directory using the apache zip classes. */
@@ -125,7 +146,7 @@ public class ZipUtilities
       final Enumeration< ? > entries = file.getEntries();
       while( entries.hasMoreElements() )
       {
-        final org.apache.tools.zip.ZipEntry entry = (org.apache.tools.zip.ZipEntry) entries.nextElement();
+        final org.apache.tools.zip.ZipEntry entry = (org.apache.tools.zip.ZipEntry)entries.nextElement();
         if( entry == null )
           break;
 
@@ -410,7 +431,7 @@ public class ZipUtilities
         if( targetContainer instanceof IFolder )
         {
           monitor.subTask( Messages.getString( "org.kalypso.commons.java.util.zip.ZipUtilities.1" ) + targetContainer.getName() ); //$NON-NLS-1$
-          ((IFolder) targetContainer).create( false, true, new SubProgressMonitor( monitor, 100 ) );
+          ((IFolder)targetContainer).create( false, true, new SubProgressMonitor( monitor, 100 ) );
         }
         else
           monitor.worked( 100 );
@@ -472,7 +493,7 @@ public class ZipUtilities
     final Enumeration< ? > entries = zf.entries();
     while( entries.hasMoreElements() )
     {
-      final ZipEntry ze = (ZipEntry) entries.nextElement();
+      final ZipEntry ze = (ZipEntry)entries.nextElement();
       if( !ze.isDirectory() && (StringUtils.isBlank( zippedFile ) || zippedFile.equalsIgnoreCase( ze.getName() )) )
       {
         final long size = ze.getSize();
@@ -633,7 +654,7 @@ public class ZipUtilities
       for( int c; (c = bis.read()) != EOF; )
       {
         // $ANALYSIS-IGNORE
-        bos.write( (byte) c );
+        bos.write( (byte)c );
       }
 
       bos.close();
