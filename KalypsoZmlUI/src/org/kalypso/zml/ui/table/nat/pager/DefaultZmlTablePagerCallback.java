@@ -108,7 +108,6 @@ public class DefaultZmlTablePagerCallback implements IZmlTablePagerCallback
 
     final NatTable table = zmlTable.getTable();
     table.addLayerListener( m_listener );
-
     table.addControlListener( m_resizeListener );
   }
 
@@ -116,9 +115,12 @@ public class DefaultZmlTablePagerCallback implements IZmlTablePagerCallback
   public void dispose( )
   {
     final NatTable table = m_zmlTable.getTable();
-    table.removeLayerListener( m_listener );
 
-    table.removeControlListener( m_resizeListener );
+    if( table != null && !table.isDisposed() )
+    {
+      table.removeLayerListener( m_listener );
+      table.removeControlListener( m_resizeListener );
+    }
   }
 
   protected void handleTableResize( )
@@ -265,16 +267,23 @@ public class DefaultZmlTablePagerCallback implements IZmlTablePagerCallback
         return false;
     }
 
-    /* forecast date will be in middle of table */
-    final int wishIndexToSet = Math.max( 0, index - viewportRows / 2 + 1 );
+    final int wishIndexToSet = getWishIndex( index, viewportRows );
 
     setRowOrigin( wishIndexToSet );
 
     m_originRow = forecastDate;
+    m_focusRow = forecastDate;
 
     rememberOrigin();
 
     return true;
+  }
+
+  protected int getWishIndex( final int index, final int viewportRows )
+  {
+    /* forecast date will be in middle of table */
+    final int wishIndexToSet = Math.max( 0, index - viewportRows / 2 + 1 );
+    return wishIndexToSet;
   }
 
   private void setRowOrigin( final int wishIndexToSet )
@@ -328,7 +337,7 @@ public class DefaultZmlTablePagerCallback implements IZmlTablePagerCallback
     }
   }
 
-  private Date findForecastDate( final IZmlTable table )
+  protected Date findForecastDate( final IZmlTable table )
   {
     final ZmlModelViewport viewport = table.getModelViewport();
     final IZmlModelColumn[] columns = viewport.getColumns();
