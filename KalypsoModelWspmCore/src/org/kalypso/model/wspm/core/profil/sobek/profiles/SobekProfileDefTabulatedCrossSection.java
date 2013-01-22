@@ -40,14 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.sobek.profiles;
 
-import java.io.IOException;
-import java.io.Writer;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.i18n.Messages;
 
 /**
@@ -150,6 +150,38 @@ public class SobekProfileDefTabulatedCrossSection implements ISobekProfileDefDat
    * @param gu
    *          The ground layer to be used within hydraulics calculation (1) or not (0).
    */
+  public SobekProfileDefTabulatedCrossSection( final BigDecimal wm, final BigDecimal w1, final BigDecimal w2, final BigDecimal sw, final BigDecimal gl, final int gu )
+  {
+    this( wm, w1, w2, sw, new SobekProfileHeight[0], 0, null, null, null, null, gl, gu );
+  }
+
+  /**
+   * @param wm
+   *          The width of the main channel.
+   * @param w1
+   *          The width of the floodplain 1 (used in River profile only, else value = 0).
+   * @param w2
+   *          The width of the floodplain 2 (used in River profile only, else value = 0).
+   * @param sw
+   *          The sediment transport width (not in SOBEK Urban/Rural). Default 0. Only important for module
+   *          sediment/morfology.
+   * @param profileHeights
+   *          The height steps for this profile. One height step contains the height, the full width and the flow width.
+   * @param dk
+   *          Summer dike (1 = active, 0 = not active) (in River profile only).
+   * @param dc
+   *          The dike crest level (in River profile only).
+   * @param db
+   *          The floodplain base level behind the dike (in River profile only).
+   * @param df
+   *          The flow area behind the dike (in River profile only).
+   * @param dt
+   *          The total area behind the dike (in River profile only).
+   * @param gl
+   *          The ground layer depth (meter relative to bed level).
+   * @param gu
+   *          The ground layer to be used within hydraulics calculation (1) or not (0).
+   */
   public SobekProfileDefTabulatedCrossSection( final BigDecimal wm, final BigDecimal w1, final BigDecimal w2, final BigDecimal sw, final SobekProfileHeight[] profileHeights, final int dk, final BigDecimal dc, final BigDecimal db, final BigDecimal df, final BigDecimal dt, final BigDecimal gl, final int gu )
   {
     m_wm = wm;
@@ -212,6 +244,14 @@ public class SobekProfileDefTabulatedCrossSection implements ISobekProfileDefDat
   public BigDecimal getSw( )
   {
     return m_sw;
+  }
+
+  /**
+   * Adds one element to the table of this tabular profile.
+   */
+  public void addProfileHeight( final SobekProfileHeight height )
+  {
+    m_profileHeights.add( height );
   }
 
   /**
@@ -295,40 +335,42 @@ public class SobekProfileDefTabulatedCrossSection implements ISobekProfileDefDat
   }
 
   @Override
-  public void writeContent( final Writer writer ) throws IOException
+  public void writeContent( final PrintWriter writer )
   {
-    /* Create a string builder. */
-    final StringBuilder line = new StringBuilder();
-
     /* Create warnings for each sobek profile height. */
     final List<SobekProfileWarning> profileWarnings = new ArrayList<>();
 
-    line.append( serializeCrdsStart( profileWarnings ) );
-    line.append( serializeTable( m_profileHeights, profileWarnings ) );
-    line.append( serializeDikes( m_dk, m_dc, m_db, m_df, m_dt ) );
+    writer.append( serializeCrdsStart( profileWarnings ) );
+    writer.append( serializeTable( m_profileHeights, profileWarnings ) );
 
-    writer.write( line.toString() );
+    if( Objects.allNotNull( m_dc, m_db, m_df, m_dt ) )
+      writer.append( serializeDikes( m_dk, m_dc, m_db, m_df, m_dt ) );
   }
 
   private String serializeCrdsStart( final List<SobekProfileWarning> profileWarnings )
   {
     final BigDecimal w2 = calculateW2( profileWarnings );
 
-    return String.format( Locale.PRC, "wm %.2f w1 %.2f w2 %.2f sw %.2f gl %.2f gu %d lt lw%n", m_wm, m_w1, w2, m_sw, m_gl, m_gu ); //$NON-NLS-1$
+    return String.format( Locale.PRC, "wm %s w1 %s w2 %s sw %s gl %s gu %d lt lw%n", m_wm, m_w1, w2, m_sw, m_gl, m_gu ); //$NON-NLS-1$
   }
 
+  // FIXME: the handling of 'warnings' is ugly!
   private BigDecimal calculateW2( final List<SobekProfileWarning> profileWarnings )
   {
+    if( m_w2 != null )
+    {
+      for( @SuppressWarnings( "unused" ) final SobekProfileHeight profileHeight : m_profileHeights )
+        profileWarnings.add( new SobekProfileWarning() );
+
+      return m_w2;
+    }
 
     /* Check all heights, full widths and flow widths. */
     double lastHeight = -1.0;
     double lastFullWidth = -1.0;
     double lastFlowWidth = -1.0;
-    for( int i = 0; i < m_profileHeights.size(); i++ )
+    for( final SobekProfileHeight profileHeight : m_profileHeights )
     {
-      /* Get the sobek profile height. */
-      final SobekProfileHeight profileHeight = m_profileHeights.get( i );
-
       /* Create a sobek profile warning. */
       /* It will be empty. */
       final SobekProfileWarning profileWarning = new SobekProfileWarning();
@@ -359,6 +401,7 @@ public class SobekProfileDefTabulatedCrossSection implements ISobekProfileDefDat
       lastFlowWidth = flowWidth;
     }
 
+    // FIXME: dubious: what is the initial value of m_w2 meant to be??
     BigDecimal w2 = m_w2;
     final double width = m_wm.doubleValue() + m_w1.doubleValue() + m_w2.doubleValue();
     final double diff = width - lastFlowWidth;
@@ -397,7 +440,7 @@ public class SobekProfileDefTabulatedCrossSection implements ISobekProfileDefDat
       final String warning = profileWarning.serialize();
 
       /* Add the line. */
-      line.append( String.format( Locale.PRC, "%.2f %.2f %.2f <%s%n", height, fullWidth, flowWidth, warning ) ); //$NON-NLS-1$
+      line.append( String.format( Locale.PRC, "%s %s %s <%s%n", height, fullWidth, flowWidth, warning ) ); //$NON-NLS-1$
     }
 
     /* Finish the table. */

@@ -52,4 +52,8 @@ public interface ISobekConstants
   String FRICTION_DAT = "friction.dat"; //$NON-NLS-1$
 
   String NETWORK_D12 = "network.d12"; //$NON-NLS-1$
+
+  String STRUCT_DAT = "struct.dat"; //$NON-NLS-1$
+
+  String STRUCT_DEF = "struct.def"; //$NON-NLS-1$
 }

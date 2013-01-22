@@ -40,9 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.sobek;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,8 +51,8 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfile;
+import org.kalypso.model.wspm.core.profil.sobek.struct.SobekStruct;
 
 /**
  * This class contains a collection of sobek profiles. It can also provides functionality for several tasks, as writing
@@ -63,9 +64,16 @@ public class SobekModel implements ISobekConstants
 {
   private final List<SobekProfile> m_profiles = new ArrayList<>();
 
+  private final List<SobekStruct> m_structs = new ArrayList<>();
+
   public void addProfile( final SobekProfile profile )
   {
     m_profiles.add( profile );
+  }
+
+  public void addStruct( final SobekStruct struct )
+  {
+    m_structs.add( struct );
   }
 
   /**
@@ -96,44 +104,59 @@ public class SobekModel implements ISobekConstants
    * @param destinationFolder
    *          The destination folder.
    */
-  public void writeTo( final File destinationFolder ) throws Exception
+  public void writeTo( final File destinationFolder ) throws IOException, CoreException
   {
-    final String alreadyExistsWarning = Messages.getString( "SobekModel_1" ); //$NON-NLS-1$
+    writeProfiles( destinationFolder );
+    writeStructs( destinationFolder );
+  }
 
-    /* Create the file handle for the file profile.dat. */
-    final File datFile = new File( destinationFolder, ISobekConstants.PROFILE_DAT ); //$NON-NLS-1$
-    if( datFile.exists() )
-      throw new Exception( String.format( alreadyExistsWarning, datFile.getAbsolutePath() ) );
+  private void writeProfiles( final File destinationFolder ) throws IOException, CoreException
+  {
+    /* Create the file handles */
+    final File profileDatFile = new File( destinationFolder, ISobekConstants.PROFILE_DAT );
+    final File profileDefFile = new File( destinationFolder, ISobekConstants.PROFILE_DEF );
+    final File frictionDatFile = new File( destinationFolder, ISobekConstants.FRICTION_DAT );
 
-    /* Create the file handle for the file profile.def. */
-    final File defFile = new File( destinationFolder, "profile.def" ); //$NON-NLS-1$
-    if( defFile.exists() )
+    try( PrintWriter datWriter = new PrintWriter( profileDatFile ); PrintWriter defWriter = new PrintWriter( profileDefFile ); PrintWriter frictionWriter = new PrintWriter( frictionDatFile ); )
     {
-      final String alreadyExistsMsg = String.format( alreadyExistsWarning, defFile.getAbsolutePath() );
-      throw new Exception( alreadyExistsMsg );
-    }
-
-    try( BufferedWriter datWriter = new BufferedWriter( new FileWriter( datFile ) ); BufferedWriter defWriter = new BufferedWriter( new FileWriter( defFile ) ) )
-    {
-      for( int i = 0; i < m_profiles.size(); i++ )
+      for( final SobekProfile profile : m_profiles )
       {
-        /* Get the profile. */
-        final SobekProfile profile = m_profiles.get( i );
-
         /* Validate the profile. */
         final IStatus status = profile.validate();
         if( status.getSeverity() > IStatus.WARNING )
           throw new CoreException( status );
 
         /* Serialize the data of the profile. */
-        final String profileDat = profile.serializeProfileDat();
-        datWriter.write( profileDat );
-
+        profile.serializeProfileDat( datWriter );
         profile.serializeProfileDef( defWriter );
+        profile.serializeFrictionDat( frictionWriter );
+      }
+    }
+  }
 
-        /* Make a new line. */
-        datWriter.newLine();
-        defWriter.newLine();
+  private void writeStructs( final File destinationFolder ) throws IOException
+  {
+    /* Create the file handles */
+    final File structDatFile = new File( destinationFolder, ISobekConstants.STRUCT_DAT );
+    final File structDefFile = new File( destinationFolder, ISobekConstants.STRUCT_DEF );
+    final File profileDefFile = new File( destinationFolder, ISobekConstants.PROFILE_DEF );
+
+    try( PrintWriter datWriter = new PrintWriter( structDatFile );
+        PrintWriter defWriter = new PrintWriter( structDefFile );
+        PrintWriter profileDefWriter = new PrintWriter( new FileWriter( profileDefFile, true ) ) )
+    {
+      for( final SobekStruct struct : m_structs )
+      {
+        /* Validate the profile. */
+
+        // FIXME
+
+//        final IStatus status = profile.validate();
+//        if( status.getSeverity() > IStatus.WARNING )
+//          throw new CoreException( status );
+
+        struct.serializeStructDat( datWriter );
+        struct.serializeStructDef( defWriter, profileDefWriter );
       }
     }
   }
@@ -141,5 +164,10 @@ public class SobekModel implements ISobekConstants
   public SobekProfile[] getProfiles( )
   {
     return m_profiles.toArray( new SobekProfile[m_profiles.size()] );
+  }
+
+  public SobekStruct[] getStructs( )
+  {
+    return m_structs.toArray( new SobekStruct[m_structs.size()] );
   }
 }

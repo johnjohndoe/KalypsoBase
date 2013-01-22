@@ -87,9 +87,12 @@ public class SobekNetworkD12Parser
 
   private final SobekNetworkD12 m_network = new SobekNetworkD12();
 
-  public SobekNetworkD12Parser( final File networkD12File )
+  private final String m_networkSRS;
+
+  public SobekNetworkD12Parser( final File networkD12File, final String networkSRS )
   {
     m_networkD12File = networkD12File;
+    m_networkSRS = networkSRS;
   }
 
   public SobekNetworkD12 read( final IProgressMonitor monitor ) throws CoreException, IOException
@@ -164,6 +167,6 @@ public class SobekNetworkD12Parser
 
     line.expectToken( TOKEN_PT12.toLowerCase() );
 
-    m_network.add( new SobekNetworkD12Point( id, name, carrierID, lc, px, py, mc, mr ) );
+    m_network.add( new SobekNetworkD12Point( id, name, carrierID, lc, px, py, mc, mr, m_networkSRS ) );
   }
 }

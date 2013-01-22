@@ -63,7 +63,9 @@ public class SobekNetworkD12Point
 
   private final int m_mr;
 
-  public SobekNetworkD12Point( final String id, final String name, final String carrierID, final BigDecimal lc, final BigDecimal px, final BigDecimal py, final int mc, final int mr )
+  private final String m_srsName;
+
+  public SobekNetworkD12Point( final String id, final String name, final String carrierID, final BigDecimal lc, final BigDecimal px, final BigDecimal py, final int mc, final int mr, final String srsName )
   {
     m_id = id;
     m_name = name;
@@ -73,11 +75,17 @@ public class SobekNetworkD12Point
     m_py = py;
     m_mc = mc;
     m_mr = mr;
+    m_srsName = srsName;
   }
 
   public String getID( )
   {
     return m_id;
+  }
+
+  public String getName( )
+  {
+    return m_name;
   }
 
   public BigDecimal getPX( )
@@ -88,5 +96,10 @@ public class SobekNetworkD12Point
   public BigDecimal getPY( )
   {
     return m_py;
+  }
+
+  public String getSrsName( )
+  {
+    return m_srsName;
   }
 }

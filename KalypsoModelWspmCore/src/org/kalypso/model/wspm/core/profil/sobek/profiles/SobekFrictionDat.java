@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.sobek.profiles;
 
+import java.io.PrintWriter;
+import java.math.BigDecimal;
+import java.util.Locale;
+
 /**
  * @author Gernot Belger
  */
@@ -81,5 +85,66 @@ public class SobekFrictionDat
   public SobekFrictionDatCRFRSection[] getSections( )
   {
     return m_sections;
+  }
+
+  public void serialize( final PrintWriter writer )
+  {
+    writer.format( "CRFR id '%s' nm '%s' cs '%s'%n", m_id, m_name, m_csID ); //$NON-NLS-1$
+
+    writeZoneTable( writer );
+
+    writePositiveTable( writer );
+    writeNegativeTable( writer );
+
+    writer.print( "crfr" ); //$NON-NLS-1$
+  }
+
+  private void writeZoneTable( final PrintWriter writer )
+  {
+    writer.format( "lt ys%n" ); //$NON-NLS-1$
+    writer.format( "TBLE%n" ); //$NON-NLS-1$
+
+    for( final SobekFrictionDatCRFRSection zone : m_sections )
+      writer.format( "%s %s <%n", zone.getStart(), zone.getEnd() ); //$NON-NLS-1$
+
+    writer.format( "tble%n" ); //$NON-NLS-1$
+  }
+
+  private void writePositiveTable( final PrintWriter writer )
+  {
+    writer.println( "ft ys" ); //$NON-NLS-1$
+    writer.format( "TBLE%n" ); //$NON-NLS-1$
+
+    for( final SobekFrictionDatCRFRSection zone : m_sections )
+    {
+      final FrictionType type = zone.getPositiveType();
+      final BigDecimal value = zone.getPositiveValue();
+      final int scale = SobekFrictionDatCRFRSection.getTypeScale( type );
+
+      final BigDecimal scaledValue = value.setScale( scale, BigDecimal.ROUND_HALF_UP );
+
+      writer.format( Locale.US, "%d %s <%n", type.ordinal(), scaledValue ); //$NON-NLS-1$
+    }
+
+    writer.format( "tble%n" ); //$NON-NLS-1$
+  }
+
+  private void writeNegativeTable( final PrintWriter writer )
+  {
+    writer.println( "fr ys" ); //$NON-NLS-1$
+    writer.format( "TBLE%n" ); //$NON-NLS-1$
+
+    for( final SobekFrictionDatCRFRSection zone : m_sections )
+    {
+      final FrictionType type = zone.getNegativeType();
+      final BigDecimal value = zone.getNegativeValue();
+      final int scale = SobekFrictionDatCRFRSection.getTypeScale( type );
+
+      final BigDecimal scaledValue = value.setScale( scale, BigDecimal.ROUND_HALF_UP );
+
+      writer.format( Locale.US, "%d %s <%n", type.ordinal(), scaledValue ); //$NON-NLS-1$
+    }
+
+    writer.format( "tble%n" ); //$NON-NLS-1$
   }
 }

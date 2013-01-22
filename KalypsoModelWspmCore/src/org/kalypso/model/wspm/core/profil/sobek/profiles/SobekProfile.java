@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.core.profil.sobek.profiles;
 
 import java.io.IOException;
-import java.io.Writer;
+import java.io.PrintWriter;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -114,9 +114,10 @@ public class SobekProfile
    * 
    * @return The data for the file 'profile.dat'.
    */
-  public String serializeProfileDat( )
+  public void serializeProfileDat( final PrintWriter writer )
   {
-    return m_profileDat.serialize();
+    final String output = m_profileDat.serialize();
+    writer.println( output );
   }
 
   /**
@@ -124,9 +125,22 @@ public class SobekProfile
    * 
    * @return The data for the file 'profile.def'.
    */
-  public void serializeProfileDef( final Writer w ) throws IOException
+  public void serializeProfileDef( final PrintWriter w ) throws IOException
   {
+    if( m_profileDef == null )
+      return;
+
     m_profileDef.serialize( w );
+    w.println();
+  }
+
+  public void serializeFrictionDat( final PrintWriter writer )
+  {
+    if( m_frictionDat == null )
+      return;
+
+    m_frictionDat.serialize( writer );
+    writer.println();
   }
 
   public SobekProfile setDefinition( final SobekProfileDef profileDef )

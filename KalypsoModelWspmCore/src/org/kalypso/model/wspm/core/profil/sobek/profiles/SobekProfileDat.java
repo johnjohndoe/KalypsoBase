@@ -228,19 +228,16 @@ public class SobekProfileDat
     final StringBuilder line = new StringBuilder();
 
     /* Build the line. */
-    line.append( String.format( Locale.PRC, "CRSN id '%s' di '%s' rl %.2f ", m_id, m_di, m_rl ) ); //$NON-NLS-1$
+    line.append( String.format( Locale.PRC, "CRSN id '%s' di '%s' rl %s ", m_id, m_di, m_rl ) ); //$NON-NLS-1$
+
     if( m_ll != null )
-    {
-      line.append( String.format( Locale.PRC, "ll %.2f ", m_ll ) ); //$NON-NLS-1$
-    }
+      line.append( String.format( Locale.PRC, "ll %s ", m_ll ) ); //$NON-NLS-1$
+
     if( m_rs != null )
-    {
-      line.append( String.format( Locale.PRC, "rs %.2f ", m_rs ) ); //$NON-NLS-1$
-    }
+      line.append( String.format( Locale.PRC, "rs %s ", m_rs ) ); //$NON-NLS-1$
+
     if( m_ls != null )
-    {
-      line.append( String.format( Locale.PRC, "ls %.2f ", m_ls ) ); //$NON-NLS-1$
-    }
+      line.append( String.format( Locale.PRC, "ls %s ", m_ls ) ); //$NON-NLS-1$
 
     line.append( String.format( Locale.PRC, "crsn" ) ); //$NON-NLS-1$
 
