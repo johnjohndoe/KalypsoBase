@@ -56,4 +56,6 @@ public class Debug
   public static final org.kalypso.contribs.eclipse.core.runtime.Debug LOADING = new org.kalypso.contribs.eclipse.core.runtime.Debug( KalypsoGMLSchemaPlugin.getDefault(), "/debug/loading" ); //$NON-NLS-1$
 
   public static final org.kalypso.contribs.eclipse.core.runtime.Debug CATALOG = new org.kalypso.contribs.eclipse.core.runtime.Debug( KalypsoGMLSchemaPlugin.getDefault(), "/debug/catalog" ); //$NON-NLS-1$
+
+  public static final org.kalypso.contribs.eclipse.core.runtime.Debug CACHE = new org.kalypso.contribs.eclipse.core.runtime.Debug( KalypsoGMLSchemaPlugin.getDefault(), "/debug/cache" ); //$NON-NLS-1$
 }

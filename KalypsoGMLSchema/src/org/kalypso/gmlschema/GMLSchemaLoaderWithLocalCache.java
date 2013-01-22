@@ -52,7 +52,7 @@ import org.xml.sax.SAXParseException;
 
 /**
  * This class finds and loads a GML schema, keeping a local schema cache.
- *
+ * 
  * @author Andreas von Doemming
  * @author Felipe Maximino - Refaktoring
  */
@@ -97,7 +97,7 @@ public class GMLSchemaLoaderWithLocalCache
    * Finds a schema with the given namespace.
    * <p>
    * This method will look in the local schema cache at first.
-   *
+   * 
    * @param namespace
    *          - the schema namespace.
    */
@@ -184,10 +184,10 @@ public class GMLSchemaLoaderWithLocalCache
         if( !xmlnsUri.equals( uri ) && !xmlnsUri.equals( NS.XSD ) )
         {
           // make sure that all dependent schemas are loaded
-          final GMLSchema additionalSchema = (GMLSchema) loadSchema( xmlnsUri, m_version, schemaLocationString, locationHint, context );
+          final GMLSchema additionalSchema = (GMLSchema)loadSchema( xmlnsUri, m_version, schemaLocationString, locationHint, context );
           if( gmlSchema != null )
           {
-            ((GMLSchema) gmlSchema).addAdditionalSchema( additionalSchema );
+            ((GMLSchema)gmlSchema).addAdditionalSchema( additionalSchema );
             m_localSchemaCache.put( xmlnsUri, additionalSchema );
           }
         }
@@ -222,11 +222,8 @@ public class GMLSchemaLoaderWithLocalCache
       /*
        * throw it, because the following SaxException eats the inner exception and we need to log this exception
        */
-      if( schema == null )
-      {
-        schemaNotFoundExceptions.addException( new SAXException( "Schema unknown. Unable to load schema with namespace: " + uri + " (schemaLocationHint was " + schemaLocationHint //$NON-NLS-1$ //$NON-NLS-2$
-            + ") (schemaLocation was " + schemaLocationString + "): ", e ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      }
+      schemaNotFoundExceptions.addException( new SAXException( "Schema unknown. Unable to load schema with namespace: " + uri + " (schemaLocationHint was " + schemaLocationHint //$NON-NLS-1$ //$NON-NLS-2$
+          + ") (schemaLocation was " + schemaLocationString + "): ", e ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     // 3. try: if we have a schemaLocation, load from there bt: do not put into cache!

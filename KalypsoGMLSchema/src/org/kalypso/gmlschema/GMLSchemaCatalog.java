@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
@@ -63,7 +64,7 @@ public final class GMLSchemaCatalog
       final GMLSchema schema = GMLSchemaFactory.createGMLSchema( gmlVersion, schemaLocation );
       final Date validity = new Date( schemaLocation.openConnection().getLastModified() );
 
-      m_cache.addSchema( schema.getTargetNamespace(), schema, validity, System.currentTimeMillis(), gmlVersion );
+      m_cache.addSchema( schema.getTargetNamespace(), schema, validity, gmlVersion );
 
       // IMPORTANT: We remember these additional namespaces separately so we can reload them later, if the cache forgets the schema
       m_additionalSchemaFiles.put( schema.getTargetNamespace(), schemaLocation );
@@ -129,6 +130,14 @@ public final class GMLSchemaCatalog
       // auch versuchen aus dem Cache zu laden, wenn die url null ist;
       // vielleicht ist der namespace ja noch im file-cache
       return m_cache.getSchema( namespace, version, resolvedUrl );
+    }
+    catch( final ExecutionException e )
+    {
+      final Throwable cause = e.getCause();
+      if( cause instanceof GMLSchemaException )
+        throw (GMLSchemaException)cause;
+
+      throw new GMLSchemaException( cause );
     }
     catch( final Throwable e )
     {
