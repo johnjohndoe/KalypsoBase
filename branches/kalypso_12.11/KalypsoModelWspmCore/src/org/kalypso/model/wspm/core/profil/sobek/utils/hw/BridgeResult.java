@@ -56,7 +56,7 @@ import com.vividsolutions.jts.geom.CoordinateSequence;
 import com.vividsolutions.jts.geom.impl.CoordinateArraySequenceFactory;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class BridgeResult extends HeightWidthResult
 {
@@ -71,6 +71,7 @@ public class BridgeResult extends HeightWidthResult
   public BridgeResult( final String parentName, final String dataName, final String id, final String name, final Collection<Coordinate> lowerCrds, final Collection<Coordinate> upperCrds, final File tempDir )
   {
     super( parentName, dataName, id, name, tempDir );
+
     m_upperCrds = upperCrds;
     m_lowerCrds = lowerCrds;
   }
@@ -231,5 +232,4 @@ public class BridgeResult extends HeightWidthResult
       }
     }
   }
-
 }

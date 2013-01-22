@@ -70,14 +70,17 @@ public class SobekModelParser
 
   private final File m_sobekProjectDir;
 
-  public SobekModelParser( final File sobekProjectDir )
+  private final String m_networkSRS;
+
+  public SobekModelParser( final File sobekProjectDir, final String networkSRS )
   {
     m_sobekProjectDir = sobekProjectDir;
+    m_networkSRS = networkSRS;
   }
 
   public SobekModel read( final IProgressMonitor monitor ) throws CoreException, IOException
   {
-    monitor.beginTask( Messages.getString("SobekModelParser_0"), 100 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "SobekModelParser_0" ), 100 ); //$NON-NLS-1$
 
     final SobekProfileDef[] profileDefs = readProfileDef( new SubProgressMonitor( monitor, 25 ) );
     final SobekProfileDat[] profileDats = readProfileDat( new SubProgressMonitor( monitor, 25 ) );
@@ -127,7 +130,7 @@ public class SobekModelParser
     if( !networkD12File.isFile() )
       return null;
 
-    final SobekNetworkD12Parser parser = new SobekNetworkD12Parser( networkD12File );
+    final SobekNetworkD12Parser parser = new SobekNetworkD12Parser( networkD12File, m_networkSRS );
     return parser.read( monitor );
   }
 

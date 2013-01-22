@@ -61,6 +61,8 @@ public class SobekFrictionDatCRFRSection
 
   private BigDecimal m_negativeValue;
 
+  private String m_comment;
+
   public SobekFrictionDatCRFRSection( final BigDecimal start, final BigDecimal end )
   {
     m_start = start;
@@ -97,5 +99,43 @@ public class SobekFrictionDatCRFRSection
   public BigDecimal getPositiveValue( )
   {
     return m_positiveValue;
+  }
+
+  public FrictionType getNegativeType( )
+  {
+    return m_negativeType;
+  }
+
+  public BigDecimal getNegativeValue( )
+  {
+    return m_negativeValue;
+  }
+
+  public void setComment( final String comment )
+  {
+    m_comment = comment;
+  }
+
+  public String getComment( )
+  {
+    return m_comment;
+  }
+
+  /**
+   * Returns the scale, by which the given type should be scaled.
+   */
+  public static int getTypeScale( final FrictionType type )
+  {
+    switch( type )
+    {
+      case Strickler_Ks:
+        return 1;
+
+      case White_Colebrook:
+        return 3;
+
+      default:
+        return 2;
+    }
   }
 }

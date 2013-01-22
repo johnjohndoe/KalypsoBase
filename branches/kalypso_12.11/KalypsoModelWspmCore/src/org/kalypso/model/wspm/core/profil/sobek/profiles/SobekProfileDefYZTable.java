@@ -40,10 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.sobek.profiles;
 
-import java.io.Writer;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Locale;
 
 /**
  * @author Gernot Belger
@@ -69,9 +70,20 @@ public class SobekProfileDefYZTable implements ISobekProfileDefData
   }
 
   @Override
-  public void writeContent( final Writer writer )
+  public void writeContent( final PrintWriter writer )
   {
-    throw new UnsupportedOperationException();
+    writer.format( "st %s lt sw %s 0 gl 0 gu 0 lt yz%n", m_st, m_sw ); //$NON-NLS-1$
+
+    writer.println( "TBLE" ); //$NON-NLS-1$
+
+    for( final SobekYZPoint point : m_points )
+    {
+      final BigDecimal y = point.getY();
+      final BigDecimal z = point.getZ();
+      writer.format( Locale.US, "%s %s <%n", y, z ); //$NON-NLS-1$
+    }
+
+    writer.println( "tble" ); //$NON-NLS-1$
   }
 
   public void addPoint( final SobekYZPoint point )

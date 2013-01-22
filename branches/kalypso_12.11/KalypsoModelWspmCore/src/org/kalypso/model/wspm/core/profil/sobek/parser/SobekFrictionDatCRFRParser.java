@@ -175,9 +175,8 @@ public class SobekFrictionDatCRFRParser
 
     final FrictionType[] frictionTypes = FrictionType.values();
     if( index < 0 || index > frictionTypes.length - 1 )
-      throw line.throwError( Messages.getString("SobekFrictionDatCRFRParser_0"), index ); //$NON-NLS-1$
+      throw line.throwError( Messages.getString( "SobekFrictionDatCRFRParser_0" ), index ); //$NON-NLS-1$
 
     return frictionTypes[index];
   }
-
 }

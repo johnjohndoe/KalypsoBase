@@ -40,8 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.sobek.profiles;
 
-import java.io.IOException;
-import java.io.Writer;
+import java.io.PrintWriter;
 import java.util.Locale;
 
 import org.eclipse.core.runtime.IStatus;
@@ -143,13 +142,13 @@ public class SobekProfileDef
    * 
    * @return The data for the file 'profile.def'.
    */
-  public void serialize( final Writer writer ) throws IOException
+  public void serialize( final PrintWriter writer )
   {
-    writer.append( String.format( Locale.PRC, "CRDS id '%s' nm '%s' ty %d ", m_id, m_nm, m_data.getType() ) ); //$NON-NLS-1$
+    writer.format( Locale.PRC, "CRDS id '%s' nm '%s' ty %d ", m_id, m_nm, m_data.getType() ); //$NON-NLS-1$
 
     m_data.writeContent( writer );
 
-    writer.append( String.format( Locale.PRC, "crds" ) ); //$NON-NLS-1$
+    writer.print( "crds" ); //$NON-NLS-1$
   }
 
   public ISobekProfileDefData getData( )

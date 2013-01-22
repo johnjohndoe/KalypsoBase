@@ -42,6 +42,8 @@ package org.kalypso.model.wspm.core.profil.sobek.struct;
 
 import java.util.Locale;
 
+import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfileDef;
+
 /**
  * Represents one entry in a 'struct.def' sobek ascii file.<br/>
  * <br/>
@@ -102,9 +104,9 @@ public final class SobekStructDef
    * @param crossSectionReference
    *          (=si). Reference to cross section definition in profile.def
    */
-  public static SobekStructDef createAbutmentBridge( final String id, final String name, final double width, final double bottomLevel, final String crossSectionReference )
+  public static SobekStructDef createAbutmentBridge( final String id, final String name, final double width, final double bottomLevel, final String crossSectionReference, final SobekProfileDef profileDef )
   {
-    return new SobekStructDef( id, name, SOBEK_STRUCT_TYPE.bridge, SOBEK_BRIDGE_TYPE.abutment_bridge, -1, -1, 0, 0, width, bottomLevel, crossSectionReference );
+    return new SobekStructDef( id, name, SOBEK_STRUCT_TYPE.bridge, SOBEK_BRIDGE_TYPE.abutment_bridge, -1, -1, 0, 0, width, bottomLevel, crossSectionReference, profileDef );
   }
 
   private String m_id = "notSet"; //$NON-NLS-1$
@@ -129,7 +131,10 @@ public final class SobekStructDef
 
   private String m_si = "notSet"; //$NON-NLS-1$
 
-  public SobekStructDef( final String id, final String name, final SOBEK_STRUCT_TYPE ty, final SOBEK_BRIDGE_TYPE tb, final double pw, final double vf, final double li, final double lo, final double dl, final double rl, final String si )
+  /** Optional: some structures have an additional entry in the profile.def (e.g. abutment bridge) */
+  private final SobekProfileDef m_profileDef;
+
+  public SobekStructDef( final String id, final String name, final SOBEK_STRUCT_TYPE ty, final SOBEK_BRIDGE_TYPE tb, final double pw, final double vf, final double li, final double lo, final double dl, final double rl, final String si, final SobekProfileDef profileDef )
   {
     m_id = id;
     m_name = name;
@@ -142,6 +147,7 @@ public final class SobekStructDef
     m_dl = dl;
     m_rl = rl;
     m_si = si;
+    m_profileDef = profileDef;
   }
 
   public String getID( )
@@ -199,6 +205,11 @@ public final class SobekStructDef
     return m_rl;
   }
 
+  public SobekProfileDef getProfileDef( )
+  {
+    return m_profileDef;
+  }
+
   public String serialize( )
   {
     final String id = getID();
@@ -216,5 +227,4 @@ public final class SobekStructDef
 
     return String.format( Locale.US, "STDS id '%s' nm '%s' ty %d tb %d si '%s' pw %.2f vf %.2f li %.2f lo %.2f dl %.2f rl %.2f stds", id, name, type, bridgeType, profileRefId, pw, vf, li, lo, dl, rl ); //$NON-NLS-1$
   }
-
 }

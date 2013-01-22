@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.core.profil.sobek.utils.hw;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Formatter;
@@ -50,6 +51,9 @@ import java.util.TreeSet;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfileDef;
+import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfileDefTabulatedCrossSection;
+import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfileHeight;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.dbf.DBFField;
@@ -234,6 +238,41 @@ public abstract class HeightWidthResult extends ProblemResult
     formatter.format( "crds%n" ); //$NON-NLS-1$
   }
 
+  public SobekProfileDef createProfileDef( )
+  {
+    calculate();
+
+    if( m_polygon == null )
+      return null;
+
+    double maxWidth = -Double.MAX_VALUE;
+    for( final double mWidth : m_widths )
+    {
+      maxWidth = Math.max( maxWidth, mWidth );
+    }
+
+    final BigDecimal wm = new BigDecimal( maxWidth ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+    final BigDecimal w1 = new BigDecimal( "0" ); //$NON-NLS-1$
+    final BigDecimal w2 = new BigDecimal( "0" ); //$NON-NLS-1$
+    final BigDecimal sw = new BigDecimal( "0" ); //$NON-NLS-1$
+    final BigDecimal gl = new BigDecimal( "0" ); //$NON-NLS-1$
+    final int gu = 0;
+
+    final SobekProfileDefTabulatedCrossSection data = new SobekProfileDefTabulatedCrossSection( wm, w1, w2, sw, gl, gu );
+
+    for( int i = 0; i < m_heights.length; i++ )
+    {
+      final double height = m_heights[i];
+      final BigDecimal width = new BigDecimal( m_widths[i] ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+      final BigDecimal relHeight = new BigDecimal( height - m_heights[0] ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+
+      final SobekProfileHeight sobekHeight = new SobekProfileHeight( relHeight, width, width );
+      data.addProfileHeight( sobekHeight );
+    }
+
+    return new SobekProfileDef( m_id, m_name, data );
+  }
+
   @Override
   public void formatLog( final Formatter formatter )
   {
@@ -254,15 +293,15 @@ public abstract class HeightWidthResult extends ProblemResult
   {
     try
     {
-      final IDBFField nameField = new DBFField( "NAME", FieldType.C, (short) 100, (short) 0 ); //$NON-NLS-1$
-      final IDBFField validField = new DBFField( "VALID", FieldType.C, (short) 10, (short) 0 ); //$NON-NLS-1$
+      final IDBFField nameField = new DBFField( "NAME", FieldType.C, (short)100, (short)0 ); //$NON-NLS-1$
+      final IDBFField validField = new DBFField( "VALID", FieldType.C, (short)10, (short)0 ); //$NON-NLS-1$
       final IDBFField[] fields = new IDBFField[] { nameField, validField };
 
       final ShapeType shapeType = ShapeType.POLYLINE;
       final File shapeFile = new File( m_tempDir, m_parentName + "_" + getName() ); //$NON-NLS-1$
       final String shapeBase = shapeFile.getAbsolutePath();
 
-      try (final ShapeFile shape = ShapeFile.create( shapeBase, shapeType, Charset.defaultCharset(), fields ))
+      try( final ShapeFile shape = ShapeFile.create( shapeBase, shapeType, Charset.defaultCharset(), fields ) )
       {
         /* Now create some features of this type */
         final ISHPGeometry geom = JTS2SHP.toPolyline( new Coordinate[][] { shell.getCoordinates() } );
