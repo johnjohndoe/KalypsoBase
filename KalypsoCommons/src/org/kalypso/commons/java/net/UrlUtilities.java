@@ -53,6 +53,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
@@ -184,7 +185,10 @@ public class UrlUtilities
   }
 
   /**
-   * Tires to find a 'lastModified' timestamp from an {@link URL}.
+   * Tries to find a 'lastModified' timestamp from an {@link URL}.<br/>
+   * This is achieved by first asking the {@link URLConnection} for a timestamp (which often is not implemented) and then trying to find the local file resource that corresponds to the {@link URL}.
+   * 
+   * @return <code>null</code> if no lastModifed timestamp could be found.
    */
   public static Date lastModified( final URL location )
   {
@@ -205,6 +209,11 @@ public class UrlUtilities
       final File file = FileUtils.toFile( location );
       if( file != null )
         return new Date( file.lastModified() );
+
+      final URL fileURL = FileLocator.toFileURL( location );
+      final File localFile = FileUtils.toFile( fileURL );
+      if( localFile != null )
+        return new Date( localFile.lastModified() );
 
       final IPath path = ResourceUtilities.findPathFromURL( location );
       if( path == null )
