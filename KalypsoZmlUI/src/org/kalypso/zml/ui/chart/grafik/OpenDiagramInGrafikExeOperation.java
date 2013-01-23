@@ -54,7 +54,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.URIUtil;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.sensor.IObservation;
@@ -116,7 +115,8 @@ public class OpenDiagramInGrafikExeOperation extends WorkspaceModifyOperation
     {
       final IPath grafikPath = Path.fromOSString( "grafik" ); //$NON-NLS-1$
 
-      final URI uri = URIUtil.fromString( href );
+      // final URI uri = URIUtil.fromString( href );
+      final URI uri = new URI( href );
       final URL url = uri.toURL();
 
       final IFile eclipseFile = ResourceUtilities.findFileFromURL( url );
@@ -127,7 +127,7 @@ public class OpenDiagramInGrafikExeOperation extends WorkspaceModifyOperation
       final IFile[] files = root.findFilesForLocationURI( uri );
       for( final IFile file : files )
       {
-        final IFolder folder = (IFolder) file.getParent();
+        final IFolder folder = (IFolder)file.getParent();
         return folder.getFolder( grafikPath );
       }
 
