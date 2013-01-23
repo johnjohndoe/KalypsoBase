@@ -40,16 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table;
 
-
 /**
  * @author Dirk Kuch
  */
 public interface IZmlTableCompositeListener
 {
-  String TYPE_REFRESH = "refresh";
-
-  String TYPE_ACTIVE_RULE_CHANGED = "rule";
-
-  void eventTableChanged( String type );
-
+  void changed( );
 }

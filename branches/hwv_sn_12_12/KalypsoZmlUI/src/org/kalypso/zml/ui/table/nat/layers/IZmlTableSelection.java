@@ -49,6 +49,10 @@ import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
  */
 public interface IZmlTableSelection
 {
+  IZmlModelColumn getClickedHeaderColumn( );
+
+  void setClickedHeaderColumn( IZmlModelColumn object );
+
   IZmlModelColumn[] getSelectedColumns( );
 
   IZmlModelRow[] getSelectedRows( );
@@ -60,4 +64,8 @@ public interface IZmlTableSelection
   IZmlModelValueCell[] getSelectedCells( IZmlModelColumn column );
 
   void updateLastSelectedCellPosition( int row, int column );
+
+  void addSelectionListener( IZmlTableSelectionListener listener );
+
+  void removeSelectionListener( IZmlTableSelectionListener listener );
 }

@@ -73,34 +73,50 @@ import org.kalypso.zml.core.table.schema.IndexColumnType;
  */
 public class ZmlRowHeaderCellPainter extends AbstractCellPainter
 {
-
   private final ZmlModelViewport m_viewport;
+
+  private final Style m_defaultStyle;
 
   public ZmlRowHeaderCellPainter( final ZmlModelViewport viewport )
   {
     m_viewport = viewport;
+
+    m_defaultStyle = getDefaultStyle();
   }
 
   @Override
   public void paintCell( final LayerCell cell, final GC gc, final Rectangle bounds, final IConfigRegistry configRegistry )
   {
     final Object object = cell.getDataValue();
+    final TextPainter painter = createPainter( object, configRegistry );
+
+    painter.paintCell( cell, gc, bounds, configRegistry );
+  }
+
+  private TextPainter createPainter( final Object object, final IConfigRegistry configRegistry )
+  {
     if( object instanceof IZmlModelRow )
     {
+      // FIXME: dubious: registering the styles every time a cell is painted, is this right??
+      // FIXME: this stuff is called too often, should we implement some caching here?
+
       final Style style = getStyle( (IZmlModelRow) object );
       configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
-      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.SELECT, GridRegion.ROW_HEADER.toString() );
 
-      final TextPainter painter = new TextPainter();
-      painter.paintCell( cell, gc, bounds, configRegistry );
+      final Style selectionStyle = getSelectionStyle( style );
+      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, selectionStyle, DisplayMode.SELECT, GridRegion.ROW_HEADER.toString() );
+
+      return new TextPainter();
     }
+
+    throw new UnsupportedOperationException();
   }
 
   private Style getStyle( final IZmlModelRow row )
   {
     final IndexColumnType base = TableTypes.findIndexColumn( m_viewport.getModel().getTableType() );
     if( Objects.isNull( base ) )
-      return getDefaultStyle();
+      return m_defaultStyle;
 
     final IZmlModelIndexCell cell = row.getIndexCell();
     final ZmlIndexCellStyleProvider provider = new ZmlIndexCellStyleProvider( cell.getBaseColumn() );
@@ -128,36 +144,41 @@ public class ZmlRowHeaderCellPainter extends AbstractCellPainter
     return cellStyle;
   }
 
+  private Style getSelectionStyle( final Style style )
+  {
+    final Font font = style.getAttributeValue( CellStyleAttributes.FONT );
+    final Color bgColor = GUIHelper.COLOR_GRAY;
+    final Color fgColor = GUIHelper.COLOR_WHITE;
+    final HorizontalAlignmentEnum hAlign = style.getAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT );
+    final VerticalAlignmentEnum vAlign = style.getAttributeValue( CellStyleAttributes.VERTICAL_ALIGNMENT );
+    final BorderStyle borderStyle = style.getAttributeValue( CellStyleAttributes.BORDER_STYLE );
+
+    final Style cellStyle = new Style();
+    cellStyle.setAttributeValue( CellStyleAttributes.BACKGROUND_COLOR, bgColor );
+    cellStyle.setAttributeValue( CellStyleAttributes.FOREGROUND_COLOR, fgColor );
+    cellStyle.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, hAlign );
+    cellStyle.setAttributeValue( CellStyleAttributes.VERTICAL_ALIGNMENT, vAlign );
+    cellStyle.setAttributeValue( CellStyleAttributes.BORDER_STYLE, borderStyle );
+    cellStyle.setAttributeValue( CellStyleAttributes.FONT, font );
+
+    return cellStyle;
+  }
+
   @Override
   public int getPreferredWidth( final LayerCell cell, final GC gc, final IConfigRegistry configRegistry )
   {
     final Object object = cell.getDataValue();
-    if( object instanceof IZmlModelIndexCell )
-    {
-      final Style style = getStyle( (IZmlModelRow) object );
-      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
 
-      final TextPainter painter = new TextPainter();
-      return painter.getPreferredWidth( cell, gc, configRegistry );
-    }
-
-    throw new UnsupportedOperationException();
+    final TextPainter painter = createPainter( object, configRegistry );
+    return painter.getPreferredWidth( cell, gc, configRegistry );
   }
 
   @Override
   public int getPreferredHeight( final LayerCell cell, final GC gc, final IConfigRegistry configRegistry )
   {
     final Object object = cell.getDataValue();
-    if( object instanceof IZmlModelIndexCell )
-    {
-      final Style style = getStyle( (IZmlModelRow) object );
-      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
 
-      final TextPainter painter = new TextPainter();
-      return painter.getPreferredHeight( cell, gc, configRegistry );
-    }
-
-    throw new UnsupportedOperationException();
+    final TextPainter painter = createPainter( object, configRegistry );
+    return painter.getPreferredHeight( cell, gc, configRegistry );
   }
-
 }

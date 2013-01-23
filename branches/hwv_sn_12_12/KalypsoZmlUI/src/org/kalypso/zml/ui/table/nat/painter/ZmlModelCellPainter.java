@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.nat.painter;
 
+import java.awt.Insets;
+
 import net.sourceforge.nattable.config.CellConfigAttributes;
 import net.sourceforge.nattable.config.IConfigRegistry;
 import net.sourceforge.nattable.grid.GridRegion;
@@ -49,16 +51,19 @@ import net.sourceforge.nattable.painter.cell.CheckBoxPainter;
 import net.sourceforge.nattable.painter.cell.ICellPainter;
 import net.sourceforge.nattable.painter.cell.ImagePainter;
 import net.sourceforge.nattable.painter.cell.TextPainter;
+import net.sourceforge.nattable.style.BorderStyle;
+import net.sourceforge.nattable.style.BorderStyle.LineStyleEnum;
 import net.sourceforge.nattable.style.CellStyleAttributes;
 import net.sourceforge.nattable.style.DisplayMode;
 import net.sourceforge.nattable.style.HorizontalAlignmentEnum;
+import net.sourceforge.nattable.style.IStyle;
 import net.sourceforge.nattable.style.Style;
+import net.sourceforge.nattable.util.GUIHelper;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
@@ -73,6 +78,8 @@ public class ZmlModelCellPainter extends AbstractCellPainter
 {
   private final ZmlModelViewport m_viewport;
 
+  private final Insets m_insets = new Insets( 0, 0, 0, 0 );
+
   public ZmlModelCellPainter( final ZmlModelViewport viewport )
   {
     m_viewport = viewport;
@@ -81,51 +88,83 @@ public class ZmlModelCellPainter extends AbstractCellPainter
   @Override
   public void paintCell( final LayerCell cell, final GC gc, final Rectangle bounds, final IConfigRegistry configRegistry )
   {
-    final Object object = cell.getDataValue();
-    if( object instanceof IZmlModelValueCell )
+    final Object dataValue = cell.getDataValue();
+    if( dataValue == null )
+      return;
+
+    if( !(dataValue instanceof IZmlModelValueCell) )
+      throw new UnsupportedOperationException();
+
+    final IZmlModelValueCell modelCell = (IZmlModelValueCell) dataValue;
+    final IStyle cellStyle = getCellStyle( modelCell );
+
+    final HorizontalAlignmentEnum baseAlignment = cellStyle.getAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT );
+    final boolean isCentered = HorizontalAlignmentEnum.CENTER.equals( baseAlignment );
+
+    Rectangle ptr = new Rectangle( bounds.x - m_insets.left, bounds.y - m_insets.top, bounds.width - m_insets.left - m_insets.right, bounds.height - m_insets.top - m_insets.bottom );
+    ptr = move( ptr, m_insets.left );
+
+    try
     {
-      final IZmlModelValueCell modelCell = (IZmlModelValueCell) object;
-      final IZmlModelCellLabelProvider provider = modelCell.getStyleProvider();
+      final ImagePainter[] imagePainters = createImagePainters( modelCell, configRegistry );
 
-      final Style imageCellStyle = provider.getStyle( m_viewport, modelCell );
-
-      imageCellStyle.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.LEFT );
-      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, imageCellStyle, DisplayMode.NORMAL, GridRegion.BODY.toString() );
-
-      final Style cellStyle = provider.getStyle( m_viewport, modelCell );
-
-      Rectangle ptr = new Rectangle( bounds.x, bounds.y, bounds.width, bounds.height );
-
-      try
+      for( final ImagePainter imagePainter : imagePainters )
       {
-        final Image[] images = provider.getImages( m_viewport, modelCell );
-        for( final Image image : images )
+        imagePainter.paintCell( cell, gc, ptr, configRegistry );
+        final int imageWidth = imagePainter.getPreferredWidth( cell, gc, configRegistry );
+        ptr = move( ptr, imageWidth );
+        if( isCentered )
         {
-          final ImagePainter imgPainter = new ImagePainter( image );
-          imgPainter.paintCell( cell, gc, ptr, configRegistry );
-
-          ptr = move( ptr, image.getBounds(), cellStyle );
+          /*
+           * differ between assigned alignments. Example: alignment is CENTER - the centered text / check box should
+           * always be drawn in the center of the complete control
+           */
+          ptr = new Rectangle( ptr.x, ptr.y, ptr.width - imageWidth, ptr.height );
         }
-
       }
-      catch( final SensorException e )
-      {
-        e.printStackTrace();
-      }
-
-      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, cellStyle, DisplayMode.NORMAL, GridRegion.BODY.toString() );
-
-      final ICellPainter painter = getPainter( modelCell );
-      painter.paintCell( cell, gc, ptr, configRegistry );
+    }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
     }
 
+    final ICellPainter painter = getPainter( modelCell, cellStyle, configRegistry );
+    painter.paintCell( cell, gc, ptr, configRegistry );
   }
 
-  private ICellPainter getPainter( final IZmlModelValueCell cell )
+  private IStyle getCellStyle( final IZmlModelValueCell modelCell )
   {
+    final IZmlModelCellLabelProvider provider = modelCell.getStyleProvider();
 
-    final IZmlModelColumn column = cell.getColumn();
-    if( Objects.isNull( column ) )
+    return provider.getStyle( m_viewport, modelCell );
+  }
+
+  private ImagePainter[] createImagePainters( final IZmlModelValueCell modelCell, final IConfigRegistry configRegistry ) throws SensorException
+  {
+    final IZmlModelCellLabelProvider provider = modelCell.getStyleProvider();
+
+    final Style imageCellStyle = provider.getStyle( m_viewport, modelCell );
+
+    imageCellStyle.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.LEFT );
+    configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, imageCellStyle, DisplayMode.NORMAL, GridRegion.BODY.toString() );
+
+    final Image[] images = provider.getImages( m_viewport, modelCell );
+    final ImagePainter[] painters = new ImagePainter[images.length];
+    for( int i = 0; i < painters.length; i++ )
+      painters[i] = new ImagePainter( images[i] );
+
+    return painters;
+  }
+
+  private ICellPainter getPainter( final IZmlModelValueCell modelCell, final IStyle cellStyle, final IConfigRegistry configRegistry )
+  {
+    final BorderStyle borderStyle = new BorderStyle( 10, GUIHelper.COLOR_WHITE, LineStyleEnum.SOLID );
+    cellStyle.setAttributeValue( CellStyleAttributes.BORDER_STYLE, borderStyle );
+
+    configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, cellStyle, DisplayMode.NORMAL, GridRegion.BODY.toString() );
+
+    final IZmlModelColumn column = modelCell.getColumn();
+    if( column == null )
       return new TextPainter();
 
     final String axis = column.getDataColumn().getValueAxis();
@@ -135,85 +174,79 @@ public class ZmlModelCellPainter extends AbstractCellPainter
     return new TextPainter();
   }
 
-  private Rectangle move( final Rectangle ptr, final Rectangle bounds, final Style cellStyle )
+  private Rectangle move( final Rectangle ptr, final int width )
   {
-    /*
-     * differ between assigned alignments. Example: alignment is CENTER - the centered text / check box should always be
-     * drawn in the center of the complete control
-     */
-    final HorizontalAlignmentEnum baseAlignment = cellStyle.getAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT );
-
-    if( HorizontalAlignmentEnum.CENTER.equals( baseAlignment ) )
-      return new Rectangle( ptr.x + bounds.width, ptr.y, ptr.width - bounds.width * 2, ptr.height );
-
-    return new Rectangle( ptr.x + bounds.width, ptr.y, ptr.width - bounds.width, ptr.height );
-
+    return new Rectangle( ptr.x + width, ptr.y, ptr.width - width, ptr.height );
   }
 
   @Override
   public int getPreferredWidth( final LayerCell cell, final GC gc, final IConfigRegistry configRegistry )
   {
-    final Object object = cell.getDataValue();
-    if( object instanceof IZmlModelValueCell )
+    final Object dataValue = cell.getDataValue();
+    if( dataValue == null )
+      return 0;
+
+    if( !(dataValue instanceof IZmlModelValueCell) )
+      throw new UnsupportedOperationException();
+
+    final IZmlModelValueCell modelCell = (IZmlModelValueCell) dataValue;
+    final IStyle cellStyle = getCellStyle( modelCell );
+
+    int width = 0;
+
+    try
     {
-      final IZmlModelValueCell value = (IZmlModelValueCell) object;
-      final IZmlModelCellLabelProvider provider = value.getStyleProvider();
+      final ImagePainter[] imagePainters = createImagePainters( modelCell, configRegistry );
 
-      int width = 0;
-      try
-      {
-        final Image[] images = provider.getImages( m_viewport, value );
-        for( final Image image : images )
-        {
-          width += image.getBounds().width;
-        }
-      }
-      catch( final SensorException e )
-      {
-        e.printStackTrace();
-      }
-
-      final TextPainter painter = new TextPainter();
-      width += painter.getPreferredWidth( cell, gc, configRegistry );
-
-      return width;
+      for( final ImagePainter imagePainter : imagePainters )
+        width += imagePainter.getPreferredWidth( cell, gc, configRegistry );
+    }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
     }
 
-    return -1;
+    final ICellPainter painter = getPainter( modelCell, cellStyle, configRegistry );
+    final int imageWidth = painter.getPreferredWidth( cell, gc, configRegistry );
+    width += imageWidth;
+
+    return width + m_insets.left + m_insets.right;
   }
 
   @Override
   public int getPreferredHeight( final LayerCell cell, final GC gc, final IConfigRegistry configRegistry )
   {
-    final Object object = cell.getDataValue();
-    if( object instanceof IZmlModelValueCell )
+    final Object dataValue = cell.getDataValue();
+    if( dataValue == null )
+      return 0;
+
+    if( !(dataValue instanceof IZmlModelValueCell) )
+      throw new UnsupportedOperationException();
+
+    final IZmlModelValueCell modelCell = (IZmlModelValueCell) dataValue;
+    final IStyle cellStyle = getCellStyle( modelCell );
+
+    int height = 0;
+
+    try
     {
-      final IZmlModelValueCell value = (IZmlModelValueCell) object;
-      final IZmlModelCellLabelProvider provider = value.getStyleProvider();
+      final ImagePainter[] imagePainters = createImagePainters( modelCell, configRegistry );
 
-      int height = 0;
-
-      try
+      for( final ImagePainter imagePainter : imagePainters )
       {
-        final Image[] images = provider.getImages( m_viewport, value );
-        for( final Image image : images )
-        {
-          final Rectangle bounds = image.getBounds();
-          height = Math.max( bounds.height, height );
-        }
+        final int imageHeight = imagePainter.getPreferredHeight( cell, gc, configRegistry );
+        height = Math.max( imageHeight, height );
       }
-      catch( final SensorException e )
-      {
-        e.printStackTrace();
-      }
-
-      final TextPainter painter = new TextPainter();
-      height = Math.max( painter.getPreferredHeight( cell, gc, configRegistry ), height );
-
-      return height;
+    }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
     }
 
-    return -1;
-  }
+    final ICellPainter painter = getPainter( modelCell, cellStyle, configRegistry );
+    final int textHeight = painter.getPreferredHeight( cell, gc, configRegistry );
+    height = Math.max( textHeight, height );
 
+    return height + m_insets.top + m_insets.bottom;
+  }
 }

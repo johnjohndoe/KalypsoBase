@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.nat.layers;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -62,12 +64,18 @@ import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
  */
 public class ZmlTableSelectionLayer extends SelectionLayer implements IZmlTableSelection
 {
+  List<IZmlTableSelectionListener> m_listener = new ArrayList<IZmlTableSelectionListener>();
+
   private final ZmlModelViewport m_model;
+
+  private IZmlModelColumn m_clickedHeaderColumn;
 
   public ZmlTableSelectionLayer( final ZmlModelViewport model, final IUniqueIndexLayer layer )
   {
     super( layer );
+
     m_model = model;
+    m_clickedHeaderColumn = null;
   }
 
   @Override
@@ -143,9 +151,7 @@ public class ZmlTableSelectionLayer extends SelectionLayer implements IZmlTableS
     for( final IZmlModelRow row : rows )
     {
       for( final IZmlModelColumn column : columns )
-      {
         selection.add( row.get( column ) );
-      }
     }
 
     return selection.toArray( new IZmlModelValueCell[] {} );
@@ -154,11 +160,9 @@ public class ZmlTableSelectionLayer extends SelectionLayer implements IZmlTableS
   @Override
   public IZmlModelValueCell getFocusCell( )
   {
-    final PositionCoordinate position = getLastSelectedCellPosition();
-    if( Objects.isNull( position ) )
-    {
+    final PositionCoordinate position = getSelectionAnchor();
+    if( position == null )
       return null;
-    }
 
     return m_model.getCell( position.getRowPosition(), position.getColumnPosition() );
   }
@@ -182,5 +186,39 @@ public class ZmlTableSelectionLayer extends SelectionLayer implements IZmlTableS
   public void updateLastSelectedCellPosition( final int row, final int column )
   {
     setLastSelectedCell( column, row );
+  }
+
+  @Override
+  public IZmlModelColumn getClickedHeaderColumn( )
+  {
+    return m_clickedHeaderColumn;
+  }
+
+  @Override
+  public void setClickedHeaderColumn( final IZmlModelColumn clickedHeaderColumn )
+  {
+    m_clickedHeaderColumn = clickedHeaderColumn;
+
+    fireClickedHeaderColumnChanged( clickedHeaderColumn );
+  }
+
+  @Override
+  public void addSelectionListener( final IZmlTableSelectionListener listener )
+  {
+    if( !m_listener.contains( listener ) )
+      m_listener.add( listener );
+  }
+
+  @Override
+  public void removeSelectionListener( final IZmlTableSelectionListener listener )
+  {
+    if( m_listener.contains( listener ) )
+      m_listener.remove( listener );
+  }
+
+  private void fireClickedHeaderColumnChanged( final IZmlModelColumn clickedHeaderColumn )
+  {
+    for( final IZmlTableSelectionListener listener : m_listener )
+      listener.clickedHeaderColumnChanged( clickedHeaderColumn );
   }
 }

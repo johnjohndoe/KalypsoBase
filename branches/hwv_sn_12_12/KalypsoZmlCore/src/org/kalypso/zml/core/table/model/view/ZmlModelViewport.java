@@ -70,11 +70,12 @@ import org.kalypso.zml.core.table.schema.IndexColumnType;
  * 
  * @author Dirk Kuch
  */
+// FIXME: bad name, this is the data model; especially it has nothing to do with the ViewPortLayer of NatTable
 public class ZmlModelViewport
 {
   private final Set<IZmlColumnModelListener> m_listeners = Collections.synchronizedSet( new LinkedHashSet<IZmlColumnModelListener>() );
 
-  protected final Set<String> m_hiddenTypes = Collections.synchronizedSet( new HashSet<String>() ); // FIXME
+  private final Set<String> m_hiddenTypes = Collections.synchronizedSet( new HashSet<String>() ); // FIXME
 
   // FIXME set as zml table base
   // FIXME IZmlModelListener change listener
@@ -121,7 +122,6 @@ public class ZmlModelViewport
           doClean( type );
       }
     } );
-
   }
 
   public void accept( final IZmlModelRowVisitor visitor )
@@ -303,6 +303,11 @@ public class ZmlModelViewport
   public final void addListener( final IZmlColumnModelListener listener )
   {
     m_listeners.add( listener );
+  }
+
+  public final void removeListener( final IZmlColumnModelListener listener )
+  {
+    m_listeners.remove( listener );
   }
 
   public void fireModelChanged( final int type )

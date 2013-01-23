@@ -57,18 +57,39 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
+import org.kalypso.zml.core.table.model.IZmlColumnModelListener;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.debug.KalypsoZmlUiDebug;
 import org.kalypso.zml.ui.table.nat.ZmlTable;
+import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
+import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelectionListener;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlTableComposite extends Composite implements IZmlTableComposite
 {
+  private final IZmlTableSelectionListener m_selectionListener = new IZmlTableSelectionListener()
+  {
+    @Override
+    public void clickedHeaderColumnChanged( final IZmlModelColumn column )
+    {
+      fireChanged();
+    }
+  };
+
+  private final IZmlColumnModelListener m_columnModelListener = new IZmlColumnModelListener()
+  {
+    @Override
+    public void modelChanged( final ZmlModelColumnChangeType type )
+    {
+      fireChanged();
+    }
+  };
 
   private final Set<IZmlTableCompositeListener> m_listeners = new LinkedHashSet<IZmlTableCompositeListener>();
 
@@ -76,11 +97,9 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
 
   protected ZmlTable m_table;
 
-  private IZmlModel m_model;
-
-  public ZmlTableComposite( final Composite parent, final FormToolkit toolkit )
+  public ZmlTableComposite( final Composite parent, final FormToolkit toolkit, final IZmlModel model, final int style )
   {
-    super( parent, SWT.NULL );
+    super( parent, style );
     m_toolkit = toolkit;
 
     final GridLayout layout = LayoutHelper.createGridLayout();
@@ -88,37 +107,40 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
     setLayout( layout );
 
     toolkit.adapt( this );
-  }
 
-  public void doInitialize( final IZmlModel model )
-  {
-    m_model = model;
+    final ZmlTableType tableType = model.getTableType();
 
-    synchronized( this )
+    Composite toolbar = null;
+    if( hasToolbar( tableType ) )
     {
-      final ZmlTableType tableType = model.getTableType();
-
-      Composite toolbar = null;
-      if( hasToolbar( tableType ) )
-      {
-        toolbar = m_toolkit.createComposite( this );
-        toolbar.setLayout( LayoutHelper.createGridLayout() );
-        toolbar.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-      }
-
-      m_table = new ZmlTable( this, m_model, m_toolkit );
-      m_table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-
-      if( hasToolbar( tableType ) )
-        initToolbar( tableType, toolbar, m_toolkit );
+      toolbar = m_toolkit.createComposite( this );
+      toolbar.setLayout( LayoutHelper.createGridLayout() );
+      toolbar.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     }
 
-    this.layout();
+    m_table = new ZmlTable( this, SWT.BORDER, model, m_toolkit );
+    m_table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+
+    // FIXME: Table composite must deliver events by listening to its table model (and other data)...
+    final IZmlTableSelection selection = m_table.getSelection();
+    selection.addSelectionListener( m_selectionListener );
+
+    final ZmlModelViewport modelViewport = m_table.getModelViewport();
+    modelViewport.addListener( m_columnModelListener );
+
+    if( hasToolbar( tableType ) )
+      initToolbar( tableType, toolbar, m_toolkit );
   }
 
   @Override
   public void dispose( )
   {
+    final ZmlModelViewport modelViewport = m_table.getModelViewport();
+    modelViewport.removeListener( m_columnModelListener );
+
+    final IZmlTableSelection selection = m_table.getSelection();
+    selection.removeSelectionListener( m_selectionListener );
+
     m_table.dispose();
 
     super.dispose();
@@ -145,9 +167,7 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
     control.setLayoutData( new GridData( SWT.RIGHT, SWT.FILL, true, false ) );
 
     for( final String reference : references )
-    {
       ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), toolBarManager, reference );
-    }
 
     if( KalypsoZmlUiDebug.DEBUG_TABLE_DIALOG.isEnabled() )
       ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), toolBarManager, "toolbar:org.kalypso.zml.ui.table.commands.debug" ); //$NON-NLS-1$
@@ -174,29 +194,24 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
   {
     synchronized( this )
     {
-
       // FIXME move to getModel().refresh()?
-// table.getModel().reset();
+      // table.getModel().reset();
       // FIXME stack columns in table model
       Collections.addAll( m_stackColumns, cols );
 
-// final IZmlModelColumn[] missing = ZmlTableColumns.findMissingColumns( getMainTable(), getModel().getColumns() );
-// ZmlTableColumns.buildTableColumns( this, ZmlTableColumns.toBaseColumns( missing ) );
+      // final IZmlModelColumn[] missing = ZmlTableColumns.findMissingColumns(getMainTable(),getModel().getColumns());
+      // ZmlTableColumns.buildTableColumns( this, ZmlTableColumns.toBaseColumns( missing ) );
 
       // FIXME don't refresh all columns!!!!
       m_table.refresh( type );
-
     }
   }
 
-  @Override
-  public void fireTableSourceChanged( final String type )
+  protected void fireChanged( )
   {
     final IZmlTableCompositeListener[] listeners = m_listeners.toArray( new IZmlTableCompositeListener[] {} );
     for( final IZmlTableCompositeListener listener : listeners )
-    {
-      listener.eventTableChanged( type );
-    }
+      listener.changed();
   }
 
   @Override
@@ -216,5 +231,4 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
   {
     return m_table;
   }
-
 }
