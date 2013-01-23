@@ -89,10 +89,9 @@ public class TableSourceProvider extends AbstractSourceProvider
   private final IZmlTableCompositeListener m_listener = new IZmlTableCompositeListener()
   {
     @Override
-    public void eventTableChanged( final String type )
+    public void changed( )
     {
-      if( IZmlTableCompositeListener.TYPE_REFRESH.equals( type ) )
-        refreshUIelements();
+      refreshUIelements();
     }
   };
 
@@ -146,9 +145,7 @@ public class TableSourceProvider extends AbstractSourceProvider
   {
     // unregister the registered source provider
     for( final IServiceWithSources service : m_registeredServices )
-    {
       service.removeSourceProvider( this );
-    }
 
     if( Objects.isNotNull( m_table ) )
       m_table.removeListener( m_listener );
@@ -232,5 +229,4 @@ public class TableSourceProvider extends AbstractSourceProvider
       e.printStackTrace();
     }
   }
-
 }
