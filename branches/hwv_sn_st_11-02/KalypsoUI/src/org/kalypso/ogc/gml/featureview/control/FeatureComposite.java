@@ -69,7 +69,6 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.ColorUtilities;
 import org.kalypso.contribs.eclipse.swt.SWTUtilities;
@@ -716,11 +715,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       return propertyType;
 
     if( property.getNamespaceURI().equals( FeatureComposite.FEATUREVIEW_NAMESPACE ) )
-    {
-      final String localPart = property.getLocalPart();
-      PluginUtilities.logToPlugin( KalypsoGisPlugin.getDefault(), IStatus.WARNING, "Still using localPart for property-name '" + localPart + "'. Use QName instead.", null ); //$NON-NLS-1$ //$NON-NLS-2$
-      return featureType.getProperty( localPart );
-    }
+      return featureType.getProperty( property.getLocalPart() );
 
     return null;
   }
