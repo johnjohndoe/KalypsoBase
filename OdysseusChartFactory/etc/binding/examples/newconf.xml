@@ -1,0 +1,90 @@
+
+
+<Configuration>
+<!-- Die Chart-ID ist eine "echte" ID - sie darf pro Dokument nur einmal vorkommen -->
+<Chart name="MyID">
+    <title></title>
+    <description></description>
+    <layers>
+        <layer ref="" />
+    </layers>
+   
+</Chart>
+
+<Layer>
+    <name></name>
+    <description></description>
+    <provider></provider>
+    <!-- Die ref(erence) verweist auf eine IRGENDWO im Dokument liegende Achse - kein Auzählen der Achsen pro Chart -->
+    <axes>
+        <domainAxis ref="" />
+        <valueAxis ref="" />
+    </axes>
+    <style ref="" />
+    <!-- Allg: Woher stammen die Daten -->
+    <parameter name="DataSource" value="http://www.url.com/data.xml"/>
+    <!-- BarChart: Wie breit ist ein Balken; für die Auswertung bedeutet das, dass alle Messwerte, deren Domain-Wert innerhalb eines
+        Bars liegen, addiert werden; stellt sich hier die Frage, wie man die Einheit für eine Datumsachse codiert -  immer als Millisekunden? -->
+    <!-- BarStart: Gibt einen Wert an, an dem ein Bar beginnen soll. -->
+    <parameter name="BarWidth" value=""/>
+    <!-- Da auch eine ObservationCollection verwendet werden kann, wird hier die ID der Observation angeben--> 
+    <parameter name="ObservationID" value="" />
+    <parameter name="domainComponent" value="" />
+    <parameter name="valueComponent" value="" />
+</Layer>
+
+
+<!-- "echte" ID -->
+<Axis name="">
+    <!-- wird als Label der Achse verwendet -->
+    <provider name="" />
+    <title></title>
+    <direction></direction>
+    <position></position>
+    <minVal>NOW</minVal>
+    <maxVal>NOW+7DAYS</maxVal>
+</Axis>
+
+<Style id="">
+    <StyleElement ref="" />
+</Style>
+
+
+<StyleElement name="">
+        <provider name="" />
+        <!-- "Durchsichtigkeit" des Elements -->
+        <alpha value="" />
+        <!-- Paramter für Point -->
+        <parameter name="pointWidth" value=""/>
+        <parameter name="pointHeight" value=""/>
+        <!-- Paramter für Line und Polygon -->
+        <parameter name="lineWidth" value=""/>
+        <parameter name="lineStyle" value=""/>
+        <parameter name="lineColor" value=""/>
+        <!-- Paramter für Polygon -->
+        <parameter name="fillColor" value=""/>
+        <!-- Paramter für Font -->
+        <parameter name="fontFamily" value=""/>
+        <parameter name="fontColor" value=""/>
+        <parameter name="fontSize" value=""/>
+        <parameter name="fontStyle" value=""/>
+</StyleElement>
+
+<Table name="">
+    <provider name="" />
+    <columns>
+        <tableColumn ref="" />
+        <tableColumn ref="" />
+    </columns>
+    <parameter name="dataSource" value=""/>    
+    <parameter name="observationID" value=""/>
+</Table>
+
+<TableColumn name="">
+    <header></header>
+    <headerClass></headerClass>
+    <valueClass></valueClass>
+    <parameter name="itemId" value="" />
+</TableColumn>
+
+</Configuration>
