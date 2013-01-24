@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- diverse Farbschemata (MG, AS1, AS2, AS3, AS4)
+Problem: gelb ist nur schlecht erkennbar, insbesondere die Beschriftung
+derzeit umgesetztes Farbschema: Sachsen-Anhalt
+Kalypso
+BD6DFF (lila)
+E8E800 (gelb-grün)
+FF8000 (orange)
+FF8080 (rosa)
+FF0000 (rot)
+Sachsen
+- (keine Farbe für Meldegrenze auf Web-Seite erkennbar)
+006699 (blau bis blau-grün)
+FFFF00 (gelb)
+FFCCCC (rosa)
+FF0000 (rot)
+Sachsen-Anhalt
+0000FF (blau)
+FFFF00 (gelb)
+FF6600 (orange)
+FF0000 (rot)
+FF00FF (magenta)
+-->
+<!-- FIXME: does not belong in ZML UI -> move to PROGNOSE -->
+<ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
+  <Chart id="alarmstufen">
+    <Styles>
+      <LineStyle role="meldegrenze_line">
+        <Width>2</Width>
+        <LineColor>0000FF</LineColor>
+      </LineStyle>
+      <LineStyle role="alarmstufe_line_1">
+        <Width>2</Width>
+        <LineColor>FFFF00</LineColor>
+      </LineStyle>
+      <LineStyle role="alarmstufe_line_2">
+        <Width>2</Width>
+        <LineColor>FF6600</LineColor>
+      </LineStyle>
+      <LineStyle role="alarmstufe_line_3">
+        <Width>2</Width>
+        <LineColor>FF0000</LineColor>
+      </LineStyle>
+      <LineStyle role="alarmstufe_line_4">
+        <Width>2</Width>
+        <LineColor>FF00FF</LineColor>
+      </LineStyle>
+      <TextStyle role="meldegrenze_text">
+        <Size>8</Size>
+        <TextColor>0000FF</TextColor>
+        <FontFamily>Arial</FontFamily>
+        <FontWeight>BOLD</FontWeight>
+        <FontStyle>NORMAL</FontStyle>
+      </TextStyle>
+      <TextStyle role="alarmstufe_text_1">
+        <Size>8</Size>
+        <!-- schwarz zur besseren Sichtbarkeit -->
+        <TextColor>000000</TextColor>        
+        <FontFamily>Arial</FontFamily>
+   <!--      <FillColor>FFFF00</FillColor> -->
+        <FontWeight>BOLD</FontWeight>
+        <FontStyle>NORMAL</FontStyle>
+      </TextStyle>
+      <TextStyle role="alarmstufe_text_2">
+        <Size>8</Size>
+        <TextColor>FF6600</TextColor>
+        <FontFamily>Arial</FontFamily>
+        <FontWeight>BOLD</FontWeight>
+        <FontStyle>NORMAL</FontStyle>
+      </TextStyle>
+      <TextStyle role="alarmstufe_text_3">
+        <Size>8</Size>
+        <TextColor>FF0000</TextColor>
+        <FontFamily>Arial</FontFamily>
+        <FontWeight>BOLD</FontWeight>
+        <FontStyle>NORMAL</FontStyle>
+      </TextStyle>
+      <TextStyle role="alarmstufe_text_4">
+        <Size>8</Size>
+        <TextColor>FF00FF</TextColor>
+        <FontFamily>Arial</FontFamily>
+        <FontWeight>BOLD</FontWeight>
+        <FontStyle>NORMAL</FontStyle>
+      </TextStyle>
+    </Styles>
+    <Layers>
+      <Layer id="meldegrenze" visible="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="org.kalypso.hwv.core.chart.layer.ZmlBoundaryLayerProvider">
+          <Parameters>
+            <Parameter name="grenzwert" value="^Grenzwert_.:\sMeldegrenze$" />
+            <Parameter name="label" value="MG" />
+            <Parameter name="content.alarmstufe" value="true" />
+            <Parameter name="hideOnMultiSelect" value="true" />
+          </Parameters>
+        </Provider>
+        <Title>Meldegrenze</Title>
+        <Description />
+        <Styles>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:alarmstufen#meldegrenze_line</StyleReference>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:alarmstufen#meldegrenze_text</StyleReference>
+        </Styles>
+      </Layer>
+      <Layer id="alarmstufe_1" visible="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="org.kalypso.hwv.core.chart.layer.ZmlBoundaryLayerProvider">
+          <Parameters>
+            <Parameter name="grenzwert" value=".*Alarmstufe_1\w?" />
+            <Parameter name="label" value="AS%s" />
+            <Parameter name="labelTokenizer" value="^.+_" />
+            <Parameter name="content.alarmstufe" value="true" />
+            <Parameter name="hideOnMultiSelect" value="true" />
+          </Parameters>
+        </Provider>
+        <Title>Alarmstufe</Title>
+        <Description />
+        <Styles>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_line_1</StyleReference>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_text_1</StyleReference>
+        </Styles>
+      </Layer>
+      <Layer id="alarmstufe_2" visible="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="org.kalypso.hwv.core.chart.layer.ZmlBoundaryLayerProvider">
+          <Parameters>
+            <Parameter name="grenzwert" value=".*Alarmstufe_2\w?" />
+            <Parameter name="label" value="AS%s" />
+            <Parameter name="labelTokenizer" value="^.+_" />
+            <Parameter name="content.alarmstufe" value="true" />
+            <Parameter name="hideOnMultiSelect" value="true" />
+          </Parameters>
+        </Provider>
+        <Title>Alarmstufe</Title>
+        <Description />
+        <Styles>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_line_2</StyleReference>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_text_2</StyleReference>
+        </Styles>
+      </Layer>
+      <Layer id="alarmstufe_3" visible="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="org.kalypso.hwv.core.chart.layer.ZmlBoundaryLayerProvider">
+          <Parameters>
+            <Parameter name="grenzwert" value=".*Alarmstufe_3\w?" />
+            <Parameter name="label" value="AS%s" />
+            <Parameter name="labelTokenizer" value="^.+_" />
+            <Parameter name="content.alarmstufe" value="true" />
+            <Parameter name="hideOnMultiSelect" value="true" />
+          </Parameters>
+        </Provider>
+        <Title>Alarmstufe</Title>
+        <Description />
+        <Styles>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_line_3</StyleReference>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_text_3</StyleReference>
+        </Styles>
+      </Layer>
+      <Layer id="alarmstufe_4" visible="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="org.kalypso.hwv.core.chart.layer.ZmlBoundaryLayerProvider">
+          <Parameters>
+            <Parameter name="grenzwert" value=".*Alarmstufe_4\w?" />
+            <Parameter name="label" value="AS%s" />
+            <Parameter name="labelTokenizer" value="^.+_" />
+            <Parameter name="content.alarmstufe" value="true" />
+            <Parameter name="hideOnMultiSelect" value="true" />
+          </Parameters>
+        </Provider>
+        <Title>Alarmstufe</Title>
+        <Description />
+        <Styles>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_line_4</StyleReference>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_text_4</StyleReference>
+        </Styles>
+      </Layer>
+    </Layers>
+  </Chart>
+</ChartConfiguration>
