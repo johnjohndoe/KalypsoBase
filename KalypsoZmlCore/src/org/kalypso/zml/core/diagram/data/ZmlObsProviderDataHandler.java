@@ -152,15 +152,12 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
   }
 
   @Override
-  public IAxis getValueAxis( )
+  public synchronized IAxis getValueAxis( )
   {
-    synchronized( this )
-    {
-      if( m_valueAxis == null )
-        m_valueAxis = ZmlLayerProviders.getValueAxis( m_provider, m_targetAxisId );
+    if( m_valueAxis == null )
+      m_valueAxis = ZmlLayerProviders.getValueAxis( m_provider, m_targetAxisId );
 
-      return m_valueAxis;
-    }
+    return m_valueAxis;
   }
 
   protected void onObservationLoaded( )
@@ -176,12 +173,13 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
   }
 
   @Override
-  public void dispose( )
+  public synchronized void dispose( )
   {
     if( m_provider != null )
     {
       m_provider.removeListener( m_observationProviderListener );
       m_provider.dispose();
+      m_provider = null;
     }
   }
 
@@ -202,17 +200,24 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
   @Override
   public Object getAdapter( final Class adapter )
   {
+    // for thread-safety, we first fetch the provider once
+    final IObsProvider provider = getProvider();
+
     if( adapter.isAssignableFrom( IObsProvider.class ) )
+      return provider;
+
+    if( adapter.isAssignableFrom( IObservation.class ) )
     {
-      return m_provider;
-    }
-    else if( adapter.isAssignableFrom( IObservation.class ) )
-    {
-      if( Objects.isNotNull( m_provider ) )
-        return m_provider.getObservation();
+      if( provider != null )
+        return provider.getObservation();
     }
 
     return null;
+  }
+
+  private synchronized IObsProvider getProvider( )
+  {
+    return m_provider;
   }
 
   public void load( final IZmlLayerProvider provider, final URL context ) throws MalformedURLException, SensorException, URISyntaxException
