@@ -1,0 +1,3 @@
+org.kalypso.zml.ui/debug = false
+org.kalypso.zml.ui/debug/table/rendering = false
+org.kalypso.zml.ui/debug/table/debug = false
