@@ -52,16 +52,18 @@ import org.eclipse.ui.PlatformUI;
  */
 public class FileLabelProvider extends LabelProvider
 {
-  private static final Image IMG_FOLDER = PlatformUI.getWorkbench().getSharedImages().getImage( ISharedImages.IMG_OBJ_FOLDER );
+  private static final Image IMG_FOLDER = PlatformUI.getWorkbench().getSharedImages().getImage(
+      ISharedImages.IMG_OBJ_FOLDER );
 
-  private static final Image IMG_FILE = PlatformUI.getWorkbench().getSharedImages().getImage( ISharedImages.IMG_OBJ_FILE );
+  private static final Image IMG_FILE = PlatformUI.getWorkbench().getSharedImages().getImage(
+      ISharedImages.IMG_OBJ_FILE );
 
   @Override
-  public Image getImage( final Object element )
+  public Image getImage( Object element )
   {
     if( element instanceof File )
     {
-      final File curr = (File) element;
+      File curr = (File)element;
       if( curr.isDirectory() )
         return IMG_FOLDER;
 
@@ -71,11 +73,11 @@ public class FileLabelProvider extends LabelProvider
   }
 
   @Override
-  public String getText( final Object element )
+  public String getText( Object element )
   {
     if( element instanceof File )
     {
-      return ((File) element).getName();
+      return ( (File)element ).getName();
     }
     return super.getText( element );
   }

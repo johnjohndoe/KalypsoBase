@@ -55,7 +55,7 @@ import org.eclipse.core.runtime.MultiStatus;
 public class DialogMultiStatus extends MultiStatus
 {
   private String m_dialogMessage = null;
-
+  
   public DialogMultiStatus( final String pluginId, final int code, final IStatus[] newChildren, final String message, final Throwable exception )
   {
     super( pluginId, code, newChildren, message, exception );
@@ -66,14 +66,14 @@ public class DialogMultiStatus extends MultiStatus
     super( pluginId, code, message, exception );
   }
 
-  public String getDialogMessage( )
+  public String getDialogMessage()
   {
     return m_dialogMessage == null ? getMessage() : m_dialogMessage;
   }
-
+  
   public void setDialogMessage( final String dialogMessage )
   {
     m_dialogMessage = dialogMessage;
   }
-
+  
 }

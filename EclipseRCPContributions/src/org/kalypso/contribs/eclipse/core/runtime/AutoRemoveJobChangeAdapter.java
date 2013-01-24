@@ -55,7 +55,7 @@ public class AutoRemoveJobChangeAdapter extends JobChangeAdapter
   /** when true, this adapter is removed from the listeners queue once the job onto which it is a listener is done */
   private final boolean m_autoRemoveListenerOnceDone;
 
-  public AutoRemoveJobChangeAdapter( )
+  public AutoRemoveJobChangeAdapter()
   {
     this( true );
   }
@@ -69,7 +69,7 @@ public class AutoRemoveJobChangeAdapter extends JobChangeAdapter
    * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
    */
   @Override
-  public void done( final IJobChangeEvent event )
+  public void done( IJobChangeEvent event )
   {
     if( m_autoRemoveListenerOnceDone )
       event.getJob().removeJobChangeListener( this );

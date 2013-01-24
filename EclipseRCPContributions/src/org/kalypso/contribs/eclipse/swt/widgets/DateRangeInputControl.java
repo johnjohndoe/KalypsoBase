@@ -63,16 +63,16 @@ import org.eclipse.swt.widgets.Text;
 public class DateRangeInputControl extends Composite
 {
   /** Flag whether to use the date range or the number of days */
-  public static final String USE_RANGE = "kalypso.repository.use_range";
+  public final static String USE_RANGE = "kalypso.repository.use_range";
 
   /** Number of days used in the date-range */
-  public static final String NUMBER_OF_DAYS = "kalypso.repository.number_of_days";
+  public final static String NUMBER_OF_DAYS = "kalypso.repository.number_of_days";
 
   /** Date-from for the preview */
-  public static final String DATE_FROM = "kalypso.repository.date_from";
+  public final static String DATE_FROM = "kalypso.repository.date_from";
 
   /** Date-to for the preview */
-  public static final String DATE_TO = "kalypso.repository.date_to";
+  public final static String DATE_TO = "kalypso.repository.date_to";
 
   protected boolean m_useRange;
 
@@ -101,7 +101,7 @@ public class DateRangeInputControl extends Composite
     this( parent, style, struct.useRange, struct.from, struct.to, struct.days, struct.df );
   }
 
-  public DateRangeInputControl( final Composite parent, final int style, final boolean useRange, final Date from, final Date to, final int days, final DateFormat df )
+  public DateRangeInputControl( final Composite parent, final int style, boolean useRange, Date from, Date to, int days, DateFormat df )
   {
     super( parent, style );
 
@@ -148,7 +148,7 @@ public class DateRangeInputControl extends Composite
     m_txtFrom.addModifyListener( new ModifyListener()
     {
       @Override
-      public void modifyText( final ModifyEvent e )
+      public void modifyText( ModifyEvent e )
       {
         m_from = parseForDate( m_txtFrom.getText() );
       }
@@ -160,7 +160,7 @@ public class DateRangeInputControl extends Composite
     m_txtTo.addModifyListener( new ModifyListener()
     {
       @Override
-      public void modifyText( final ModifyEvent e )
+      public void modifyText( ModifyEvent e )
       {
         m_to = parseForDate( m_txtTo.getText() );
       }
@@ -250,7 +250,7 @@ public class DateRangeInputControl extends Composite
     {
       return m_df.parse( str );
     }
-    catch( final ParseException e )
+    catch( ParseException e )
     {
       return null;
     }

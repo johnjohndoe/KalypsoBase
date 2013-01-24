@@ -48,9 +48,9 @@ public class TreeSingleSelectionDialog extends SelectionDialog
   static String DESELECT_ALL_TITLE = WorkbenchMessages.SelectionDialog_deselectLabel;
 
   // sizing constants
-  private static final int SIZING_SELECTION_WIDGET_HEIGHT = 250;
+  private final static int SIZING_SELECTION_WIDGET_HEIGHT = 250;
 
-  private static final int SIZING_SELECTION_WIDGET_WIDTH = 300;
+  private final static int SIZING_SELECTION_WIDGET_WIDTH = 300;
 
   // the root element to populate the viewer with
   private final Object m_inputElement;
@@ -67,15 +67,16 @@ public class TreeSingleSelectionDialog extends SelectionDialog
    * Creates a tree selection dialog.
    * 
    * @param parentShell
-   *          the parent shell
+   *            the parent shell
    * @param input
-   *          the root element to populate this dialog with
+   *            the root element to populate this dialog with
    * @param contentProvider
-   *          the content provider for navigating the model
+   *            the content provider for navigating the model
    * @param labelProvider
-   *          the label provider for displaying model elements
+   *            the label provider for displaying model elements
    * @param message
-   *          the message to be displayed at the top of this dialog, or <code>null</code> to display a default message
+   *            the message to be displayed at the top of this dialog, or <code>null</code> to display a default
+   *            message
    */
   public TreeSingleSelectionDialog( final Shell parentShell, final Object input, final ITreeContentProvider contentProvider, final ILabelProvider labelProvider, final String message )
   {

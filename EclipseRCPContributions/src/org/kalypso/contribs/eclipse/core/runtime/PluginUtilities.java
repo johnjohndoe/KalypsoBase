@@ -108,6 +108,19 @@ public final class PluginUtilities
   }
 
   /**
+   * Returns a sub-section of a given {@link IDialogSettings}.<br>
+   * If the section does not yet exist, it is created.
+   * 
+   * @return <code>null</code>, if the given <code>settings</code> are <code>null</code>.
+   * @deprecated Use {@link DialogSettingsUtils#getSection(IDialogSettings, String)} instead.
+   */
+  @Deprecated
+  public static IDialogSettings getSection( final IDialogSettings settings, final String sectionName )
+  {
+    return DialogSettingsUtils.getSection( settings, sectionName );
+  }
+
+  /**
    * Search for a resource in the plugin (any file) and its fragments.
    * 
    * @return null, if something goes wrong
@@ -139,6 +152,7 @@ public final class PluginUtilities
    * @throws ClassNotFoundException
    *           If either the class or the bundle cannot be found.
    */
+  @SuppressWarnings("unchecked")
   public static <T> Class<T> findClass( final String className, final String pluginId ) throws ClassNotFoundException
   {
     final Bundle bundle = Platform.getBundle( pluginId );
@@ -148,7 +162,7 @@ public final class PluginUtilities
       throw new ClassNotFoundException( msg );
     }
 
-    return (Class<T>) bundle.loadClass( className );
+    return bundle.loadClass( className );
   }
 
   /**

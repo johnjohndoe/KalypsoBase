@@ -41,38 +41,40 @@
 package org.kalypso.contribs.eclipse.jface.viewers.table;
 
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 
 /**
  * This class provides functions for dealing with table viewers.
  * 
  * @author Holger Albert
- * @deprecated {@link ColumnsResizeControlListener} should now directly be added to the table.
  */
-@Deprecated
-public final class TableViewerUtilities
+public class TableViewerUtilities
 {
-  private TableViewerUtilities( )
+  /**
+   * The constructor.
+   */
+  public TableViewerUtilities( )
   {
-    throw new UnsupportedOperationException();
   }
 
   /**
    * This function adds a listener to the parent of a table of a table viewer, which adjusts the width of all columns,
-   * to match the client area of the contained table. Very useful if you only have one column or some more with small
+   * to match the client area of the contained table. Very usefull if you only have one column or some more with small
    * content.
    * 
    * @param viewer
    *          The table viewer.
    */
-  public static void addColumnsResizeListener( final TableViewer viewer )
+  public static void addColumnsResizeListener( TableViewer viewer )
   {
     /* Get the table. */
-    final Table table = viewer.getTable();
-    // TODO: not really needed any more
+    Table table = viewer.getTable();
     if( table.getColumnCount() == 0 )
       return;
 
-    table.addControlListener( new ColumnsResizeControlListener() );
+    /* Add the listener. */
+    Composite parent = table.getParent();
+    parent.addControlListener( new ColumnsResizeControlListener( table ) );
   }
 }

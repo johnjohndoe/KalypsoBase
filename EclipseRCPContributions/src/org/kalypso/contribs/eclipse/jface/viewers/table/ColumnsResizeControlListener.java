@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,21 +36,19 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.viewers.table;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Item;
+import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.ui.progress.UIJob;
+import org.eclipse.swt.widgets.TableColumn;
 
 /**
  * This listener resizes the columns of a table to match its borders, if the table is resized.
@@ -59,135 +57,78 @@ import org.eclipse.ui.progress.UIJob;
  */
 public class ColumnsResizeControlListener extends ControlAdapter
 {
-  private static final String DATA_WIDTH_INFO = "columnWidthInfo"; //$NON-NLS-1$
+  /**
+   * The table.
+   */
+  private Table m_table;
 
-  public static final int MIN_COL_WIDTH_PACK = -2;
-
-  private final UIJob m_resizeColumnsJob = new UIJob( "Resize columns" ) //$NON-NLS-1$
+  /**
+   * The constructor.
+   * 
+   * @param table
+   *          The table.
+   */
+  public ColumnsResizeControlListener( Table table )
   {
-    @Override
-    public IStatus runInUIThread( final IProgressMonitor monitor )
-    {
-      resizeColumns();
-      monitor.done();
-      return Status.OK_STATUS;
-    }
-  };
-
-  private boolean m_isActive;
-
-  private Composite m_tableOrTree;
-
-  public ColumnsResizeControlListener( )
-  {
-    m_resizeColumnsJob.setSystem( true );
+    m_table = table;
   }
 
+  /**
+   * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
+   */
   @Override
-  public void controlResized( final ControlEvent e )
+  public void controlResized( ControlEvent e )
   {
-    if( !(e.widget instanceof Table) && !(e.widget instanceof Tree) )
-      return;
-
-    if( m_tableOrTree == null )
-      m_tableOrTree = (Composite) e.widget;
-
-    if( m_isActive )
-      return;
-
-    updateColumnSizes();
-  }
-
-  public void updateColumnSizes( )
-  {
-    // In order to handle many resize events in short time, we schedule the real update into a job
-    m_resizeColumnsJob.cancel();
-    // REMARK: using a long delay here also protects against strange effect in combinasion with
-    // scrolled forms.
-    m_resizeColumnsJob.schedule( 250 );
-  }
-
-  void resizeColumns( )
-  {
-    if( m_tableOrTree == null || m_tableOrTree.isDisposed() )
-      return;
-
-    try
-    {
-      m_isActive = true;
-
-      doRefreshColumnsWidth( m_tableOrTree );
-    }
-    finally
-    {
-      m_isActive = false;
-    }
-  }
-
-  public static void refreshColumnsWidth( final Table table )
-  {
-    doRefreshColumnsWidth( table );
-  }
-
-  public static void refreshColumnsWidth( final Tree tree )
-  {
-    doRefreshColumnsWidth( tree );
-  }
-
-  private static void doRefreshColumnsWidth( final Composite tableOrTree )
-  {
-    /* Set the size for each colum. */
-    final Item[] columns = getItems( tableOrTree );
-    final ColumnWidthInfo[] infos = new ColumnWidthInfo[columns.length];
-    for( int i = 0; i < columns.length; i++ )
-      infos[i] = updateWidthInfo( columns[i] );
+    /* Get the parent. */
+    Composite parent = m_table.getParent();
 
     /* Get the area of the parent. */
-    final Rectangle area = tableOrTree.getClientArea();
-    final int width = area.width;
+    Rectangle area = parent.getClientArea();
 
-    final ColumnResizeUpdater updater = new ColumnResizeUpdater( width, infos );
-    updater.updateColumnsWidth();
-  }
+    /* Calculate the needed size of the table. */
+    Point size = m_table.computeSize( SWT.DEFAULT, SWT.DEFAULT );
 
-  /**
-   * Make sure all items have a info.
-   */
-  private static ColumnWidthInfo updateWidthInfo( final Item item )
-  {
-    final Object info = item.getData( DATA_WIDTH_INFO );
-    if( info instanceof ColumnWidthInfo )
-      return (ColumnWidthInfo) info;
+    /* Get the vertical bar. */
+    ScrollBar vBar = m_table.getVerticalBar();
 
-    final ColumnWidthInfo newInfo = new ColumnWidthInfo( item );
-    item.setData( DATA_WIDTH_INFO, newInfo );
-    return newInfo;
-  }
+    /* Calculate the available width for the table. */
+    int width = area.width - m_table.computeTrim( 0, 0, 0, 0 ).width - vBar.getSize().x;
 
-  private static Item[] getItems( final Composite tableOrTree )
-  {
-    if( tableOrTree instanceof Table )
-      return ((Table) tableOrTree).getColumns();
+    /* Subtract the scrollbar width from the total column width if a vertical scrollbar will be required. */
+    if( size.y > area.height + m_table.getHeaderHeight() )
+    {
+      Point vBarSize = vBar.getSize();
+      width -= vBarSize.x;
+    }
 
-    if( tableOrTree instanceof Tree )
-      return ((Tree) tableOrTree).getColumns();
+    /* Get the colums. */
+    TableColumn[] columns = m_table.getColumns();
 
-    throw new IllegalArgumentException();
-  }
+    /* Get the old size. */
+    Point oldSize = m_table.getSize();
 
-  public static void setWidthInfo( final Item column, final int minimumWidth, final boolean doAutoResize )
-  {
-    final ColumnWidthInfo info = new ColumnWidthInfo( column );
-    info.setMinimumWidth( minimumWidth );
-    info.setAutoResize( doAutoResize );
-    column.setData( DATA_WIDTH_INFO, info );
-  }
+    /* Table is getting smaller so make the columns smaller first. */
+    /* Then resize the table to match the client area width. */
+    if( oldSize.x > area.width )
+    {
+      /* Set the size for each colum. */
+      for( TableColumn column : columns )
+        column.setWidth( width / columns.length );
 
-  /**
-   * Shortcut for {@link #setWidthInfo(Item, ColumnWidthInfo.PACK, true)}
-   */
-  public static void setMinimumPackWidth( final Item column )
-  {
-    setWidthInfo( column, ColumnWidthInfo.PACK, true );
+      /* Set the size for the table. */
+      m_table.setSize( area.width, area.height );
+
+      return;
+    }
+
+    /* Table is getting bigger so make the table bigger first. */
+    /* Then make the columns wider to match the client area width. */
+
+    /* Set the size for the table. */
+    m_table.setSize( area.width, area.height );
+
+    /* Set the size for each colum. */
+    for( TableColumn column : columns )
+      column.setWidth( width / columns.length );
   }
 }

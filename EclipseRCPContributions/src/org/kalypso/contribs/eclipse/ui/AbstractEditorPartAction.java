@@ -8,8 +8,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorPart;
 
 /**
- * Default implementation of {@link org.kalypso.contribs.eclipse.ui.IEditorPartAction}. Just stores a reference to the
- * given editor.
+ * Default implementation of {@link org.kalypso.contribs.eclipse.ui.IEditorPartAction}. Just stores a reference
+ * to the given editor.
  * 
  * @author Belger
  */
@@ -22,17 +22,17 @@ public abstract class AbstractEditorPartAction extends Action implements IEditor
     super();
   }
 
-  public AbstractEditorPartAction( final String text, final ImageDescriptor image )
+  public AbstractEditorPartAction( String text, ImageDescriptor image )
   {
     super( text, image );
   }
 
-  public AbstractEditorPartAction( final String text, final int style )
+  public AbstractEditorPartAction( String text, int style )
   {
     super( text, style );
   }
 
-  public AbstractEditorPartAction( final String text )
+  public AbstractEditorPartAction( String text )
   {
     super( text );
   }

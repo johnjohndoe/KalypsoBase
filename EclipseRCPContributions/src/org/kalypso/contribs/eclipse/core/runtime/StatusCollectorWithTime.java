@@ -52,9 +52,13 @@ import org.eclipse.core.runtime.MultiStatus;
  */
 public class StatusCollectorWithTime extends StatusCollector
 {
+  private final Date m_startTime;
+
   public StatusCollectorWithTime( final String pluginId )
   {
     super( pluginId );
+
+    m_startTime = new Date();
   }
 
   @Override
@@ -72,13 +76,8 @@ public class StatusCollectorWithTime extends StatusCollector
   }
 
   @Override
-  public MultiStatus asMultiStatus( final String msg )
+  protected MultiStatus createMultiStatus( final String pluginID, final int code, final IStatus[] children, final String msg, final Throwable exception )
   {
-    final IStatus[] children = getAllStati();
-    Date time = new Date();
-    if( children != null && children.length > 0 && children[0] instanceof IStatusWithTime )
-      time = ((IStatusWithTime) children[0]).getTime();
-
-    return new MultiStatusWithTime( getPluginID(), IStatus.OK, children, msg, time, null );
+    return new MultiStatusWithTime( pluginID, code, children, msg, m_startTime, exception );
   }
 }

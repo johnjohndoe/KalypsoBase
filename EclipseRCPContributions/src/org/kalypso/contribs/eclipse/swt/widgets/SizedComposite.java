@@ -72,7 +72,7 @@ public class SizedComposite extends Composite
    * @see org.eclipse.swt.widgets.Composite#computeSize(int, int, boolean)
    */
   @Override
-  public Point computeSize( final int wHint, final int hHint, final boolean changed )
+  public Point computeSize( int wHint, int hHint, boolean changed )
   {
     if( getChildren().length > 0 )
       return super.computeSize( wHint, hHint, changed );

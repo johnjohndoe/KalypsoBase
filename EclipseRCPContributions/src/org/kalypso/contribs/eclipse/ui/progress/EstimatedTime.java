@@ -53,7 +53,7 @@ public class EstimatedTime
   /**
    * The maximum number of items.
    */
-  private final int m_maxItems;
+  private int m_maxItems;
 
   /**
    * The number of items, whose are already done.
@@ -73,7 +73,7 @@ public class EstimatedTime
   /**
    * This date formatter will be used to format the time string returned.
    */
-  private final DateFormat m_df;
+  private DateFormat m_df;
 
   /**
    * The constructor.
@@ -81,7 +81,7 @@ public class EstimatedTime
    * @param maxItems
    *          The maximum number of items.
    */
-  public EstimatedTime( final int maxItems )
+  public EstimatedTime( int maxItems )
   {
     m_maxItems = maxItems;
     m_itemsDone = 0;
@@ -97,7 +97,7 @@ public class EstimatedTime
    * @param done
    *          The number of items done.
    */
-  public void increaseItemsDone( final int done )
+  public void increaseItemsDone( int done )
   {
     if( done <= 0 )
       return;
@@ -133,8 +133,8 @@ public class EstimatedTime
     if( m_maxItems <= 0 || m_itemsDone <= 0 || m_start == -1 || m_end == -1 )
       return -1;
 
-    final long worked = m_end - m_start;
-    final long workTimeItem = worked / m_itemsDone;
+    long worked = m_end - m_start;
+    long workTimeItem = worked / m_itemsDone;
 
     return workTimeItem * (m_maxItems - m_itemsDone);
   }
@@ -146,11 +146,11 @@ public class EstimatedTime
    */
   public String getEstimatedTime( )
   {
-    final long estimatedTimeLeft = getEstimatedTimeLeft();
+    long estimatedTimeLeft = getEstimatedTimeLeft();
     if( estimatedTimeLeft <= 0 )
       return "Unknown ...";
 
-    final Date estimatedTime = new Date( estimatedTimeLeft );
+    Date estimatedTime = new Date( estimatedTimeLeft );
 
     return m_df.format( estimatedTime );
   }
@@ -165,7 +165,7 @@ public class EstimatedTime
     if( m_start == -1 || m_end == -1 )
       return "Unknown";
 
-    final Date exceededTime = new Date( m_end - m_start );
+    Date exceededTime = new Date( m_end - m_start );
 
     return m_df.format( exceededTime );
   }

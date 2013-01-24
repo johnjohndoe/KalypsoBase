@@ -102,8 +102,8 @@ public abstract class ScrolledCompositeCreator
     final int style = m_scrolledComposite.getStyle();
 
     final Point maxSize = m_maxSizeProvider == null ? new Point( psizex, psizey ) : m_maxSizeProvider.getSize( clientareaSize );
-    final int newX = (style & SWT.H_SCROLL) != 0 ? Math.max( controlX, psizex ) : Math.min( psizex, maxSize.x );
-    final int newY = (style & SWT.V_SCROLL) != 0 ? Math.max( controlY, psizey ) : Math.min( psizey, maxSize.y );
+    final int newX = ((style & SWT.H_SCROLL) != 0) ? Math.max( controlX, psizex ) : Math.min( psizex, maxSize.x );
+    final int newY = ((style & SWT.V_SCROLL) != 0) ? Math.max( controlY, psizey ) : Math.min( psizey, maxSize.y );
 
     final Point newSize = new Point( newX == 0 ? controlX : newX, newY == 0 ? controlY : newY );
 

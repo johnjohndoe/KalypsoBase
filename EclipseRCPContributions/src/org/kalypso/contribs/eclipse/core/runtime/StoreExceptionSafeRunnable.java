@@ -67,7 +67,7 @@ public abstract class StoreExceptionSafeRunnable implements ISafeRunnable
   /**
    * @return null, if no exception was thrown by the run method.
    */
-  public Throwable getException( )
+  public Throwable getException()
   {
     return m_exception;
   }

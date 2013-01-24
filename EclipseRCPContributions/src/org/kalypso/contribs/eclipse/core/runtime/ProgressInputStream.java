@@ -49,7 +49,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 /**
  * An input stream that reports read bytes to a {@link IProgressMonitor}.<br/>
  * Any read byte results in a tick to the monitor.
- * 
+ *
  * @author Gernot Belger
  */
 public class ProgressInputStream extends FilterInputStream

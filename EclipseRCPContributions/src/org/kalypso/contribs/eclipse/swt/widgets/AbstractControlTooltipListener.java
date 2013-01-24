@@ -48,8 +48,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
 
 /**
- * TODO: was not merges from 3.0 Version; check if everything is fine Provides fake tooltips for control's which doesnt
- * have one. For example TableItem or Tablecolumns in Tables.
+ * TODO: was not merges from 3.0 Version; check if everything is fine
+ * 
+ * Provides fake tooltips for control's which doesnt have one. For example TableItem or Tablecolumns in Tables.
  * 
  * @author belger
  */
@@ -84,7 +85,7 @@ public abstract class AbstractControlTooltipListener implements Listener
         switch( event.type )
         {
           case SWT.MouseExit:
-            // fall through
+          // fall through
           case SWT.MouseMove:
             if( event.widget instanceof Control )
             {

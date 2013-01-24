@@ -64,18 +64,19 @@ public final class SectionUtils
    */
   public static ToolBarManager createSectionToolbar( final Section section )
   {
-    final ToolBarManager toolBarManager = new ToolBarManager( SWT.FLAT | SWT.FLAT | SWT.HORIZONTAL );
+    final ToolBarManager toolBarManager = new ToolBarManager( SWT.FLAT );
 
     final ToolBar toolbar = toolBarManager.createControl( section );
 
-    final Cursor handCursor = section.getDisplay().getSystemCursor( SWT.CURSOR_HAND );
+    final Cursor handCursor = new Cursor( section.getDisplay(), SWT.CURSOR_HAND );
     toolbar.setCursor( handCursor );
     toolbar.addDisposeListener( new DisposeListener()
     {
       @Override
       public void widgetDisposed( final DisposeEvent e )
       {
-        toolBarManager.dispose();
+        if( handCursor != null && !handCursor.isDisposed() )
+          handCursor.dispose();
       }
     } );
 

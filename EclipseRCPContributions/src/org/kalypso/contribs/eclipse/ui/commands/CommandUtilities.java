@@ -6,7 +6,7 @@
 
  *  Copyright (C) 2004 by:
 
- *
+ * 
 
  *  Technical University Hamburg-Harburg (TUHH)
 
@@ -18,11 +18,11 @@
 
  *  http://www.tuhh.de/wb
 
- *
+ * 
 
  *  and
 
- *
+ *  
 
  *  Bjoernsen Consulting Engineers (BCE)
 
@@ -32,7 +32,7 @@
 
  *  http://www.bjoernsen.de
 
- *
+ * 
 
  *  This library is free software; you can redistribute it and/or
 
@@ -42,7 +42,7 @@
 
  *  version 2.1 of the License, or (at your option) any later version.
 
- *
+ * 
 
  *  This library is distributed in the hope that it will be useful,
 
@@ -52,7 +52,7 @@
 
  *  Lesser General Public License for more details.
 
- *
+ * 
 
  *  You should have received a copy of the GNU Lesser General Public
 
@@ -60,11 +60,11 @@
 
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
- *
+ * 
 
  *  Contact:
 
- *
+ * 
 
  *  E-Mail:
 
@@ -74,7 +74,7 @@
 
  *  v.doemming@tuhh.de
 
- *
+ *   
 
  *  ---------------------------------------------------------------------------*/
 
@@ -88,6 +88,7 @@ import java.util.Map;
 import org.eclipse.core.commands.Category;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.common.CommandException;
+import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.services.IServiceScopes;
@@ -107,9 +108,9 @@ public class CommandUtilities
    */
   public static void refreshElementsForWindow( final IWorkbenchWindow window, final String categoryId ) throws CommandException
   {
-    final ICommandService commandService = (ICommandService)window.getService( ICommandService.class );
+    final ICommandService commandService = (ICommandService) window.getService( ICommandService.class );
 
-    final Map<Object, Object> filter = new HashMap<>();
+    final Map<Object, Object> filter = new HashMap<Object, Object>();
     filter.put( IServiceScopes.WINDOW_SCOPE, window );
 
     refreshElements( commandService, categoryId, filter );
@@ -130,17 +131,17 @@ public class CommandUtilities
    */
   public static Command[] getCommands( final ICommandService commandService, final String categoryId ) throws CommandException
   {
-    final List<Command> result = new ArrayList<>();
+    final List<Command> result = new ArrayList<Command>();
 
     final Category category = commandService.getCategory( categoryId );
-    // if( category == null )
-    // throw new NotDefinedException( "Unknown category: " + categoryId );
+    if( category == null )
+      throw new NotDefinedException( "Unknown category: " + categoryId );
 
     final Command[] commands = commandService.getDefinedCommands();
     for( final Command command : commands )
     {
       final Category cmdCat = command.getCategory();
-      if( category == null || cmdCat.equals( category ) )
+      if( cmdCat.equals( category ) )
         result.add( command );
     }
 

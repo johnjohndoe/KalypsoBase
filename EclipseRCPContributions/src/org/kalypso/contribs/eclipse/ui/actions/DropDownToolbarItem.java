@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.ui.actions;
 
@@ -89,8 +89,6 @@ import org.eclipse.ui.commands.ICommandImageService;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.commands.IElementReference;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.eclipse.ui.menus.CommandContributionItem;
-import org.eclipse.ui.menus.CommandContributionItemParameter;
 import org.eclipse.ui.menus.UIElement;
 import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.services.IServiceLocator;
@@ -108,6 +106,9 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
     /**
      * Listen for pre-execution: if any of my commands is executed, put it as the current command on top.<br>
      * TODO: is this always intended? This happens also if the command is executed by another mean (key-binding, etc.)
+     * 
+     * @see org.kalypso.contribs.eclipse.core.commands.ExecutionAdapter#preExecute(java.lang.String,
+     *      org.eclipse.core.commands.ExecutionEvent)
      */
     @Override
     public void preExecute( final String commandId, final ExecutionEvent event )
@@ -143,9 +144,9 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
 
   protected Command[] m_commands = new Command[] {};
 
-  private final Map<Command, IExecutionListener> m_executionListeners = new HashMap<>();
+  private final Map<Command, IExecutionListener> m_executionListeners = new HashMap<Command, IExecutionListener>();
 
-  private final Map<Command, ICommandListener> m_commandListeners = new HashMap<>();
+  private final Map<Command, ICommandListener> m_commandListeners = new HashMap<Command, ICommandListener>();
 
   protected CommandContributionItem m_currentCommand;
 
@@ -165,6 +166,9 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
     return PlatformUI.getWorkbench();
   }
 
+  /**
+   * @see org.eclipse.ui.actions.CompoundContributionItem#getContributionItems()
+   */
   @Override
   protected CommandContributionItem[] getContributionItems( )
   {
@@ -172,28 +176,26 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
 
     final CommandContributionItem[] items = new CommandContributionItem[m_commands.length];
     for( int i = 0; i < m_commands.length; i++ )
-    {
-      final CommandContributionItemParameter data = new CommandContributionItemParameter( locator, m_commands[i].getId(), m_commands[i].getId(), SWT.PUSH );
-      // items[i] = new CommandContributionItem( locator, m_commands[i].getId(), m_commands[i].getId(), new
-// HashMap<Object,
-      // Object>(), null, null, null, null, null, null, SWT.PUSH );
-      items[i] = new CommandContributionItem( data );
-    }
+      items[i] = new CommandContributionItem( locator, m_commands[i].getId(), m_commands[i].getId(), new HashMap<Object, Object>(), null, null, null, null, null, null, SWT.PUSH );
 
     return items;
   }
 
+  /**
+   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
+   *      java.lang.String, java.lang.Object)
+   */
   @Override
-  @SuppressWarnings( "unchecked" )
+  @SuppressWarnings("unchecked")
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
-    final Set<Command> commands = new LinkedHashSet<>();
+    final Set<Command> commands = new LinkedHashSet<Command>();
     if( data instanceof Map< ? , ? > )
     {
       /* REMARK: map ht is unsorted - sort commands by param id! */
       final Map<String, String> ht = (Map<String, String>) data;
 
-      final List<String> keys = new ArrayList<>();
+      final List<String> keys = new ArrayList<String>();
       keys.addAll( ht.keySet() );
       Collections.sort( keys );
 
@@ -241,6 +243,9 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
 
   private final int style = CommandContributionItem.STYLE_PULLDOWN;
 
+  /**
+   * @see org.eclipse.jface.action.ContributionItem#fill(org.eclipse.swt.widgets.Menu, int)
+   */
   @Override
   public void fill( final Menu parent, final int index )
   {
@@ -270,6 +275,9 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
     update( null );
   }
 
+  /**
+   * @see org.eclipse.jface.action.ContributionItem#fill(org.eclipse.swt.widgets.ToolBar, int)
+   */
   @Override
   public void fill( final ToolBar parent, final int index )
   {
@@ -295,12 +303,18 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
     update( null );
   }
 
+  /**
+   * @see org.eclipse.jface.action.ContributionItem#update()
+   */
   @Override
   public void update( )
   {
     update( null );
   }
 
+  /**
+   * @see org.eclipse.jface.action.ContributionItem#update(java.lang.String)
+   */
   @Override
   public void update( final String id )
   {
@@ -315,19 +329,17 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
         ImageDescriptor disabledIcon = service.getImageDescriptor( m_currentCommand.getId(), ICommandImageService.TYPE_DISABLED );
         ImageDescriptor hoverIcon = service.getImageDescriptor( m_currentCommand.getId(), ICommandImageService.TYPE_HOVER );
 
-        final CommandContributionItemParameter data = m_currentCommand.getData();
-
         if( icon == null )
-          icon = data.icon;
+          icon = m_currentCommand.getIcon();
         if( disabledIcon == null )
-          disabledIcon = data.disabledIcon;
+          disabledIcon = m_currentCommand.getDisabledIcon();
         if( hoverIcon == null )
-          hoverIcon = data.hoverIcon;
+          hoverIcon = m_currentCommand.getHoverIcon();
 
         updateIcons( icon, disabledIcon, hoverIcon );
 
-        final String label = data.label;
-        final String tooltip = data.tooltip;
+        final String label = m_currentCommand.getLabel();
+        final String tooltip = m_currentCommand.getTooltip();
 
         updateText( label, tooltip );
 
@@ -336,9 +348,13 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
           final MenuItem item = (MenuItem) widget;
 
           final String text = label;
+          final String keyBindingText = null;
           if( text != null )
           {
+            if( keyBindingText == null )
+            {
               item.setText( text );
+            }
           }
 
           if( item.getSelection() != checkedState )
@@ -504,7 +520,7 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
     if( openDropDownMenu( event ) )
       return;
 
-    if( (event.type & SWT.MouseDown) != 0 )
+    if( ((event.type & SWT.MouseDown) != 0) )
     {
       if( m_currentCommand == null || !m_currentCommand.isEnabled() )
         return;
@@ -546,7 +562,7 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
   /**
    * Determines if the selection was on the dropdown affordance and, if so, opens the drop down menu (populated using
    * the same id as this item...
-   *
+   * 
    * @param event
    *          The <code>SWT.Selection</code> event to be tested
    * @return <code>true</code> iff a drop down menu was opened
@@ -591,6 +607,9 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
     return false;
   }
 
+  /**
+   * @see org.eclipse.jface.action.ContributionItem#isEnabled()
+   */
   @Override
   public boolean isEnabled( )
   {
@@ -604,7 +623,7 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
     return false;
   }
 
-  void setCurrentCommand( final CommandContributionItem item )
+  protected void setCurrentCommand( final CommandContributionItem item )
   {
     if( m_elementReference != null )
     {

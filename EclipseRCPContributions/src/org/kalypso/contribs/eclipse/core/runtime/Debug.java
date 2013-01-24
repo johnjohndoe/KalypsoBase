@@ -87,11 +87,11 @@ public class Debug
    * Create a new instance for the given debug-option.
    * 
    * @param plugin
-   *          The plugin to which this options apply. Also used to log non-info messages.
+   *            The plugin to which this options apply. Also used to log non-info messages.
    * @param debugOption
-   *          This debugger is active, if {@link Platform#getDebugOption(debugOptions)} returns true.
+   *            This debugger is active, if {@link Platform#getDebugOption(debugOptions)} returns true.
    * @param printer
-   *          All output of this debugger is redirected to this printer.
+   *            All output of this debugger is redirected to this printer.
    */
   public Debug( final Plugin plugin, final String pluginId, final String debugOption, final PrintStream printer )
   {
@@ -153,7 +153,7 @@ public class Debug
    * </p>
    * 
    * @param severity
-   *          One of {@link IStatus#OK},...
+   *            One of {@link IStatus#OK},...
    */
   public void printStackTrace( final int severity, final Throwable t )
   {
@@ -173,9 +173,9 @@ public class Debug
    * Creates a utility for performance measurement.
    * 
    * @param message
-   *          Inital message for the stopwatch
+   *            Inital message for the stopwatch
    * @param args
-   *          Arguments, the message gets formatted with
+   *            Arguments, the message gets formatted with
    */
   public DebugPerf createStopWatch( final String message, final Object... args )
   {

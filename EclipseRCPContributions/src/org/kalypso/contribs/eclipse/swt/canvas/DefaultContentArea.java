@@ -177,7 +177,7 @@ public abstract class DefaultContentArea implements IContentArea
     else if( m_textPosition == SWT.RIGHT )
     {
       final int x = point.x + imageBounds.width + m_spacing;
-      final int y = point.y + imageBounds.height / 2 - m_textExtent.y / 2;
+      final int y = point.y + (imageBounds.height / 2) - (m_textExtent.y / 2);
 
       e.gc.drawText( m_text, x, y, true );
     }

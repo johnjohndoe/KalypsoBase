@@ -63,8 +63,8 @@ public class StatusAndDelegateContentProvider implements ITreeContentProvider
 
   /**
    * @param All
-   *          request to this content provider are delegated to the delegate as long as the input is not of type
-   *          {@link org.eclipse.core.runtime.IStatus}. The delegate will be disposed if this instance gets disposed.
+   *            request to this content provider are delegated to the delegate as long as the input is not of type
+   *            {@link org.eclipse.core.runtime.IStatus}. The delegate will be disposed if this instance gets disposed.
    */
   public StatusAndDelegateContentProvider( final IContentProvider delegate )
   {

@@ -55,7 +55,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 
 /**
@@ -108,7 +108,7 @@ public class StringFileReplacer implements ICoreRunnableWithProgress
     }
     catch( final Exception e )
     {
-      throw new CoreException( new Status( IStatus.ERROR, EclipseRCPContributionsPlugin.ID, "Replacing strings failed", e ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( "Replacing strings failed", e ) );
     }
 
     return Status.OK_STATUS;

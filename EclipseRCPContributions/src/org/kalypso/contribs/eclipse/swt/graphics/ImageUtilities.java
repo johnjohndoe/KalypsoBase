@@ -67,11 +67,11 @@ public class ImageUtilities
    * @return The rotated image.
    * @see http://www.eclipse.org/swt/snippets/
    */
-  public static ImageData rotate( final ImageData srcData, final int direction )
+  public static ImageData rotate( ImageData srcData, int direction )
   {
-    final int bytesPerPixel = srcData.bytesPerLine / srcData.width;
-    final int destBytesPerLine = direction == SWT.DOWN ? srcData.width * bytesPerPixel : srcData.height * bytesPerPixel;
-    final byte[] newData = new byte[direction == SWT.DOWN ? srcData.height * destBytesPerLine : srcData.width * destBytesPerLine];
+    int bytesPerPixel = srcData.bytesPerLine / srcData.width;
+    int destBytesPerLine = (direction == SWT.DOWN) ? srcData.width * bytesPerPixel : srcData.height * bytesPerPixel;
+    byte[] newData = new byte[(direction == SWT.DOWN) ? srcData.height * destBytesPerLine : srcData.width * destBytesPerLine];
     int width = 0, height = 0;
     for( int srcY = 0; srcY < srcData.height; srcY++ )
     {
@@ -100,8 +100,8 @@ public class ImageUtilities
             break;
         }
 
-        destIndex = destY * destBytesPerLine + destX * bytesPerPixel;
-        srcIndex = srcY * srcData.bytesPerLine + srcX * bytesPerPixel;
+        destIndex = (destY * destBytesPerLine) + (destX * bytesPerPixel);
+        srcIndex = (srcY * srcData.bytesPerLine) + (srcX * bytesPerPixel);
         System.arraycopy( srcData.data, srcIndex, newData, destIndex, bytesPerPixel );
       }
     }

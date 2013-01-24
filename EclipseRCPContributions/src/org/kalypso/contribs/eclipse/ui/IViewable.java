@@ -50,5 +50,5 @@ public interface IViewable
   /**
    * @return true when object is shown
    */
-  public boolean isShown( );
+  public boolean isShown();
 }

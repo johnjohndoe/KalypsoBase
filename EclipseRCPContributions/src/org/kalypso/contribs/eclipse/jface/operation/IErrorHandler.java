@@ -55,10 +55,11 @@ public interface IErrorHandler
    * <p>
    * Should be used to display an error message to the user
    * <p>
+   * 
    * Typical usage is:
    * 
    * <pre>
-   * ErrorDialog.openError( shell, &quot;Dialog Title&quot;, &quot;Dialog Message&quot;, status );
+   *  ErrorDialog.openError( shell, "Dialog Title", "Dialog Message", status );
    * </pre>
    */
   public void handleError( final Shell shell, final IStatus status );

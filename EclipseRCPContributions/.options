@@ -1,3 +1,2 @@
 # Debug output
 org.kalypso.contribs.eclipsercp/debug/cronjob = true
-org.kalypso.contribs.eclipsercp/debug/genericWizards = false

@@ -1,19 +1,16 @@
 /**
- *
+ * 
  */
 package org.kalypso.contribs.eclipse.jface.preference;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -28,14 +25,14 @@ import org.eclipse.swt.widgets.Group;
 
 /**
  * A field editor in form of a checkable list.
- *
- * @author Gernot Belger
+ * 
+ * @author belger
  */
 public class ChecklistFieldEditor extends FieldEditor implements ICheckStateListener
 {
-  private final Map<String, Object> m_idMap = new HashMap<>();
+  private final Map<String, Object> m_idMap = new HashMap<String, Object>();
 
-  private final Map<Object, String> m_contentMap = new HashMap<>();
+  private final Map<Object, String> m_contentMap = new HashMap<Object, String>();
 
   private CheckboxTableViewer m_checklist;
 
@@ -45,7 +42,9 @@ public class ChecklistFieldEditor extends FieldEditor implements ICheckStateList
 
   private Group m_group;
 
-  public ChecklistFieldEditor( final Object[] content, final String idMethod, final ILabelProvider labelProvider, final String name, final String labelText, final Composite parent )
+  public ChecklistFieldEditor( final Object[] content, final String idMethod,
+      final ILabelProvider labelProvider, final String name, final String labelText,
+      final Composite parent )
   {
     super( name, labelText, parent );
 
@@ -57,33 +56,41 @@ public class ChecklistFieldEditor extends FieldEditor implements ICheckStateList
     }
 
     // hash id -> element
-    final Class< ? >[] noclasses = new Class[] {};
+    final Class<?>[] noclasses = new Class[] {};
     final Object[] noobjects = new Object[] {};
-    for( final Object element : content )
+    for( int i = 0; i < content.length; i++ )
     {
       try
       {
+        final Object element = content[i];
         final Class< ? extends Object> klass = element.getClass();
         final Method method = klass.getMethod( idMethod, noclasses );
-        final String id = (String) method.invoke( element, noobjects );
+        final String id = (String)method.invoke( element, noobjects );
         m_idMap.put( id, element );
         m_contentMap.put( element, id );
       }
-      catch( final Exception e )
+      catch( Exception e )
       {
         e.printStackTrace();
       }
     }
   }
 
+  /**
+   * @see org.eclipse.jface.preference.FieldEditor#adjustForNumColumns(int)
+   */
   @Override
-  protected void adjustForNumColumns( final int numColumns )
+  protected void adjustForNumColumns( int numColumns )
   {
-    ((GridData) m_group.getLayoutData()).horizontalSpan = numColumns;
+    ((GridData)m_group.getLayoutData()).horizontalSpan = numColumns;
   }
 
+  /**
+   * @see org.eclipse.jface.preference.FieldEditor#doFillIntoGrid(org.eclipse.swt.widgets.Composite,
+   *      int)
+   */
   @Override
-  protected void doFillIntoGrid( final Composite parent, final int numColumns )
+  protected void doFillIntoGrid( final Composite parent, int numColumns )
   {
     if( m_group == null )
     {
@@ -94,7 +101,7 @@ public class ChecklistFieldEditor extends FieldEditor implements ICheckStateList
       m_group.setLayoutData( gridData );
       m_group.setText( getLabelText() );
 
-      m_checklist = CheckboxTableViewer.newCheckList( m_group, SWT.BORDER );
+      m_checklist = CheckboxTableViewer.newCheckList( m_group, SWT.NONE );
       m_checklist.setContentProvider( new ArrayContentProvider() );
       m_checklist.addCheckStateListener( this );
       m_checklist.getControl().setLayoutData( new GridData( GridData.FILL_BOTH ) );
@@ -110,6 +117,9 @@ public class ChecklistFieldEditor extends FieldEditor implements ICheckStateList
       m_checklist.getControl().setFocus();
   }
 
+  /**
+   * @see org.eclipse.jface.preference.FieldEditor#doLoad()
+   */
   @Override
   protected void doLoad( )
   {
@@ -117,6 +127,9 @@ public class ChecklistFieldEditor extends FieldEditor implements ICheckStateList
     uncheckElements( value );
   }
 
+  /**
+   * @see org.eclipse.jface.preference.FieldEditor#doLoadDefault()
+   */
   @Override
   protected void doLoadDefault( )
   {
@@ -130,39 +143,45 @@ public class ChecklistFieldEditor extends FieldEditor implements ICheckStateList
     {
       final String[] strings = value.split( ";" );
 
-      final List<Object> elementsToCheck = new ArrayList<>( strings.length );
+      final List<Object> elementsToCheck = new ArrayList<Object>( strings.length );
       Collections.addAll( elementsToCheck, m_content );
 
-      for( final String string : strings )
+      for( int i = 0; i < strings.length; i++ )
       {
-        final Object object = m_idMap.get( string );
+        final Object object = m_idMap.get( strings[i] );
         elementsToCheck.remove( object );
       }
 
-      m_checklist.setCheckedElements( elementsToCheck.toArray( new Object[elementsToCheck.size()] ) );
+      m_checklist
+          .setCheckedElements( elementsToCheck.toArray( new Object[elementsToCheck.size()] ) );
     }
   }
 
+  /**
+   * @see org.eclipse.jface.preference.FieldEditor#doStore()
+   */
   @Override
   protected void doStore( )
   {
-    if( m_checklist != null && m_checkedElements != null )
+    if( m_checklist != null )
     {
-      // FIXME: this is very special and was made for the validation rules of WspmCore...
-      final Set<String> excluded = new HashSet<>();
+      final StringBuffer selection = new StringBuffer();
+
+      final List<Object> checked = m_checkedElements == null ? new ArrayList<Object>() : Arrays
+          .asList( m_checkedElements );
 
       for( final Object element : m_content )
       {
-        if( !ArrayUtils.contains( m_checkedElements, element ) )
-          excluded.add( m_contentMap.get( element ) );
+        if( !checked.contains( element ) )
+          selection.append( m_contentMap.get( element ) );
       }
-
-      final String preference = StringUtils.join( excluded, ';' );
-
-      getPreferenceStore().setValue( getPreferenceName(), preference );
+      getPreferenceStore().setValue( getPreferenceName(), selection.toString() );
     }
   }
 
+  /**
+   * @see org.eclipse.jface.preference.FieldEditor#getNumberOfControls()
+   */
   @Override
   public int getNumberOfControls( )
   {

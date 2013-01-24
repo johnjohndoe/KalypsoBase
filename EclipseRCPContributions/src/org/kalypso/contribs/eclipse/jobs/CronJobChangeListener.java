@@ -45,8 +45,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsDebug;
-import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin;
+import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
+import org.kalypso.contribs.eclipse.utils.Debug;
 
 /**
  * This listener will check, if the job has to be rescheduled.
@@ -55,6 +55,16 @@ import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin;
  */
 public class CronJobChangeListener extends JobChangeAdapter
 {
+  /**
+   * The constructor.
+   */
+  public CronJobChangeListener( )
+  {
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
+   */
   @Override
   public void done( final IJobChangeEvent event )
   {
@@ -74,7 +84,7 @@ public class CronJobChangeListener extends JobChangeAdapter
     final long rescheduleDelay = cronJob.getRescheduleDelay();
 
     /* Log. */
-    if( EclipseRCPContributionsDebug.CRON_JOB.isEnabled() )
+    if( Debug.CRON_JOB.isEnabled() )
     {
       EclipseRCPContributionsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, EclipseRCPContributionsPlugin.ID, String.format( "The cron job ('%s') has finished execution...", name ) ) );
       EclipseRCPContributionsPlugin.getDefault().getLog().log( cronJob.getResult() );
@@ -84,7 +94,7 @@ public class CronJobChangeListener extends JobChangeAdapter
     if( rescheduleDelay < 0 )
     {
       /* Log. */
-      if( EclipseRCPContributionsDebug.CRON_JOB.isEnabled() )
+      if( Debug.CRON_JOB.isEnabled() )
         EclipseRCPContributionsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, EclipseRCPContributionsPlugin.ID, String.format( "The cron job ('%s') will be deactivated...", name ) ) );
 
       /* Remove myself as listener. */
@@ -94,7 +104,7 @@ public class CronJobChangeListener extends JobChangeAdapter
     }
 
     /* Log. */
-    if( EclipseRCPContributionsDebug.CRON_JOB.isEnabled() )
+    if( Debug.CRON_JOB.isEnabled() )
       EclipseRCPContributionsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, EclipseRCPContributionsPlugin.ID, String.format( "The cron job ('%s') will stay activated with a reschedule delay of %d ms (mutex used: %s)...", name, rescheduleDelay, mutexString ) ) );
 
     /* Schedule (leave myself as listener). */

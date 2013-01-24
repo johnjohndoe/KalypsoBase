@@ -154,7 +154,7 @@ public final class ExcelClipboardAdapter
   {
     try
     {
-      return (String) Toolkit.getDefaultToolkit().getSystemClipboard().getContents( this ).getTransferData( DataFlavor.stringFlavor );
+      return (String) (Toolkit.getDefaultToolkit().getSystemClipboard().getContents( this ).getTransferData( DataFlavor.stringFlavor ));
     }
     catch( final Exception e )
     {

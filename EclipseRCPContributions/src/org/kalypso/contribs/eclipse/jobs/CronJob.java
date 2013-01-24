@@ -42,7 +42,7 @@ package org.kalypso.contribs.eclipse.jobs;
 
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
-import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin;
+import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
 
 /**
  * This is a default implementation for a cron job.

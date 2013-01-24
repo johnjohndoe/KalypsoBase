@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jobs;
 
@@ -53,12 +53,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
-import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsDebug;
-import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin;
+import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
+import org.kalypso.contribs.eclipse.utils.Debug;
 
 /**
  * This class provides functions for dealing with cron jobs.
- *
+ * 
  * @author Holger Albert
  */
 public final class CronJobUtilities
@@ -123,7 +123,7 @@ public final class CronJobUtilities
       final IStatus status = CronJobUtilities.startCronJob( cronJob );
 
       /* Log the result. */
-      if( EclipseRCPContributionsDebug.CRON_JOB.isEnabled() )
+      if( Debug.CRON_JOB.isEnabled() )
         EclipseRCPContributionsPlugin.getDefault().getLog().log( status );
     }
   }
@@ -131,13 +131,13 @@ public final class CronJobUtilities
   /**
    * This function reads the extension registry and creates a list of the registered cron jobs. If there are none
    * registered, the list will be emtpy.
-   *
+   * 
    * @return The list of registered cron jobs.
    */
   private static List<CronJob> getCronJobs( ) throws CoreException
   {
     /* The memory for the results. */
-    final List<CronJob> cronJobs = new ArrayList<>();
+    final List<CronJob> cronJobs = new ArrayList<CronJob>();
 
     /* Get the extension registry. */
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -173,7 +173,7 @@ public final class CronJobUtilities
 
   /**
    * This function starts one cron job.
-   *
+   * 
    * @param cronJob
    *          The cron job.
    * @return A status, indicating, if the cron job was started.
@@ -191,7 +191,7 @@ public final class CronJobUtilities
       return new Status( IStatus.WARNING, EclipseRCPContributionsPlugin.ID, String.format( "The cron job ('%s') should not be activated, due to a negative schedule delay...", name ) );
 
     /* Get the job manager. */
-    final IJobManager jobManager = Job.getJobManager();
+    final IJobManager jobManager = CronJob.getJobManager();
 
     /* Search all running (waiting, executing and sleeping) jobs with the cron job family. */
     final Job[] runningJobs = jobManager.find( CronJob.CRON_JOB_FAMILY );
@@ -227,7 +227,7 @@ public final class CronJobUtilities
   public static void cancelAllCronJobs( )
   {
     /* Get the job manager. */
-    final IJobManager jobManager = Job.getJobManager();
+    final IJobManager jobManager = CronJob.getJobManager();
 
     /* Search all running (waiting, executing and sleeping) jobs with the cron job family. */
     final Job[] runningJobs = jobManager.find( CronJob.CRON_JOB_FAMILY );

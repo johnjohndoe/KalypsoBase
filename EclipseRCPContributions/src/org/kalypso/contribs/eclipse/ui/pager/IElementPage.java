@@ -56,6 +56,4 @@ public interface IElementPage
   void render( final Composite body, final FormToolkit toolkit );
 
   void dispose( );
-
-  String getIdentifier( );
 }

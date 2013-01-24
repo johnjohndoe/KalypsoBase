@@ -56,9 +56,9 @@ public class StatusAndDelegateLabelProvider extends LabelProvider
 
   /**
    * @param delegate
-   *          All request to this label provider are delegated to the delegate. Only if the requested element is a
-   *          {@link org.eclipse.core.runtime.IStatus}, the status text will be shown. The delegate will be disposed if
-   *          this instance gets disposed.
+   *            All request to this label provider are delegated to the delegate. Only if the requested element is a
+   *            {@link org.eclipse.core.runtime.IStatus}, the status text will be shown. The delegate will be disposed
+   *            if this instance gets disposed.
    */
   public StatusAndDelegateLabelProvider( final LabelProvider delegate )
   {

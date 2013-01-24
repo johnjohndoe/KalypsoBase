@@ -76,4 +76,5 @@ public abstract class ThreadContextClassLoaderRunnable extends StoreExceptionSaf
   }
 
   protected abstract void runWithContextClassLoader( ) throws Exception;
+
 }

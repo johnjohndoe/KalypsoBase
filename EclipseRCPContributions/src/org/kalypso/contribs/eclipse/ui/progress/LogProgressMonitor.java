@@ -45,7 +45,7 @@ import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin;
+import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
 
 /**
  * A progress monitor, which can log messages to a log.
@@ -58,12 +58,12 @@ public class LogProgressMonitor implements IProgressMonitor
    * All requests will be relayed to this progress monitor. It is not allowed to be null, because this monitor only logs
    * messages and does not implement any other functionality concerning progress monitors.
    */
-  private final IProgressMonitor m_monitor;
+  private IProgressMonitor m_monitor;
 
   /**
    * The log, where the messages are logged to. It is not allowed to be null.
    */
-  private final ILog m_log;
+  private ILog m_log;
 
   /**
    * The constructor.
@@ -74,7 +74,7 @@ public class LogProgressMonitor implements IProgressMonitor
    * @param log
    *          The log, where the messages are logged to. It is not allowed to be null.
    */
-  public LogProgressMonitor( final IProgressMonitor monitor, final ILog log )
+  public LogProgressMonitor( IProgressMonitor monitor, ILog log )
   {
     /* The progress monitor and the log are not allowed to be null. */
     Assert.isNotNull( monitor );
@@ -89,7 +89,7 @@ public class LogProgressMonitor implements IProgressMonitor
    * @see org.eclipse.core.runtime.IProgressMonitor#beginTask(java.lang.String, int)
    */
   @Override
-  public void beginTask( final String name, final int totalWork )
+  public void beginTask( String name, int totalWork )
   {
     /* Log. */
     m_log.log( new Status( IStatus.INFO, EclipseRCPContributionsPlugin.ID, name ) );
@@ -115,7 +115,7 @@ public class LogProgressMonitor implements IProgressMonitor
    * @see org.eclipse.core.runtime.IProgressMonitor#internalWorked(double)
    */
   @Override
-  public void internalWorked( final double work )
+  public void internalWorked( double work )
   {
     /* Delegate to the progress monitor. */
     m_monitor.internalWorked( work );
@@ -135,7 +135,7 @@ public class LogProgressMonitor implements IProgressMonitor
    * @see org.eclipse.core.runtime.IProgressMonitor#setCanceled(boolean)
    */
   @Override
-  public void setCanceled( final boolean value )
+  public void setCanceled( boolean value )
   {
     /* Log. */
     if( value )
@@ -149,7 +149,7 @@ public class LogProgressMonitor implements IProgressMonitor
    * @see org.eclipse.core.runtime.IProgressMonitor#setTaskName(java.lang.String)
    */
   @Override
-  public void setTaskName( final String name )
+  public void setTaskName( String name )
   {
     /* Log. */
     m_log.log( new Status( IStatus.INFO, EclipseRCPContributionsPlugin.ID, name ) );
@@ -162,7 +162,7 @@ public class LogProgressMonitor implements IProgressMonitor
    * @see org.eclipse.core.runtime.IProgressMonitor#subTask(java.lang.String)
    */
   @Override
-  public void subTask( final String name )
+  public void subTask( String name )
   {
     /* Delegate to the progress monitor. */
     m_monitor.subTask( name );
@@ -175,7 +175,7 @@ public class LogProgressMonitor implements IProgressMonitor
    * @see org.eclipse.core.runtime.IProgressMonitor#worked(int)
    */
   @Override
-  public void worked( final int work )
+  public void worked( int work )
   {
     /* Delegate to the progress monitor. */
     m_monitor.worked( work );

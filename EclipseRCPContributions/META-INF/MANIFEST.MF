@@ -2,11 +2,12 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: EclipseRCPContribution Plug-in
 Bundle-SymbolicName: org.kalypso.contribs.eclipsercp; singleton:=true
-Bundle-Version: 12.11.0.qualifier
-Bundle-Activator: org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin
-Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
+Bundle-Version: 13.1.0.qualifier
+Bundle-Activator: org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin
+Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
-Export-Package: org.kalypso.contribs.eclipse.core.commands,
+Export-Package: org.kalypso.contribs.eclipse,
+ org.kalypso.contribs.eclipse.core.commands,
  org.kalypso.contribs.eclipse.core.commands.operations,
  org.kalypso.contribs.eclipse.core.net,
  org.kalypso.contribs.eclipse.core.resources,
@@ -22,7 +23,6 @@ Export-Package: org.kalypso.contribs.eclipse.core.commands,
  org.kalypso.contribs.eclipse.jface.viewers,
  org.kalypso.contribs.eclipse.jface.viewers.table,
  org.kalypso.contribs.eclipse.jface.viewers.tree,
- org.kalypso.contribs.eclipse.jface.window,
  org.kalypso.contribs.eclipse.jface.wizard,
  org.kalypso.contribs.eclipse.jobs,
  org.kalypso.contribs.eclipse.swt,
@@ -51,10 +51,9 @@ Require-Bundle: org.eclipse.core.expressions,
  org.eclipse.core.resources,
  org.eclipse.core.runtime,
  org.eclipse.ui,
- org.eclipse.ui.forms;visibility:=reexport,
+ org.eclipse.ui.forms,
  org.eclipse.core.variables;visibility:=reexport,
  org.junit;resolution:=optional,
- org.kalypso.contribs.java;visibility:=reexport,
- org.apache.commons;visibility:=reexport
+ org.kalypso.contribs.java;visibility:=reexport
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

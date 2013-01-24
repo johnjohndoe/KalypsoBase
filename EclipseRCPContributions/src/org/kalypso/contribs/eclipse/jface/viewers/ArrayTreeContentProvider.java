@@ -76,7 +76,7 @@ public class ArrayTreeContentProvider implements ITreeContentProvider
    * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
    */
   @Override
-  public boolean hasChildren( final Object element )
+  public boolean hasChildren( Object element )
   {
     return false;
   }

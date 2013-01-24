@@ -4,15 +4,6 @@
    <extension-point id="actionFilters" name="actionFilters" schema="schema/actionFilters.exsd"/>
    <extension-point id="cronJobs" name="cronJobs" schema="schema/cronJobs.exsd"/>
    <extension-point id="fallbackConfigLocation" name="fallbackConfigLocation" schema="schema/fallbackConfigLocation.exsd"/>
-   <extension-point id="wizardEnablement" name="wizardEnablement" schema="schema/wizardEnablement.exsd"/>
-   <extension
-         point="org.eclipse.core.expressions.propertyTesters">
-      <propertyTester
-            class="org.kalypso.contribs.eclipse.ui.dialogs.GenericWizardTester"
-            id="org.kalypso.contribs.eclipse.ui.dialogs.GenericWizardTester"
-            namespace="org.kalypso.contribs.eclipsercp.genericWizardTester"
-            properties="isEnabled"
-            type="java.lang.Object">
-      </propertyTester>
-   </extension>
+
+    
 </plugin>

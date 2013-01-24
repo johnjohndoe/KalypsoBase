@@ -49,7 +49,7 @@ import org.eclipse.swt.graphics.FontData;
 
 /**
  * Helper class for deriving fonts from other fonts.
- *
+ * 
  * @author Gernot Belger, Holger Albert
  */
 public final class FontUtilities
@@ -61,7 +61,7 @@ public final class FontUtilities
   /**
    * This function copies the font, setting a new height and adding the style constants. It sets the height to the new
    * font. It adjusts the style of the original font by the style, before setting to the new font.
-   *
+   * 
    * @param device
    *          The device.
    * @param font
@@ -75,7 +75,7 @@ public final class FontUtilities
   public static Font changeHeightAndStyle( final Device device, final Font font, final int height, final int style )
   {
     /* The new font data. */
-    final List<FontData> fontData = new ArrayList<>();
+    final List<FontData> fontData = new ArrayList<FontData>();
 
     /* Create the new font data. */
     final FontData[] elements = font.getFontData();
@@ -89,7 +89,7 @@ public final class FontUtilities
   public static Font changeHeightAndStyleByFactor( final Device device, final Font font, final double heightFactor, final int style )
   {
     /* The new font data. */
-    final List<FontData> fontData = new ArrayList<>();
+    final List<FontData> fontData = new ArrayList<FontData>();
 
     /* Create the new font data. */
     final FontData[] elements = font.getFontData();

@@ -45,22 +45,20 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
+import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 
 /**
  * A {@link Job} that paints a IPaintable onto a {@link BufferedImage}.<br>
  * Its own paint method, paints the current state of the {@link BufferedImage}.<br>
- * 
+ *
  * @author Gernot Belger
  */
 public class BufferPaintJob extends Job
@@ -83,7 +81,7 @@ public class BufferPaintJob extends Job
 
   public BufferPaintJob( final IPaintable paintable, final ImageCache imageCache )
   {
-    super( StringUtils.EMPTY );
+    super( "" );
 
     m_paintable = paintable;
     m_imageCache = imageCache;
@@ -94,6 +92,8 @@ public class BufferPaintJob extends Job
 
   /**
    * Needed because we use {@link java.lang.ref.SoftReference}'s.
+   * 
+   * @see java.lang.Object#finalize()
    */
   @Override
   protected void finalize( ) throws Throwable
@@ -125,7 +125,7 @@ public class BufferPaintJob extends Job
 
   /**
    * Returns the current state of the buffered image.
-   * 
+   *
    * @return The buffered image; <code>null</code>, if the job has not yet started.
    */
   public synchronized BufferedImage getImage( )
@@ -133,6 +133,9 @@ public class BufferPaintJob extends Job
     return m_image;
   }
 
+  /**
+   * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
+   */
   @Override
   public IStatus run( final IProgressMonitor monitor )
   {
@@ -140,7 +143,7 @@ public class BufferPaintJob extends Job
 
     if( m_paintable == null )
     {
-      // System.out.println("BufferPaintJob: paintable was null");
+      //System.out.println("BufferPaintJob: paintable was null");
       return Status.OK_STATUS;
     }
 
@@ -159,7 +162,7 @@ public class BufferPaintJob extends Job
         // just return without comment
         if( gr == null )
         {
-          // System.out.println("BufferPaintJob: image was null");
+          //    System.out.println("BufferPaintJob: image was null");
           return Status.OK_STATUS;
         }
 
@@ -184,13 +187,9 @@ public class BufferPaintJob extends Job
 
       return ce.getStatus();
     }
-    catch( final OperationCanceledException e )
-    {
-      return Status.CANCEL_STATUS;
-    }
     catch( final Throwable t )
     {
-      return new Status( IStatus.ERROR, EclipseRCPContributionsPlugin.ID, "Failed to paint buffer image", t ); //$NON-NLS-1$
+      return StatusUtilities.createStatus( IStatus.ERROR, "Failed to paint buffer image", t );
     }
     finally
     {
@@ -230,7 +229,8 @@ public class BufferPaintJob extends Job
   }
 
   /**
-   * Configures the graphics-context before actual painting is started (i.e. {@link IPaintable#paint(Graphics2D, IProgressMonitor)} is called).<br>
+   * Configures the graphics-context before actual painting is started (i.e.
+   * {@link IPaintable#paint(Graphics2D, IProgressMonitor)} is called).<br>
    * Default behaviour is to set activate anti-aliasing (normal and text).<br>
    * Overwrite to change.
    */

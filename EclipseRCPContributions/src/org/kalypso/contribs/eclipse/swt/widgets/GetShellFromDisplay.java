@@ -52,7 +52,6 @@ import org.eclipse.swt.widgets.Shell;
 public class GetShellFromDisplay implements Runnable
 {
   private final Display m_display;
-
   private Shell m_shell;
 
   public GetShellFromDisplay( final Display display )
@@ -61,12 +60,12 @@ public class GetShellFromDisplay implements Runnable
   }
 
   @Override
-  public void run( )
+  public void run()
   {
     m_shell = m_display.getActiveShell();
   }
 
-  public Shell getShell( )
+  public Shell getShell()
   {
     m_display.syncExec( this );
 

@@ -50,7 +50,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
  */
 public class FullAction extends Action
 {
-  public FullAction( final String text, final ImageDescriptor image, final String tooltipText )
+  public FullAction( String text, ImageDescriptor image, String tooltipText )
   {
     super( text, image );
 

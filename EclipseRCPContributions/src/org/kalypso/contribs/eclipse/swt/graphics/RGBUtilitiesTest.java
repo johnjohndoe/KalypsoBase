@@ -47,7 +47,7 @@ import org.eclipse.swt.graphics.RGB;
 
 public class RGBUtilitiesTest extends TestCase
 {
-  public void testParseRGB( )
+  public void testParseRGB()
   {
     parseTest( 255, 255, 255, ";" );
     parseTest( 0, 128, 255, ":" );

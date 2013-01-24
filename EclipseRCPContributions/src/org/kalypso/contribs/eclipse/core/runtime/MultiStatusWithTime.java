@@ -80,13 +80,9 @@ public class MultiStatusWithTime extends MultiStatus implements IStatusWithTime
     m_time = time;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.core.runtime.IStatusWithTime#getTime()
-   */
   @Override
   public Date getTime( )
   {
     return m_time;
   }
-
 }

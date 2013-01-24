@@ -27,7 +27,7 @@ import org.kalypso.contribs.eclipse.ui.IEditorPartAction;
 
 /**
  * Helper class to register global actions and more.
- *
+ * 
  * @author Belger
  */
 public class RetargetActionManager
@@ -65,7 +65,7 @@ public class RetargetActionManager
     public RetargetInfo( final RetargetAction retargetAction )
     {
       m_retargetAction = retargetAction;
-      if( m_retargetAction.getStyle() == IAction.AS_DROP_DOWN_MENU && m_retargetAction.getMenuCreator() == null )
+      if( (m_retargetAction.getStyle() == IAction.AS_DROP_DOWN_MENU) && (m_retargetAction.getMenuCreator() == null) )
       {
         m_retargetAction.setMenuCreator( new DropDownMenuCreator() );
       }
@@ -77,7 +77,7 @@ public class RetargetActionManager
       return m_menuGroup;
     }
 
-    public void setMenuGroup( final String menuGroup )
+    public void setMenuGroup( String menuGroup )
     {
       m_menuGroup = menuGroup;
     }
@@ -139,9 +139,9 @@ public class RetargetActionManager
     }
   }
 
-  private final Map<String, RetargetInfo> m_retargetMap = new HashMap<>();
+  private Map<String, RetargetInfo> m_retargetMap = new HashMap<String, RetargetInfo>();
 
-  private final List<RetargetInfo> m_sortedRetargetinfo = new ArrayList<>();
+  private List<RetargetInfo> m_sortedRetargetinfo = new ArrayList<RetargetInfo>();
 
   public RetargetInfo addRetargetInfo( final RetargetInfo info )
   {
@@ -215,7 +215,7 @@ public class RetargetActionManager
 
   public void contributeToMenu( final IMenuManager menuManager )
   {
-    for( final RetargetInfo info : m_sortedRetargetinfo )
+    for( RetargetInfo info : m_sortedRetargetinfo )
     {
       final String menuGroup = info.getMenuGroup();
       if( menuGroup != null )
@@ -229,7 +229,7 @@ public class RetargetActionManager
         }
         else if( item instanceof AbstractGroupMarker )
         {
-          final AbstractGroupMarker gm = (AbstractGroupMarker) item;
+          final AbstractGroupMarker gm = ((AbstractGroupMarker) item);
           if( retargetAction.getStyle() == IAction.AS_DROP_DOWN_MENU )
             gm.getParent().appendToGroup( gm.getGroupName(), new MenuManager( retargetAction.getText(), retargetAction.getId() ) );
           else
@@ -269,9 +269,9 @@ public class RetargetActionManager
   public void fillContextMenu( final IMenuManager manager )
   {
 
-    for( final RetargetInfo info : m_sortedRetargetinfo )
+    for( RetargetInfo info : m_sortedRetargetinfo )
     {
-      final String toolbarGroup = info.getToolbarGroup() == null ? IWorkbenchActionConstants.MB_ADDITIONS : info.getToolbarGroup();
+      final String toolbarGroup = (info.getToolbarGroup() == null) ? IWorkbenchActionConstants.MB_ADDITIONS : info.getToolbarGroup();
 
       final IContributionItem item = manager.findUsingPath( toolbarGroup );
       final RetargetAction retargetAction = info.getRetargetAction();

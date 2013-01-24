@@ -7,9 +7,11 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * Waits for {@link org.eclipse.core.runtime.jobs.Job}to finish and then shows a message box if the job was succesful.
+ * Waits for {@link org.eclipse.core.runtime.jobs.Job}to finish and then shows
+ * a message box if the job was succesful.
  * 
  * @see IStatus#isOK()
+ * 
  * @author belger
  */
 public final class InformSuccessJobChangeAdapter extends JobChangeAdapter
@@ -26,9 +28,11 @@ public final class InformSuccessJobChangeAdapter extends JobChangeAdapter
    * @param messageTitle
    *          Displayed in the title of the message box.
    * @param messageFirstline
-   *          Displayed as first line of the message box. The second line wil be the mesage of the status objekt.
+   *          Displayed as first line of the message box. The second line wil be
+   *          the mesage of the status objekt.
    */
-  public InformSuccessJobChangeAdapter( final Shell shell, final String messageTitle, final String messageFirstline )
+  public InformSuccessJobChangeAdapter( final Shell shell, final String messageTitle,
+      final String messageFirstline )
   {
     m_shell = shell;
     m_messageTitle = messageTitle;
@@ -47,9 +51,10 @@ public final class InformSuccessJobChangeAdapter extends JobChangeAdapter
       final Runnable runnable = new Runnable()
       {
         @Override
-        public void run( )
+        public void run()
         {
-          MessageDialog.openInformation( m_shell, m_messageTitle, m_messageFirstline + "\n" + status.getMessage() );
+          MessageDialog.openInformation( m_shell, m_messageTitle, m_messageFirstline + "\n"
+              + status.getMessage() );
 
         }
       };

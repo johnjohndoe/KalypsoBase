@@ -52,10 +52,10 @@ import org.kalypso.contribs.eclipse.ui.actions.RetargetActionManager.RetargetInf
 public class RetargetInfoComparator implements Comparator<RetargetInfo>
 {
   @Override
-  public int compare( final RetargetInfo info0, final RetargetInfo info1 )
+  public int compare( RetargetInfo info0, RetargetInfo info1 )
   {
-    final String str0 = (info0.getMenuPath() == null ? "" : info0.getMenuPath()) + "/" + info0.getID();
-    final String str1 = (info1.getMenuPath() == null ? "" : info1.getMenuPath()) + "/" + info1.getID();
-    return str0.compareTo( str1 );
+    final String str0 = (info0.getMenuPath() == null ? "" : info0.getMenuPath())+"/"+info0.getID();
+    final String str1 = (info1.getMenuPath() == null ? "" : info1.getMenuPath())+"/"+info1.getID();
+    return str0.compareTo(str1 );
   }
 }

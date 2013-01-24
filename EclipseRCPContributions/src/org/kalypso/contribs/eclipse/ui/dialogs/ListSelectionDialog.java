@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.ui.dialogs;
 
@@ -63,12 +63,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * This dialog displays a list of elements and lets the user select them.<br/>
- * Differences to {@link org.eclipse.ui.dialogs.ListSelectionDialog}:
- * <ul>
- * <li>A type can be defined (generics).</li>
- * <li>OK button will be disabled, if nothing is selected.</li>
- * </ul>
+ * This dialog displays a list of elements and lets the user select them.
  * 
  * @author Holger Albert
  */
@@ -77,12 +72,12 @@ public class ListSelectionDialog<T> extends Dialog
   /**
    * The description text will be displayed to the user. May be null.
    */
-  private final String m_description;
+  private String m_description;
 
   /**
    * The array of all elements.
    */
-  private final T[] m_allElements;
+  private T[] m_allElements;
 
   /**
    * The array of elements, which should be selected by default. May be null.
@@ -92,7 +87,7 @@ public class ListSelectionDialog<T> extends Dialog
   /**
    * The label provider. May be null.
    */
-  private final IBaseLabelProvider m_labelProvider;
+  private IBaseLabelProvider m_labelProvider;
 
   /**
    * The class.
@@ -115,7 +110,7 @@ public class ListSelectionDialog<T> extends Dialog
    * @param clazz
    *          The class.
    */
-  public ListSelectionDialog( final Shell parentShell, final String description, final T[] allElements, final T[] selectedElements, final IBaseLabelProvider labelProvider, final Class<T> clazz )
+  public ListSelectionDialog( Shell parentShell, String description, T[] allElements, T[] selectedElements, IBaseLabelProvider labelProvider, Class<T> clazz )
   {
     super( parentShell );
 
@@ -142,7 +137,7 @@ public class ListSelectionDialog<T> extends Dialog
    * @param clazz
    *          The class.
    */
-  public ListSelectionDialog( final IShellProvider parentShell, final String description, final T[] allElements, final T[] selectedElements, final IBaseLabelProvider labelProvider, final Class<T> clazz )
+  public ListSelectionDialog( IShellProvider parentShell, String description, T[] allElements, T[] selectedElements, IBaseLabelProvider labelProvider, Class<T> clazz )
   {
     super( parentShell );
 
@@ -157,20 +152,20 @@ public class ListSelectionDialog<T> extends Dialog
    * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  protected Control createDialogArea( final Composite parent )
+  protected Control createDialogArea( Composite parent )
   {
     /* Set the title. */
     getShell().setText( "Auswahl erforderlich" );
 
     /* Create the main composite. */
-    final Composite main = (Composite) super.createDialogArea( parent );
+    Composite main = (Composite) super.createDialogArea( parent );
     main.setLayout( new GridLayout( 1, false ) );
-    final GridData mainData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    GridData mainData = new GridData( SWT.FILL, SWT.FILL, true, true );
     mainData.widthHint = 400;
     main.setLayoutData( mainData );
 
     /* Create a label. */
-    final Label descriptionLabel = new Label( main, SWT.WRAP );
+    Label descriptionLabel = new Label( main, SWT.WRAP );
     descriptionLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     descriptionLabel.setText( "Bitte w‰hlen Sie die gew¸nschten Elemente aus." );
     if( m_description != null && m_description.length() > 0 )
@@ -194,7 +189,7 @@ public class ListSelectionDialog<T> extends Dialog
        * @see org.eclipse.jface.viewers.ICheckStateProvider#isGrayed(java.lang.Object)
        */
       @Override
-      public boolean isGrayed( final Object element )
+      public boolean isGrayed( Object element )
       {
         return false;
       }
@@ -203,12 +198,12 @@ public class ListSelectionDialog<T> extends Dialog
        * @see org.eclipse.jface.viewers.ICheckStateProvider#isChecked(java.lang.Object)
        */
       @Override
-      public boolean isChecked( final Object element )
+      public boolean isChecked( Object element )
       {
         if( m_selectedElements == null || m_selectedElements.length == 0 )
           return false;
 
-        final List<T> checkedElements = Arrays.asList( m_selectedElements );
+        List<T> checkedElements = Arrays.asList( m_selectedElements );
         return checkedElements.contains( element );
       }
     } );
@@ -216,14 +211,15 @@ public class ListSelectionDialog<T> extends Dialog
     /* Add a listener. */
     listViewer.addCheckStateListener( new ICheckStateListener()
     {
-      @SuppressWarnings("unchecked")
+      /**
+       * @see org.eclipse.jface.viewers.ICheckStateListener#checkStateChanged(org.eclipse.jface.viewers.CheckStateChangedEvent)
+       */
       @Override
-      public void checkStateChanged( final CheckStateChangedEvent event )
+      public void checkStateChanged( CheckStateChangedEvent event )
       {
         /* Store the new selection. */
-        final Object[] checkedElements = listViewer.getCheckedElements();
-
-        final Object newInstance = java.lang.reflect.Array.newInstance( m_clazz, checkedElements.length );
+        Object[] checkedElements = listViewer.getCheckedElements();
+        Object newInstance = java.lang.reflect.Array.newInstance( m_clazz, checkedElements.length );
         System.arraycopy( checkedElements, 0, newInstance, 0, checkedElements.length );
         m_selectedElements = (T[]) newInstance;
 
@@ -239,7 +235,7 @@ public class ListSelectionDialog<T> extends Dialog
    * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  protected void createButtonsForButtonBar( final Composite parent )
+  protected void createButtonsForButtonBar( Composite parent )
   {
     super.createButtonsForButtonBar( parent );
 
@@ -272,7 +268,7 @@ public class ListSelectionDialog<T> extends Dialog
   protected void checkDialogComplete( )
   {
     /* Get the OK button. */
-    final Button okButton = getButton( IDialogConstants.OK_ID );
+    Button okButton = getButton( IDialogConstants.OK_ID );
 
     /* First of all, it should be allowed to complete. */
     okButton.setEnabled( true );

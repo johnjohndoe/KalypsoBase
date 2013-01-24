@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.wizard;
 
-import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.wizard.WizardPage;
 
 /**
@@ -48,7 +47,7 @@ import org.eclipse.jface.wizard.WizardPage;
  * 
  * @author Holger Albert
  */
-public final class WizardPageUtilities
+public class WizardPageUtilities
 {
   /**
    * Should not be instanziated.
@@ -65,10 +64,10 @@ public final class WizardPageUtilities
    * @param page
    *          The wizard page, which should display the warning.
    */
-  public static void appendWarning( final String message, final WizardPage page )
+  public static void appendWarning( String message, WizardPage page )
   {
     /* If the message should be resetted ... */
-    if( message == null || "".equals( message ) ) //$NON-NLS-1$
+    if( message == null || message.equals( "" ) )
     {
       /* ... do it! */
       page.setMessage( null );
@@ -76,9 +75,9 @@ public final class WizardPageUtilities
     }
 
     if( page.getMessage() == null )
-      page.setMessage( message, IMessageProvider.WARNING );
+      page.setMessage( message, WizardPage.WARNING );
     else
-      page.setMessage( page.getMessage() + "\n" + message, IMessageProvider.WARNING );
+      page.setMessage( page.getMessage() + "\n" + message, WizardPage.WARNING );
   }
 
   /**
@@ -89,10 +88,10 @@ public final class WizardPageUtilities
    * @param page
    *          The wizard page, which should display the error.
    */
-  public static void appendError( final String message, final WizardPage page )
+  public static void appendError( String message, WizardPage page )
   {
     /* If the message should be resetted ... */
-    if( message == null || "".equals( message ) ) //$NON-NLS-1$
+    if( message == null || message.equals( "" ) )
     {
       /* ... do it! */
       page.setErrorMessage( null );

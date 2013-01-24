@@ -44,30 +44,13 @@ public final class RectangleUtils
     return new Rectangle( x, y, w, h );
   }
 
-  /**
-   * Reduces the size of an rectangle by some given insets.
-   */
   public static Rectangle inflateRect( final Rectangle rect, final Insets insets )
   {
     if( rect == null )
       return null;
     if( insets == null )
       return rect;
-
     return new Rectangle( rect.x + insets.left, rect.y + insets.top, rect.width - insets.left - insets.right, rect.height - insets.bottom - insets.top );
-  }
-
-  public static Rectangle inflateRect( final Rectangle rect, final double factor )
-  {
-    final double insetFactor = factor / 2.0;
-
-    final int insetWidth = (int) (insetFactor * rect.width);
-    final int insetHeight = (int) (insetFactor * rect.height);
-
-    final int left = rect.x + insetWidth;
-    final int top = rect.y + insetHeight;
-
-    return new Rectangle( left, top, (int) (rect.width * factor), (int) (rect.height * factor) );
   }
 
   public static Rectangle bufferRect( final Rectangle rect, final Insets insets )
@@ -97,11 +80,10 @@ public final class RectangleUtils
     return new Point( x + w / 2, y + h / 2 );
   }
 
-  public static Rectangle buffer( final Point p, final int size )
+  public static Rectangle buffer( final Point p )
   {
     if( p == null )
       return null;
-
-    return new Rectangle( p.x - size, p.y - size, size * 2, size * 2 );
+    return new Rectangle( p.x - 5, p.y - 5, 10, 10 );
   }
 }

@@ -27,8 +27,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -74,6 +72,9 @@ public class ExcelTableCursor extends TableCursor
    */
   private final MouseListener m_mouseListener = new MouseAdapter()
   {
+    /**
+     * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
+     */
     @Override
     public void mouseDown( final MouseEvent e )
     {
@@ -159,7 +160,7 @@ public class ExcelTableCursor extends TableCursor
         }
       }
 
-      advanceCursor( (Control)e.getSource(), dx, dy );
+      advanceCursor( (Control) e.getSource(), dx, dy );
 
       /*
        * Special case: checkbox: always toggle? TODO: shouldn't handle this the CheckboxCellEditor??
@@ -167,7 +168,7 @@ public class ExcelTableCursor extends TableCursor
       if( (e.keyCode != SWT.CR || e.keyCode == SWT.KEYPAD_CR) && e.getSource() instanceof CheckboxCellEditor )
       {
         // toggle checkbox
-        final CheckboxCellEditor ce = (CheckboxCellEditor)e.getSource();
+        final CheckboxCellEditor ce = (CheckboxCellEditor) e.getSource();
         if( Boolean.TRUE.equals( ce.getValue() ) )
           ce.setValue( Boolean.FALSE );
         else
@@ -288,6 +289,9 @@ public class ExcelTableCursor extends TableCursor
 
   private final SelectionListener m_selectionListener = new SelectionListener()
   {
+    /**
+     * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+     */
     @Override
     public void widgetSelected( final SelectionEvent e )
     {
@@ -316,15 +320,6 @@ public class ExcelTableCursor extends TableCursor
     public void mouseDown( final MouseEvent e )
     {
       tableMouseDown( e );
-    }
-  };
-
-  private final Listener m_tableVisibilityListener = new Listener()
-  {
-    @Override
-    public void handleEvent( final Event event )
-    {
-      handleTableVisibilityChanged( event.type == SWT.Show );
     }
   };
 
@@ -363,9 +358,6 @@ public class ExcelTableCursor extends TableCursor
     table.addFocusListener( m_tableFocusListener );
     table.addMouseListener( m_tableMouseListener );
 
-    table.addListener( SWT.Show, m_tableVisibilityListener );
-    // table.addListener( SWT.Hide, m_tableVisibilityListener );
-
     viewer.addSelectionChangedListener( m_tableSelectionListener );
 
     // BUGFIX: always invalidate self if table was redrawn. Fixes: if a row was deleted/added,
@@ -394,9 +386,7 @@ public class ExcelTableCursor extends TableCursor
     if( selectedRow != row )
     {
       if( selectedRow == null )
-      {
-        // setVisible( false );
-      }
+        setVisible( false );
       else
       {
         final int column = getColumn();
@@ -419,7 +409,7 @@ public class ExcelTableCursor extends TableCursor
 
     if( m_selectionFollowsCursor )
     {
-      final Table table = (Table)getParent();
+      final Table table = (Table) getParent();
 
       final TableItem[] currentSelection = table.getSelection();
       if( currentSelection.length == 1 && currentSelection[0] == row )
@@ -495,13 +485,13 @@ public class ExcelTableCursor extends TableCursor
 
     if( keyEvent != null && control != null && !control.isDisposed() && control instanceof Button )
     {
-      final Button button = (Button)control;
+      final Button button = (Button) control;
       button.setSelection( !button.getSelection() );
     }
     //
     if( control instanceof Text )
     {
-      final Text text = (Text)control;
+      final Text text = (Text) control;
       if( keyEvent != null && keyEvent.keyCode != SWT.F2 )
         text.insert( "" + keyEvent.character );
     }
@@ -536,7 +526,7 @@ public class ExcelTableCursor extends TableCursor
     if( columnProperties == null || columnProperties.length == 0 )
       return false;
 
-    final String property = (String)columnProperties[column];
+    final String property = columnProperties[column].toString();
     final ICellModifier modifier = m_viewer.getCellModifier();
     if( modifier == null )
       return false;
@@ -552,11 +542,8 @@ public class ExcelTableCursor extends TableCursor
     if( DEBUG )
       System.out.println( "stopEditing" );
 
-    if( isDisposed() )
-      return;
-
     // leaf cell
-    if( cellEditorControl != null && !cellEditorControl.isDisposed() )
+    if( cellEditorControl != null )
     {
       cellEditorControl.removeKeyListener( m_keyListenerOnCell );
       cellEditorControl.removeTraverseListener( m_dontTraverseListener );
@@ -655,16 +642,10 @@ public class ExcelTableCursor extends TableCursor
   void tableFocusIn( )
   {
     if( DEBUG )
-      System.out.println( "tableFocusIn" ); //$NON-NLS-1$
+      System.out.println( "tableFocusIn" );
 
     if( isDisposed() )
       return;
-
-    // BUGFIX: if the table receives focus, we force ourselfs to be visible
-    // Before, the cursor was not visible and selection did not change cursor position
-    // FIXME: does not work: table selection does not work any more with this fix
-    // setVisible( true );
-
     if( isVisible() )
       setFocus();
   }
@@ -672,7 +653,7 @@ public class ExcelTableCursor extends TableCursor
   void tableMouseDown( final MouseEvent event )
   {
     if( DEBUG )
-      System.out.println( "tableMouseDown" ); //$NON-NLS-1$
+      System.out.println( "tableMouseDown" );
 
     if( isDisposed() || !isVisible() )
       return;
@@ -771,11 +752,4 @@ public class ExcelTableCursor extends TableCursor
     super.setVisible( visible );
   }
 
-  protected void handleTableVisibilityChanged( final boolean madeVisible )
-  {
-    if( madeVisible )
-    {
-      setVisible( true );
-    }
-  }
 }
