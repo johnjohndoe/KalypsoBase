@@ -1,0 +1,14 @@
+Jul 24, 2007 10:20:32 AM org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory <init>
+INFO: SLD-Default-Katalog initialisiert mit DIR=C:\Eclipse\junit-workspace\.metadata\.plugins\org.kalypso.ui\defaultStyles
+Starting test: tin.gmt
+Loading map: 0.063 SECONDS, 
+Map was loaded. Creating map modell on map: 0.421 SECONDS, 
+Loading map modell...0.000 SECONDS, 
+Map modell and data loaded.14.375 SECONDS, 
+Map data was loaded: 0.000 SECONDS, 
+Rendered map #0: 1.687 SECONDS, 
+Rendered map #1: 1.469 SECONDS, 
+Rendered map #2: 1.453 SECONDS, 
+Rendered map #3: 1.469 SECONDS, 
+Rendered map #4: 1.468 SECONDS, 
+Total: 22.484 SECONDS, 
