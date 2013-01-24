@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.opengis.net/sld" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+  xmlns:jxb="http://java.sun.com/xml/ns/jaxb" jxb:version="2.1"
+>
+  <annotation>
+    <appinfo>
+      <jxb:schemaBindings>
+        <jxb:package name="ogc2.www.opengis.net.sld" />
+      </jxb:schemaBindings>
+    </appinfo>
+  </annotation>
+</schema>
