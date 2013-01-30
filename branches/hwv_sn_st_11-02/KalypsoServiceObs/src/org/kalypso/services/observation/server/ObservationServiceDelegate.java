@@ -322,10 +322,10 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
       {
         request = ObservationRequest.createWith( requestType );
 
-        m_logger.info( "Reading data for observation: " + obean.getId() + " Request: " + request ); //$NON-NLS-1$ //$NON-NLS-2$
+        // m_logger.info( "Reading data for observation: " + obean.getId() + " Request: " + request ); //$NON-NLS-1$ //$NON-NLS-2$
       }
-      else
-        m_logger.info( "Reading data for observation: " + obean.getId() ); //$NON-NLS-1$
+      // else
+      //  m_logger.info( "Reading data for observation: " + obean.getId() ); //$NON-NLS-1$
     }
     catch( final SensorException e )
     {
