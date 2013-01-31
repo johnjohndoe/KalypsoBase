@@ -50,7 +50,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
  * default implementierung of the GM_Aggregate interface ------------------------------------------------------------
- *
+ * 
  * @version 8.6.2001
  * @author Andreas Poth href="mailto:poth@lat-lon.de"
  */
@@ -63,7 +63,7 @@ abstract class GM_Aggregate_Impl extends GM_AbstractGML_Impl implements GM_Aggre
 
   /**
    * Creates a new GM_Aggregate_Impl object.
-   *
+   * 
    * @param crs
    */
   public GM_Aggregate_Impl( final String crs )
@@ -73,7 +73,7 @@ abstract class GM_Aggregate_Impl extends GM_AbstractGML_Impl implements GM_Aggre
 
   /**
    * Creates a new GM_Aggregate_Impl object.
-   *
+   * 
    * @param crs
    */
   public GM_Aggregate_Impl( final GM_Object[] children, final String crs )
@@ -94,7 +94,7 @@ abstract class GM_Aggregate_Impl extends GM_AbstractGML_Impl implements GM_Aggre
 
   /**
    * merges this aggregation with another one
-   *
+   * 
    * @exception GM_Exception
    *              a GM_Exception will be thrown if the submitted isn't the same type as the recieving one.
    */
@@ -128,7 +128,7 @@ abstract class GM_Aggregate_Impl extends GM_AbstractGML_Impl implements GM_Aggre
   /**
    * inserts a GM_Object in the aggregation. all elements with an index equal or larger index will be moved. if index is
    * larger then getSize() - 1 or smaller then 0 or gmo equals null an exception will be thrown.
-   *
+   * 
    * @param gmo
    *          GM_Object to insert.
    * @param index
@@ -155,7 +155,7 @@ abstract class GM_Aggregate_Impl extends GM_AbstractGML_Impl implements GM_Aggre
   /**
    * sets the submitted GM_Object at the submitted index. the element at the position <code>index</code> will be
    * removed. if index is larger then getSize() - 1 or smaller then 0 or gmo equals null an exception will be thrown.
-   *
+   * 
    * @param gmo
    *          GM_Object to set.
    * @param index
@@ -181,7 +181,7 @@ abstract class GM_Aggregate_Impl extends GM_AbstractGML_Impl implements GM_Aggre
 
   /**
    * removes the submitted GM_Object from the aggregation
-   *
+   * 
    * @return the removed GM_Object
    */
   @Override
@@ -213,7 +213,7 @@ abstract class GM_Aggregate_Impl extends GM_AbstractGML_Impl implements GM_Aggre
   /**
    * removes the GM_Object at the submitted index from the aggregation. if index is larger then getSize() - 1 or smaller
    * then 0 an exception will be thrown.
-   *
+   * 
    * @return the removed GM_Object
    */
   @Override
@@ -296,7 +296,7 @@ abstract class GM_Aggregate_Impl extends GM_AbstractGML_Impl implements GM_Aggre
 
   /**
    * sets the spatial reference system
-   *
+   * 
    * @param crs
    *          new spatial reference system
    */
@@ -309,7 +309,7 @@ abstract class GM_Aggregate_Impl extends GM_AbstractGML_Impl implements GM_Aggre
     {
       for( int i = 0; i < m_aggregate.size(); i++ )
       {
-        ((GM_AbstractGML_Impl) getObjectAt( i )).setCoordinateSystem( crs );
+        ((GM_AbstractGML_Impl)getObjectAt( i )).setCoordinateSystem( crs );
       }
       invalidate();
     }
@@ -346,10 +346,10 @@ abstract class GM_Aggregate_Impl extends GM_AbstractGML_Impl implements GM_Aggre
       return false;
 
     // envelope was not valid
-    if( !ObjectUtils.equals( getEnvelope(), ((GM_Object) other).getEnvelope() ) )
+    if( !ObjectUtils.equals( getEnvelope(), ((GM_Object)other).getEnvelope() ) )
       return false;
 
-    if( getSize() != ((GM_Aggregate) other).getSize() )
+    if( getSize() != ((GM_Aggregate)other).getSize() )
       return false;
 
     try
@@ -357,7 +357,7 @@ abstract class GM_Aggregate_Impl extends GM_AbstractGML_Impl implements GM_Aggre
       for( int i = 0; i < getSize(); i++ )
       {
         final Object o1 = getObjectAt( i );
-        final Object o2 = ((GM_Aggregate) other).getObjectAt( i );
+        final Object o2 = ((GM_Aggregate)other).getObjectAt( i );
 
         if( !o1.equals( o2 ) )
         {
@@ -429,6 +429,8 @@ abstract class GM_Aggregate_Impl extends GM_AbstractGML_Impl implements GM_Aggre
     final Class< ? > componentType = adapter.getComponentType();
     if( componentType == null )
       return super.getAdapter( adapter );
+    else if( !m_aggregate.isEmpty() && componentType.isAssignableFrom( m_aggregate.get( 0 ).getClass() ) )
+      return m_aggregate.toArray( (Object[])Array.newInstance( m_aggregate.get( 0 ).getClass(), m_aggregate.size() ) );
 
     /* If it is a component type, we adapt each member of this aggregate to the component and combine the result */
 
@@ -442,7 +444,7 @@ abstract class GM_Aggregate_Impl extends GM_AbstractGML_Impl implements GM_Aggre
     }
 
     final Object adaptedArray = Array.newInstance( componentType, adaptedObjects.size() );
-    return adaptedObjects.toArray( (Object[]) adaptedArray );
+    return adaptedObjects.toArray( (Object[])adaptedArray );
   }
 
   @Override

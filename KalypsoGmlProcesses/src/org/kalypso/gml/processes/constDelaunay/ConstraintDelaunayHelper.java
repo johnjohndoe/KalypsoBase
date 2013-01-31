@@ -141,7 +141,9 @@ public class ConstraintDelaunayHelper
   {
     if( !findTriangleExe().isFile() )
       return new GM_Triangle[0];
-    Assert.isTrue( !ArrayUtils.isEmpty( boundaries ) );
+    
+    if( ArrayUtils.isEmpty( boundaries ) )
+      return new GM_Triangle[0];
 
     if( ArrayUtils.isEmpty( breaklines ) && boundaries.length == 1 )
     {
